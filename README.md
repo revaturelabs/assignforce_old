@@ -17,7 +17,7 @@ On every merge to development, it is important that all developers pull the late
 
 Periodically, work on the *development* branch will be merged to *master*.
 
-## How to Set Up your Envrionment
+## How to Set Up your Environment
 
 1. Make sure *Maven* is installed and accessible my the `mvn` command on Git Bash or Windows CommandLine
 2. Make sure your *JAVA_HOME* environmental variable is set to something like *C:\Program Files\Java\jdk1.8.0_101*
