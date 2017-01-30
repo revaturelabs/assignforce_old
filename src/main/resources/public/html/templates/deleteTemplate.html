@@ -1,0 +1,35 @@
+
+    <md-dialog aria-label="delete dialog">
+
+        <div ng-if="(!dCtrl.thinking || dCtrl.flag) && dCtrl.locations != undefined">
+            
+            <md-dialog-content>
+
+                <md-toolbar layout="columns">
+                    <div class="md-toolbar-tools">
+                        <span> Delete items </span>
+                    </div>
+                </md-toolbar>
+
+                <div class="md-padding">
+                    <div flex> {{ dCtrl.desc }} </div>
+                </div>
+                
+            </md-dialog-content>
+
+            <md-dialog-actions>
+
+                <md-button class="md-primary" ng-click="dCtrl.delete()"> Yes </md-button>
+                <md-button class="md-primary" ng-click="dCtrl.cancel()"> Cancel </md-button>
+            
+            </md-dialog-actions>
+
+        </div>
+
+        <div ng-if="(dCtrl.thinking && !dCtrl.flag) || dCtrl.locations == undefined" layout="column" layout-wrap layout-align="center center">
+            <div flex="100"> &nbsp; </div>
+            <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
+            <div flex="100"> &nbsp; </div>
+        </div>
+
+    </md-dialog>

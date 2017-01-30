@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <title>AssignForce</title>
+
+        <base href="/">
+
+        <meta charset="UTF-8">
+        <meta name="theme-color" content="#f26925">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+        <!-- stylesheets -->
+        <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+        <link rel="stylesheet" href="css/md-data-table.css">
+        <link rel="stylesheet" href="css/AFMaterialStyle.css">
+        <link rel="stylesheet" href="css/md-expansion-panel.min.css">
+        <link type="image/x-icon" rel="icon" href="img/favicon.ico">
+
+    </head>
+
+    <body ng-app="batchApp" ng-controller="AuthCtrl as aCtrl" layout-fill>
+
+        <div class="toastContainer">
+
+            <div>
+                <ng-include src="'html/views/menu.html'"/>
+            </div>
+
+            <div>
+                <div id="view" ng-view></div>
+            </div>
+        
+        </div>
+        
+            <!-- jQuery (this needs to be here for animations) -->
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+            <!-- AngularJS -->
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"> </script>
+
+            <!-- Angular modules -->
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-route.js"> </script>
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.js"> </script>
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-aria.js"> </script>
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-resource.js"> </script>
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-messages.js"> </script>
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.js"> </script>
+
+            <!-- Angular scripts -->
+        <script type="text/javascript" src="js/assignforce.js"></script>
+
+            <!-- Controllers -->
+        <script type="text/javascript" src="js/controllers/authController.js"> </script>
+        <script type="text/javascript" src="js/controllers/locationDialogController.js"></script>
+        <script type="text/javascript" src="js/controllers/roomDialogController.js"></script>
+        <script type="text/javascript" src="js/controllers/deleteDialogController.js"></script>
+        <script type="text/javascript" src="js/controllers/menuController.js"></script>
+        <script type="text/javascript" src="js/controllers/homeController.js"></script>
+        <script type="text/javascript" src="js/controllers/batchController.js"></script>
+        <script type="text/javascript" src="js/controllers/timelineController.js"></script>
+        <script type="text/javascript" src="js/controllers/trainerController.js"></script>
+        <script type="text/javascript" src="js/controllers/locationController.js"></script>
+        <script type="text/javascript" src="js/controllers/reportController.js"></script>
+
+            <!-- Services -->
+        <script type="text/javascript" src="js/services/calendarService.js"></script>
+        <script type="text/javascript" src="js/services/batchService.js"></script>
+        <script type="text/javascript" src="js/services/curriculumService.js"></script>
+        <script type="text/javascript" src="js/services/locationService.js"></script>
+        <script type="text/javascript" src="js/services/roomService.js"></script>
+        <script type="text/javascript" src="js/services/skillService.js"></script>
+        <script type="text/javascript" src="js/services/trainerService.js"></script>
+        <script type="text/javascript" src="js/services/userService.js"></script>
+
+            <!-- Filters -->
+        <script type="text/javascript" src="js/filters/timeModeFilter.js"></script>
+        <script type="text/javascript" src="js/filters/availableModeFilter.js"></script>
+        <script type="text/javascript" src="js/filters/activeFilter.js"></script>
+
+            <!-- Directives -->
+        <script type="text/javascript" src="js/directives/md-data-table.js"> </script>
+        
+            <!-- Misc -->
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
+        <script type="text/javascript" src="//use.fontawesome.com/8d8fa1da46.js"></script>
+        <script type="text/javascript" src="//use.typekit.net/pvo4jdm.js"></script>
+        <script>
+            try {
+                Typekit.load({
+                    async : true
+                });
+            } catch (e) {
+            }
+        </script>
+
+        <style type="text/css">
+            .wf-loading {
+                visibility: hidden;
+            }
+        </style>
+
+    </body>
+</html>

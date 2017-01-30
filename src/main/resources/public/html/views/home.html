@@ -1,0 +1,218 @@
+
+    <div>
+
+            <!-- Batches card -->
+        <md-card md-whiteframe="8">
+
+            <md-toolbar layout="columns">
+
+                <div class="md-toolbar-tools">
+                    <span> {{ hCtrl.batchFilter }} Batches </span>
+                </div>
+
+                <span flex> </span>
+
+                <md-menu md-position-mode="target-right target">
+
+                    <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button">
+                        <md-tooltip> Filter </md-tooltip>
+                        <md-icon md-menu-origin md-svg-icon="img/ic_filter_list_white_24px.svg"> </md-icon>
+                    </md-button>
+
+                    <md-menu-content width="4">
+                        <md-menu-item> <md-button ng-click="hCtrl.batchFilter = 'Active'"> In progress </md-button> </md-menu-item>
+                        <md-menu-item> <md-button ng-click="hCtrl.batchFilter = 'Upcoming'"> Beginning within two weeks </md-button> </md-menu-item>
+                        <md-menu-item> <md-button ng-click="hCtrl.batchFilter = 'All'"> All </md-button> </md-menu-item>
+                    </md-menu-content>
+
+                </md-menu>
+
+            </md-toolbar>
+
+            <md-content>
+
+                <md-table-container ng-if="hCtrl.batches != undefined">
+                    <table md-table ng-model="batchSelected">
+                        
+                        <thead md-head md-order="hCtrl.batchOrder">
+                            <tr md-row>
+                                <th md-column md-order-by="name"> Name </th>
+                                <th md-column md-order-by="curriculum.name"> Curriculum </th>
+                                <th md-column md-order-by="trainer.firstName"> Trainer / Cotrainer </th>
+                                <th md-column md-order-by="location.name"> Location </th>
+                                <th md-column md-order-by="room.roomName"> Room </th>
+                                <th md-column md-order-by="startDate"> Start date </th>
+                                <th md-column md-order-by="endDate"> End date </th>
+                            </tr>
+                        </thead>
+
+                        <tbody md-body>
+                            <tr md-row ng-repeat-start="batch in (hCtrl.batches | timeMode:hCtrl.filterMux[hCtrl.batchFilter].mode:hCtrl.filterMux[hCtrl.batchFilter].params | orderBy:hCtrl.batchOrder) track by batch.id">
+                                <td md-cell> {{ batch.name | limitTo:20 }} </td>
+                                <td md-cell> {{ batch.curriculum.name }} </td>
+                                <td md-cell ng-if="batch.cotrainer == null"> {{ batch.trainer.firstName | limitTo:20 }} {{ batch.trainer.lastName | limitTo:20 }} </td>
+                                <td md-cell ng-if="batch.cotrainer != null"> {{ batch.trainer.firstName | limitTo:20 }} {{ batch.trainer.lastName | limitTo:20 }} / 
+                                                                             {{ batch.cotrainer.firstName | limitTo:20 }} {{ batch.cotrainer.lastName | limitTo:20 }} </td>
+                                <td md-cell> {{ batch.location.name | limitTo:20 }} </td>
+                                <td md-cell> {{ batch.room.roomName | limitTo:20 }} </td>
+                                <td md-cell> {{ batch.startDate | date:'MMM. d, yyyy' }} </td>
+                                <td md-cell> {{ batch.endDate | date:'MMM. d, yyyy' }} </td>
+                            </tr>
+                            <tr ng-repeat-end>
+                                <td colspan="7" class="progressBar">
+                                    <md-progress-linear class="md-accent" style="height: 2px" md-mode="determinate" value="{{ hCtrl.calcProgress(batch.startDate, batch.endDate) }}"> </md-progress-linear>
+                                </td>
+                            </tr>
+                        </tr>
+                        </tbody>
+                        
+                    </table>
+                </md-table-container>
+
+                <div ng-if="hCtrl.batches == undefined" layout="column" layout-wrap layout-align="center center">
+                    <div flex="100"> &nbsp; </div>
+                    <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
+                    <div flex="100"> &nbsp; </div>
+                </div>
+
+            </md-content>
+
+        </md-card>
+    
+            <!-- Trainers card -->
+            <!-- Unnecessary now, but future implimentations may expand upon funtionailty already here -->            
+        <!--<md-card md-whiteframe="8">
+
+            <md-toolbar layout="columns">
+                
+                <div class="md-toolbar-tools">
+                    <span> {{ hCtrl.trainerFilter }} Trainers </span>
+                </div>
+
+                <span flex> </span>
+
+                <md-menu md-position-mode="target-right target">
+
+                    <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button">
+                        <md-tooltip> Filter </md-tooltip>
+                        <md-icon md-menu-origin md-svg-icon="img/ic_filter_list_white_24px.svg"> </md-icon>
+                    </md-button>
+
+                    <md-menu-content width="4">
+                        <md-menu-item> <md-button ng-click="hCtrl.trainerFilter = 'Active'"> Available </md-button> </md-menu-item>
+                        <md-menu-item> <md-button ng-click="hCtrl.trainerFilter = 'All'"> All </md-button> </md-menu-item>
+                    </md-menu-content>
+
+                </md-menu>
+
+            </md-toolbar>
+
+            <md-content>
+
+                <md-table-container ng-if="hCtrl.trainers != undefined">
+                    <table md-table ng-model="trainerSelected">
+                        
+                        <thead md-head md-order="hCtrl.trainerOrder">
+                            <tr md-row>
+                                <th md-column md-order-by="firstName"> Name </th>
+                                <th md-column> Available </th>
+                            </tr>
+                        </thead>
+
+                        <tbody md-body>
+                            <tr md-row ng-repeat-start="trainer in (hCtrl.trainers | availableMode:hCtrl.filterMux[hCtrl.trainerFilter].mode:hCtrl.filterMux[hCtrl.trainerFilter].params | activeItem | orderBy:hCtrl.trainerOrder) track by trainer.trainerID">
+                                <td md-cell> {{ trainer.firstName | limitTo:20 }} {{ trainer.lastName | limitTo:20 }} </td>
+                                <td md-cell> {{ hCtrl.checkAvailability(trainer.unavailable) }} </td>
+                            </tr>
+                            <tr ng-repeat-end>
+                                <td colspan="2" class="progressBar">
+                                    <md-progress-linear class="md-accent" style="height: 2px" md-mode="determinate" value="{{ hCtrl.calcProgress( hCtrl.checkAvailability(trainer.unavailable) ) }}"> </md-progress-linear>
+                                </td>
+                            </tr>
+                        </tbody>
+                        
+                    </table>
+                </md-table-container>
+
+                <div ng-if="hCtrl.trainers == undefined" layout="column" layout-wrap layout-align="center center">
+                    <div flex="100"> &nbsp; </div>
+                    <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
+                    <div flex="100"> &nbsp; </div>
+                </div>
+
+            </md-content>
+        
+        </md-card>-->
+
+            <!-- Locations card -->
+            <!-- Unnecessary now, but future implimentations may expand upon funtionailty already here -->
+        <!--<md-card md-whiteframe="8">
+
+            <md-toolbar layout="columns">
+                
+                <div class="md-toolbar-tools">
+                    <span> {{ hCtrl.locationFilter }} Locations </span>
+                </div>
+
+                <span flex> </span>
+
+                <md-menu md-position-mode="target-right target">
+
+                    <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button">
+                        <md-tooltip> Filter </md-tooltip>
+                        <md-icon md-menu-origin md-svg-icon="img/ic_filter_list_white_24px.svg"> </md-icon>
+                    </md-button>
+
+                    <md-menu-content width="4">
+                        <md-menu-item> <md-button ng-click="hCtrl.locationFilter = 'Current'"> Current </md-button> </md-menu-item>
+                        <md-menu-item> <md-button ng-click="hCtrl.locationFilter = 'Upcoming'"> Upcoming </md-button> </md-menu-item>
+                    </md-menu-content>
+
+                </md-menu>
+
+            </md-toolbar>
+
+            <md-content>
+
+                <md-table-container ng-if="hCtrl.locations != undefined">
+                    <table md-table ng-model="locationSelected">
+                        
+                        <thead md-head md-order="hCtrl.locationOrder">
+                            <tr md-row>
+                                <th md-column md-order-by="name"> Name </th>
+                                <th md-column md-order-by="city"> City </th>
+                                <th md-column md-order-by="state"> State </th>
+                                <th md-column> Number of Rooms Available </th>
+                                <th md-column md-order-by="rooms.length"> Total Number of Rooms </th>
+                            </tr>
+                        </thead>
+
+                        <tbody md-body>
+                            <tr md-row ng-repeat-start="location in (hCtrl.locations | activeItem | orderBy:hCtrl.locationOrder) track by location.id">
+                                <td md-cell> {{ location.name | limitTo:40 }} </td>
+                                <td md-cell> {{ location.city }} </td>
+                                <td md-cell> {{ location.state }} </td>
+                                <td md-cell> {{ hCtrl.findRoomsAvailable(location.rooms | activeItem) }} </td>
+                                <td md-cell> {{ (location.rooms | activeItem).length }} </td>
+                            </tr>
+                            <tr ng-repeat-end>
+                                <td colspan="5" class="progressBar">
+                                    <md-progress-linear class="md-accent" style="height: 2px" md-mode="determinate" value="{{ hCtrl.findRoomsAvailable(location.rooms | activeItem) * 100 / location.rooms.length }}"> </md-progress-linear>
+                                </td>
+                            </tr>
+                        </tbody>
+                        
+                    </table>
+                </md-table-container>
+
+                <div ng-if="hCtrl.locations == undefined" layout="column" layout-wrap layout-align="center center">
+                    <div flex="100"> &nbsp; </div>
+                    <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
+                    <div flex="100"> &nbsp; </div>
+                </div>
+
+            </md-content>
+        
+        </md-card>-->
+
+    </div>

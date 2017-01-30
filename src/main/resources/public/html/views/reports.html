@@ -1,0 +1,89 @@
+
+    <md-card md-whiteframe="8" ng-cloak>
+
+        <md-toolbar layout="columns">
+            <div class="md-toolbar-tools">
+                <span> Reports </span>
+            </div>
+        </md-toolbar>
+
+          <!-- Graduates annual report -->
+        <md-content>
+
+            <md-toolbar layout="columns" class="md-primary md-hue-2">
+
+                <div class="md-toolbar-tools">
+                    <span> Graduates summary for {{ rCtrl.year }} </span>
+                </div>
+
+                <span flex> </span>
+
+                <md-menu md-position-mode="target-right target">
+
+                    <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button">
+                        <md-tooltip> Settings </md-tooltip>
+                        <md-icon md-menu-origin md-svg-icon="img/ic_settings_white_24px.svg"> </md-icon>
+                    </md-button>
+
+                    <md-menu-content width="4" class="md-padding">
+                        
+                        <md-menu-item> 
+                            <md-input-container>
+                                <label> Year </label>
+                                <input ng-model="rCtrl.year" type="number">
+                            </md-input-container>
+                        </md-menu-item>
+
+                        <md-menu-item> 
+                            <md-input-container>
+                                <label> Graduates per batch </label>
+                                <input ng-model="rCtrl.graduates" type="number">
+                            </md-input-container>
+                        </md-menu-item>
+
+                    </md-menu-content>
+
+                </md-menu>
+
+            </md-toolbar>
+
+            <div ng-if="rCtrl.batches != undefined" class="md-padding">
+
+                <md-table-container>
+                    <table md-table class="gradTable">
+                        
+                        <thead md-head md-order="rCtrl.currOrder">
+                            <tr md-row>
+                                <th md-column flex md-order-by="name"> Curriculum </th>
+                                <th md-column flex ng-repeat="month in rCtrl.monthList"> {{ month }} </th>
+                                <th md-column md-numeric flex> Total </th>
+                            </tr>
+                        </thead>
+
+                        <tbody md-body>
+                            <tr md-row ng-repeat="curr in (rCtrl.curricula | orderBy:rCtrl.currOrder) track by curr.id">
+                                <td md-cell flex> {{ curr.name }} </td>
+                                <td md-cell flex ng-repeat="month in rCtrl.currSummary(curr) track by $index"> {{ month }} </td>
+                                <td md-cell flex> {{ rCtrl.currSummary(curr).reduce(rCtrl.sumCurrYear) }} </td>
+                            </tr>
+                            <tr md-row>
+                                <td md-cell flex> Total </td>
+                                <td md-cell flex ng-repeat="month in rCtrl.currSummary(curr) track by $index"> {{ rCtrl.sumMonth($index) }} </td>
+                                <td md-cell flex> {{ rCtrl.sumYear() }} </td>
+                            </tr>
+                        </tbody>
+                        
+                    </table>
+                </md-table-container>
+
+            </div>
+
+            <div ng-if="rCtrl.batches == undefined" layout="column" layout-wrap layout-align="center center">
+                <div flex="100"> &nbsp; </div>
+                <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
+                <div flex="100"> &nbsp; </div>
+            </div>
+
+        </md-content>
+
+    </md-card>

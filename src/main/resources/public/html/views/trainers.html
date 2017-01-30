@@ -1,0 +1,31 @@
+
+    <md-card md-whiteframe="8" ng-cloak>
+
+        <md-toolbar layout="columns">
+            <div class="md-toolbar-tools">
+                <span> Trainers </span>
+            </div>
+        </md-toolbar>
+
+        <md-content>
+
+            <md-list ng-if="tCtrl.trainers != undefined">
+                <md-list-item class="md-2-line" md-ink-ripple ng-repeat="trainer in tCtrl.trainers | activeItem track by trainer.trainerID" ng-click="tCtrl.goToTrainer($event)">
+                    <md-icon md-svg-icon="img/ic_people_black_48px.svg"> </md-icon>
+                    <div class="md-list-item-text" layout="column">
+                        <h3> {{ trainer.firstName }} {{ trainer.lastName }} </h3>
+                        <p ng-if="trainer.skill.length > 0"> Skills: {{ trainer.skill.map(tCtrl.joinObjArrayByName).join(", "); }} </p>
+                        <p ng-if="trainer.skill.length <= 0"> Skills: none </p>
+                    </div>
+                </md-list-item>
+            </md-list>
+
+            <div ng-if="tCtrl.trainers == undefined" layout="column" layout-wrap layout-align="center center">
+                <div flex="100"> &nbsp; </div>
+                <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
+                <div flex="100"> &nbsp; </div>
+            </div>
+
+        </md-content>
+    
+    </md-card>

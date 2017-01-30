@@ -1,0 +1,50 @@
+
+    <md-dialog>
+
+        <form name="locationForm" ng-submit="ldCtrl.save(locationForm.$valid)" novalidate>
+
+            <md-dialog-content>
+
+                <md-toolbar layout="columns">
+                    <div class="md-toolbar-tools">
+                        <span> {{ ldCtrl.title }} </span>
+                    </div>
+                </md-toolbar>
+
+                    <div class="md-padding">
+
+                        <div layout layout-wrap>
+
+                            <md-input-container flex="100">
+                                <label> Name </label>
+                                <input ng-model="ldCtrl.location.name" required>
+                            </md-input-container>
+
+                            <md-input-container flex="50"> 
+                                <label> City </label>
+                                <input ng-model="ldCtrl.location.city">
+                            </md-input-container>
+                            
+                            <md-input-container flex>                       
+                                <label> State </label>
+                                <md-select ng-model="ldCtrl.location.state">
+                                    <md-option ng-value="stateAbr" ng-repeat="stateAbr in ldCtrl.USstates"> {{ stateAbr }} </md-option>
+                                </md-select>
+                            </md-input-container>
+
+                        </div>
+
+                    </div>
+
+            </md-dialog-content>
+
+            <md-dialog-actions>
+
+                <md-button class="md-primary" type="submit"> Save </md-button>
+                <md-button class="md-primary" ng-click="ldCtrl.cancel()"> Cancel </md-button>
+            
+            </md-dialog-actions>
+
+        </form>
+
+    </md-dialog>
