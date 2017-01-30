@@ -3,19 +3,19 @@ A scheduling application
 
 ## About the codebase
 
-There are two main branches: *master* and *development*.  As a developer, you're not allowed to touch either of them directly.
+There are two main branches: **master** and **development**.  As a developer, you're not allowed to touch either of them directly.
 
-The *master* branch is the copy of the application that's running on the production server
+The **master** branch is the copy of the application that's running on the production server
 
-The *development* branch is the copy of the application that's running on the production server
+The **development** branch is the copy of the application that's running on the production server
 
-When you'd like to work on a feature, make a feature branch, and create a Pull Request (a request to merge) to the *development* branch.
+When you'd like to work on a feature, make a feature branch, and create a Pull Request (a request to merge) to the development branch.
 
 After you feel your work is satisfactory, comment `RFI` on your Pull Request, and your team lead will review your code, and, if accepted, it will be merged onto the development branch.
 
-On every merge to development, it is important that all developers pull the latest version of *development* to ensure everyone's working on the same codebase.
+On every merge to development, it is important that all developers pull the latest version of the development branch to ensure everyone's working on the same codebase.
 
-Periodically, work on the *development* branch will be merged to *master*.
+Periodically, work on the development branch will be merged to the master branch.
 
 ## How to Set Up your Environment
 
