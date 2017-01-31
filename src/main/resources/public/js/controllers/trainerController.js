@@ -2,7 +2,7 @@
     var assignforce = angular.module( "batchApp" );
 
     assignforce.controller( "trainerCtrl", function( $scope, trainerService ) {
-        console.log("Beginning trainer controller.");
+        //console.log("Beginning trainer controller.");
         var tc = this;
 
           // functions
@@ -26,10 +26,10 @@
           // page initialization
             // data gathering
         trainerService.getAll( function(response) {
-            console.log("  (TC)  Retrieving all trainers.");
+            //console.log("  (TC)  Retrieving all trainers.");
             tc.trainers = response;
         }, function(error) {
-            console.log("  (TC)  Failed to retrieve all trainers with error", error.data.message);
+            //console.log("  (TC)  Failed to retrieve all trainers with error", error.data.message);
             tc.showToast("Could not fetch trainers.");
         });
     });
