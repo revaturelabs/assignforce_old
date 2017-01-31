@@ -2,7 +2,7 @@
  var assignforce = angular.module( "batchApp" );
 
     assignforce.controller( "locationCtrl", function( $scope, $filter, $mdDialog, locationService ) {
-        console.log("Beginning location controller.");
+        //console.log("Beginning location controller.");
         var lc = this;
 
           // functions
@@ -225,10 +225,10 @@
             lc.locations = undefined;
             lc.selectedList = [];
             locationService.getAll( function(response) {
-                console.log("  (LC)  Retrieving all locations.")
+                //console.log("  (LC)  Retrieving all locations.")
                 lc.locations = response;
             }, function(error) {
-                console.log("  (LC)  Failed to retrieve all locations with error:", error.data.message);
+                //console.log("  (LC)  Failed to retrieve all locations with error:", error.data.message);
                 lc.showToast("Could not fetch locations.");
             });
         };
@@ -239,10 +239,10 @@
           // page initialization
             // data gathering
         locationService.getAll( function(response) {
-            console.log("  (LC)  Retrieving all locations.")
+            //console.log("  (LC)  Retrieving all locations.")
             lc.locations = response;
         }, function(error) {
-            console.log("  (LC)  Failed to retrieve all locations with error:", error.data.message);
+            //console.log("  (LC)  Failed to retrieve all locations with error:", error.data.message);
             lc.showToast("Could not fetch locations.");
         });
 

@@ -2,6 +2,8 @@ package com.revature.assignforce.service;
 
 import com.revature.assignforce.domain.Activatable;
 import com.revature.assignforce.domain.dao.ActivatableObjectRepository;
+
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -30,6 +32,7 @@ public class ActivatableObjectDaoService<T extends Activatable, ID extends Seria
         try{
             repo.delete(id);
         }catch(Exception ex){
+        	Logger.getRootLogger().error(ex);
             Activatable item = (Activatable) repo.findOne(id);
             item.setActive(false);
 

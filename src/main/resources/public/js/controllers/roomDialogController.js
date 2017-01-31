@@ -2,7 +2,7 @@
     var assignforce = angular.module( "batchApp" );
 
     assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationService, roomService ){
-        console.log("Beginning room dialog controller.");
+        //console.log("Beginning room dialog controller.");
         var rdc = this;
         
           // functions
@@ -77,7 +77,7 @@
           // page initialization
             // data gathering
         locationService.getAll( function(response) {
-            console.log("  (RDC) Retrieving all locations.")
+            //console.log("  (RDC) Retrieving all locations.")
             rdc.locations = response;
             if (rdc.state == "create") {
                 rdc.title = "Add new room to " + rdc.location.name;
@@ -86,7 +86,7 @@
                 rdc.title = "Edit " + rdc.room.roomName + " at " + rdc.location.name;
             }
         }, function(error) {
-            console.log("  (RDC) Failed to retrieve all locations with error:", error.data.message);
+            //console.log("  (RDC) Failed to retrieve all locations with error:", error.data.message);
             $mdDialog.cancel();
         });
     });

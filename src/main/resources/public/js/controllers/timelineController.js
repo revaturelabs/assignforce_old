@@ -5,7 +5,7 @@ var app = angular.module('batchApp');
 /*--------------------------CONTROLLER---------------------------*/
 
 app.controller("TimelineCtrl", function($scope, $window, batchService, calendarService, trainerService){
-    console.log("Beginning timeline controller.");
+    //console.log("Beginning timeline controller.");
     var tlc = this;
 
     tlc.removeNoTrainer = function(batch) {
@@ -27,44 +27,44 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	var trainerNames;
 	$scope.$on("repullTimeline", function(event, data){
 		batchService.getAll( function(response) {
-            console.log("  (TLC) Retrieving all batches.")
+            //console.log("  (TLC) Retrieving all batches.")
             tlc.batches = response;
             if (tlc.trainers) {
                 projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
             }
         }, function(error) {
-            console.log("  (TLC) Failed to retrieve all batches with error:", error.data.message);
+            //console.log("  (TLC) Failed to retrieve all batches with error:", error.data.message);
         });
 
         trainerService.getAll( function(response) {
-            console.log("  (TLC) Retrieving all trainers.")
+            //console.log("  (TLC) Retrieving all trainers.")
             tlc.trainers = response.map(function(trainer){return trainer.firstName});
             if (tlc.batches) {
                 projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
             }
         }, function(error) {
-            console.log("  (TLC) Failed to retrieve all trainers with error:", error.data.message);
+            //console.log("  (TLC) Failed to retrieve all trainers with error:", error.data.message);
         });
 	});
 
     batchService.getAll( function(response) {
-        console.log("  (TLC) Retrieving all batches.")
+        //console.log("  (TLC) Retrieving all batches.")
         tlc.batches = response;
         if (tlc.trainers) {
 			projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
         }
     }, function(error) {
-        console.log("  (TLC) Failed to retrieve all batches with error:", error.data.message);
+        //console.log("  (TLC) Failed to retrieve all batches with error:", error.data.message);
     });
 
     trainerService.getAll( function(response) {
-        console.log("  (TLC) Retrieving all trainers.")
+        //console.log("  (TLC) Retrieving all trainers.")
 		tlc.trainers = response.map(function(trainer){return trainer.firstName});
         if (tlc.batches) {
 			projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
         }
     }, function(error) {
-        console.log("  (TLC) Failed to retrieve all trainers with error:", error.data.message);
+        //console.log("  (TLC) Failed to retrieve all trainers with error:", error.data.message);
     });
 	
 	$scope.$watch(

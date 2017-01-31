@@ -2,7 +2,7 @@
     var assignforce = angular.module( "batchApp" );
 
     assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeout, locationService ){
-        console.log("Beginning deletion controller.");
+        //console.log("Beginning deletion controller.");
         var dc = this;
 
           // functions
@@ -74,7 +74,7 @@
             locationService.update( elem, function(){
                 dc.deleteHelper(delList);
             }, function(error){
-                console.log("  (LC)  Failed to delete room/location with error:", error.data.message);
+                //console.log("  (LC)  Failed to delete room/location with error:", error.data.message);
                 $mdDialog.cancel();
             });
         };
@@ -105,10 +105,10 @@
           // page initialization
             // data gathering
         locationService.getAll( function(response) {
-            console.log("  (DC)  Retrieving all locations.")
+            //console.log("  (DC)  Retrieving all locations.")
             dc.locations = response;
         }, function(error) {
-            console.log("  (DC)  Failed to retrieve all locations with error:", error.data.message);
+            //console.log("  (DC)  Failed to retrieve all locations with error:", error.data.message);
             $mdDialog.cancel();
         });
     });

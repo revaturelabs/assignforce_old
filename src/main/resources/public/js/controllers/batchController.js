@@ -2,7 +2,7 @@
     var assignforce = angular.module( "batchApp" );
 
     assignforce.controller( "batchCtrl", function($scope, $timeout, batchService, curriculumService, skillService, trainerService, locationService, calendarService ) {
-        console.log("Beginning batch controller.");
+        //console.log("Beginning batch controller.");
         var bc = this;
 
           // functions
@@ -13,7 +13,7 @@
 
             // changes form state and populates fields if need-be
         bc.changeState = function( newState, incomingBatch ){ 
-            console.log("  (BC)  Changing to state [" + newState + "] from [" + bc.state + "].");
+            //console.log("  (BC)  Changing to state [" + newState + "] from [" + bc.state + "].");
             bc.state = newState;
 
             if (newState == "create") {
@@ -146,7 +146,7 @@
 
             // resets form
         bc.resetForm = function(){
-            console.log("  (BC)  Restting form.");
+            //console.log("  (BC)  Restting form.");
             bc.batchesSelected = [];
             bc.changeState( "create", null );
         };
@@ -187,11 +187,11 @@
             bc.batchesSelected = [];
             bc.changeState( "create", null );
             batchService.getAll( function(response) {
-                console.log("  (BC)  Retrieving all batches.")
+                //console.log("  (BC)  Retrieving all batches.")
                 bc.batches = response;
                 $scope.$broadcast("repullTimeline");
             }, function(error) {
-                console.log("  (BC)  Failed to retrieve all batches with error:", error.data.message);
+                //console.log("  (BC)  Failed to retrieve all batches with error:", error.data.message);
                 bc.showToast( "Could not fetch batches.");
             });
         };
@@ -213,7 +213,7 @@
                 bc.showToast("Batch deleted.");
                 bc.repull();
             }, function(error){
-                console.log("  (BC)  Failed to delete batch.");
+                //console.log("  (BC)  Failed to delete batch.");
                 bc.showToast("Failed to delete batch.");
             });
         };
@@ -239,7 +239,7 @@
             batchService.delete( first, function(){
                 return bc.deleteMultipleHelper(delList);
             }, function(error){
-                console.log("  (BC)  Failed to delete batches with error:", error.data.message);
+                //console.log("  (BC)  Failed to delete batches with error:", error.data.message);
                 bc.showToast("Failed to delete batches.");
                 return false;
             });
@@ -255,7 +255,7 @@
                             bc.showToast("Batch saved.");
                             bc.repull();
                         }, function(error){
-                            console.log("  (BC)  Failed to save batch with error:", error.data.message);
+                            //console.log("  (BC)  Failed to save batch with error:", error.data.message);
                             bc.showToast("Failed to save batch.");
                         });
                         break;
@@ -265,7 +265,7 @@
                             bc.showToast("Batch updated.");
                             bc.repull();
                         }, function(error){
-                            console.log("  (BC)  Failed to update batch with error:", error.data.message);
+                            //console.log("  (BC)  Failed to update batch with error:", error.data.message);
                             bc.showToast("Failed to update batch.");
                         });
                         break;
@@ -276,7 +276,7 @@
                             bc.showToast("Batch cloned.");
                             bc.repull();
                         }, function(error){
-                            console.log("  (BC)  Failed to clone batch with error:", error.data.message);
+                            //console.log("  (BC)  Failed to clone batch with error:", error.data.message);
                             bc.showToast("Failed to clone batch.");
                         });
                         break;
@@ -309,43 +309,43 @@
           // page initialization
             // data gathering
         batchService.getAll( function(response) {
-            console.log("  (BC)  Retrieving all batches.");
+            //console.log("  (BC)  Retrieving all batches.");
             bc.batches = response;
         }, function(error) {
-            console.log("  (BC)  Failed to retrieve all batches with error:", error.data.message);
+            //console.log("  (BC)  Failed to retrieve all batches with error:", error.data.message);
             bc.showToast( "Could not fetch batches.");
         });
 
         curriculumService.getAll( function(response) {
-            console.log("  (BC)  Retrieving all curricula.");
+            //console.log("  (BC)  Retrieving all curricula.");
             bc.curricula = response;
         }, function(error) {
-            console.log("  (BC)  Failed to retrieve all curricula with error:", error.data.message);
+            //console.log("  (BC)  Failed to retrieve all curricula with error:", error.data.message);
             bc.showToast( "Could not fetch curricula.");
         });
 
         // skillService.getAll( function(response) {
-        //     console.log("  (BC)  Retrieving all skills.");
+        //     //console.log("  (BC)  Retrieving all skills.");
         //     bc.skills = response;
         // }, function(error) {
-        //     console.log("  (BC)  Failed to retrieve all skills with error:", error.data.message);
+        //     //console.log("  (BC)  Failed to retrieve all skills with error:", error.data.message);
             // bc.showToast( "Could not fetch skills.");
         // });
 
         trainerService.getAll( function(response) {
-            console.log("  (BC)  Retrieving all trainers.");
+            //console.log("  (BC)  Retrieving all trainers.");
             bc.trainers = response;
         }, function(error) {
-            console.log("  (BC)  Failed to retrieve all trainers with error:", error.data.message);
+            //console.log("  (BC)  Failed to retrieve all trainers with error:", error.data.message);
             bc.showToast( "Could not fetch trainers.");
         });
 
         locationService.getAll( function(response) {
-            console.log("  (BC)  Retrieving all locations.");
+            //console.log("  (BC)  Retrieving all locations.");
             bc.locations = response;
             bc.batch.location = bc.findHQ();
         }, function(error) {
-            console.log("  (BC)  Failed to retrieve all locations with error:", error.data.message);
+            //console.log("  (BC)  Failed to retrieve all locations with error:", error.data.message);
             bc.showToast( "Could not fetch locations.");
         });
 

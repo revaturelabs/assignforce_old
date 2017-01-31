@@ -2,7 +2,7 @@
     var assignforce = angular.module( "batchApp" );
 
     assignforce.controller( "reportCtrl", function( $scope, batchService, curriculumService, monthList ){
-        console.log("Beginning report controller.");
+        //console.log("Beginning report controller.");
         var rc = this;
 
           // functions
@@ -53,7 +53,7 @@
 
             formatted.push(totalMonth);
 
-            console.log(formatted);
+            //console.log(formatted);
 
             return formatted;
         };
@@ -125,44 +125,44 @@
           // page initialization
             // data gathering
         batchService.getAll( function(response) {
-            console.log("  (RC)  Retrieving all batches.");
+            //console.log("  (RC)  Retrieving all batches.");
             rc.batches = response;
         }, function(error) {
-            console.log("  (RC)  Failed to retrieve all batches with error:", error.data.message);
+            //console.log("  (RC)  Failed to retrieve all batches with error:", error.data.message);
             rc.showToast( "Could not fetch batches.");
         });
 
         curriculumService.getAll( function(response) {
-            console.log("  (RC)  Retrieving all curricula.");
+            //console.log("  (RC)  Retrieving all curricula.");
             rc.curricula = response;
         }, function(error) {
-            console.log("  (RC)  Failed to retrieve all curricula with error:", error.data.message);
+            //console.log("  (RC)  Failed to retrieve all curricula with error:", error.data.message);
             rc.showToast( "Could not fetch curricula.");
         });
 
           // only batches and curricula are necessary now, but these are here in the event that new reports require the use of other object lists
 
         // skillService.getAll( function(response) {
-        //     console.log("  (BC)  Retrieving all skills.");
+        //     //console.log("  (BC)  Retrieving all skills.");
         //     rc.skills = response;
         // }, function(error) {
-        //     console.log("  (BC)  Failed to retrieve all skills with error:", error.data.message);
+        //     //console.log("  (BC)  Failed to retrieve all skills with error:", error.data.message);
         //     rc.showToast( "Could not fetch skills.");
         // });
 
         // trainerService.getAll( function(response) {
-        //     console.log("  (RC)  Retrieving all trainers.");
+        //     //console.log("  (RC)  Retrieving all trainers.");
         //     rc.trainers = response;
         // }, function(error) {
-        //     console.log("  (RC)  Failed to retrieve all trainers with error:", error.data.message);
+        //     //console.log("  (RC)  Failed to retrieve all trainers with error:", error.data.message);
         //     rc.showToast( "Could not fetch trainers.");
         // });
 
         // locationService.getAll( function(response) {
-        //     console.log("  (RC)  Retrieving all locations.");
+        //     //console.log("  (RC)  Retrieving all locations.");
         //     rc.locations = response;
         // }, function(error) {
-        //     console.log("  (RC)  Failed to retrieve all locations with error:", error.data.message);
+        //     //console.log("  (RC)  Failed to retrieve all locations with error:", error.data.message);
         //     rc.showToast( "Could not fetch locations.");
         // });
 
