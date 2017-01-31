@@ -53,12 +53,6 @@
 
 	</dependencies>
 
-<distributionManagement>
-		<snapshotRepository>
-			<id>internal</id>
-			<url>http://nexus.aduet.tech/content/repositories/snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
 
 	<build>
           <finalName>scheduler</finalName>
@@ -67,16 +61,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.1</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <nexusUrl>http://nexus.aduet.tech/</nexusUrl>
-                    <serverId>internal</serverId>
-                </configuration>
-            </plugin>
 		</plugins>
 		
 	</build>
