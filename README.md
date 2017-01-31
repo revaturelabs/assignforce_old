@@ -7,7 +7,7 @@ There are two main branches: **master** and **development**.  As a developer, yo
 
 The **master** branch is the copy of the application that's running on the production server
 
-The **development** branch is the copy of the application that's running on the production server
+The **development** branch is the copy of the application that's running on the development server
 
 When you'd like to work on a feature, make a feature branch, and create a Pull Request (a request to merge) to the development branch.
 
