@@ -11,6 +11,53 @@
             $scope.$parent.aCtrl.showToast( message );
         };
 
+            // formats data to be exported as .csv file
+        rc.export = function() {
+            var formatted = [];
+            formatted.push( [
+                "Curriculum",
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December",
+                "Total"
+            ]);
+            rc.curricula.forEach( function(curr) {
+                var year = [curr.name];
+                var sum = 0;
+                rc.currSummary(curr).forEach( function(month) {
+                    year.push(month);
+                    sum += month;
+                });
+                year.push(sum);
+
+                formatted.push(year);
+            })
+
+            var totalMonth = ["Total"];
+            var sumTotal = 0;
+            for (var i = 0; i < 12; i++) {
+                var ttl = rc.sumMonth(i);
+                totalMonth.push(ttl);
+                sumTotal += ttl;
+            }
+            totalMonth.push(sumTotal);
+
+            formatted.push(totalMonth);
+
+            console.log(formatted);
+
+            return formatted;
+        };
+
             // summarizes graduate output of given curriculum for chosen year
         rc.currSummary = function( curriculum ){
             

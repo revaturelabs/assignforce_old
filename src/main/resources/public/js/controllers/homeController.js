@@ -1,7 +1,7 @@
 
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "homeCtrl", function( $scope, batchService, trainerService, locationService ) {
+    assignforce.controller( "homeCtrl", function( $scope, $filter, batchService, trainerService, locationService ) {
         console.log("Beginning overview controller.");
         var hc = this;
 
@@ -82,6 +82,34 @@
                }
             });
             return numAv;
+        };
+
+            // organizes batch data to a format conforming to CSV format
+        hc.formatBatches = function() {
+            var formatted = [];
+            formatted.push( [
+                "Name",
+                "Curriculum",
+                "Trainer",
+                "Cotrainer",
+                "Location",
+                "Room",
+                "Start date",
+                "End date"
+            ] );
+            hc.batches.forEach( function(batch) {
+                var name       = ( batch.name       ) ? batch.name                                                 : "";
+                var curriculum = ( batch.curriculum ) ? batch.curriculum.name                                      : "";
+                var trainer    = ( batch.trainer    ) ? batch.trainer.firstName + " " + batch.trainer.lastName     : "";
+                var cotrainer  = ( batch.cotrainer  ) ? batch.cotrainer.firstName + " " + batch.cotrainer.lastName : "";
+                var location   = ( batch.location   ) ? batch.location.name                                        : "";
+                var room       = ( batch.room       ) ? batch.room.roomName                                        : "";
+                var startDate  = ( batch.startDate  ) ? $filter( "date" )( batch.startDate, "MM/dd/yyyy" )         : "";
+                var endDate    = ( batch.endDate    ) ? $filter( "date" )( batch.endDate, "MM/dd/yyyy" )           : "";
+                formatted.push( [ name, curriculum, trainer, cotrainer, location, room, startDate, endDate ] );
+            });
+            
+            return formatted;
         };
 
           // data

@@ -19,7 +19,7 @@ public class AuthController {
 	@RequestMapping(value="/authorize",method=RequestMethod.GET)
 	public void initSetup(@RequestParam String redirect_url, HttpSession session, HttpServletResponse response) throws IOException{
 		String sToken = (String) session.getAttribute("token");
-		String authServiceRedirectUrl = System.getenv("SF_AUTH_SERVICE_URL");
+		String authServiceRedirectUrl = System.getenv("AUTH_SERVICE_REDIRECT");
 
 		if(authServiceRedirectUrl == null){
 			response.sendError(500, "Could not contact the authorization service");

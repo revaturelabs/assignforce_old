@@ -31,7 +31,7 @@ Periodically, work on the development branch will be merged to the master branch
   * Select the folder of the repo you just copied
   * Finish the operation, and allow Maven to do an initial build of the project
 10. At this point, you should be able to run the project as a Spring Boot App and access the project on your browser at `http://localhost`
-  * NOTE: If you want to override the default port, set the environment variable `SERVER_PORT` to whatever port you desire
+  * NOTE: If you want to override the default port, set the environment variable `SERVER_PORT` to whatever port you desire, and you update the relevant environment variables (EG: use `http://localhost:8080` rather than `http://localhost`)
 11. Create a feature branch and pull request for the issue you're working, such as `AwesomeFeature`. To do this:
   * On Git Bash, use `git checkout development` to make sure you're on the development branch
   * Run `git pull` to pull the latest code

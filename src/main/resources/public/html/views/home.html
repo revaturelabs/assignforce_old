@@ -8,10 +8,17 @@
 
                 <div class="md-toolbar-tools">
                     <span> {{ hCtrl.batchFilter }} Batches </span>
+                
+                    <div flex> </div>
+
+                    <md-button ng-click="hCtrl.exportTable()" ng-csv="hCtrl.formatBatches()" filename="batches.csv" class="md-icon-button">
+                        <md-tooltip> Export to CSV </md-tooltip>
+                        <md-icon md-menu-origin class="material-icons"> file_download </md-icon>
+                    </md-button>
                 </div>
 
-                <span flex> </span>
-
+                <div flex> </div>
+                
                 <md-menu md-position-mode="target-right target">
 
                     <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button">

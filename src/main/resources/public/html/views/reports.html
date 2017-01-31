@@ -4,6 +4,13 @@
         <md-toolbar layout="columns">
             <div class="md-toolbar-tools">
                 <span> Reports </span>
+
+                <span flex> </span>
+
+                <md-button ng-click="null" ng-csv="rCtrl.export()" filename="{{rCtrl.year}}report.csv" class="md-icon-button">
+                    <md-tooltip> Export to CSV </md-tooltip>
+                    <md-icon md-menu-origin class="material-icons"> file_download </md-icon>
+                </md-button>
             </div>
         </md-toolbar>
 
