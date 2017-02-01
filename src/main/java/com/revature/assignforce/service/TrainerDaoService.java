@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class TrainerDaoService extends ActivatableObjectDaoService<Trainer, Integer>{
 	
-	public Trainer findByFiristName(String name){
+	public Trainer findByFirstName(String name){
 		return ((TrainerRepository) repo).findByFirstName(name);
 	}
 }
