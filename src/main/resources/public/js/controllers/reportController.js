@@ -140,5 +140,6 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 
     // only batches and curricula are necessary now, but these are here in the event that new reports require the use of other object lists
     // Nate Vardell Deleted the commented out block that was here because SonarQube wouldn't pass with it.
-    // Contained 4 functions for getting skills, trainers, & locations,.
+    // Contained 4 functions for getting skills, trainers, & locations.
+    // I have the deleted methods if we need them in the future.
 });
