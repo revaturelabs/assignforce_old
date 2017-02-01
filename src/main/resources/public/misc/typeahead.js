@@ -482,7 +482,9 @@
             all: function all() {
                 var values = [];
                 for (var key in this.datums) {
-                    values.push(this.datums[key]);
+                    if (this.datums.hasOwnProperty(key)){
+                    	values.push(this.datums[key]);
+                    }                	
                 }
                 return values;
             },

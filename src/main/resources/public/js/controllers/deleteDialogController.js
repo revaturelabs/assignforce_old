@@ -7,7 +7,7 @@
 
           // functions
             // format text
-        dc.formatText = function() {
+        function formatText() {
 
             var title = "Delete ";
 
@@ -31,7 +31,7 @@
             title += "?";
 
             dc.desc = title;
-        }();
+        }formatText();
 
             // delete rooms/locations
         dc.delete = function(){
