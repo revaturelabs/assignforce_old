@@ -151,7 +151,7 @@ function projectTimeline(windowWidth, minDate, maxDate, timelineData, parentScop
 	var betweenBatches = [];
 	
 	for(var trainer in batchCount){
-		if (batchCount.hasOwnProperty(trainer){
+		if (batchCount.hasOwnProperty(trainer)){
 			for(x = 0; x < batchCount[trainer].length-1; x++){
 				var between = {x: xScale(batchCount[trainer][x].trainer ? batchCount[trainer][x].trainer.firstName : 'No trainer'),
 						y1: yScale(new Date(batchCount[trainer][x].endDate)),
