@@ -2,7 +2,7 @@
     var assignforce = angular.module( "batchApp" );
 
     assignforce.controller( "reportCtrl", function( $scope, batchService, curriculumService, monthList ){
-
+        //console.log("Beginning report controller.");
         var rc = this;
 
           // functions
@@ -53,6 +53,8 @@
 
             formatted.push(totalMonth);
 
+            //console.log(formatted);
+
             return formatted;
         };
 
@@ -64,11 +66,13 @@
 
             for (var month = 0; month < 12; month++) {
                 total = 0;
-                for (var batch in rc.branches){
-                	if(rc.branches.hasOwnProperty(batch) && (batch.curriculum && curriculum)){
-                        date = new Date(batch.endDate);
-                        if ( (date.getMonth() == month) && (date.getFullYear() == rc.year) && (batch.curriculum.id == curriculum.id) ) {
-                            total += rc.graduates;
+                for (batch in rc.branches){
+                	if(rc.branches.hasOwnProperty(batch)){
+                		if (batch.curriculum && curriculum) {
+                            date = new Date(batch.endDate);
+                            if ( (date.getMonth() == month) && (date.getFullYear() == rc.year) && (batch.curriculum.id == curriculum.id) ) {
+                                total += rc.graduates;
+                            }
                         }
                 	}
                 }
@@ -139,6 +143,29 @@
         });
 
           // only batches and curricula are necessary now, but these are here in the event that new reports require the use of other object lists
-        // Nate Vardell Deleted the commented out block that was here because SonarQube wouldn't pass with it.
-        // Contained 4 functions for getting skills, trainers, & locations,.
+
+        // skillService.getAll( function(response) {
+        //     //console.log("  (BC)  Retrieving all skills.");
+        //     rc.skills = response;
+        // }, function(error) {
+        //     //console.log("  (BC)  Failed to retrieve all skills with error:", error.data.message);
+        //     rc.showToast( "Could not fetch skills.");
+        // });
+
+        // trainerService.getAll( function(response) {
+        //     //console.log("  (RC)  Retrieving all trainers.");
+        //     rc.trainers = response;
+        // }, function(error) {
+        //     //console.log("  (RC)  Failed to retrieve all trainers with error:", error.data.message);
+        //     rc.showToast( "Could not fetch trainers.");
+        // });
+
+        // locationService.getAll( function(response) {
+        //     //console.log("  (RC)  Retrieving all locations.");
+        //     rc.locations = response;
+        // }, function(error) {
+        //     //console.log("  (RC)  Failed to retrieve all locations with error:", error.data.message);
+        //     rc.showToast( "Could not fetch locations.");
+        // });
+
     });
