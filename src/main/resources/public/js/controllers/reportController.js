@@ -66,11 +66,6 @@
 
             for (var month = 0; month < 12; month++) {
                 total = 0;
-                for (name in object) {
-                	  if (object.hasOwnProperty(name)) {
-                	    doSomething(name);
-                	  }
-                	}
                 for (batch in rc.branches){
                 	if(rc.branches.hasOwnProperty(batch)){
                 		if (batch.curriculum && curriculum) {
