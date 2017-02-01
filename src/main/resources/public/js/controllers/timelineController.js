@@ -311,5 +311,5 @@ function projectTimeline(windowWidth, minDate, maxDate, timelineData, parentScop
 		.append('text')
 			.attr('y', function(d) {return ((d.y1+d.y2)/2)+5;})
 			.attr('x', function(d) {return d.x+5;})
-			.text(function(d) {return d.length;})
-};
+			.text(function(d) {return d.length;});
+}
