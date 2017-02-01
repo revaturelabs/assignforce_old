@@ -66,15 +66,22 @@
 
             for (var month = 0; month < 12; month++) {
                 total = 0;
-                rc.batches.forEach( function(batch){
-
-                    if (batch.curriculum && curriculum) {
-                        date = new Date(batch.endDate);
-                        if ( (date.getMonth() == month) && (date.getFullYear() == rc.year) && (batch.curriculum.id == curriculum.id) ) {
-                            total += rc.graduates;
+                for (name in object) {
+                	  if (object.hasOwnProperty(name)) {
+                	    doSomething(name);
+                	  }
+                	}
+                for (batch in rc.branches){
+                	if(rc.branches.hasOwnProperty(batch)){
+                		if (batch.curriculum && curriculum) {
+                            date = new Date(batch.endDate);
+                            if ( (date.getMonth() == month) && (date.getFullYear() == rc.year) && (batch.curriculum.id == curriculum.id) ) {
+                                total += rc.graduates;
+                            }
                         }
-                    }
-                });
+                	}
+                }
+                
                 summary.push( total );
             }
 
