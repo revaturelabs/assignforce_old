@@ -151,13 +151,21 @@ function projectTimeline(windowWidth, minDate, maxDate, timelineData, parentScop
 	var betweenBatches = [];
 	
 	for(var trainer in batchCount){
-		for(var x = 0; x < batchCount[trainer].length-1; x++){
-			var between = {x: xScale(batchCount[trainer][x].trainer ? batchCount[trainer][x].trainer.firstName : 'No trainer'),
-					y1: yScale(new Date(batchCount[trainer][x].endDate)),
-					y2: yScale(new Date(batchCount[trainer][x+1].startDate)),
-					length:numWeeks(batchCount[trainer][x].endDate,batchCount[trainer][x+1].startDate)};
-			betweenBatches.push(between);
+		if (batchCount.hasOwnProperty(trainer){
+			for(x = 0; x < batchCount[trainer].length-1; x++){
+				var between = {x: xScale(batchCount[trainer][x].trainer ? batchCount[trainer][x].trainer.firstName : 'No trainer'),
+						y1: yScale(new Date(batchCount[trainer][x].endDate)),
+						y2: yScale(new Date(batchCount[trainer][x+1].startDate)),
+						length:numWeeks(batchCount[trainer][x].endDate,batchCount[trainer][x+1].startDate)};
+				betweenBatches.push(between);
+			}
 		}
+		for (name in object) {
+			  if (object.hasOwnProperty(name)) {
+			    doSomething(name);
+			  }
+			}
+		
 	}
 	
 	var lanePadding = (xScale.range()[1]-xScale.range()[0])/2;
@@ -167,7 +175,7 @@ function projectTimeline(windowWidth, minDate, maxDate, timelineData, parentScop
 	// d3.select('svg').remove();
     svg.selectAll("*").remove();
 	
-	var svg = d3.select('#timeline')
+	svg = d3.select('#timeline')
 		.append('svg')
 			.attr('width',width + margin.left + margin.right)
 			.attr('height',height + margin.bottom + margin.top)
@@ -312,4 +320,4 @@ function projectTimeline(windowWidth, minDate, maxDate, timelineData, parentScop
 			.attr('y', function(d) {return ((d.y1+d.y2)/2)+5;})
 			.attr('x', function(d) {return d.x+5;})
 			.text(function(d) {return d.length;});
-};
+}

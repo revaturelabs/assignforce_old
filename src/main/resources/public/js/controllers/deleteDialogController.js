@@ -2,6 +2,7 @@
     var assignforce = angular.module( "batchApp" );
 
     assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeout, locationService ){
+        //console.log("Beginning deletion controller.");
         var dc = this;
 
           // functions
@@ -28,7 +29,6 @@
                 title += " " + dc.summary.locations + " locations";
             }
             title += "?";
-            
 
             dc.desc = title;
         }formatText();
