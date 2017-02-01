@@ -167,7 +167,7 @@ function projectTimeline(windowWidth, minDate, maxDate, timelineData, parentScop
 	// d3.select('svg').remove();
     svg.selectAll("*").remove();
 	
-	var svg = d3.select('#timeline')
+	svg = d3.select('#timeline')
 		.append('svg')
 			.attr('width',width + margin.left + margin.right)
 			.attr('height',height + margin.bottom + margin.top)
@@ -311,5 +311,5 @@ function projectTimeline(windowWidth, minDate, maxDate, timelineData, parentScop
 		.append('text')
 			.attr('y', function(d) {return ((d.y1+d.y2)/2)+5;})
 			.attr('x', function(d) {return d.x+5;})
-			.text(function(d) {return d.length;});
+			.text(function(d) {return d.length;})
 };
