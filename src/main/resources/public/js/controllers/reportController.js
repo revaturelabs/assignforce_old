@@ -62,7 +62,7 @@
         rc.currSummary = function( curriculum ){
             
             var summary = [];
-            var total = 0;
+            var total;
 
             for (var month = 0; month < 12; month++) {
                 total = 0;
