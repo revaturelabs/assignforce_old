@@ -2,11 +2,12 @@
     var assignforce = angular.module( "batchApp" );
 
     assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeout, locationService ){
+        //console.log("Beginning deletion controller.");
         var dc = this;
 
           // functions
             // format text
-        function formatText() {
+        dc.formatText = function() {
 
             var title = "Delete ";
 
@@ -30,7 +31,7 @@
             title += "?";
 
             dc.desc = title;
-        }formatText();
+        }();
 
             // delete rooms/locations
         dc.delete = function(){
