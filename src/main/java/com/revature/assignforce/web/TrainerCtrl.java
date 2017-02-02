@@ -2,6 +2,7 @@ package com.revature.assignforce.web;
 
 import java.util.List;
 
+import com.revature.assignforce.domain.Certification;
 import com.revature.assignforce.service.ActivatableObjectDaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,9 +37,10 @@ public class TrainerCtrl {
 		String firstName = in.getFirstName();
 		String lastName = in.getLastName();
 		List<Skill> skills = in.getSkills();
+		List<Certification> certifications = in.getCertifications();
 		List<Unavailable> unavailabilities = in.getUnavailabilities();
 		
-		Trainer out = new Trainer( ID, firstName, lastName, unavailabilities, skills );
+		Trainer out = new Trainer( ID, firstName, lastName, unavailabilities, skills, certifications );
 		out = trainerService.saveItem( out );
 		
 		if (out == null) {
@@ -71,8 +73,9 @@ public class TrainerCtrl {
 		String lastName = in.getLastName();
 		List<Skill> skills = in.getSkills();
 		List<Unavailable> unavailabilities = in.getUnavailabilities();
+		List<Certification> certifications = in.getCertifications();
 		
-		Trainer out = new Trainer( ID, firstName, lastName, unavailabilities, skills );
+		Trainer out = new Trainer( ID, firstName, lastName, unavailabilities, skills, certifications);
 		out = trainerService.saveItem( out );
 		
 		if (out == null) {
