@@ -38,6 +38,56 @@
                 bc.updateWeeks();
             }
         };
+        
+        	// calculates the percentage to which a trainer's skills correspond
+        	// to the batch's curriculum.
+        bc.calcTrainerCurriculumRatio = function(trainer)
+        {	
+        	//console.log(bc.selectedCurriculum);
+        	
+    		if (angular.isUndefined(bc.selectedCurriculum) || bc.selectedCurriculum === null) { return 0; }
+    		else if (bc.selectedCurriculum.skill.length == 0) { return 100; }
+        	else
+        	{
+        		var matches = 0;
+        		var total = 0;
+        		
+        		//console.log(bc.selectedCurriculum.skill[0].name);
+        		
+        		for (c in bc.selectedCurriculum.skill)
+        		{
+        			//console.log("Got here!");
+        			//console.log(trainer.skill[0].name);
+        			for (s in trainer.skill)
+        			{
+        				//console.log("C name:  " + c.name);
+        				//console.log("S name:  " + s.name);
+        				
+        				if (c === s)
+        				{
+        					matches += 1;
+        					break;
+        				}
+        			}
+        			total += 1;
+        		}
+        		
+        		//console.log(bc.selectedCurriculum.skill.length);
+        		if (total > 0) { return Math.floor((matches / total) * 100); }
+        		else { return 100; }
+        	}
+        }
+        
+        bc.getSelectedCurriculum = function()
+        {
+    		curriculumService.getById(bc.batch.curriculum, function(response) {
+                //console.log("  (BC)  Retrieving the curriculum.");
+                bc.selectedCurriculum = response;
+            }, function(error) {
+                //console.log("  (BC)  Failed to retrieve the curriculum with error:", error.data.message);
+                bc.showToast( "Could not fetch curriculum.");
+            });
+        }
 
             // defaults location to Reston branch 
               // HARD CODED, I couldn't think of a better way to do it that would reliably select only the main branch
@@ -296,6 +346,8 @@
         bc.batch = batchService.getEmptyBatch();
         
         bc.batchesSelected = [];
+        
+        bc.selectedCurriculum;
 
             // state information
         bc.state = "create";
