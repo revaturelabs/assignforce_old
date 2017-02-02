@@ -8,6 +8,7 @@
         </md-toolbar>
 
           <!-- Create/edit batch -->
+          <!--  bCtrl is Batch Controller -->
         <md-content>
 
             <form class="batchForm" name="batchForm" ng-submit="bCtrl.saveBatch(batchForm.$valid)" novalidate>
@@ -36,18 +37,31 @@
 
                       <!-- Name, curriculum -->
                     <div flex layout="columns">
-
-                        <md-input-container flex>
-                            <label> Name </label>
-                            <input ng-model="bCtrl.batch.name" required>
-                        </md-input-container>
-
-                        <md-input-container flex>                       
+                    
+                    	<md-input-container flex>                       
                             <label> Curriculum </label>
                             <md-select ng-model="bCtrl.batch.curriculum" ng-change="bCtrl.defaultName()">
                                 <md-option ng-value="curriculum.id" ng-repeat="curriculum in bCtrl.curricula"> {{ curriculum.name }} </md-option>
                             </md-select>
                         </md-input-container>
+                        
+                        <md-input-container flex>
+                            <label> Start Date </label>
+                            <md-datepicker ng-model="bCtrl.batch.startDate" md-date-filter="bCtrl.enableMondays" md-open-on-focus md-hide-icons="calendar" ng-change="bCtrl.selectEndDate(); bCtrl.updateWeeks(); bCtrl.defaultName()"> </md-datepicker>
+                        </md-input-container>
+                        
+                        <md-input-container flex>
+                            <label> End Date </label>
+                            <md-datepicker ng-model="bCtrl.batch.endDate" md-date-filter="bCtrl.enableFridays" md-open-on-focus md-hide-icons="calendar" ng-change="bCtrl.updateWeeks()"> </md-datepicker>
+                        </md-input-container>  
+                        
+                        <md-input-container flex class="weekSpan">
+                            <input ng-model="bCtrl.weeksSpan" aria-label="weeks span" disabled>
+                        </md-input-container>                              
+                        
+                         
+
+                        
 
                     </div>
 
@@ -58,9 +72,26 @@
                     </div>-->
 
                       <!-- Trainer, cotrainer -->
-                    <div flex layout="columns">
+                     <div flex layout="columns">
+                    
+                    
+						<md-input-container flex>
+                            <label> Name </label>
+                            <input ng-model="bCtrl.batch.name" required>
+                        </md-input-container>  
+                        
+                        
 
-                        <md-input-container flex>                       
+                    </div>
+
+                </div>
+
+                <div layout="columns" layout-xl="rows">
+
+                      <!-- Location, room -->
+                    <div flex layout="columns">
+                    
+                    <md-input-container flex>                       
                             <label> Trainer </label>
                             <md-select ng-model="bCtrl.batch.trainer">
                                 <md-option ng-value="trainer.trainerID" ng-repeat="trainer in bCtrl.trainers | (filter:getUnavailable().get(0)"> {{ trainer.firstName }}  {{ trainer.lastName }} </md-option>
@@ -73,15 +104,10 @@
                                 <md-option ng-value="cotrainer.trainerID" ng-repeat="cotrainer in bCtrl.trainers"> {{ cotrainer.firstName }}  {{ cotrainer.lastName }} </md-option>
                             </md-select>
                         </md-input-container>
-
-                    </div>
-
-                </div>
-
-                <div layout="columns" layout-xl="rows">
-
-                      <!-- Location, room -->
-                    <div flex layout="columns">
+                        
+                        </div>
+                        
+                        <div flex layout="columns">
 
                         <md-input-container flex>                       
                             <label> Location </label>
@@ -96,27 +122,19 @@
                                 <md-option ng-value="room.roomID" ng-repeat="room in bCtrl.filterRooms(bCtrl.batch.location) | activeItem | orderBy:roomName"> {{ room.roomName }} </md-option>
                             </md-select>
                         </md-input-container>
+                        
+                        </div>
 
                     </div>
 
                       <!-- Start/end dates -->
-                    <div flex layout="columns" layout-align="space-between center">
+                    <!-- <div flex layout="columns" layout-align="space-between center">
 
-                        <md-input-container flex="none">
-                            <label> Start Date </label>
-                            <md-datepicker ng-model="bCtrl.batch.startDate" md-date-filter="bCtrl.enableMondays" md-open-on-focus md-hide-icons="calendar" ng-change="bCtrl.selectEndDate(); bCtrl.updateWeeks(); bCtrl.defaultName()"> </md-datepicker>
-                        </md-input-container>
                         
-                        <md-input-container flex class="weekSpan">
-                            <input ng-model="bCtrl.weeksSpan" aria-label="weeks span" disabled>
-                        </md-input-container>
+                        
+                        
 
-                        <md-input-container flex="none">
-                            <label> End Date </label>
-                            <md-datepicker ng-model="bCtrl.batch.endDate" md-date-filter="bCtrl.enableFridays" md-open-on-focus md-hide-icons="calendar" ng-change="bCtrl.updateWeeks()"> </md-datepicker>
-                        </md-input-container>
-
-                    </div>
+                    </div> -->
 
                 </div>
 
