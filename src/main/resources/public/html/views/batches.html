@@ -63,7 +63,7 @@
                         <md-input-container flex>                       
                             <label> Trainer </label>
                             <md-select ng-model="bCtrl.batch.trainer">
-                                <md-option ng-value="trainer.trainerID" ng-repeat="trainer in bCtrl.trainers"> {{ trainer.firstName }}  {{ trainer.lastName }} </md-option>
+                                <md-option ng-value="trainer.trainerID" ng-repeat="trainer in bCtrl.trainers | (filter:getUnavailable().get(0)"> {{ trainer.firstName }}  {{ trainer.lastName }} </md-option>
                             </md-select>
                         </md-input-container>
 
@@ -149,8 +149,9 @@
                         
                         <thead md-head md-order="bCtrl.batchOrder">
                             <tr md-row>
-                                <th md-column md-checkbox-column> 
-                                    <md-checkbox ng-click="bCtrl.toggleAll()" ng-checked="bCtrl.allSelected()" aria-label="batches select all"> </md-checkbox> 
+                                <th md-column md-checkbox-column>
+                                	<!-- Select All Batches --> 
+                                    <!-- <md-checkbox ng-click="bCtrl.toggleAll()" ng-checked="bCtrl.allSelected()" aria-label="batches select all"> </md-checkbox>  -->
                                 </th>
                                 <th md-column md-order-by="name"> Name </th>
                                 <th md-column md-order-by="curriculum.name"> Curriculum </th>
@@ -165,7 +166,8 @@
 
                         <tbody md-body>
                             <tr md-row class="batchRow" ng-repeat-start="batch in (bCtrl.batches | orderBy:bCtrl.batchOrder) track by batch.id" ng-click="bCtrl.highlightBatch(batch)" ng-class="bCtrl.selectedBatchRow(batch)">
-                                <td md-cell> 
+                                <td md-cell>
+                                	<!-- Select Individual Batches -->
                                     <md-checkbox md-no-ink ng-checked="bCtrl.exists(batch)" ng-click="bCtrl.toggle(batch)" aria-label="batch check"> </md-checkbox> 
                                 </td>
                                 <td md-cell> {{ batch.name | limitTo:20 }} </td>
