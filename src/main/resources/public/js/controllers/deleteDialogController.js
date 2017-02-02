@@ -2,13 +2,12 @@
     var assignforce = angular.module( "batchApp" );
 
     assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeout, locationService ){
-        //console.log("Beginning deletion controller.");
+        // console.log("Beginning deletion controller.");
         var dc = this;
 
           // functions
             // format text
         function formatText() {
-
             var title = "Delete ";
 
             if (dc.summary.rooms == 1) {
@@ -33,15 +32,15 @@
             dc.desc = title;
         }formatText();
 
-            // delete rooms/locations
+          // delete rooms/locations
         dc.delete = function(){
-            
             dc.thinking = true;
             var delList = dc.list;
             dc.deleteHelper(delList);
         };
 
-            // recursively deletes the first entry in bc.batchesSelected until it is empty
+            // recursively deletes the first entry in bc.batchesSelected until
+			// it is empty
         dc.deleteHelper = function( delList ){
             
             if (delList.length == 0) {
@@ -74,7 +73,8 @@
             locationService.update( elem, function(){
                 dc.deleteHelper(delList);
             }, function(error){
-                //console.log("  (LC)  Failed to delete room/location with error:", error.data.message);
+                // console.log(" (LC) Failed to delete room/location with
+				// error:", error.data.message);
                 $mdDialog.cancel();
             });
         };
@@ -105,10 +105,11 @@
           // page initialization
             // data gathering
         locationService.getAll( function(response) {
-            //console.log("  (DC)  Retrieving all locations.")
+            // console.log(" (DC) Retrieving all locations.")
             dc.locations = response;
         }, function(error) {
-            //console.log("  (DC)  Failed to retrieve all locations with error:", error.data.message);
+            // console.log(" (DC) Failed to retrieve all locations with error:",
+			// error.data.message);
             $mdDialog.cancel();
         });
     });
