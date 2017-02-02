@@ -58,18 +58,23 @@
         		{
         			//console.log("Got here!");
         			//console.log(trainer.skill[0].name);
-        			for (s in trainer.skill)
+        			if (bc.selectedCurriculum.skill.hasOwnProperty(c))
         			{
-        				//console.log("C name:  " + c.name);
-        				//console.log("S name:  " + s.name);
-        				
-        				if (c === s)
-        				{
-        					matches += 1;
-        					break;
-        				}
+	        			for (s in trainer.skill)
+	        			{
+	        				//console.log("C name:  " + c.name);
+	        				//console.log("S name:  " + s.name);
+	        				if (trainer.skill.hasOwnProperty(s))
+	        				{
+		        				if (c === s)
+		        				{
+		        					matches += 1;
+		        					break;
+		        				}
+	        				}
+	        			}
+	        			total += 1;
         			}
-        			total += 1;
         		}
         		
         		//console.log(bc.selectedCurriculum.skill.length);
