@@ -10,7 +10,7 @@ assignforce.filter("trainerSelectionFilter", function() {
 
 		var filtered = [];
 
-		var count;
+		var count = 0;
 		//Iterates through trainer unavailable dates.
 		for (unavailable in trainer.unavailable) {
 			unavailable[0] = new Date(unavailable[0].getYear(), unavailable[0].getMonth(), unavailable[0].getDay(), 0, 0, 0, 0);
