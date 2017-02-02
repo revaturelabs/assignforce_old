@@ -30,6 +30,5 @@ assignforce.filter("trainerSelectionFilter", function() {
 			return filtered;
 
 		}
-		;
 	}
 });
