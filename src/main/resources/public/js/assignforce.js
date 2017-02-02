@@ -34,6 +34,10 @@
 					templateUrl : "html/views/reports.html",
 					controller  : "reportCtrl as rCtrl"
 				})
+				.when("/profile", {
+					templateUrl : "html/views/profile.html",
+					controller  : "profileCtrl as pCtrl"
+				})
 				.otherwise({"redirectTo": "/home"});
 			
 			$locationProvider.html5Mode(true);
