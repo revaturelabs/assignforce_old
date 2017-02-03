@@ -160,12 +160,6 @@ function projectTimeline(windowWidth, minDate, maxDate, timelineData, parentScop
 				betweenBatches.push(between);
 			}
 		}
-		for (name in object) {
-			  if (object.hasOwnProperty(name)) {
-			    doSomething(name);
-			  }
-			}
-		
 	}
 	
 	var lanePadding = (xScale.range()[1]-xScale.range()[0])/2;
