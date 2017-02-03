@@ -1,7 +1,7 @@
 
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "batchCtrl", function($scope, $timeout, batchService, curriculumService, skillService, trainerService, locationService, calendarService ) {
+    assignforce.controller( "batchCtrl", function($scope, $timeout, batchService, curriculumService, skillService, trainerService, locationService, calendarService, $location, $anchorScroll) {
         //console.log("Beginning batch controller.");
         var bc = this;
 
@@ -256,6 +256,11 @@
               // edit batch
         bc.edit = function( batch ){
             bc.changeState( "edit", batch );
+            // the element you wish to scroll to.
+            $location.hash('batchInfoDiv');
+
+            // call $anchorScroll()
+            $anchorScroll();
         };
 
               // clone batch
