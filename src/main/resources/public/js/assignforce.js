@@ -48,7 +48,7 @@
             });
 
             var revBlueMap = $mdThemingProvider.extendPalette("blue-grey", {
-                "A200": "#72A4C2",
+                "A200": "#29c20a",
                 "100" : "#C9DCE8"
             });
 
@@ -57,8 +57,8 @@
                 
             $mdThemingProvider.theme("default")
                 .primaryPalette("revOrange")
-                .accentPalette("revBlue");
-                // .primaryPalette("indigo")
-                // .accentPalette("pink");
+                .accentPalette("revBlue")
+                .primaryPalette("indigo")
+                .accentPalette("pink");
         });
 
