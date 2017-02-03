@@ -20,13 +20,13 @@ import org.hibernate.annotations.FetchMode;
 public class Batch {
 
 	@Id
-	@Column(name = "ID")
+	@Column(name = "id")
 	@SequenceGenerator(allocationSize = 1, name = "batchSeq", sequenceName = "BATCH_SEQ")
 	@GeneratedValue(generator = "batchSeq", strategy = GenerationType.SEQUENCE)
-	private int ID;
+	private int id;
 	
 	@Column(name="NAME")
-	private String Name;
+	private String name;
 
 	@Column(name = "START_DATE", nullable=false)
 	private Timestamp startDate;
@@ -70,8 +70,8 @@ public class Batch {
 	public Batch(int iD, String name, Curriculum curriculum, Location location, Room room, Trainer trainer,
 			Trainer cotrainer, Timestamp startDate, Timestamp endDate, BatchStatusLookup status) {
 		super();
-		ID = iD;
-		Name = name;
+		id = iD;
+		this.name = name;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.curriculum = curriculum;
@@ -83,23 +83,23 @@ public class Batch {
 	}
 
 
-	public int getID() {
-		return ID;
+	public int getId() {
+		return id;
 	}
 
 
-	public void setID(int iD) {
-		ID = iD;
+	public void setId(int iD) {
+		id = iD;
 	}
 
 
 	public String getName() {
-		return Name;
+		return name;
 	}
 
 
 	public void setName(String name) {
-		Name = name;
+		this.name = name;
 	}
 
 
@@ -177,7 +177,7 @@ public class Batch {
 
 	@Override
 	public String toString() {
-		return "Batch [ID=" + ID + ", Name=" + Name + ", startDate=" + startDate + ", endDate=" + endDate + ", curriculum=" + curriculum + ", room=" + room + ", location=" + location + ", batchStatus="
+		return "Batch [id=" + id + ", name=" + name + ", startDate=" + startDate + ", endDate=" + endDate + ", curriculum=" + curriculum + ", room=" + room + ", location=" + location + ", batchStatus="
 				+ batchStatus + ", trainer=" + trainer + "]";
 	}
 
@@ -195,8 +195,8 @@ public class Batch {
 	public Batch(int iD, String name, Timestamp startDate, Timestamp endDate, Curriculum curriculum, Room room,
 			Location location, BatchStatusLookup batchStatus, Trainer trainer, Trainer coTrainer) {
 		super();
-		ID = iD;
-		Name = name;
+		id = iD;
+		this.name = name;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.curriculum = curriculum;
