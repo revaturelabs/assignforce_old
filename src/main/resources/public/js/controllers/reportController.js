@@ -1,20 +1,19 @@
-
 var assignforce = angular.module( "batchApp" );
 
-assignforce.controller( "reportCtrl", function( $scope, batchService, curriculumService, monthList ){
-
+assignforce.controller( "reportCtrl", function( $scope, batchService, curriculumService, monthList ) {
+    //console.log("Beginning report controller.");
     var rc = this;
 
     // functions
     // calls showToast method of aCtrl
-    rc.showToast = function( message ) {
-        $scope.$parent.aCtrl.showToast( message );
+    rc.showToast = function (message) {
+        $scope.$parent.aCtrl.showToast(message);
     };
 
     // formats data to be exported as .csv file
-    rc.export = function() {
+    rc.export = function () {
         var formatted = [];
-        formatted.push( [
+        formatted.push([
             "Curriculum",
             "January",
             "February",
@@ -30,17 +29,17 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
             "December",
             "Total"
         ]);
-        rc.curricula.forEach( function(curr) {
+        rc.curricula.forEach(function (curr) {
             var year = [curr.name];
             var sum = 0;
-            rc.currSummary(curr).forEach( function(month) {
+            rc.currSummary(curr).forEach(function (month) {
                 year.push(month);
                 sum += month;
             });
             year.push(sum);
 
             formatted.push(year);
-        })
+        });
 
         var totalMonth = ["Total"];
         var sumTotal = 0;
@@ -53,43 +52,45 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 
         formatted.push(totalMonth);
 
+        //console.log(formatted);
+
         return formatted;
     };
 
     // summarizes graduate output of given curriculum for chosen year
-    rc.currSummary = function( curriculum ){
+    rc.currSummary = function (curriculum) {
 
         var summary = [];
-        var total;
+        var total = 0;
 
         for (var month = 0; month < 12; month++) {
             total = 0;
-            for (var batch in rc.branches){
-                if(rc.branches.hasOwnProperty(batch) && (batch.curriculum && curriculum)){
+            rc.batches.forEach(function (batch) {
+
+                if (batch.curriculum && curriculum) {
                     date = new Date(batch.endDate);
-                    if ( (date.getMonth() == month) && (date.getFullYear() == rc.year) && (batch.curriculum.id == curriculum.id) ) {
+                    if ((date.getMonth() == month) && (date.getFullYear() == rc.year) && (batch.curriculum.id == curriculum.id)) {
                         total += rc.graduates;
                     }
                 }
-            }
-
-            summary.push( total );
+            });
+            summary.push(total);
         }
 
         return summary;
     };
 
     // sums months for given curriculum in chosen year
-    rc.sumCurrYear = function( total, num ){
+    rc.sumCurrYear = function (total, num) {
         return total + num;
     };
 
     // sums all curricula for the year
-    rc.sumYear = function() {
+    rc.sumYear = function () {
 
         var total = 0;
         var summary;
-        rc.curricula.forEach( function(curr){
+        rc.curricula.forEach(function (curr) {
             summary = rc.currSummary(curr);
             total += summary.reduce(rc.sumCurrYear);
         });
@@ -97,14 +98,14 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     };
 
     // sums monthly total over all curricula
-    rc.sumMonth = function(month){
+    rc.sumMonth = function (month) {
 
         if (rc.batches) {
             var total = 0;
             var date;
-            rc.batches.forEach( function(batch){
+            rc.batches.forEach(function (batch) {
                 date = new Date(batch.endDate);
-                if ( (date.getMonth() == month) && (date.getFullYear() == rc.year) && (batch.curriculum) ) {
+                if ((date.getMonth() == month) && (date.getFullYear() == rc.year) && (batch.curriculum)) {
                     total += rc.graduates;
                 }
             });
@@ -115,6 +116,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     // data
     rc.year = new Date().getFullYear();
     rc.graduates = 15;
+    rc.futureGrads = 15;
 
     rc.currOrder = "name";
 
@@ -122,23 +124,23 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 
     // page initialization
     // data gathering
-    batchService.getAll( function(response) {
+    batchService.getAll(function (response) {
         //console.log("  (RC)  Retrieving all batches.");
         rc.batches = response;
-    }, function(error) {
+    }, function (error) {
         //console.log("  (RC)  Failed to retrieve all batches with error:", error.data.message);
-        rc.showToast( "Could not fetch batches.");
+        rc.showToast("Could not fetch batches.");
     });
 
-    curriculumService.getAll( function(response) {
+    curriculumService.getAll(function (response) {
         //console.log("  (RC)  Retrieving all curricula.");
         rc.curricula = response;
-    }, function(error) {
+    }, function (error) {
         //console.log("  (RC)  Failed to retrieve all curricula with error:", error.data.message);
-        rc.showToast( "Could not fetch curricula.");
+        rc.showToast("Could not fetch curricula.");
     });
 
-    // only batches and curricula are necessary now, but these are here in the event that new reports require the use of other object lists
+    // Only batches and curricula are necessary now, but these are here in the event that new reports require the use of other object lists
     // Nate Vardell Deleted the commented out block that was here because SonarQube wouldn't pass with it.
     // Contained 4 functions for getting skills, trainers, & locations.
     // I have the deleted methods if we need them in the future.
