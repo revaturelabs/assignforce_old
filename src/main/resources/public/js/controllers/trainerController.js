@@ -46,7 +46,6 @@
             // gets all trainers and stores them in variable trainers
         trainerService.getAll( function(response) {
             tc.trainers = response;
-            console.log(tc.trainers);
         }, function(error) {
             tc.showToast("Could not fetch trainers.");
         });
