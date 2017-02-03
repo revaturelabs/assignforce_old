@@ -13,6 +13,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan("com.revature.assignforce.domain")
 public class AssignForceV2Application {
 
+	private AssignForceV2Application() {
+	}
+
 	public static void main(String[] args) {
 		SpringApplication.run(AssignForceV2Application.class, args);
 	}
