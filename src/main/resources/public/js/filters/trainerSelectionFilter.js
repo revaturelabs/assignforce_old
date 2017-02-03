@@ -26,9 +26,7 @@ assignforce.filter("trainerSelectionFilter", function() {
 					filtered.push(item);
 				}
 			}
-
 			return filtered;
-
 		}
 	}
 });
