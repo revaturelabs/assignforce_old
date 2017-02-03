@@ -17,7 +17,7 @@ assignforce.filter("trainerSelectionFilter", function() {
 			unavailable[1] = new Date(unavailable[1].getYear(), unavailable[1].getMonth(), unavailable[1].getDay(), 0, 0, 0, 0);
 
 			for (var i = trainer.unavailable[0]; i <= trainer.unavailable[1]; i.setDate(i.getDate() + 1)) {
-				for (var j = batchStart; j <= batchEnd.getDate() + 14; j.setDate()) { //14 can be replaced by a config value.
+				for (var j = batchStart; j <= batchEnd.getDate() + 14 && count < 10; j.setDate()) { //14 can be replaced by a config value.
 					if (i == j) {
 						count = count+1;
 						if (count == 10)
