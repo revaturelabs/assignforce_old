@@ -1,19 +1,24 @@
 
 var assignforce = angular.module( "batchApp" );
 
-assignforce.filter("trainerSelectionFilter", function() {
+assignforce.filter("trainerSelection", function() {
 	//returns list of available trainers based on dates of batch
 	return function(trainer, batchStart, batchEnd) { //note to self - maybe try just passing the batch (as single argument)
-
+		if(batchStart && batchEnd){
 		batchStart = new Date(batchStart.getYear(), batchStart.getMonth(), batchStart.getDay(), 0, 0, 0, 0);
 		batchEnd = new Date(batchEnd.getYear(), batchEnd.getMonth(), batchStart.getDay(), 0, 0, 0, 0);
+		}
+		else {
+			batchStart = new Date(0,0,0,0,0,0,0);
+			batchEnd = new Date(0,0,0,0,0,0,0);
+		}
 
 		var filtered = [];
 
 		var count;
 
 		//Iterates through trainer unavailable dates.
-		for (var unavailable in trainer.unavailable) {
+		for (var unavailable in trainer.getUnavailable()) {
 			if (trainer.hasOwnProperty(unavailable)) {
 				count = 0;
 				unavailable[0] = new Date(unavailable[0].getYear(), unavailable[0].getMonth(), unavailable[0].getDay(), 0, 0, 0, 0);
