@@ -1,8 +1,8 @@
 package com.revature.assignforce.domain.dto;
 
-import java.util.List;
-
 import com.revature.assignforce.domain.Room;
+
+import java.util.List;
 
 public class LocationDTO {
 

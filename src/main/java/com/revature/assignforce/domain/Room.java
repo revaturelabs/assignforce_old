@@ -1,11 +1,9 @@
 package com.revature.assignforce.domain;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.*;
-import jdk.nashorn.internal.ir.annotations.Ignore;
+import java.util.List;
 
 @Entity
 @Table(name = "ROOM")

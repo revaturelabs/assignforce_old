@@ -1,11 +1,10 @@
 package com.revature.assignforce.service;
 
-import java.io.Serializable;
-import java.util.List;
-
+import com.revature.assignforce.domain.dao.BaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.revature.assignforce.domain.dao.BaseRepository;
+import java.io.Serializable;
+import java.util.List;
 
 
 public abstract class DaoService<T, ID extends Serializable>{

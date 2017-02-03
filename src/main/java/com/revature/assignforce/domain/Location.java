@@ -1,10 +1,9 @@
 package com.revature.assignforce.domain;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "LOCATION")

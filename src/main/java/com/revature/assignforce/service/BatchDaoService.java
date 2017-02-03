@@ -1,9 +1,8 @@
 package com.revature.assignforce.service;
 
+import com.revature.assignforce.domain.Batch;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.revature.assignforce.domain.Batch;
 
 @Transactional
 @Service
