@@ -96,6 +96,7 @@
 
             // defaults location to Reston branch 
               // HARD CODED, I couldn't think of a better way to do it that would reliably select only the main branch
+        	//update - it should be saved per admin profile
         bc.findHQ = function(){
             return 1;
         }

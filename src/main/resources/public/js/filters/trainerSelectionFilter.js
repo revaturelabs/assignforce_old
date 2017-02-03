@@ -3,10 +3,10 @@ var assignforce = angular.module( "batchApp" );
 
 assignforce.filter("trainerSelection", function() {
 	//returns list of available trainers based on dates of batch
-	return function(trainer, batchStart, batchEnd) { //note to self - maybe try just passing the batch (as single argument)
+	return function(trainer, batchStart, batchEnd) {
 		if(batchStart && batchEnd){
-		batchStart = new Date(batchStart.getYear(), batchStart.getMonth(), batchStart.getDay(), 0, 0, 0, 0);
-		batchEnd = new Date(batchEnd.getYear(), batchEnd.getMonth(), batchStart.getDay(), 0, 0, 0, 0);
+			batchStart = new Date(batchStart.getYear(), batchStart.getMonth(), batchStart.getDay(), 0, 0, 0, 0);
+			batchEnd = new Date(batchEnd.getYear(), batchEnd.getMonth(), batchStart.getDay(), 0, 0, 0, 0);
 		}
 		else {
 			batchStart = new Date(0,0,0,0,0,0,0);
