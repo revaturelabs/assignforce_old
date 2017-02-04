@@ -58,6 +58,10 @@
                 tc.showToast("Could not fetch trainers.");
             });
         };
+        
+        tc.convertUnavailability = function(incoming){
+        	return new Date(incoming);
+        }
 
         trainerService.getById(1, function (response) {
             tc.singleTrainer = response;

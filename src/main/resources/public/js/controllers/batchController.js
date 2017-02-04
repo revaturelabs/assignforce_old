@@ -4,6 +4,9 @@
     assignforce.controller( "batchCtrl", function($scope, $timeout, batchService, curriculumService, skillService, trainerService, locationService, calendarService, $location, $anchorScroll) {
         //console.log("Beginning batch controller.");
         var bc = this;
+        bc.convertUnavailability = function(incoming){
+        	return new Date(incoming);
+        }
 
           // functions
             // calls showToast method of aCtrl

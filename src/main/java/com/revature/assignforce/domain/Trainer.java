@@ -51,8 +51,8 @@ public class Trainer implements Activatable{
 	@Column(name="active", insertable = false)
 	private Boolean active;
 
-	public int getTrainerID() {
-		return trainerID;
+	public int getTrainerID() {		
+		return trainerID;		
 	}
 	
 	public Trainer(){}
