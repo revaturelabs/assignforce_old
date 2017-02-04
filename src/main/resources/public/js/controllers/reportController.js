@@ -1,4 +1,3 @@
-
 var assignforce = angular.module( "batchApp" );
 
 assignforce.controller( "reportCtrl", function( $scope, batchService, curriculumService, monthList ){

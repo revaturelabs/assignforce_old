@@ -1,28 +1,18 @@
 package com.revature.assignforce.web;
 
-import java.sql.Timestamp;
-import java.util.List;
-
+import com.revature.assignforce.domain.*;
+import com.revature.assignforce.domain.dto.BatchDTO;
+import com.revature.assignforce.domain.dto.ResponseErrorDTO;
+import com.revature.assignforce.service.DaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.revature.assignforce.domain.Batch;
-import com.revature.assignforce.domain.BatchStatusLookup;
-import com.revature.assignforce.domain.Curriculum;
-import com.revature.assignforce.domain.Location;
-import com.revature.assignforce.domain.Room;
-import com.revature.assignforce.domain.Trainer;
-import com.revature.assignforce.domain.dto.BatchDTO;
-import com.revature.assignforce.domain.dto.ResponseErrorDTO;
-import com.revature.assignforce.service.DaoService;
+import java.sql.Timestamp;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/batch")

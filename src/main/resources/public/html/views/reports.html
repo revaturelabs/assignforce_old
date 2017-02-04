@@ -1,96 +1,378 @@
 
-    <md-card md-whiteframe="8" ng-cloak>
 
-        <md-toolbar layout="columns">
+
+<md-card md-whiteframe="8" ng-cloak>
+
+    <md-toolbar layout="columns">
+        <div class="md-toolbar-tools">
+            <span> Reports </span>
+
+            <span flex> </span>
+
+            <md-button ng-click="null" ng-csv="rCtrl.export()" filename="{{rCtrl.year}}report.csv" class="md-icon-button">
+                <md-tooltip> Export to CSV </md-tooltip>
+                <md-icon md-menu-origin class="material-icons"> file_download </md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <!-- Graduates annual report -->
+    <md-content>
+
+        <md-toolbar layout="columns" class="md-primary md-hue-2">
+
             <div class="md-toolbar-tools">
-                <span> Reports </span>
-
-                <span flex> </span>
-
-                <md-button ng-click="null" ng-csv="rCtrl.export()" filename="{{rCtrl.year}}report.csv" class="md-icon-button">
-                    <md-tooltip> Export to CSV </md-tooltip>
-                    <md-icon md-menu-origin class="material-icons"> file_download </md-icon>
-                </md-button>
+                <span> Graduates summary for {{ rCtrl.year }} </span>
             </div>
+
+            <span flex> </span>
+
+            <md-menu md-position-mode="target-right target">
+
+                <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button">
+                    <md-tooltip> Settings </md-tooltip>
+                    <md-icon md-menu-origin md-svg-icon="img/ic_settings_white_24px.svg"> </md-icon>
+                </md-button>
+
+                <md-menu-content width="4" class="md-padding">
+
+                    <md-menu-item>
+                        <md-input-container>
+                            <label> Year </label>
+                            <input ng-model="rCtrl.year" type="number">
+                        </md-input-container>
+                    </md-menu-item>
+
+                    <md-menu-item>
+                        <md-input-container>
+                            <label> Graduates per batch </label>
+                            <input ng-model="rCtrl.graduates" type="number">
+                        </md-input-container>
+                    </md-menu-item>
+
+                </md-menu-content>
+
+            </md-menu>
+
         </md-toolbar>
 
-          <!-- Graduates annual report -->
-        <md-content>
+        <div ng-if="rCtrl.batches != undefined" class="md-padding">
 
-            <md-toolbar layout="columns" class="md-primary md-hue-2">
+            <md-table-container>
+                <table md-table class="gradTable">
 
-                <div class="md-toolbar-tools">
-                    <span> Graduates summary for {{ rCtrl.year }} </span>
-                </div>
+                    <thead md-head md-order="rCtrl.currOrder">
+                    <tr md-row>
+                        <th md-column flex md-order-by="name"> Curriculum </th>
+                        <th md-column flex ng-repeat="month in rCtrl.monthList"> {{ month }} </th>
+                        <th md-column md-numeric flex> Total </th>
+                    </tr>
+                    </thead>
 
-                <span flex> </span>
+                    <tbody md-body>
+                    <tr md-row ng-repeat="curr in (rCtrl.curricula | orderBy:rCtrl.currOrder) track by curr.id">
+                        <td md-cell flex> {{ curr.name }} </td>
+                        <td md-cell flex ng-repeat="month in rCtrl.currSummary(curr) track by $index"> {{ month }} </td>
+                        <td md-cell flex> {{ rCtrl.currSummary(curr).reduce(rCtrl.sumCurrYear) }} </td>
+                    </tr>
+                    <tr md-row>
+                        <td md-cell flex> Total </td>
+                        <td md-cell flex ng-repeat="month in rCtrl.currSummary(curr) track by $index"> {{ rCtrl.sumMonth($index) }} </td>
+                        <td md-cell flex> {{ rCtrl.sumYear() }} </td>
+                    </tr>
+                    </tbody>
 
-                <md-menu md-position-mode="target-right target">
+                </table>
+            </md-table-container>
+        </div>
 
-                    <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button">
-                        <md-tooltip> Settings </md-tooltip>
-                        <md-icon md-menu-origin md-svg-icon="img/ic_settings_white_24px.svg"> </md-icon>
-                    </md-button>
+        <div ng-if="rCtrl.batches == undefined" layout="column" layout-wrap layout-align="center center">
+            <div flex="100"> &nbsp; </div>
+            <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
+            <div flex="100"> &nbsp; </div>
+        </div>
 
-                    <md-menu-content width="4" class="md-padding">
-                        
-                        <md-menu-item> 
-                            <md-input-container>
-                                <label> Year </label>
-                                <input ng-model="rCtrl.year" type="number">
-                            </md-input-container>
-                        </md-menu-item>
+    </md-content>
 
-                        <md-menu-item> 
-                            <md-input-container>
-                                <label> Graduates per batch </label>
-                                <input ng-model="rCtrl.graduates" type="number">
-                            </md-input-container>
-                        </md-menu-item>
+</md-card>
 
-                    </md-menu-content>
+<br>
 
-                </md-menu>
 
-            </md-toolbar>
 
-            <div ng-if="rCtrl.batches != undefined" class="md-padding">
 
-                <md-table-container>
-                    <table md-table class="gradTable">
-                        
-                        <thead md-head md-order="rCtrl.currOrder">
-                            <tr md-row>
-                                <th md-column flex md-order-by="name"> Curriculum </th>
-                                <th md-column flex ng-repeat="month in rCtrl.monthList"> {{ month }} </th>
-                                <th md-column md-numeric flex> Total </th>
-                            </tr>
-                        </thead>
 
-                        <tbody md-body>
-                            <tr md-row ng-repeat="curr in (rCtrl.curricula | orderBy:rCtrl.currOrder) track by curr.id">
-                                <td md-cell flex> {{ curr.name }} </td>
-                                <td md-cell flex ng-repeat="month in rCtrl.currSummary(curr) track by $index"> {{ month }} </td>
-                                <td md-cell flex> {{ rCtrl.currSummary(curr).reduce(rCtrl.sumCurrYear) }} </td>
-                            </tr>
-                            <tr md-row>
-                                <td md-cell flex> Total </td>
-                                <td md-cell flex ng-repeat="month in rCtrl.currSummary(curr) track by $index"> {{ rCtrl.sumMonth($index) }} </td>
-                                <td md-cell flex> {{ rCtrl.sumYear() }} </td>
-                            </tr>
-                        </tbody>
-                        
-                    </table>
-                </md-table-container>
 
+
+
+
+<!--  This is the duplicate display div  -->
+
+<md-card md-whiteframe="8" ng-cloak>
+
+    <md-toolbar layout="columns">
+        <div class="md-toolbar-tools">
+            <span> Reports </span>
+
+            <span flex> </span>
+
+            <md-button ng-click="null" ng-csv="rCtrl.export()" filename="{{rCtrl.year}}report.csv" class="md-icon-button">
+                <md-tooltip> Export to CSV </md-tooltip>
+                <md-icon md-menu-origin class="material-icons"> file_download </md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+
+
+
+
+    <!-- Graduates annual report -->
+    <md-content>
+
+        <md-toolbar layout="columns" class="md-primary md-hue-2">
+
+            <div class="md-toolbar-tools">
+                <span> Required Batches for {{ rCtrl.year }} </span>
             </div>
 
-            <div ng-if="rCtrl.batches == undefined" layout="column" layout-wrap layout-align="center center">
-                <div flex="100"> &nbsp; </div>
-                <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
-                <div flex="100"> &nbsp; </div>
-            </div>
+            <span flex> </span>
 
-        </md-content>
+            <md-menu md-position-mode="target-right target">
 
-    </md-card>
+                <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button">
+                    <md-tooltip> Settings </md-tooltip>
+                    <md-icon md-menu-origin md-svg-icon="img/ic_settings_white_24px.svg"> </md-icon>
+                </md-button>
+
+                <md-menu-content width="4" class="md-padding">
+
+                    <md-menu-item>
+                        <!--  This is where we are putting items onto one line. -->
+                        <md-input-container>
+                            <label> Currently Required Graduates:</label>
+                            <input ng-model="rCtrl.graduates" type="number">
+                        </md-input-container>
+
+                        <!--   This needs to be altered to contain a calander date... -->
+                        <md-input-container>
+                            <label> Current Date:</label>
+                            <input ng-model="rCtrl.year" type="number">
+                            <!-- Add a calander icon here for calander-date pop-up.... -->
+                        </md-input-container>
+                    </md-menu-item>
+
+
+                    <md-menu-item>
+                        <md-input-container>
+                            <label> Future Required Graduates:</label>
+                            <input ng-model="rCtrl.futureReqGrad" type="number">
+                        </md-input-container>
+
+                        <!--   This needs to be altered to contain a calander date... -->
+                        <md-input-container>
+                            <label> Current Date:</label>
+                            <input ng-model="rCtrl.year" type="number">
+                            <!-- Add a calander icon here for calander-date pop-up.... -->
+                        </md-input-container>
+
+                    </md-menu-item>
+
+
+
+                    <md-menu-item>
+                        <Label>Ciriculum:</Label>
+                        <input ng-model="" type="string">
+                    </md-menu-item>
+
+
+
+
+
+
+                </md-menu-content>
+
+            </md-menu>
+
+        </md-toolbar>
+
+        <div ng-if="rCtrl.batches != undefined" class="md-padding">
+
+            <md-table-container>
+                <table md-table class="gradTable">
+
+                    <thead md-head md-order="rCtrl.currOrder">
+                    <tr md-row>
+                        <th md-column flex md-order-by="name"> Curriculum </th>
+                        <th md-column flex ng-repeat="month in rCtrl.monthList"> {{ month }} </th>
+                        <th md-column md-numeric flex> Total </th>
+                    </tr>
+                    </thead>
+
+                    <tbody md-body>
+                    <tr md-row ng-repeat="curr in (rCtrl.curricula | orderBy:rCtrl.currOrder) track by curr.id">
+                        <td md-cell flex> {{ curr.name }} </td>
+                        <td md-cell flex ng-repeat="month in rCtrl.currSummary(curr) track by $index"> {{ month }} </td>
+                        <td md-cell flex> {{ rCtrl.currSummary(curr).reduce(rCtrl.sumCurrYear) }} </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+            </md-table-container>
+
+        </div>
+
+        <div ng-if="rCtrl.batches == undefined" layout="column" layout-wrap layout-align="center center">
+            <div flex="100"> &nbsp; </div>
+            <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
+            <div flex="100"> &nbsp; </div>
+        </div>
+
+    </md-content>
+
+</md-card>
+
+<br><br>
+
+<md-card>
+    <md-content>
+        <form>
+            <label><input type="radio" name="mode" value="grouped"> Grouped</label>
+            <label><input type="radio" name="mode" value="stacked" checked> Stacked</label>
+        </form>
+        <svg width="960" height="500"></svg>
+        <script>
+
+            var n = 4, // The number of series.
+                m = 58; // The number of values per series.
+
+            // The xz array has m elements, representing the x-values shared by all series.
+            // The yz array has n elements, representing the y-values of each of the n series.
+            // Each yz[i] is an array of m non-negative numbers representing a y-value for xz[i].
+            // The y01z array has the same structure as yz, but with stacked [y₀, y₁] instead of y.
+            var xz = d3.range(m),
+                yz = d3.range(n).map(function() { return bumps(m); }),
+                y01z = d3.stack().keys(d3.range(n))(d3.transpose(yz)),
+                yMax = d3.max(yz, function(y) { return d3.max(y); }),
+                y1Max = d3.max(y01z, function(y) { return d3.max(y, function(d) { return d[1]; }); });
+
+            var svg = d3.select("svg"),
+                margin = {top: 40, right: 10, bottom: 20, left: 10},
+                width = +svg.attr("width") - margin.left - margin.right,
+                height = +svg.attr("height") - margin.top - margin.bottom,
+                g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            var x = d3.scaleBand()
+                .domain(xz)
+                .rangeRound([0, width])
+                .padding(0.08);
+
+            var y = d3.scaleLinear()
+                .domain([0, y1Max])
+                .range([height, 0]);
+
+            var color = d3.scaleOrdinal()
+                .domain(d3.range(n))
+                .range(d3.schemeCategory20c);
+
+            var series = g.selectAll(".series")
+                .data(y01z)
+                .enter().append("g")
+                .attr("fill", function(d, i) { return color(i); });
+
+            var rect = series.selectAll("rect")
+                .data(function(d) { return d; })
+                .enter().append("rect")
+                .attr("x", function(d, i) { return x(i); })
+                .attr("y", height)
+                .attr("width", x.bandwidth())
+                .attr("height", 0);
+
+            rect.transition()
+                .delay(function(d, i) { return i * 10; })
+                .attr("y", function(d) { return y(d[1]); })
+                .attr("height", function(d) { return y(d[0]) - y(d[1]); });
+
+            g.append("g")
+                .attr("class", "axis axis--x")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(x)
+                    .tickSize(0)
+                    .tickPadding(6));
+
+            d3.selectAll("input")
+                .on("change", changed);
+
+            var timeout = d3.timeout(function() {
+                d3.select("input[value=\"grouped\"]")
+                    .property("checked", true)
+                    .dispatch("change");
+            }, 2000);
+
+            function changed() {
+                timeout.stop();
+                if (this.value === "grouped") transitionGrouped();
+                else transitionStacked();
+            }
+
+            function transitionGrouped() {
+                y.domain([0, yMax]);
+
+                rect.transition()
+                    .duration(500)
+                    .delay(function(d, i) { return i * 10; })
+                    .attr("x", function(d, i) { return x(i) + x.bandwidth() / n * this.parentNode.__data__.key; })
+                    .attr("width", x.bandwidth() / n)
+                    .transition()
+                    .attr("y", function(d) { return y(d[1] - d[0]); })
+                    .attr("height", function(d) { return y(0) - y(d[1] - d[0]); });
+            }
+
+            function transitionStacked() {
+                y.domain([0, y1Max]);
+
+                rect.transition()
+                    .duration(500)
+                    .delay(function(d, i) { return i * 10; })
+                    .attr("y", function(d) { return y(d[1]); })
+                    .attr("height", function(d) { return y(d[0]) - y(d[1]); })
+                    .transition()
+                    .attr("x", function(d, i) { return x(i); })
+                    .attr("width", x.bandwidth());
+            }
+
+            // Returns an array of m psuedorandom, smoothly-varying non-negative numbers.
+            // Inspired by Lee Byron’s test data generator.
+            // http://leebyron.com/streamgraph/
+            function bumps(m) {
+                var values = [], i, j, w, x, y, z;
+
+                // Initialize with uniform random values in [0.1, 0.2).
+                for (i = 0; i < m; ++i) {
+                    values[i] = 0.1 + 0.1 * Math.random();
+                }
+
+                // Add five random bumps.
+                for (j = 0; j < 5; ++j) {
+                    x = 1 / (0.1 + Math.random());
+                    y = 2 * Math.random() - 0.5;
+                    z = 10 / (0.1 + Math.random());
+                    for (i = 0; i < m; i++) {
+                        w = (i / m - y) * z;
+                        values[i] += x * Math.exp(-w * w);
+                    }
+                }
+
+                // Ensure all values are positive.
+                for (i = 0; i < m; ++i) {
+                    values[i] = Math.max(0, values[i]);
+                }
+
+                return values;
+            }
+
+        </script>
+    </md-content>
+</md-card>
+
+<br><br>
