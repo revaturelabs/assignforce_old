@@ -2,7 +2,6 @@
     var assignforce = angular.module( "batchApp" );
 
     assignforce.controller( "batchCtrl", function($scope, $timeout, batchService, curriculumService, skillService, trainerService, locationService, calendarService, $location, $anchorScroll) {
-        //console.log("Beginning batch controller.");
         var bc = this;
 
           // functions
@@ -13,7 +12,6 @@
 
             // changes form state and populates fields if need-be
         bc.changeState = function( newState, incomingBatch ){ 
-            //console.log("  (BC)  Changing to state [" + newState + "] from [" + bc.state + "].");
             bc.state = newState;
 
             if (newState == "create") {
@@ -42,9 +40,7 @@
         	// calculates the percentage to which a trainer's skills correspond
         	// to the batch's curriculum.
         bc.calcTrainerCurriculumRatio = function(trainer)
-        {	
-        	//console.log(bc.selectedCurriculum);
-        	
+        {
     		if (angular.isUndefined(bc.selectedCurriculum) || bc.selectedCurriculum === null) { return 0; }
     		else if (bc.selectedCurriculum.skill.length == 0) { return 100; }
         	else
@@ -52,18 +48,13 @@
         		var matches = 0;
         		var total = 0;
         		
-        		//console.log(bc.selectedCurriculum.skill[0].name);
-        		
+
         		for (c in bc.selectedCurriculum.skill)
         		{
-        			//console.log("Got here!");
-        			//console.log(trainer.skill[0].name);
         			if (bc.selectedCurriculum.skill.hasOwnProperty(c))
         			{
 	        			for (s in trainer.skill)
 	        			{
-	        				//console.log("C name:  " + c.name);
-	        				//console.log("S name:  " + s.name);
 	        				if (trainer.skill.hasOwnProperty(s))
 	        				{
 		        				if (c === s)
@@ -77,7 +68,6 @@
         			}
         		}
         		
-        		//console.log(bc.selectedCurriculum.skill.length);
         		if (total > 0) { return Math.floor((matches / total) * 100); }
         		else { return 100; }
         	}
@@ -86,10 +76,8 @@
         bc.getSelectedCurriculum = function()
         {
     		curriculumService.getById(bc.batch.curriculum, function(response) {
-                //console.log("  (BC)  Retrieving the curriculum.");
                 bc.selectedCurriculum = response;
             }, function(error) {
-                //console.log("  (BC)  Failed to retrieve the curriculum with error:", error.data.message);
                 bc.showToast( "Could not fetch curriculum.");
             });
         }
@@ -242,11 +230,9 @@
             bc.batchesSelected = [];
             bc.changeState( "create", null );
             batchService.getAll( function(response) {
-                //console.log("  (BC)  Retrieving all batches.")
                 bc.batches = response;
                 $scope.$broadcast("repullTimeline");
             }, function(error) {
-                //console.log("  (BC)  Failed to retrieve all batches with error:", error.data.message);
                 bc.showToast( "Could not fetch batches.");
             });
         };
@@ -273,7 +259,6 @@
                 bc.showToast("Batch deleted.");
                 bc.repull();
             }, function(error){
-                //console.log("  (BC)  Failed to delete batch.");
                 bc.showToast("Failed to delete batch.");
             });
         };
@@ -299,7 +284,6 @@
             batchService.delete( first, function(){
                 return bc.deleteMultipleHelper(delList);
             }, function(error){
-                //console.log("  (BC)  Failed to delete batches with error:", error.data.message);
                 bc.showToast("Failed to delete batches.");
                 return false;
             });
@@ -315,7 +299,6 @@
                             bc.showToast("Batch saved.");
                             bc.repull();
                         }, function(error){
-                            //console.log("  (BC)  Failed to save batch with error:", error.data.message);
                             bc.showToast("Failed to save batch.");
                         });
                         break;
@@ -325,7 +308,6 @@
                             bc.showToast("Batch updated.");
                             bc.repull();
                         }, function(error){
-                            //console.log("  (BC)  Failed to update batch with error:", error.data.message);
                             bc.showToast("Failed to update batch.");
                         });
                         break;
@@ -336,7 +318,6 @@
                             bc.showToast("Batch cloned.");
                             bc.repull();
                         }, function(error){
-                            //console.log("  (BC)  Failed to clone batch with error:", error.data.message);
                             bc.showToast("Failed to clone batch.");
                         });
                         break;
@@ -371,18 +352,14 @@
           // page initialization
             // data gathering
         batchService.getAll( function(response) {
-            //console.log("  (BC)  Retrieving all batches.");
             bc.batches = response;
         }, function(error) {
-            //console.log("  (BC)  Failed to retrieve all batches with error:", error.data.message);
             bc.showToast( "Could not fetch batches.");
         });
 
         curriculumService.getAll( function(response) {
-            //console.log("  (BC)  Retrieving all curricula.");
             bc.curricula = response;
         }, function(error) {
-            //console.log("  (BC)  Failed to retrieve all curricula with error:", error.data.message);
             bc.showToast( "Could not fetch curricula.");
         });
 
@@ -395,19 +372,15 @@
         // });
 
         trainerService.getAll( function(response) {
-            //console.log("  (BC)  Retrieving all trainers.");
             bc.trainers = response;
         }, function(error) {
-            //console.log("  (BC)  Failed to retrieve all trainers with error:", error.data.message);
             bc.showToast( "Could not fetch trainers.");
         });
 
         locationService.getAll( function(response) {
-            //console.log("  (BC)  Retrieving all locations.");
             bc.locations = response;
             bc.batch.location = bc.findHQ();
         }, function(error) {
-            //console.log("  (BC)  Failed to retrieve all locations with error:", error.data.message);
             bc.showToast( "Could not fetch locations.");
         });
 
