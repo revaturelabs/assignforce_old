@@ -8,8 +8,12 @@ assignforce.filter("trainerSelection", function() {
 			return trainers;
 		}
 		if(batchStart && batchEnd){
-			batchStart = new Date(batchStart.getYear(), batchStart.getMonth(), batchStart.getDay(), 0, 0, 0, 0);
-			batchEnd = new Date(batchEnd.getYear(), batchEnd.getMonth(), batchStart.getDay(), 0, 0, 0, 0);
+			console.log(batchStart.getFullYear());
+			batchStart = new Date(batchStart.getFullYear(), batchStart.getMonth(), batchStart.getDate(), 0, 0, 0, 0);
+			batchEnd = new Date(batchEnd.getFullYear(), batchEnd.getMonth(), batchStart.getDate(), 0, 0, 0, 0);
+			console.log(batchStart.getFullYear());
+			var temp = new Date(batchStart);
+			console.log(temp.getFullYear());
 		}
 		else { // This should be deprecated from the big if statement above
 			batchStart = new Date(0,0,0,0,0,0,0);
@@ -17,7 +21,6 @@ assignforce.filter("trainerSelection", function() {
 		}
 
 		var dayCount;
-		var trainerCount = 0;
 		var availableTrainers = [];
 		
 		//These functions are valid:
@@ -26,44 +29,59 @@ assignforce.filter("trainerSelection", function() {
 		//return availableTrainers;
 		//console.log(trainers[0].unavailable[0].startDate);
 		trainers.forEach(function(trainer){
+			dayCount = 0;
+			console.log("Beginning trainer process.");
+			console.log("Trainer: " + trainer.firstName + " " + trainer.lastName);
+			console.log("Day Count: " + dayCount);
 		//for(var trainer in trainers){
 			//Iterates through trainer unavailable dates.
-			trainer.unavailable.forEach(function(unavailable){
+			trainer.unavailable.forEach(function(unavailable){//forEach works and for does not.  This is also stupid and I hate javascript
 			//for (var unavailable in trainer.unavailable) {//No statement is passing here, but I know trainer1 has an unavailability, tested.
 				//console.log(unavailable[0].startDate);
-				//if (trainer.hasOwnProperty(unavailable)) {				
-					console.log(unavailable);
-					console.log(unavailable.endDate);
-					console.log(unavailable.startDate);
-					var tempdate = new Date(unavailable.startDate);
-					console.log(tempdate);//output Sun Feb 19 2017 18:31:53 GMT-0500
-					tempdate = new Date(tempdate.getYear(), tempdate.getMonth(), tempdate.getDay(), 0, 0, 0,0);
-					console.log(tempdate);//after conversion Sun Jan 31  117 00:00:00 GMT-0500.....  wtf
-					var tempdate2 = new Date();
-					unavailable.startDate = new Date(unavailable.startDate.year, unavailable.startDate.month, unavailable.startDate.day, 0, 0, 0, 0);
-					unavailable.endDate = new Date(unavailable.endDate.year, unavailable.endDate.month, unavailable.endDate.day, 0, 0, 0, 0);
-					console.log(unavailable.startDate);
-					console.log(unavailable.endDate);
+				//if (trainer.hasOwnProperty(unavailable)) {
+				
+				if (dayCount < 10){
+					var startDate = new Date(unavailable.startDate); //cannot access day, month, or year from unavailable.startDate directly for some reason...
+					var endDate = new Date(unavailable.endDate);
 					//Iterates current unavailable date range by day
-					for (var i = unavailable.startDate; i <= unavailable.endDate; i.setDate(i.getDate() + 1)) {
+					console.log("Unavailable period's Start Date: " + startDate);
+					console.log("Unavailable period's End Date: " + endDate);
+					for (var i = startDate; i <= endDate; i.setDate(i.getDate() + 1)) {
 						//Iterates batch dates by day
-						for (var j = batchStart; j <= batchEnd.getDate + 14 && count < 10; j.setDate) { //14 can be replaced by a config value.
-							if (i == j)
+						console.log("In the first FOR loop.");
+						console.log("The condition for the next: ");
+						console.log("j = batchStart; j.getFullYear() <= batchEnd.getFullYear() && j.getMonth() <= batchEnd.getMoth() && j.getDate() <= batchEnd.getDate() + 14; j.setDate(j.getDate() + 1");
+						console.log("j = " + batchStart + " ; " + " " + "j.getFullYear() <= " + batchEnd.getFullYear() + " && " + "j.getMonth()" + " <= " + batchEnd.getMonth() + " && " + "j.getDate()" + " <= " + (batchEnd.getDate() + 14) + "; && dayCount < 10");
+						for (var j = new Date(batchStart); j.getFullYear() <= batchEnd.getFullYear() && j.getMonth() <= batchEnd.getMonth() && j.getDate() <= batchEnd.getDate() + 14; j.setDate(j.getDate() + 1)){//<= batchEnd + 14 && dayCount < 10; j.setDate(j.getDate() + 1)) { //14 can be replaced by a config value.
+							console.log("In the second FOR loop.");
+							console.log("The next if statement's evaluations: ");
+							console.log("i.getDate() == j.getDate() && i.getMonth() == j.getMonth() && i.getFullYear() == j.getFullYear()");
+							console.log(i.getDate() + " == " + j.getDate() + " && " + i.getMonth() + " == " + j.getMonth() + " && " + i.getYear() + " == " + j.getYear());
+							if (i.getDate() == j.getDate() && i.getMonth() == j.getMonth() && i.getFullYear() == j.getFullYear()){
 								dayCount = dayCount + 1;
+								break;
+							}
+							console.log("Unavailable iteration: " + i);
+							console.log("Batch iteration: " + j);
+							console.log("Day count: " + dayCount);
 						}
+						if (dayCount == 10) { //If overlapped dates are 10 or greater, trainer is unavailable for this batch.
+							console.log("Day count is 10!  trainer: " + trainer.firstName + " " + trainer.lastName + " is unavailable.");
+							break;
+						}
+						console.log("Should be only if dayCount is < 10 after all batch dates checked.  DayCount: " + dayCount);
 					}
-					if (dayCount == 10) { //If overlapped dates are 10 or greater, trainer is unavailable for this batch.
-						trainerCount = trainerCount +1;
-						availableTrainers.push(trainers[trainerCount]);
-						return;
-					}
-					availableTrainers.push(trainers[trainerCount]);
-					trainerCount = trainerCount +1;
+				}
 				//}
 				//}
 			});
 		//}
-		return availableTrainers;
+			if(dayCount < 10){
+				console.log("About to push trainer: " + trainer.firstName + " " + trainer.lastName);
+				console.log("dayCount: " + dayCount);
+				availableTrainers.push(trainer);
+			}
 		});
+		return availableTrainers;
 	}
 });
