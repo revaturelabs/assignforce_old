@@ -84,7 +84,7 @@ public class TrainerCtrl {
 		List<Unavailable> unavailabilities = in.getUnavailabilities();
 		List<Certification> certifications = in.getCertifications();
 
-		Trainer out = new Trainer( ID, firstName, lastName, unavailabilities, skills );
+		Trainer out = new Trainer( ID, firstName, lastName, unavailabilities, skills, certifications);
 		out.setActive(in.getActive());
 		out = trainerService.saveItem( out );
 
@@ -117,4 +117,5 @@ public class TrainerCtrl {
 			return new ResponseEntity< List<Trainer> >(all, HttpStatus.OK);
 		}
 	}
+
 }
