@@ -7,11 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.revature.assignforce.domain.Skill;
 import com.revature.assignforce.domain.Trainer;
@@ -65,16 +61,31 @@ public class TrainerCtrl {
 		// updating an existing trainer object with information passed from trainer data transfer object
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object updateTrainer( @RequestBody TrainerDTO in ) {
-	
+
 		int ID = in.getID();
+
+		if(in.getActive() == false){
+			List<Trainer> trainers = trainerService.getAllItems();
+
+			for(int i = 0; i < trainers.size(); i++){
+				if(in.getFirstName().equals(trainers.get(i).getFirstName()) && in.getLastName().equals(trainers.get(i).getLastName())){//add lookup by last name
+					ID = trainers.get(i).getTrainerID();
+					break;
+				}
+			}
+		}
+
+
 		String firstName = in.getFirstName();
 		String lastName = in.getLastName();
 		List<Skill> skills = in.getSkills();
 		List<Unavailable> unavailabilities = in.getUnavailabilities();
-		
+
+
 		Trainer out = new Trainer( ID, firstName, lastName, unavailabilities, skills );
+		out.setActive(in.getActive());
 		out = trainerService.saveItem( out );
-		
+
 		if (out == null) {
 			return new ResponseEntity<ResponseErrorDTO>( new ResponseErrorDTO("Trainer failed to update."), HttpStatus.NOT_MODIFIED);
 		} else {
@@ -86,7 +97,6 @@ public class TrainerCtrl {
 		// delete trainer with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object deleteTrainer( @PathVariable("id") int ID ) {
-		
 		trainerService.deleteItem(ID);
 		return new ResponseEntity<Object>(null, HttpStatus.OK);
 	}
