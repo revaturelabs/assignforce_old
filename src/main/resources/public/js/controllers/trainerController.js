@@ -30,10 +30,8 @@
         };
 
         tc.removeTrainer = function (trainerRM) {
-            console.log(trainerRM);
             // $mdToast.show( $mdToast.simple().textContent( "Do you want to remove this trainer" ).action("OKAY").position("top right").highlightAction(true) );
             trainerRM.active = false;
-            console.log(trainerRM);
 
             trainerService.update(trainerRM, function () {
                 tc.showToast("success");
