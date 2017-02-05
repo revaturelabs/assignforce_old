@@ -1,4 +1,57 @@
 
+
+
+<script>
+
+Highcharts.chart('container', {
+    title: {
+        text: 'Graduate Summary (2017)',
+        x: -20 //center
+    },
+    subtitle: {
+        text: '',
+        x: -20
+    },
+    xAxis: {
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    },
+    yAxis: {
+        title: {
+            text: '# of Graduates'
+        },
+        plotLines: [{
+            value: 0,
+            width: 1,
+            color: '#808080'
+        }]
+    },
+    tooltip: {
+        valueSuffix: ''
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle',
+        borderWidth: 0
+    },
+    series: [{
+        name: 'Tokyo',
+        data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+    }, {
+        name: 'New York',
+        data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
+    }, {
+        name: 'Berlin',
+        data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
+    }]
+});
+
+</script>
+
+
+
+
     <md-card md-whiteframe="8" ng-cloak>
 
         <md-toolbar layout="columns">
@@ -94,3 +147,87 @@
         </md-content>
 
     </md-card>
+    
+    <br><br>
+ 	
+ 	<!--  2017 Graduate Summary -->
+ 	<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+ 	 
+ 	<br><br>
+ 	 
+ 	<!--    -->
+ 	    <md-card md-whiteframe="8" ng-cloak>
+
+
+        <!-- Graduates annual report -->
+        <md-content>
+
+            <md-toolbar layout="columns" class="md-primary md-hue-2">
+
+                <div class="md-toolbar-tools">
+                    <span>Required Trainee's</span>
+                </div>
+
+                <span flex> </span>
+
+            </md-toolbar>
+
+            <div ng-if="rCtrl.batches != undefined" class="md-padding">
+
+				<div flex-xs="" flex-gt-xs="20" layout="column">
+					<md-card md-theme="{{ showDarkTheme ? 'dark-purple' : 'default' }}" md-theme-watch="">
+						
+						<md-card-title>
+							<md-card-title-text>
+								<span class="md-headline"></span>
+							</md-card-title-text>
+						</md-card-title>
+					
+						<!--  Needed Trainee's Field  -->
+						<md-input-container>
+                        	<label>Trainee's Needed:</label>
+                        	<input ng-model="rCtrl.requiredGrads" type="number">
+                        </md-input-container>
+						
+						<!--  'Needed-by Date  -->
+						<md-input-container>
+                        	<label>Hire Date:</label>
+                        	<input ng-model="rCtrl.reqDate" type="date">
+                        </md-input-container>
+						
+						<!--  Batch Curriculum  -->
+						<md-input-container flex>                       
+                            <label>Curriculum:</label>
+                            <md-select ng-model="rCtrl.curriculum" >
+                                <md-option ng-value="curriculum.id" ng-repeat="curriculum in rCtrl.curricula"> {{ curriculum.name }} </md-option>
+                            </md-select>
+                        </md-input-container>
+						
+						
+						<!--  Required Batches  -->
+						
+						<div ng-model="rCtrl.requiredBatches">
+							<p>  Required Batches: {{ rCtrl.calcReqBatch(rCtrl.requiredGrads, rCtrl.reqDate) }}</p>
+						</div>
+						
+						<md-card-actions layout="row" layout-align="end center">
+							<md-button>Create Batch</md-button>
+						</md-card-actions>
+    	 			 </md-card>
+	            </div>
+			
+
+
+            <div ng-if="rCtrl.batches == undefined" layout="column" layout-wrap layout-align="center center">
+                <div flex="100"> &nbsp; </div>
+                <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
+                <div flex="100"> &nbsp; </div>
+            </div>
+
+        </md-content>
+
+    </md-card>
+    
+    
+
+    <br><br>
