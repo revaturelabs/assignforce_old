@@ -2,7 +2,6 @@ var assignforce = angular.module("batchApp");
 
 assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 		locationService) {
-	console.log("Beginning location controller.");
 	var lc = this;
 	
 	lc.buildingOnItr = null;
@@ -15,8 +14,6 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 
 	// adds location
 	lc.addLocation = function() {
-		console.log("TACO");
-
 		$mdDialog.show({
 			templateUrl : "html/templates/locationTemplate.html",
 			controller : "locationDialogCtrl",
@@ -53,7 +50,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 	// ORIGINAL METHOD BEFORE ADDING BUILDINGS
 	// opens room list for location
 	// lc.openLocation = function(location) {
-	// console.log("TACO 2");
+
 	// if ( $filter("activeItem")(location.rooms).length > 0 ) {
 	// var id = "#loc" + location.id;
 	// $(id).slideToggle( lc.removeRooms(location) );
@@ -256,10 +253,8 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 		lc.locations = undefined;
 		lc.selectedList = [];
 		locationService.getAll(function(response) {
-			// console.log(" (LC) Retrieving all locations.")
 			lc.locations = response;
 		}, function(error) {
-			// console.log(" (LC) Failed to retrieve all locations with error:",
 			// error.data.message);
 			lc.showToast("Could not fetch locations.");
 		});
@@ -271,10 +266,8 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 	// page initialization
 	// data gathering
 	locationService.getAll(function(response) {
-		// console.log(" (LC) Retrieving all locations.")
 		lc.locations = response;
 	}, function(error) {
-		// console.log(" (LC) Failed to retrieve all locations with error:",
 		// error.data.message);
 		lc.showToast("Could not fetch locations.");
 	});
