@@ -40,6 +40,15 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			$(id).slideToggle();
 		}
 	};
+	// opens room list for buildings
+	lc.openBuilding = function(building) {
+		console.log("TACO 2");
+		if ($filter("activeItem")(building.rooms).length > 0) {
+			var id = "#bldg" + building.id;
+			$(id).slideToggle(lc.removeRooms(building));
+		}
+	};
+
 	// ORIGINAL METHOD BEFORE ADDING BUILDINGS
 	// opens room list for location
 	// lc.openLocation = function(location) {
@@ -143,7 +152,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 	};
 
 	// delete location
-	//TODO DELETE BUTTON CALLS THIS
+	// TODO DELETE BUTTON CALLS THIS
 	lc.deleteSelected = function() {
 
 		var summary = lc.categorizeSelected();
