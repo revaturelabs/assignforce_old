@@ -30,7 +30,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
             //console.log("  (TLC) Retrieving all batches.")
             tlc.batches = response;
             if (tlc.trainers) {
-                projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
+                projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, 0, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
             }
         }, function(error) {
             //console.log("  (TLC) Failed to retrieve all batches with error:", error.data.message);
@@ -40,7 +40,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
             //console.log("  (TLC) Retrieving all trainers.")
             tlc.trainers = response.map(function(trainer){return (trainer.firstName + "\n" + trainer.lastName)});
             if (tlc.batches) {
-                projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
+                projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, 0, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
             }
         }, function(error) {
             //console.log("  (TLC) Failed to retrieve all trainers with error:", error.data.message);
@@ -51,7 +51,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
         //console.log("  (TLC) Retrieving all batches.")
         tlc.batches = response;
         if (tlc.trainers) {
-			projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
+			projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, 0, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
         }
     }, function(error) {
         //console.log("  (TLC) Failed to retrieve all batches with error:", error.data.message);
@@ -61,7 +61,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
         //console.log("  (TLC) Retrieving all trainers.")
 		tlc.trainers = response.map(function(trainer){return (trainer.firstName + "\n" + trainer.lastName)});
         if (tlc.batches) {
-			projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
+			projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, 0, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
         }
     }, function(error) {
         //console.log("  (TLC) Failed to retrieve all trainers with error:", error.data.message);
@@ -73,24 +73,80 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		},
 		function(){
 			if(tlc.batches !== undefined || tlc.trainers !== undefined){
-				projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
+				projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, 0, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
 			}
 		}
 	);
 	
 	$scope.$watch(
 		function(){
-			return tlc.maxDate
+			return tlc.maxDate;
 		},
 		function(){
 			if(tlc.batches !== undefined || tlc.trainers !== undefined) {
-                projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
+                projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, 0, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
             }
 		}
 	);
+
+	// Events for the timeline
+
+	$("#timeline").mousedown(function(evt){
+
+		// Initial y-coordinate of the mouse
+		var init = evt.offsetY - 29;
+		var mousedownY = init;
+
+		// Get the date with respect to the y coordinate
+		var yScale = d3.time.scale()
+			.domain([0,1940])
+			.range([tlc.minDate, tlc.maxDate]);
+
+		var yDate = new Date(yScale(init)).getTime();
+		var diff = tlc.maxDate.getTime() - tlc.minDate.getTime();
+		var topFraction = (yDate - tlc.minDate.getTime()) / diff;
+		var bottomFraction = 1 - topFraction; 
+
+		// Draw the zoompoint
+		projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, mousedownY, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
+		
+		// // Fire when there is a mousemove event on the #timeline element
+		$("#timeline").mousemove(function(evt){
+
+			// Recalculate the scaling factor based on the number of milliseconds(more accuracy) currently on the timeline
+			tlc.scalingFactor = (new Date(tlc.maxDate).getTime() - new Date(tlc.minDate).getTime()) / 10;
+			diff = tlc.maxDate.getTime() - tlc.minDate.getTime();
+
+		    // If the mouse moves up
+		    if(init > evt.offsetY && diff > 1000000){
+
+		    	// Set the newly calculated min and max dates
+		    	tlc.minDate = new Date(new Date(tlc.minDate).getTime() + Math.trunc(tlc.scalingFactor * topFraction));
+		    	tlc.maxDate = new Date(new Date(tlc.maxDate).getTime() - Math.trunc(tlc.scalingFactor * bottomFraction));
+			
+			} else if(init < evt.offsetY && diff < 126140000000000) { // If the mouse moves down(big number is milliseconds in 4000 years)
+
+				tlc.minDate = new Date(new Date(tlc.minDate).getTime() - Math.trunc(tlc.scalingFactor * topFraction));
+				tlc.maxDate = new Date(new Date(tlc.maxDate).getTime() + Math.trunc(tlc.scalingFactor * bottomFraction));
+			}
+
+			projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, mousedownY, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
+			
+			// Update the last coordinate of the mouse
+			init = evt.offsetY;
+		});
+	});
+
+	$("#timeline").mouseup(function(){
+		// Erase the zoompoint(or move out of view)
+		projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, -100, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
+		// Remove mousemove listener from the timeline
+		$("#timeline").off("mousemove");
+	});
 });
 
-function projectTimeline(windowWidth, minDate, maxDate, timelineData, parentScope, numWeeks, trainerNames){
+// Draw timeline
+function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, parentScope, numWeeks, trainerNames){
 	
 	//Timeline variables
 	var margin = {top: 30, right: 10, bottom: 30, left:75},
@@ -104,7 +160,7 @@ function projectTimeline(windowWidth, minDate, maxDate, timelineData, parentScop
 	var yScale = d3.time.scale()
 		.domain([minDate, maxDate])
 		.range([0,height]);
-	
+
 	var xScale = d3.scale.ordinal()
 		.domain(trainerNames)
 		.rangePoints([xPadding,width-xPadding]);
@@ -166,7 +222,6 @@ function projectTimeline(windowWidth, minDate, maxDate, timelineData, parentScop
 	
 	//Create timeline
     var svg = d3.select("#timeline");
-	// d3.select('svg').remove();
     svg.selectAll("*").remove();
 	
 	svg = d3.select('#timeline')
@@ -200,7 +255,6 @@ function projectTimeline(windowWidth, minDate, maxDate, timelineData, parentScop
 			.attr('stroke','lightgray');
 	
 	//Add line for current date on timeline
-	
 	svg.append('g')
 		.attr('class','currentdate')
 		
@@ -211,9 +265,21 @@ function projectTimeline(windowWidth, minDate, maxDate, timelineData, parentScop
 			.attr('y1', yScale(new Date()))
 			.attr('y2',yScale(new Date()))
 			.attr('stroke','#f26a25');
+
+	// Create line for zoompoint
+	svg.append('g')
+		.attr('class','zoompoint')
+		
+	d3.select('.zoompoint')
+		.append('line')
+			.attr('x1', 0)
+			.attr('x2', width)
+			.attr('y1', yCoord)
+			.attr('y2', yCoord)
+			.attr('stroke','#000000')
+			.attr('stroke-width', 1);
 	
 	//Add batches to timeline
-	
 	var defs = svg.append("defs");
 
 	var filter = defs.append("filter")
@@ -247,7 +313,6 @@ function projectTimeline(windowWidth, minDate, maxDate, timelineData, parentScop
 		.attr("in", "SourceGraphic");
 	  
 	//Normal stuff
-	
 	svg.append('g')
 		.attr('class','rectangles');
 

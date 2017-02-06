@@ -1,38 +1,55 @@
 
 var assignforce = angular.module( "batchApp" );
 
-assignforce.filter("trainerSelectionFilter", function() {
-	//returns true if too much overlap in unavailable dates and batch range(/config padding)
-	return function(trainer, batchStart, batchEnd) {
+assignforce.filter("trainerSelection", function() {
+	//returns list of available trainers based on selected dates of batch
+	return function(trainers, batchStart, batchEnd) {
+		if(angular.isUndefined(trainers) || trainers == null || angular.isUndefined(batchStart) || angular.isUndefined(batchEnd) || batchStart == null || batchEnd == null){
+			return trainers;
+		}
 
-		batchStart = new Date(batchStart.getYear(), batchStart.getMonth(), batchStart.getDay(), 0, 0, 0, 0);
-		batchEnd = new Date(batchEnd.getYear(), batchEnd.getMonth(), batchStart.getDay(), 0, 0, 0, 0);
-
-		var filtered = [];
-
-		var count;
-
-		//Iterates through trainer unavailable dates.
-		for (var unavailable in trainer.unavailable) {
-			if (trainer.hasOwnProperty(unavailable)) {
-				count = 0;
-				unavailable[0] = new Date(unavailable[0].getYear(), unavailable[0].getMonth(), unavailable[0].getDay(), 0, 0, 0, 0);
-				unavailable[1] = new Date(unavailable[1].getYear(), unavailable[1].getMonth(), unavailable[1].getDay(), 0, 0, 0, 0);
-
-				//Iterates current unavailable date range by day
-				for (var i = trainer.unavailable[0]; i <= trainer.unavailable[1]; i.setDate(i.getDate() + 1)) {
-					//Iterates batch dates by day
-					for (var j = batchStart; j <= batchEnd.getDate() + 14 && count < 10; j.setDate()) { //14 can be replaced by a config value.
-						if (i == j)
-							count = count + 1;
+		var dayCount;
+		var availableTrainers = [];
+		var tempDate = new Date(batchStart);
+		
+		trainers.forEach(function(trainer){ //for CANNOT be used here, must be forEach
+			dayCount = 0;
+			
+			//Iterates through trainer unavailable dates.
+			trainer.unavailable.forEach(function(unavailable){
+				batchStart = tempDate;
+				
+				if (dayCount < 10){
+					
+					var startDate = new Date(unavailable.startDate); //cannot access day, month, or year from unavailable.startDate directly for some reason...
+					var endDate = new Date(unavailable.endDate);
+					
+					//Iterates current unavailable date range by day
+					for (var i = startDate; i <= endDate; i.setDate(i.getDate() + 1)) {
+						
+						//Iterates batch dates by day
+						for (var j = new Date(batchStart); j.getFullYear() <= batchEnd.getFullYear() && j.getMonth() <= batchEnd.getMonth() && j.getDate() <= batchEnd.getDate() + 14; j.setDate(j.getDate() + 1)){//14 can be replaced by a config value.
+							
+							if (i.getDate() == j.getDate() && i.getMonth() == j.getMonth() && i.getFullYear() == j.getFullYear()){
+								j.setDate(j.getDate() + 1);
+								dayCount = dayCount + 1;
+								batchStart = j;
+								break;
+							}
+						}
+						//If overlapped dates are 10 or greater, trainer is unavailable for this batch.
+						//This is a predetermined number set by the client
+						if (dayCount == 10) {
+							break;
+						}
 					}
 				}
-				if (count == 10) { //If overlapped dates are 10 or greater, trainer is unavailable for this batch.
-					break;
-				}
-				filtered.push(item);
+			});
+			//If made it through all date checks, trainer is available for this batch
+			if(dayCount < 10){
+				availableTrainers.push(trainer);
 			}
-		}
-		return filtered;
+		});
+		return availableTrainers;
 	}
 });

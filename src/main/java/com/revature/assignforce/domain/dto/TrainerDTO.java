@@ -2,6 +2,7 @@ package com.revature.assignforce.domain.dto;
 
 import java.util.List;
 
+import com.revature.assignforce.domain.Certification;
 import com.revature.assignforce.domain.Skill;
 import com.revature.assignforce.domain.Unavailable;
 
@@ -11,7 +12,9 @@ public class TrainerDTO {
 	private String firstName;
 	private String lastName;
 	private List<Skill> skills;
+	private List<Certification> certifications;
 	private List<Unavailable> unavailabilities;
+	private Boolean active;
 	
 	public int getID() {
 		return ID;
@@ -37,11 +40,22 @@ public class TrainerDTO {
 	public void setSkills(List<Skill> skills) {
 		this.skills = skills;
 	}
+	public List<Certification> getCertifications() {
+		return certifications;
+	}
+	public void setCertifications(List<Certification> certifications) {
+		this.certifications = certifications;
+	}
 	public List<Unavailable> getUnavailabilities() {
 		return unavailabilities;
 	}
 	public void setUnavailabilities(List<Unavailable> unavailabilities) {
 		this.unavailabilities = unavailabilities;
 	}
-	
+	public Boolean getActive() {
+		return active;
+	}
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
 }
