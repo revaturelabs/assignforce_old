@@ -39,10 +39,10 @@
 
                     <md-icon md-svg-icon="img/ic_location_city_black_48px.svg"> </md-icon>
                     <div class="md-list-item-text" layout="column">
-                        <h3> {{ location.name }} </h3>
-                        <p ng-if="location.city && location.state"> {{ location.city }}, {{ location.state }} </p>
-                        <p ng-if="location.city && !location.state"> {{ location.city }} </p>
-                        <p ng-if="!location.city && location.state"> {{ location.state }} </p>
+                        <h3> {{ location.name }}, {{location.buildings[0].name}} </h3>
+                        <p ng-if="location.city && location.state"> {{ location.city }}, {{ location.state }}</p>
+                        <p ng-if="location.city && !location.state"> {{ location.city }} TACO 2</p>
+                        <p ng-if="!location.city && location.state"> {{ location.state }} TACO 3</p>
                     </div>
 
                     <span flex> </span>
@@ -50,8 +50,39 @@
                     <md-checkbox md-no-ink ng-checked="lCtrl.exists(location)" ng-click="lCtrl.toggle(location)"> </md-checkbox>
 
                 </md-list-item>
+                
+                <md-list id="{{ 'loc'.concat(location.id) }}" class="buildingList">
+                    <md-list-item ng-repeat="building in location.buildings | activeItem " ng-click="lCtrl.toggle(building)" layout-align="center center">
 
-                <md-list id="{{ 'loc'.concat(location.id) }}" class="roomList">
+                        <div flex="5"> </div>
+
+                        <md-icon md-svg-icon="img/ic_business_black_48px.svg"> </md-icon>
+                        <p> &nbsp; {{ building.name }} </p>
+
+                        <span flex> </span>
+
+                        <md-checkbox md-no-ink ng-checked="lCtrl.exists(building)" ng-click="lCtrl.toggle()"> </md-checkbox>
+
+                    </md-list-item>
+                </md-list>
+				
+				 <!--md-list id="{{ 'Bldg'.concat(buildings.id) }}" class="roomList">
+                    <md-list-item ng-repeat="room in buildings.rooms | activeItem | orderBy:'roomName'" ng-click="lCtrl.toggle(room)" layout-align="center center">
+
+                        <div flex="5"> </div>
+
+                        <md-icon md-svg-icon="img/ic_business_black_48px.svg"> </md-icon>
+                        <p> &nbsp; {{ room.roomName }} </p>
+
+                        <span flex> </span>
+
+                        <md-checkbox md-no-ink ng-checked="lCtrl.exists(room)" ng-click="lCtrl.toggle(room)"> </md-checkbox>
+
+                    </md-list-item>
+                </md-list-->
+                
+                <!-- ORIGINAL LIST -->
+                <!--md-list id="{{ 'loc'.concat(location.id) }}" class="roomList">
                     <md-list-item ng-repeat="room in location.rooms | activeItem | orderBy:'roomName'" ng-click="lCtrl.toggle(room)" layout-align="center center">
 
                         <div flex="5"> </div>
@@ -64,7 +95,7 @@
                         <md-checkbox md-no-ink ng-checked="lCtrl.exists(room)" ng-click="lCtrl.toggle(room)"> </md-checkbox>
 
                     </md-list-item>
-                </md-list>
+                </md-list-->
                 
                 <md-divider ng-repeat-end ng-if="location.rooms.length > 0 && lCtrl.visible(location)"></md-divider>
 
