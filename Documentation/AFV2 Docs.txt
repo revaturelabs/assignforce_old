@@ -1,0 +1,10 @@
+2/6/2017
+
+This is our working documentation for this version of this project.
+When it is complete, we will put the actual text files here, but for
+now, here are the links to the editable Google Docs:
+
+Project Outline:
+https://docs.google.com/document/d/1EYpdUfsXGqMF4PSzXNuD9DyT7VjOYAgnUgmfuJEVJ40/edit?usp=sharing
+
+Project Class Structure:
