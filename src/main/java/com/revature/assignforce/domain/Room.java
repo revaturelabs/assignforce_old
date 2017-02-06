@@ -11,17 +11,20 @@ import jdk.nashorn.internal.ir.annotations.Ignore;
 @Table(name = "ROOM")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Room implements Activatable{
-	
+public class Room implements Activatable {
+
 	@Id
 	@Column(name = "ID")
 	@SequenceGenerator(allocationSize = 1, name = "roomSeq", sequenceName = "ROOM_SEQ")
 	@GeneratedValue(generator = "roomSeq", strategy = GenerationType.SEQUENCE)
 	private int roomID;
-	
+
 	@Column(name = "NAME", nullable = false)
 	private String roomName;
-	
+
+	@Column(name = "BUILDING")
+	private int building;
+
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "ROOM_UNAVAILABILITY_JT", joinColumns = @JoinColumn(name = "ROOM_ID"), inverseJoinColumns = @JoinColumn(name = "UNAVAILABLE_ID"))
 	@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
@@ -29,18 +32,27 @@ public class Room implements Activatable{
 
 	@OneToMany(mappedBy = "room")
 	@JsonIgnore
-	private List<Batch>batches;
-	@Column(name="active", insertable = false)
+	private List<Batch> batches;
+
+	@Column(name = "active", insertable = false)
 	private Boolean active;
 
-	
-	public Room(){}
-	
+	public Room() {
+	}
+
 	public Room(int roomID, String roomName, List<Unavailable> unavailable) {
 		super();
 		this.roomID = roomID;
 		this.roomName = roomName;
 		this.unavailable = unavailable;
+	}
+
+	public int getBuilding() {
+		return building;
+	}
+
+	public void setBuilding(int building) {
+		this.building = building;
 	}
 
 	public int getRoomID() {
@@ -85,7 +97,8 @@ public class Room implements Activatable{
 
 	@Override
 	public String toString() {
-		return "Room [roomID=" + roomID + ", roomName=" + roomName + ", unavailable=" + unavailable + "]";
+		return "Room [roomID=" + roomID + ", roomName=" + roomName + ", building=" + building + ", unavailable="
+				+ unavailable + ", batches=" + batches + ", active=" + active + "]";
 	}
 
 }
