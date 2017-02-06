@@ -45,8 +45,8 @@ public class Trainer implements Activatable{
 	@Column(name="active", insertable = false)
 	private Boolean active;
 
-	public int getTrainerID() {
-		return trainerID;
+	public int getTrainerID() {		
+		return trainerID;		
 	}
 	
 	public Trainer(){}
@@ -85,7 +85,7 @@ public class Trainer implements Activatable{
 	public List<Unavailable> getUnavailable() {
 		return unavailable;
 	}
-	
+
 	public void setUnavailable(List<Unavailable> unavailable) {
 		this.unavailable = unavailable;
 	}
