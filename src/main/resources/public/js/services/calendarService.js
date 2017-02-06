@@ -10,6 +10,17 @@ app.service( "calendarService", function(secWeek){
         return weeks;
     };
 
+    cs.countDays = function(startDate, endDate){
+        var diff = (endDate / 1000) - (startDate / 1000);
+        var secondsInDay = 86400;
+        var days = Math.ceil(diff / secondsInDay);
+        return days;
+    };
+
+    cs.countMilliseconds = function(startDate, endDate){
+        return (endDate / 1000) - (startDate / 1000);
+    }
+
     cs.createDate = function(ms){
         var date = new Date(ms).toDateString();
 
