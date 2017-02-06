@@ -85,7 +85,7 @@
                     <md-input-container flex>                       
                             <label> Trainer </label>
                             <md-select ng-model="bCtrl.batch.trainer">
-                                <md-option ng-value="trainer.trainerID" ng-repeat="trainer in bCtrl.availableTrainers"> {{ trainer.firstName }}  {{ trainer.lastName }} ({{ bCtrl.calcTrainerCurriculumRatio(trainer, bCtrl.batch.curriculum)}} % skill match to selected curriculum.)</md-option>
+                                <md-option ng-value="trainer.trainerID" ng-repeat="trainer in bCtrl.trainers"> {{ trainer.firstName }}  {{ trainer.lastName }} ({{ bCtrl.calcTrainerCurriculumRatio(trainer, bCtrl.batch.curriculum)}} % skill match to selected curriculum.)</md-option>
                             </md-select>
                         </md-input-container>
 
