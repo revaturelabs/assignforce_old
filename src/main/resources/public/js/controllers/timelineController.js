@@ -38,7 +38,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 
         trainerService.getAll( function(response) {
             //console.log("  (TLC) Retrieving all trainers.")
-            tlc.trainers = response.map(function(trainer){return trainer.firstName});
+            tlc.trainers = response.map(function(trainer){return (trainer.firstName + "\n" + trainer.lastName)});
             if (tlc.batches) {
                 projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
             }
@@ -59,7 +59,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 
     trainerService.getAll( function(response) {
         //console.log("  (TLC) Retrieving all trainers.")
-		tlc.trainers = response.map(function(trainer){return trainer.firstName});
+		tlc.trainers = response.map(function(trainer){return (trainer.firstName + "\n" + trainer.lastName)});
         if (tlc.batches) {
 			projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
         }
@@ -141,11 +141,11 @@ function projectTimeline(windowWidth, minDate, maxDate, timelineData, parentScop
 	var batchCount = {};
 	for(var x = 0; x < timelineData.length; x++){
 		
-		if(batchCount[timelineData[x].trainer ? timelineData[x].trainer.firstName : 'No trainer'] === undefined){
-			batchCount[timelineData[x].trainer ? timelineData[x].trainer.firstName : 'No trainer'] = [];
+		if(batchCount[timelineData[x].trainer ? (timelineData[x].trainer.firstName + "\n" + timelineData[x].trainer.lastName) : 'No trainer'] === undefined){
+			batchCount[timelineData[x].trainer ? (timelineData[x].trainer.firstName + "\n" + timelineData[x].trainer.lastName) : 'No trainer'] = [];
 		}
 		
-		batchCount[timelineData[x].trainer ? timelineData[x].trainer.firstName : 'No trainer'].push(timelineData[x]);
+		batchCount[timelineData[x].trainer ? (timelineData[x].trainer.firstName + "\n" + timelineData[x].trainer.lastName) : 'No trainer'].push(timelineData[x]);
 	}
 	
 	var betweenBatches = [];
@@ -153,7 +153,7 @@ function projectTimeline(windowWidth, minDate, maxDate, timelineData, parentScop
 	for(var trainer in batchCount){
 		if (batchCount.hasOwnProperty(trainer)){
 			for(x = 0; x < batchCount[trainer].length-1; x++){
-				var between = {x: xScale(batchCount[trainer][x].trainer ? batchCount[trainer][x].trainer.firstName : 'No trainer'),
+				var between = {x: xScale(batchCount[trainer][x].trainer ? (batchCount[trainer][x].trainer.firstName + "\n" + batchCount[trainer][x].trainer.lastName) : 'No trainer'),
 						y1: yScale(new Date(batchCount[trainer][x].endDate)),
 						y2: yScale(new Date(batchCount[trainer][x+1].startDate)),
 						length:numWeeks(batchCount[trainer][x].endDate,batchCount[trainer][x+1].startDate)};
@@ -266,7 +266,7 @@ function projectTimeline(windowWidth, minDate, maxDate, timelineData, parentScop
 				}
 				return y;
 			})
-			.attr('x', function(d) {return xScale(d.trainer ? d.trainer.firstName : 'No trainer')-15;})
+			.attr('x', function(d) {return xScale(d.trainer ? (d.trainer.firstName + "\n" + d.trainer.lastName) : 'No trainer')-15;})
 			.attr('width', 30)
 			.attr('height', function(d) {
 				var start = yScale(new Date(d.startDate));
@@ -280,7 +280,7 @@ function projectTimeline(windowWidth, minDate, maxDate, timelineData, parentScop
 				return end - start;
 			})
 			.on('click', function(d){parentScope.bCtrl.highlightBatch(d);parentScope.$apply();})
-			.style('fill', function(d) {return colorScale(d.trainer ? d.trainer.firstName : 'No trainer');});
+			.style('fill', function(d) {return colorScale(d.trainer ? (d.trainer.firstName + "\n" + d.trainer.lastName) : 'No trainer');});
 	d3.selectAll('.rect')
 		.append('text')
 			.attr('y', function(d) { 
@@ -290,7 +290,7 @@ function projectTimeline(windowWidth, minDate, maxDate, timelineData, parentScop
 				}
 				return (y+25);
 			})
-			.attr('x', function(d) {return xScale(d.trainer ? d.trainer.firstName : 'No trainer')-7;})
+			.attr('x', function(d) {return xScale(d.trainer ? (d.trainer.firstName + "\n" + d.trainer.lastName) : 'No trainer')-7;})
 			.text(function(d) {return numWeeks(d.startDate,d.endDate);});
 	
 	//Add between batch length to timeline
