@@ -127,27 +127,90 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     };
 
     /*************************************************************/
+    /**
+     * This method will compute the required batch start date, 
+     * 		given a required hire date.
+     * 
+     * @param requiredDate 
+     * @return nothing
+     */
     
-    rc.calcReqBatch = function(requiredTrainees, requiredDate){
+    rc.calcStarDate = function(requiredDate){
     	
-    	//Value to hold the 'start date' and 'number of batches' upon returning.
-    	//var reqBatches = [];
+    	//Initializes a start date variable and assigns it the value in 'requiredDate'.
+    	var sDate = ( requiredDate == undefined ) ? (new Date()) : requiredDate;
     	
-    	//Subtract 10 weeks from the 'requiredDate' to determine the 'startDate'.
-    	//startDate = 
+    	
+    	//Subtract 10 weeks from the 'requiredDate' to determine the 'startDate'.  **Using 11 week default.
+    	sDate.setDate( sDate.getDate() - ( 7 * (rc.defWeeks)));
+    	
+    	// This code segment allows for the batch start date to be pushed to the closest Monday.
+    	switch(sDate.getDay()){
+    		
+    		case 0 : sDate.setDate( sDate.getDate() + 1 );
+    				 break;
+    		
+    		case 1 : sDate.setDate( sDate.getDate() );
+    				 break;
+    		
+    		case 2 : sDate.setDate( sDate.getDate() - 1 );
+    			 	 break;
+    		
+    		case 3 : sDate.setDate( sDate.getDate() - 2 );
+    				 break;
+    		
+    		case 4 : sDate.setDate( sDate.getDate() - 3 );
+    				 break;
+    		
+    		case 5 : sDate.setDate( sDate.getDate() - 4 );
+    				 break;
+    		
+    		case 6 : sDate.setDate( sDate.getDate() -5 );
+    				 break;
+    				
+    		default: break;
+    	}
+
+ 
+    	var monthArr = [ 'JAN', 'FEB','MAR', 'APR', 'MAY', 'JUNE', 'JULY', 'AUG', 'SEPT', 'OCT', 'NOV', 'DEC' ];
+    	var wkDayArr = ['Sun', 'Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun'];
+    	
+    	//Formats the date to 'mm-dd-yyyy' and assigns the output for easier user visibility and comprehension.
+    	var formattedDate = monthArr[sDate.getMonth()] + "-" + sDate.getDate() + "-" + sDate.getFullYear() + " (" + wkDayArr[sDate.getDay()] +")";
+    	
+    	//Sets the 'startdate' equal to the formatted Date.
+    	rc.startDate = formattedDate;
+    	
+    };
+    
+    /*************************************************************/  
+    /**
+     * This method will compute the number of batches needed to be made, 
+     * 		given the number of required Trainee's.
+     * 
+     * @param requiredTrainees 
+     * @return neededBatches
+     */
+    
+    rc.calcReqBatch = function(requiredTrainees){
     	
     	//Compute the total number of Batches estimated.
     	var neededBatches = requiredTrainees/15;
-    	
-    	//Insert the item into the 'reqBatches' array.
-    	//reqBatches.push(neededBatches);
-    	
-    	//If a ...
+    	    	
+    	/**
+    	 * 	Ensures the correct number of batches are created, regardless of any remainder of trainee's required.
+    	 * 		Example:  If the total number of required trainee's is 40 and the average batch
+    	 * 					size is 15, the resulting number of batches is '2.666666'.
+    	 * 					This result should be rounded up to accommodate for the remainder.
+    	 */
     	if (( neededBatches > Math.floor(neededBatches)) && (neededBatches < Math.ceil(neededBatches))){
     		
     		neededBatches = Math.ceil( neededBatches );
     		
     	}
+    	
+    	//Sets the reportsController's 'requiredBatches' data value to the computed 'neededBatches' values.
+    	rc.requiredBatches = neededBatches;
     	
     	//Returns the reqBatches variable.  Needs to be both the 
     	//'reqStartDate' and the 'reqBatches', at a later point.
@@ -157,33 +220,26 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     
     /*************************************************************/
     
-    
-    
-    
-    
-    
-    
-    
-    
-    /*************************************************************/
-    
     // data
     rc.year = new Date().getFullYear();
     
-    //
+    //The number of graduates.  Used in 
     rc.graduates = 15;
     
-    //
-    rc.futureGrads = 15;
-
-    //Date Trainee's are needed by.
-    rc.reqDate = 25;
+    //The date Trainee's are needed by.
+    rc.reqDate = new Date();
+    
+    //Batch(s) StartDate variable.
+    rc.startDate;
+    
+    //Default batch time-period
+    rc.defWeeks = 11;
     
     //Number of Required Graduates
     rc.requiredGrads = 40;
     
     //The number of Batches needed to be created
-    rc.requiredBatches = 7;
+    rc.requiredBatches;
     
     rc.currOrder = "name";
 

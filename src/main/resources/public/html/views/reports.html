@@ -152,10 +152,13 @@ Highcharts.chart('container', {
  	
  	<!--  2017 Graduate Summary -->
  	<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+
+
  	 
  	<br><br>
  	 
- 	<!--    -->
+ 	<!--  Required Trainee's Tab  -->
  	    <md-card md-whiteframe="8" ng-cloak>
 
 
@@ -166,15 +169,24 @@ Highcharts.chart('container', {
 
                 <div class="md-toolbar-tools">
                     <span>Required Trainee's</span>
-                </div>
-
+                
                 <span flex> </span>
+                
+                <md-button class="md-icon-button" ng-click="">
+                    <md-tooltip> Add New Card </md-tooltip>
+                    <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
+                </md-button>
+
+                
+				
+				</div>
 
             </md-toolbar>
 
             <div ng-if="rCtrl.batches != undefined" class="md-padding">
 
-				<div flex-xs="" flex-gt-xs="20" layout="column">
+				<div flex-xs="" flex-gt-xs="20" layout="column" >
+					
 					<md-card md-theme="{{ showDarkTheme ? 'dark-purple' : 'default' }}" md-theme-watch="">
 						
 						<md-card-title>
@@ -186,13 +198,13 @@ Highcharts.chart('container', {
 						<!--  Needed Trainee's Field  -->
 						<md-input-container>
                         	<label>Trainee's Needed:</label>
-                        	<input ng-model="rCtrl.requiredGrads" type="number">
+                        	<input ng-model="rCtrl.requiredGrads" ng-change="rCtrl.calcReqBatch(rCtrl.requiredGrads)" type="number">
                         </md-input-container>
 						
 						<!--  'Needed-by Date  -->
 						<md-input-container>
                         	<label>Hire Date:</label>
-                        	<input ng-model="rCtrl.reqDate" type="date">
+                        	<input ng-model="rCtrl.reqDate" ng-change="rCtrl.calcStarDate(rCtrl.reqDate)" type="date">
                         </md-input-container>
 						
 						<!--  Batch Curriculum  -->
@@ -204,10 +216,15 @@ Highcharts.chart('container', {
                         </md-input-container>
 						
 						
-						<!--  Required Batches  -->
+						<!--  Start Date  -->
+						<div ng-model="rCtrl.startDate">
+							<p>  Start Date: {{ rCtrl.startDate }}</p>
+						</div>
 						
+						
+						<!--  Required Batches  -->
 						<div ng-model="rCtrl.requiredBatches">
-							<p>  Required Batches: {{ rCtrl.calcReqBatch(rCtrl.requiredGrads, rCtrl.reqDate) }}</p>
+							<p>  Required Batches: {{ rCtrl.requiredBatches }}</p>
 						</div>
 						
 						<md-card-actions layout="row" layout-align="end center">
