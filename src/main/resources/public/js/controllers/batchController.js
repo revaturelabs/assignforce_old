@@ -1,8 +1,10 @@
 
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "batchCtrl", function($scope, $timeout, batchService, curriculumService, skillService, trainerService, locationService, calendarService, $location, $anchorScroll) {
+    assignforce.controller( "batchCtrl", function($scope, $timeout, batchService, curriculumService, skillService, trainerService, locationService, calendarService, $location, $anchorScroll, $filter) {
         var bc = this;
+        var availableTrainers;
+        
         bc.convertUnavailability = function(incoming){
         	return new Date(incoming);
         }
@@ -38,6 +40,11 @@
 
                 bc.updateWeeks();
             }
+        };
+        
+        //Filters trainers based on available dates by calling the trainerSelection filter
+        bc.updateTrainers = function(trainers, batchStart, batchEnd){
+        	bc.availableTrainers = $filter('trainerSelection')(trainers, batchStart, batchEnd);
         };
         
         	// calculates the percentage to which a trainer's skills correspond
@@ -388,4 +395,4 @@
             bc.showToast( "Could not fetch locations.");
         });
 
-    });
+    })
