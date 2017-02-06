@@ -4,6 +4,8 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 		locationService) {
 	console.log("Beginning location controller.");
 	var lc = this;
+	
+	lc.buildingOnItr = null;
 
 	// functions
 	// calls showToast method of aCtrl
@@ -34,7 +36,6 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 	};
 	// opens building list for locations
 	lc.openLocation = function(location) {
-		console.log("TACO 2");
 		if ($filter("activeItem")(location.buildings).length > 0) {
 			var id = "#loc" + location.id;
 			$(id).slideToggle();
@@ -42,10 +43,10 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 	};
 	// opens room list for buildings
 	lc.openBuilding = function(building) {
-		console.log("TACO 2");
 		if ($filter("activeItem")(building.rooms).length > 0) {
 			var id = "#bldg" + building.id;
-			$(id).slideToggle(lc.removeRooms(building));
+			console.log(id);
+			$(id).slideToggle();
 		}
 	};
 
