@@ -1,8 +1,13 @@
 
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "batchCtrl", function($scope, $timeout, batchService, curriculumService, skillService, trainerService, locationService, calendarService, $location, $anchorScroll) {
+    assignforce.controller( "batchCtrl", function($scope, $timeout, batchService, curriculumService, skillService, trainerService, locationService, calendarService, $location, $anchorScroll, $filter) {
         var bc = this;
+        var availableTrainers;
+        
+        bc.convertUnavailability = function(incoming){
+        	return new Date(incoming);
+        }
 
           // functions
             // calls showToast method of aCtrl
@@ -35,6 +40,11 @@
 
                 bc.updateWeeks();
             }
+        };
+        
+        //Filters trainers based on available dates by calling the trainerSelection filter
+        bc.updateTrainers = function(trainers, batchStart, batchEnd){
+        	bc.availableTrainers = $filter('trainerSelection')(trainers, batchStart, batchEnd);
         };
         
         	// calculates the percentage to which a trainer's skills correspond
@@ -84,6 +94,7 @@
 
             // defaults location to Reston branch 
               // HARD CODED, I couldn't think of a better way to do it that would reliably select only the main branch
+        	//update - it should be saved per admin profile
         bc.findHQ = function(){
             return 1;
         }
@@ -384,4 +395,4 @@
             bc.showToast( "Could not fetch locations.");
         });
 
-    });
+    })
