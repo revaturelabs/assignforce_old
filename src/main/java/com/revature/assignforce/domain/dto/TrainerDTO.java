@@ -14,6 +14,7 @@ public class TrainerDTO {
 	private List<Skill> skills;
 	private List<Certification> certifications;
 	private List<Unavailable> unavailabilities;
+	private Boolean active;
 	
 	public int getID() {
 		return ID;
@@ -51,5 +52,10 @@ public class TrainerDTO {
 	public void setUnavailabilities(List<Unavailable> unavailabilities) {
 		this.unavailabilities = unavailabilities;
 	}
-	
+	public Boolean getActive() {
+		return active;
+	}
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
 }

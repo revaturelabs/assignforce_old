@@ -2,8 +2,8 @@
  var assignforce = angular.module( "batchApp" );
 
     assignforce.controller( "locationCtrl", function( $scope, $filter, $mdDialog, locationService ) {
-        //console.log("Beginning location controller.");
         var lc = this;
+        // console.log("Beginning location controller.");
 
           // functions
             // calls showToast method of aCtrl
@@ -239,7 +239,7 @@
           // page initialization
             // data gathering
         locationService.getAll( function(response) {
-            //console.log("  (LC)  Retrieving all locations.")
+            // console.log("  (LC)  Retrieving all locations.");
             lc.locations = response;
         }, function(error) {
             //console.log("  (LC)  Failed to retrieve all locations with error:", error.data.message);
