@@ -138,56 +138,65 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 
 	$("#timeline").mousedown(function(evt){
 
-		// Initial y-coordinate of the mouse
-		var init = evt.offsetY - 29;
-		var mousedownY = init;
+		if(evt.offsetY > 30 && evt.offsetY < 1970){
 
-		// Get the date with respect to the y coordinate
-		var yScale = d3.time.scale()
-			.domain([0,1940])
-			.range([tlc.minDate, tlc.maxDate]);
+			// Initial y-coordinate of the mouse
+			var init = evt.offsetY - 29;
+			var mousedownY = init;
+			var pageY = evt.pageY;
 
-		var yDate = new Date(yScale(init)).getTime();
-		var diff = tlc.maxDate.getTime() - tlc.minDate.getTime();
-		var topFraction = (yDate - tlc.minDate.getTime()) / diff;
-		var bottomFraction = 1 - topFraction; 
+			// Get the date with respect to the y coordinate
+			var yScale = d3.time.scale()
+				.domain([0,1940])
+				.range([tlc.minDate, tlc.maxDate]);
 
-		// Draw the zoompoint
-		projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, mousedownY, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
-		
-		// // Fire when there is a mousemove event on the #timeline element
-		$("#timeline").mousemove(function(evt){
+			var yDate = new Date(yScale(init)).getTime();
+			var diff = tlc.maxDate.getTime() - tlc.minDate.getTime();
+			var topFraction = (yDate - tlc.minDate.getTime()) / diff;
+			var bottomFraction = 1 - topFraction; 
 
-			// Recalculate the scaling factor based on the number of milliseconds(more accuracy) currently on the timeline
-			tlc.scalingFactor = (new Date(tlc.maxDate).getTime() - new Date(tlc.minDate).getTime()) / 10;
-			diff = tlc.maxDate.getTime() - tlc.minDate.getTime();
-
-		    // If the mouse moves up
-		    if(init > evt.offsetY && diff > 1000000){
-
-		    	// Set the newly calculated min and max dates
-		    	tlc.minDate = new Date(new Date(tlc.minDate).getTime() + Math.trunc(tlc.scalingFactor * topFraction));
-		    	tlc.maxDate = new Date(new Date(tlc.maxDate).getTime() - Math.trunc(tlc.scalingFactor * bottomFraction));
-			
-			} else if(init < evt.offsetY && diff < 126140000000000) { // If the mouse moves down(big number is milliseconds in 4000 years)
-
-				tlc.minDate = new Date(new Date(tlc.minDate).getTime() - Math.trunc(tlc.scalingFactor * topFraction));
-				tlc.maxDate = new Date(new Date(tlc.maxDate).getTime() + Math.trunc(tlc.scalingFactor * bottomFraction));
-			}
-
+			// Draw the zoompoint
 			projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, mousedownY, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
 			
-			// Update the last coordinate of the mouse
-			init = evt.offsetY;
-		});
+			// // Fire when there is a mousemove event on the #timeline element
+			$(".toastContainer").mousemove(function(evt){
+
+				evt.preventDefault();
+
+				// Recalculate the scaling factor based on the number of milliseconds(more accuracy) currently on the timeline
+				tlc.scalingFactor = (new Date(tlc.maxDate).getTime() - new Date(tlc.minDate).getTime()) / 10;
+				diff = tlc.maxDate.getTime() - tlc.minDate.getTime();
+
+			    // If the mouse moves up
+			    if(pageY > evt.pageY && diff > 1000000){
+
+			    	// Set the newly calculated min and max dates
+			    	tlc.minDate = new Date(new Date(tlc.minDate).getTime() + Math.trunc(tlc.scalingFactor * topFraction));
+			    	tlc.maxDate = new Date(new Date(tlc.maxDate).getTime() - Math.trunc(tlc.scalingFactor * bottomFraction));
+				
+				} else if(pageY < evt.pageY && diff < 126140000000000) { // If the mouse moves down(big number is milliseconds in 4000 years)
+
+					tlc.minDate = new Date(new Date(tlc.minDate).getTime() - Math.trunc(tlc.scalingFactor * topFraction));
+					tlc.maxDate = new Date(new Date(tlc.maxDate).getTime() + Math.trunc(tlc.scalingFactor * bottomFraction));
+				}
+
+				projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, mousedownY, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
+				
+				// Update the last coordinate of the mouse
+				pageY = evt.pageY;
+				
+			});
+		}
 	});
 
-	$("#timeline").mouseup(function(){
+	$(".toastContainer").mouseup(function(){
 		// Erase the zoompoint(or move out of view)
 		projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, -100, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
 		// Remove mousemove listener from the timeline
-		$("#timeline").off("mousemove");
+		$(".toastContainer").off("mousemove");
 	});
+
+
 });
 
 // Draw timeline
