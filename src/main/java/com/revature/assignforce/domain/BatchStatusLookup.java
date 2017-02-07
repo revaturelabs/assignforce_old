@@ -27,8 +27,6 @@ public class BatchStatusLookup {
 		this.batchStatusID = batchStatusID;
 		this.batchStatusName = batchStatusName;
 	}
-
-	
 	
 	public int getBatchStatusID() {
 		return batchStatusID;
@@ -44,9 +42,5 @@ public class BatchStatusLookup {
 
 	public void setBatchStatusName(String batchStatusName) {
 		this.batchStatusName = batchStatusName;
-	}
-
-
-	
-	
+	}	
 }

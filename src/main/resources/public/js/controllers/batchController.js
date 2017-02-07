@@ -398,5 +398,4 @@
         }, function(error) {
             bc.showToast( "Could not fetch locations.");
         });
-
     })

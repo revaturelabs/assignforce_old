@@ -97,8 +97,7 @@ public class Room implements Activatable {
 
 	@Override
 	public String toString() {
-		return "Room [roomID=" + roomID + ", roomName=" + roomName + ", building=" + building + ", unavailable="
-				+ unavailable + ", batches=" + batches + ", active=" + active + "]";
+		return "Room [roomID = " + roomID + ", roomName = " + roomName + ", building = " + building + ", unavailable = "
+				+ unavailable + ", batches = " + batches + ", active = " + active + "]";
 	}
-
 }
