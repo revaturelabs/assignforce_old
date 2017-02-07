@@ -16,9 +16,7 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "UNAVAILABILITY")
-public class Unavailable {
-
-	
+public class Unavailable {	
 
 	@Id
 	@Column(name = "ID")
