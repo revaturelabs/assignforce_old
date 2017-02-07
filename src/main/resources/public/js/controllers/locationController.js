@@ -55,6 +55,39 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 	// $(id).slideToggle( lc.removeRooms(location) );
 	// }
 	// };
+	
+	//add building
+	lc.addBuilding = function() {
+		if (lc.selectedList.length > 1) {
+			lc.showToast("Please select only one location.");
+		}
+		// indicates that the list item is actually a location and not something else
+		else if (!(Array.isArray( lc.selectedList[0].buildings ) ) ) {
+			lc.showToast("Please select a location.");
+		} else {
+			$mdDialog.show({
+				
+				templateUrl : "html/templates/buildingTemplate.html",
+				//
+				controller : "bldgDialogCtrl",
+				controllerAs : "ldCtrl",
+				locals : {
+					location : lc.selectedList[0],
+					building : {
+						buildingName : ""
+					},
+					state : "create"
+				},
+				bindToController : true,
+				clickOutsideToClose : true
+			}).then(function() {
+				lc.showToast("Building added.");
+				lc.repull();
+			}, function() {
+				lc.showToast("Failed to add building.");
+			});
+		}
+	};
 
 	// add room to location
 	lc.addRoom = function() {
@@ -86,18 +119,30 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			});
 		}
 	};
-
-	// removes rooms from selectedList on location menu close
-	lc.removeRooms = function(location) {
-		if (location.rooms.length > 0) {
-			location.rooms.forEach(function(room) {
-				var idx = lc.selectedList.indexOf(room);
+	
+	// removes buildings from selectedList on location menu close
+	lc.removeBuildings = function(location) {
+		if (location.buildings.length > 0) {
+			location.buildings.forEach(function(building) {
+				var idx = lc.selectedList.indexOf(building);
 				if (idx > -1) {
 					lc.selectedList.splice(idx, 1);
 				}
 			});
 		}
 	};
+
+	// removes rooms from selectedList on location menu close
+	//	lc.removeRooms = function(location) {
+	//		if (location.rooms.length > 0) {
+	//			location.rooms.forEach(function(room) {
+	//				var idx = lc.selectedList.indexOf(room);
+	//				if (idx > -1) {
+	//					lc.selectedList.splice(idx, 1);
+	//				}
+	//			});
+	//		}
+	//	};
 
 	// edit location
 	lc.editSelected = function() {
