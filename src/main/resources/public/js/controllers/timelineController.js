@@ -19,60 +19,105 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	}
 	
 	//Timeline axis range variables
-	tlc.minDate = new Date(2016,7,0);
-	tlc.maxDate = new Date(2017,12,0);
+	tlc.minDate = new Date(3000, 7, 0);
+	tlc.maxDate = new Date(2000, 12, 0);
+	
+	//Set the min and max dates based on the batches.
+	tlc.getDateRange = function()
+	{	
+		//console.log("Got here.");
+		
+		if (tlc.batches)
+		{
+			var startDate;
+			var endDate;
+			
+			for (b in tlc.batches)
+			{
+				if (!angular.isUndefined(tlc.batches[b].trainer) && tlc.batches[b].trainer !== null)
+				{
+					//console.log(tlc.batches[b].trainer);
+					
+					if (angular.isUndefined(tlc.minDate))
+					{
+						//console.log("Min undefined here!");
+						tlc.minDate = new Date(tlc.batches[b].startDate);
+					}
+					else
+					{
+						//console.log("Min else here!");
+						startDate = new Date(tlc.batches[b].startDate);
+						if (startDate.getTime() < tlc.minDate.getTime()) {tlc.minDate = startDate;}
+					}
+					
+					if (angular.isUndefined(tlc.maxDate))
+					{
+						//console.log("Max undefined here!");
+						tlc.maxDate = new Date(tlc.batches[b].endDate);
+					}
+					else
+					{
+						endDate = new Date(tlc.batches[b].endDate);
+						//console.log(endDate);
+						if (endDate.getTime() > tlc.maxDate.getTime()) {tlc.maxDate = endDate;}
+					}
+				}
+			}
+		}
+	}
 	
 	//Project timeline when data changes
 	var batches;
 	var trainerNames;
+	
 	$scope.$on("repullTimeline", function(event, data){
-		batchService.getAll( function(response) {
-            //console.log("  (TLC) Retrieving all batches.")
-            tlc.batches = response;
-            if (tlc.trainers) {
-                projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, 0, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
-            }
-        }, function(error) {
-            //console.log("  (TLC) Failed to retrieve all batches with error:", error.data.message);
-        });
-
-        trainerService.getAll( function(response) {
-            //console.log("  (TLC) Retrieving all trainers.")
-            tlc.trainers = response.map(function(trainer){return trainer.firstName});
-            if (tlc.batches) {
-                projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, 0, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
-            }
-        }, function(error) {
-            //console.log("  (TLC) Failed to retrieve all trainers with error:", error.data.message);
-        });
+		tlc.getAllTrainers();
+		tlc.getAllBatches();
 	});
 
-    batchService.getAll( function(response) {
-        //console.log("  (TLC) Retrieving all batches.")
-        tlc.batches = response;
-        if (tlc.trainers) {
-			projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, 0, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
-        }
-    }, function(error) {
-        //console.log("  (TLC) Failed to retrieve all batches with error:", error.data.message);
-    });
+	tlc.getAllBatches = function()
+	{
+	    batchService.getAll( function(response) {
+	        //console.log("  (TLC) Retrieving all batches.")
+	        tlc.batches = response;
+	        tlc.getDateRange();
+	        //console.log(tlc.trainerNames);
+	        if (!angular.isUndefined(tlc.trainers) && tlc.trainers !== null && !angular.isUndefined(tlc.trainerNames) && tlc.trainerNames !== null)
+	        {
+				projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, 0, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
+	        }
+	    }, function(error) {
+	        //console.log("  (TLC) Failed to retrieve all batches with error:", error.data.message);
+	    });
+	}
 
-    trainerService.getAll( function(response) {
-        //console.log("  (TLC) Retrieving all trainers.")
-		tlc.trainers = response.map(function(trainer){return trainer.firstName});
-        if (tlc.batches) {
-			projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, 0, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
-        }
-    }, function(error) {
-        //console.log("  (TLC) Failed to retrieve all trainers with error:", error.data.message);
-    });
+	tlc.getAllTrainers = function()
+	{
+	    trainerService.getAll( function(response) {
+	        //console.log("  (TLC) Retrieving all trainers.")
+			tlc.trainers = response.map(function(trainer){return (trainer.trainerID)});
+			tlc.trainerNames = response.map(function(trainer){return (trainer.firstName + " " + trainer.lastName)});
+			tlc.getDateRange();
+			//console.log(tlc.trainerNames);
+	        if (!angular.isUndefined(tlc.batches) && tlc.batches !== null && !angular.isUndefined(tlc.trainerNames) && tlc.trainerNames !== null)
+	        {
+				projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, 0, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
+	        }
+	    }, function(error) {
+	        //console.log("  (TLC) Failed to retrieve all trainers with error:", error.data.message);
+	    });
+	}
 	
+	tlc.getAllBatches();
+
+    tlc.getAllTrainers();
+    
 	$scope.$watch(
 		function(){
 			return tlc.minDate;
 		},
 		function(){
-			if(tlc.batches !== undefined || tlc.trainers !== undefined){
+			if(tlc.batches !== undefined && tlc.trainers !== undefined){
 				projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, 0, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
 			}
 		}
@@ -83,7 +128,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 			return tlc.maxDate;
 		},
 		function(){
-			if(tlc.batches !== undefined || tlc.trainers !== undefined) {
+			if(tlc.batches !== undefined && tlc.trainers !== undefined) {
                 projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, 0, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers);
             }
 		}
@@ -197,11 +242,11 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 	var batchCount = {};
 	for(var x = 0; x < timelineData.length; x++){
 		
-		if(batchCount[timelineData[x].trainer ? timelineData[x].trainer.firstName : 'No trainer'] === undefined){
-			batchCount[timelineData[x].trainer ? timelineData[x].trainer.firstName : 'No trainer'] = [];
+		if(batchCount[timelineData[x].trainer ? (timelineData[x].trainer.trainerID) : 'No trainer'] === undefined){
+			batchCount[timelineData[x].trainer ? (timelineData[x].trainer.trainerID) : 'No trainer'] = [];
 		}
 		
-		batchCount[timelineData[x].trainer ? timelineData[x].trainer.firstName : 'No trainer'].push(timelineData[x]);
+		batchCount[timelineData[x].trainer ? (timelineData[x].trainer.trainerID) : 'No trainer'].push(timelineData[x]);
 	}
 	
 	var betweenBatches = [];
@@ -209,7 +254,7 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 	for(var trainer in batchCount){
 		if (batchCount.hasOwnProperty(trainer)){
 			for(x = 0; x < batchCount[trainer].length-1; x++){
-				var between = {x: xScale(batchCount[trainer][x].trainer ? batchCount[trainer][x].trainer.firstName : 'No trainer'),
+				var between = {x: xScale(batchCount[trainer][x].trainer ? (batchCount[trainer][x].trainer.trainerID) : 'No trainer'),
 						y1: yScale(new Date(batchCount[trainer][x].endDate)),
 						y2: yScale(new Date(batchCount[trainer][x+1].startDate)),
 						length:numWeeks(batchCount[trainer][x].endDate,batchCount[trainer][x+1].startDate)};
@@ -331,7 +376,7 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 				}
 				return y;
 			})
-			.attr('x', function(d) {return xScale(d.trainer ? d.trainer.firstName : 'No trainer')-15;})
+			.attr('x', function(d) {return xScale(d.trainer ? (d.trainer.trainerID) : 'No trainer')-15;})
 			.attr('width', 30)
 			.attr('height', function(d) {
 				var start = yScale(new Date(d.startDate));
@@ -344,8 +389,30 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 				}
 				return end - start;
 			})
-			.on('click', function(d){parentScope.bCtrl.highlightBatch(d);parentScope.$apply();})
-			.style('fill', function(d) {return colorScale(d.trainer ? d.trainer.firstName : 'No trainer');});
+			.on('mouseover', function()
+			{
+				//tip.show;
+				d3.event.stopPropagation();
+			})
+			.on('mouseout', function()
+			{
+				//tip.hide;
+				d3.event.stopPropagation();
+			})
+			.on('mousedown', function()
+			{
+				d3.event.stopPropagation();
+			})
+			.on('mousemove', function()
+			{
+				d3.event.stopPropagation();
+			})
+			.on('click', function(d){
+				parentScope.bCtrl.highlightBatch(d);
+				parentScope.$apply();
+				d3.event.stopPropagation();
+			})
+			.style('fill', function(d) {return colorScale(d.trainer ? (d.trainer.trainerID) : 'No trainer');});
 	d3.selectAll('.rect')
 		.append('text')
 			.attr('y', function(d) { 
@@ -355,7 +422,7 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 				}
 				return (y+25);
 			})
-			.attr('x', function(d) {return xScale(d.trainer ? d.trainer.firstName : 'No trainer')-7;})
+			.attr('x', function(d) {return xScale(d.trainer ? (d.trainer.trainerID) : 'No trainer')-7;})
 			.text(function(d) {return numWeeks(d.startDate,d.endDate);});
 	
 	//Add between batch length to timeline
