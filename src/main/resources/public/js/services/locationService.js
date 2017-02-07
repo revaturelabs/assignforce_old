@@ -6,6 +6,7 @@ app.service( "locationService", function($resource) {
     var ls = this;
     
     ls.getEmptyLocation = function(){
+    	console.log("getEmptyLocation");
         return new Location();
     };
 

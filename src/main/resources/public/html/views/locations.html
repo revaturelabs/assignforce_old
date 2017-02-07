@@ -13,8 +13,13 @@
                 <md-tooltip> Add location </md-tooltip>
                 <md-icon md-svg-icon="img/ic_add_location_white_24px.svg"> </md-icon>
             </md-button>
+            
+            <md-button id="bldgAdd" class="md-icon-button" ng-click="lCtrl.addBuilding()">
+                <md-tooltip> Add building to selected </md-tooltip>
+                <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
+            </md-button>
 
-            <md-button class="md-icon-button" ng-click="lCtrl.addRoom()">
+            <md-button id="roomAdd" class="md-icon-button" ng-click="lCtrl.addRoom()">
                 <md-tooltip> Add room to selected </md-tooltip>
                 <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
             </md-button>

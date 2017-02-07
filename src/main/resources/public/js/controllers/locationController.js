@@ -3,13 +3,27 @@ var assignforce = angular.module("batchApp");
 assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 		locationService) {
 	var lc = this;
-	
-	lc.buildingOnItr = null;
 
 	// functions
 	// calls showToast method of aCtrl
 	lc.showToast = function(message) {
 		$scope.$parent.aCtrl.showToast(message);
+	};
+	
+	// opens building list for locations
+	lc.openLocation = function(location) {
+		if ($filter("activeItem")(location.buildings).length > 0) {
+			var id = "#loc" + location.id;
+			$(id).slideToggle();
+		}
+	};
+	// opens room list for buildings
+	lc.openBuilding = function(building) {
+		if ($filter("activeItem")(building.rooms).length > 0) {
+			var id = "#bldg" + building.id;
+			console.log(id);
+			$(id).slideToggle();
+		}
 	};
 
 	// adds location
@@ -30,21 +44,6 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 		}, function() {
 			lc.showToast("Failed to create location.");
 		});
-	};
-	// opens building list for locations
-	lc.openLocation = function(location) {
-		if ($filter("activeItem")(location.buildings).length > 0) {
-			var id = "#loc" + location.id;
-			$(id).slideToggle();
-		}
-	};
-	// opens room list for buildings
-	lc.openBuilding = function(building) {
-		if ($filter("activeItem")(building.rooms).length > 0) {
-			var id = "#bldg" + building.id;
-			console.log(id);
-			$(id).slideToggle();
-		}
 	};
 
 	// ORIGINAL METHOD BEFORE ADDING BUILDINGS
