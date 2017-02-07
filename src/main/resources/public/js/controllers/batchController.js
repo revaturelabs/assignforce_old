@@ -33,7 +33,11 @@
                 bc.batch.cotrainer  = (incomingBatch.cotrainer)  ? incomingBatch.cotrainer.trainerID : undefined;
                 
                 bc.batch.location   = incomingBatch.location.id;
+              //bc.batch.building	= incomingBatch.building.id;
                 bc.batch.room       = (incomingBatch.room)       ? incomingBatch.room.roomID         : undefined;
+              //bc.batch.room.unavailability.startDate = incomingBatch.startDate;
+              //bc.batch.room.unavailability.endDate = incomingBatch.endDate;
+              //These need to exist to test...
                 
                 bc.batch.startDate  = (incomingBatch.startDate)  ? new Date(incomingBatch.startDate) : undefined;
                 bc.batch.endDate    = (incomingBatch.endDate)    ? new Date(incomingBatch.endDate)   : undefined;
