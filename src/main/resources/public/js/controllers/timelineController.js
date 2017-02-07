@@ -160,7 +160,7 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 	var yScale = d3.time.scale()
 		.domain([minDate, maxDate])
 		.range([0,height]);
-
+console.log(trainerNames);
 	var xScale = d3.scale.ordinal()
 		.domain(trainerNames)
 		.rangePoints([xPadding,width-xPadding]);
