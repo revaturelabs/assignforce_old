@@ -1,6 +1,8 @@
 package com.revature.assignforce.domain;
 
 import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,12 +11,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "UNAVAILABILITY")
-public class Unavailable {
-
-	
+public class Unavailable {	
 
 	@Id
 	@Column(name = "ID")
@@ -23,20 +25,20 @@ public class Unavailable {
 	private int ID;
 
 	
-
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "START_DATE", nullable=false)
-	private Timestamp startDate;
+	private Calendar startDate;
 
 
-
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "END_DATE", nullable=false)
-	private Timestamp endDate;
+	private Calendar endDate;
 
 	
 	public Unavailable(){}
 
 
-	public Unavailable(int iD, Timestamp startDate, Timestamp endDate) {
+	public Unavailable(int iD, Calendar startDate, Calendar endDate) {
 		super();
 		ID = iD;
 		this.startDate = startDate;
@@ -57,25 +59,25 @@ public class Unavailable {
 
 
 
-	public Timestamp getStartDate() {
+	public Calendar getStartDate() {
 		return startDate;
 	}
 
 
 
-	public void setStartDate(Timestamp startDate) {
+	public void setStartDate(Calendar startDate) {
 		this.startDate = startDate;
 	}
 
 
 
-	public Timestamp getEndDate() {
+	public Calendar getEndDate() {
 		return endDate;
 	}
 
 
 
-	public void setEndDate(Timestamp endDate) {
+	public void setEndDate(Calendar endDate) {
 		this.endDate = endDate;
 	}
 

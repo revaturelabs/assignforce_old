@@ -253,9 +253,10 @@ table.md-table .md-table-progress th md-progress-linear > .md-container {
 table.md-table .md-table-progress th md-progress-linear > .md-container > .md-bar {
   height: 3px;
 }
+/*COLUMN NAME FONT SIZE AND OTHER INFO*/
 table.md-table th.md-column {
   color: rgba(0, 0, 0, 0.54);
-  font-size: 12px;
+  font-size: 16px;
   font-weight: bold;
   white-space: nowrap;
 }
@@ -362,9 +363,10 @@ table.md-table th.md-column md-checkbox {
   margin: 0;
   width: 20px;
 }
+/*CELL FONT SIZE AND OTHER INFO*/
 table.md-table td.md-cell {
   color: rgba(0, 0, 0, 0.87);
-  font-size: 13px;
+  font-size: 17px;
   border-top: 1px rgba(0, 0, 0, 0.12) solid;
 }
 table.md-table td.md-cell.md-numeric md-select {
