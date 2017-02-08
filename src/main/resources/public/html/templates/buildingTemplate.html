@@ -1,15 +1,16 @@
 
     <md-dialog>
 
-        <form name="buildingForm" ng-submit="ldCtrl.save(buildingForm.$valid)" novalidate>
+        <form name="buildingForm" ng-submit="bldgCtrl.save(buildingForm.$valid)" novalidate>
 
-            <div ng-if="ldCtrl.locations != undefined">
+            <div ng-if="bldgCtrl.locations != undefined">
                 
                 <md-dialog-content>
 
                     <md-toolbar layout="columns">
                         <div class="md-toolbar-tools">
-                            <span> {{ ldCtrl.title }} </span>
+                            <!--span> {{ bldgCtrl.title }} </span-->
+                            <span>TEST TITLE</span>
                         </div>
                     </md-toolbar>
 
@@ -18,7 +19,7 @@
 
                                 <md-input-container flex="100">
                                     <label> Building Name </label>
-                                    <input ng-model="ldCtrl.building.buildingName" required>
+                                    <input ng-model="bldgCtrl.building.buildingName" required>
                                 </md-input-container>
 
                             </div>
@@ -29,12 +30,12 @@
                 <md-dialog-actions>
 
                     <md-button class="md-primary" type="submit"> Save </md-button>
-                    <md-button class="md-primary" ng-click="ldCtrl.cancel()"> Cancel </md-button>
+                    <md-button class="md-primary" ng-click="bldgCtrl.cancel()"> Cancel </md-button>
                 
                 </md-dialog-actions>
             </div>
 
-            <div ng-if="ldCtrl.locations == undefined" layout="column" layout-wrap layout-align="center center">
+            <div ng-if="bldgCtrl.locations == undefined" layout="column" layout-wrap layout-align="center center">
                 <div flex="100"> &nbsp; </div>
                 <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
                 <div flex="100"> &nbsp; </div>

@@ -9,7 +9,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 	lc.showToast = function(message) {
 		$scope.$parent.aCtrl.showToast(message);
 	};
-	
+
 	// opens building list for locations
 	lc.openLocation = function(location) {
 		if ($filter("activeItem")(location.buildings).length > 0) {
@@ -21,7 +21,6 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 	lc.openBuilding = function(building) {
 		if ($filter("activeItem")(building.rooms).length > 0) {
 			var id = "#bldg" + building.id;
-			console.log(id);
 			$(id).slideToggle();
 		}
 	};
@@ -46,29 +45,19 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 		});
 	};
 
-	// ORIGINAL METHOD BEFORE ADDING BUILDINGS
-	// opens room list for location
-	// lc.openLocation = function(location) {
-
-	// if ( $filter("activeItem")(location.rooms).length > 0 ) {
-	// var id = "#loc" + location.id;
-	// $(id).slideToggle( lc.removeRooms(location) );
-	// }
-	// };
-	
-	//add building
+	// add building
 	lc.addBuilding = function() {
 		if (lc.selectedList.length > 1) {
 			lc.showToast("Please select only one location.");
 		}
-		// indicates that the list item is actually a location and not something else
-		else if (!(Array.isArray( lc.selectedList[0].buildings ) ) ) {
+		// indicates that the list item is actually a location and not something
+		// else
+		else if (!(Array.isArray(lc.selectedList[0].buildings))) {
 			lc.showToast("Please select a location.");
 		} else {
+			// console.log("taco");
 			$mdDialog.show({
-				
 				templateUrl : "html/templates/buildingTemplate.html",
-				//
 				controller : "bldgDialogCtrl",
 				controllerAs : "ldCtrl",
 				locals : {
@@ -92,7 +81,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 	// add room to location
 	lc.addRoom = function() {
 		if (lc.selectedList.length > 1) {
-			lc.showToast("Please select only a location.");
+			lc.showToast("Please select only one location.");
 		}
 		// indicates that the list item is actually a room and not a location
 		else if (!Array.isArray(lc.selectedList[0].rooms)) {
@@ -119,7 +108,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			});
 		}
 	};
-	
+
 	// removes buildings from selectedList on location menu close
 	lc.removeBuildings = function(location) {
 		if (location.buildings.length > 0) {
@@ -133,16 +122,16 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 	};
 
 	// removes rooms from selectedList on location menu close
-	//	lc.removeRooms = function(location) {
-	//		if (location.rooms.length > 0) {
-	//			location.rooms.forEach(function(room) {
-	//				var idx = lc.selectedList.indexOf(room);
-	//				if (idx > -1) {
-	//					lc.selectedList.splice(idx, 1);
-	//				}
-	//			});
-	//		}
-	//	};
+	// lc.removeRooms = function(location) {
+	// if (location.rooms.length > 0) {
+	// location.rooms.forEach(function(room) {
+	// var idx = lc.selectedList.indexOf(room);
+	// if (idx > -1) {
+	// lc.selectedList.splice(idx, 1);
+	// }
+	// });
+	// }
+	// };
 
 	// edit location
 	lc.editSelected = function() {

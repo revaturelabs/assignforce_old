@@ -1,7 +1,7 @@
 var assignforce = angular.module("batchApp");
 
 assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
-		locationService, bldgService) {
+		locationService, buildingService) {
 	// console.log("Beginning building dialog controller.");
 	var bdc = this;
 
@@ -16,9 +16,9 @@ assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
 
 		if (isValid) {
 
-			// shouldn't need this, this just concatonates the OLD building name
+			// shouldn't need this, this just concatenates the OLD building name
 			// onto the room name
-			
+
 			// if (bdc.building) {
 			// bdc.room.roomName = bdc.building + " - " + bdc.room.roomName;
 			// }
@@ -72,7 +72,8 @@ assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
 	// data
 	if (bdc.building.buildingName.split("-").length > 1) {
 		bdc.building = bdc.building.buildingName.split("-")[0].trim();
-		bdc.building.buildingName = bdc.building.buildingName.split("-")[1].trim();
+		bdc.building.buildingName = bdc.building.buildingName.split("-")[1]
+				.trim();
 	} else {
 		bdc.building = "";
 	}
