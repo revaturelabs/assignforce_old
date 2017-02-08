@@ -59,7 +59,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			$mdDialog.show({
 				templateUrl : "html/templates/buildingTemplate.html",
 				controller : "bldgDialogCtrl",
-				controllerAs : "ldCtrl",
+				controllerAs : "bldgCtrl",
 				locals : {
 					location : lc.selectedList[0],
 					building : {
