@@ -281,10 +281,6 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
         rc.showToast("Could not fetch curricula.");
     });
 
-    // Only batches and curricula are necessary now, but these are here in the event that new reports require the use of other object lists
-    // Nate Vardell Deleted the commented out block that was here because SonarQube wouldn't pass with it.
-    // Contained 4 functions for getting skills, trainers, & locations.
-    // I have the deleted methods if we need them in the future.
 
 
     rc.graphData = function() {
@@ -332,7 +328,6 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 
 
     $scope.myGraph = function() {
-        console.log("In my graph function...");
         Highcharts.chart('container', {
             chart: {
                 type: 'column'
@@ -366,6 +361,14 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
             },
             series: rc.graphData()
         })};
+
+        rc.randomColor = function() {
+            var test = Math.floor(Math.random()*16777215).toString(16);
+            console.log(test);
+            return test;
+        };
+
+
 });
 
 
@@ -379,7 +382,6 @@ assignforce.directive('getData', function() {
         bindToController: true,
         controller: function($scope) {
             console.log("Get Data Directive.");
-            console.log($scope.name);
             $scope.myGraph();
         }
     };
