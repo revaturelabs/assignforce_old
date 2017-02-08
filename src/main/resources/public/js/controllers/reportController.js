@@ -296,7 +296,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
       	for ( x in rc.cardArr){
 
             if(rc.cardArr.hasOwnProperty(x)){
-                var batchVal = rc.cardArr[x].batchType;
+                batchVal = rc.cardArr[x].batchType;
 
                 switch(batchVal){
 
