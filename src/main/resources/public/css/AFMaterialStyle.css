@@ -99,5 +99,7 @@
 
     .gradTable.md-table:not(.md-row-select) td.md-cell:nth-child(n+2):nth-last-child(n+2), .gradTable.md-table:not(.md-row-select) th.md-column:nth-child(n+2):nth-last-child(n+2) {
         padding: 0 50px 0 0;
+        text-align: center;
+        font-size: 12px;
     }
 
