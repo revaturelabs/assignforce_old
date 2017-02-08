@@ -1,7 +1,5 @@
 package com.revature.assignforce.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;
@@ -41,13 +39,6 @@ public class Building implements Activatable {
 	private List<Room> rooms;
 	
 	public Building() {
-		System.out.println("Failure");
-	}
-	
-	public Building(int location) {
-		System.out.println("ALMOST EMPTY CONSTRUCTOR CALLED");
-		System.out.println(location);
-		this.location = location;
 	}
 
 	public Building(int ID, String name, List<Room> rooms, boolean active, int location) {
