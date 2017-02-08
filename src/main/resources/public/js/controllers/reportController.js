@@ -5,8 +5,9 @@ var assignforce = angular.module( "batchApp" );
 assignforce.controller( "reportCtrl", function( $scope, batchService, curriculumService, monthList ) {
     //console.log("Beginning report controller.");
     var rc = this;
+    $scope.batch = [];
 
-
+    $scope.name = 'This is not a name.';
 
 
     $scope.options = [{
@@ -265,6 +266,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     batchService.getAll(function (response) {
         //console.log("  (RC)  Retrieving all batches.");
         rc.batches = response;
+        batch = response;
     }, function (error) {
         //console.log("  (RC)  Failed to retrieve all batches with error:", error.data.message);
         rc.showToast("Could not fetch batches.");
@@ -326,131 +328,68 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     // var series = [{"name":[".NET"],"data":[0,0,0,0,0,0,0,15,0,0,15,0]},{"name":["Java"],"data":[15,45,0,15,15,0,15,0,15,0,0,30]},{"name":["SDET"],"data":[0,0,15,0,0,15,0,0,0,15,0,0]}];
 
 
-    // window.onload = console.log(rc.graphData);
-
-    // Highcharts.chart('container', {
-    //     chart: {
-    //         type: 'column'
-    //     },
-    //     title: {
-    //         text: 'Graduate Summary'
-    //     },
-    //     xAxis: {
-    //         categories: categories,
-    //         crosshair: true
-    //     },
-    //     yAxis: {
-    //         min: 0,
-    //         title: {
-    //             text: 'Graduates'
-    //         }
-    //     },
-    //     tooltip: {
-    //         headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-    //         pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-    //         '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
-    //         footerFormat: '</table>',
-    //         shared: true,
-    //         useHTML: true
-    //     },
-    //     plotOptions: {
-    //         column: {
-    //             pointPadding: 0.2,
-    //             borderWidth: 0
-    //         }
-    //     },
-    //     series: rc.graphData()
-    // });
 
 
-    setTimeout(myGraph, 2000);
 
-
-    function myGraph() {Highcharts.chart('container', {
-        chart: {
-            type: 'column'
-        },
-        title: {
-            text: 'Graduate Summary'
-        },
-        xAxis: {
-            categories: categories,
-            crosshair: true
-        },
-        yAxis: {
-            min: 0,
+    $scope.myGraph = function() {
+        console.log("In my graph function...");
+        Highcharts.chart('container', {
+            chart: {
+                type: 'column'
+            },
             title: {
-                text: 'Graduates'
-            }
-        },
-        tooltip: {
-            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-            '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
-            footerFormat: '</table>',
-            shared: true,
-            useHTML: true
-        },
-        plotOptions: {
-            column: {
-                pointPadding: 0.2,
-                borderWidth: 0
-            }
-        },
-        series: rc.graphData()
-    })};
-
-
-    // var categories = ['-55', '-50', '-45', '-40', '-35', '-30', '-25', '-20', '-15', '-10', '-05', '0'];
-    // var test1 = {name: 'Inbound',data: [29.9, 71.5, 25.4, 43.2, 37.0, 33.0, 35.6, 48.5, 21.4, 19.1, 16.6, 54.4]};
-    // var test2 = {name: 'Outbound',data: [19.3, 56.3, 23.1, 38.5, 32.9, 27.0, 30.6, 42.3, 17.4, 12.0, 9.1, 34.0]};
-    //
-    //
-    // Highcharts.chart('container', {
-    //     options: {
-    //         chart: {
-    //             type: 'area'
-    //         }
-    //     },
-    //
-    //     title: {
-    //         text: 'Network Usage - Last 60 Minutes'
-    //     },
-    //     yAxis: {
-    //         title: {
-    //             text: 'Throughput MBit/s'
-    //         }
-    //     },
-    //     xAxis: {
-    //         title: {
-    //             text: 'Minutes'
-    //         },
-    //         categories: categories
-    //     },
-    //     plotOptions: {
-    //         line: {
-    //             dataLabels: {
-    //                 enabled: true
-    //             },
-    //             enableMouseTracking: true
-    //         }
-    //     },
-    //     series: [
-    //         test1,
-    //         test2
-    //     ]
-    // });
-
-
-
-
-
-
+                text: 'Graduate Summary'
+            },
+            xAxis: {
+                categories: categories,
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Graduates'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: rc.graphData()
+        })};
 });
 
 
 
+
+assignforce.directive('getData', function() {
+    return {
+        restrict: 'E',
+        scope: true,
+        template: '<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>',
+        bindToController: true,
+        controller: function($scope) {
+            console.log("Get Data Directive.");
+            console.log($scope.name);
+            $scope.myGraph();
+        }
+    };
+});
+
+
+
+
 assignforce.directive('accordionDynamic', function(){
+    console.log("Accordion  Directive");
     return{
         restrict: 'ACE',
         link: function(scope, element, attributes){
