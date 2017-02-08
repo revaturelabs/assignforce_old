@@ -4,6 +4,7 @@
 .mtj.tmp/
 
 # Package Files #
+*.exe.stackdump
 *.jar
 *.war
 *.ear
