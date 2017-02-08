@@ -128,6 +128,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 
     /*************************************************************/
     /**
+     * @Author:  Jaina L. Brehm
      * This method will compute the required batch start date, 
      * 		given a required hire date.
      * 
@@ -135,7 +136,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
      * @return nothing
      */
     
-    rc.calcStarDate = function(requiredDate){
+    rc.calcStarDate = function(requiredDate, index){
     	
     	//Initializes a start date variable and assigns it the value in 'requiredDate'.
     	var sDate = ( requiredDate == undefined ) ? (new Date()) : requiredDate;
@@ -171,20 +172,28 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     		default: break;
     	}
 
- 
+    	//Month abbreviation array.
     	var monthArr = [ 'JAN', 'FEB','MAR', 'APR', 'MAY', 'JUNE', 'JULY', 'AUG', 'SEPT', 'OCT', 'NOV', 'DEC' ];
+    	
+    	//'Day of the Week' abbreviation array.
     	var wkDayArr = ['Sun', 'Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun'];
     	
     	//Formats the date to 'mm-dd-yyyy' and assigns the output for easier user visibility and comprehension.
     	var formattedDate = monthArr[sDate.getMonth()] + "-" + sDate.getDate() + "-" + sDate.getFullYear() + " (" + wkDayArr[sDate.getDay()] +")";
     	
-    	//Sets the 'startdate' equal to the formatted Date.
-    	rc.startDate = formattedDate;
+    	//Sets the 'startDate' within 'cardArr', @ the index value, equal to the un-formatted start date.
+    	//This value is used when creating specific batches from the card pannel.
+    	rc.cardArr[index].startDate = sDate;
+    	
+    	//Sets the 'startdate' within 'cardArr', @ the 'index' value, equal to the formatted Date.
+    	rc.cardArr[index].formattedStartDate = formattedDate;
+ 
     	
     };
     
     /*************************************************************/  
     /**
+     * @Author: Jaina L. Brehm
      * This method will compute the number of batches needed to be made, 
      * 		given the number of required Trainee's.
      * 
@@ -192,7 +201,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
      * @return neededBatches
      */
     
-    rc.calcReqBatch = function(requiredTrainees){
+    rc.calcReqBatch = function(requiredTrainees, index){
     	
     	//Compute the total number of Batches estimated.
     	var neededBatches = requiredTrainees/15;
@@ -209,8 +218,20 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     		
     	}
     	
-    	//Sets the reportsController's 'requiredBatches' data value to the computed 'neededBatches' values.
-    	rc.requiredBatches = neededBatches;
+    	//Sets the reportsController's 'requiredBatches' data value in each index of the 'cardArr' to the computed 'neededBatches' values.
+    	rc.cardArr[index].requiredBatches = neededBatches;
+    	    	
+    	for (var x in rc.cardArr){
+    	//Outputs the contents of the cardArr to the console.
+    		console.log(rc.cardArr[x].requiredGrads);
+    		console.log(rc.cardArr[x].reqDate);
+    		console.log(rc.cardArr[x].requiredBatches);
+    		console.log(rc.cardArr[x].startDate);
+    		console.log(rc.cardArr[x].formattedStartDate);
+    		console.log(rc.cardArr[x].batchType);
+    	}
+
+    	rc.cumulativeBatches();
     	
     	//Returns the reqBatches variable.  Needs to be both the 
     	//'reqStartDate' and the 'reqBatches', at a later point.
@@ -219,11 +240,107 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     };
     
     /*************************************************************/
+    /**
+     * @Author: Jaina L. Brehm
+     * This method will assign the particular card objects 'btchType' variable
+     * 		to the selected value.
+     * 
+     * @param 
+     * @return 
+     */
+    
+    rc.assignCurr = function(bType, index){
+    	
+    	rc.cardArr[index].batchType = bType;
+    	    	
+    	
+    	if(rc.cardArr[index].requiredGrads > 0){	
+    		rc.cumulativeBatches();
+    	}
+    };
+    
+    /*************************************************************/
+    /**
+     * @Author: Jaina L. Brehm
+     * This method will add another card to the cardArr object,
+     * 		ultimately generating another card in the 'required Trainee's' tab
+     * 		in the Reports tab.
+     * 
+     * @param  
+     * @return
+     */
+    
+    rc.genCard = function(){
+    	
+    	var temp = [ this.requiredGrads ,
+					 this.reqDate = new Date() , 
+					 this.requiredBatches  ,
+					 this.startDate , 
+					 this.formattedStartDate , 
+					 this.batchType
+				   ];
+    	//pushes the value onto the end of the array.
+    	rc.cardArr.push(temp);
+    	
+    };
+    
+    /************************************************************/  
+
+    /**
+     * @Author:  Jaina L. Brehm
+     * This method will add 
+     * 
+     * 
+     * @param
+     * @return
+     */
+    
+    rc.cumulativeBatches = function(){
+    	
+    	var batchVal;
+    	rc.totalJavaBatch = 0;
+    	rc.totalNetBatch = 0;
+    	rc.totalSDETBatch = 0;
+    	rc.totalCumulativeBatches = 0;
+    	
+      	for (var x in rc.cardArr){
+        	
+      		batchVal = rc.cardArr[x].batchType;
+      		
+      		switch(batchVal){
+    		
+      			//Switch case for Java Batches
+      			case 1 : 	rc.totalJavaBatch += rc.cardArr[x].requiredBatches;
+      						rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
+    				 		break;
+    				 		
+    			//Switch case for .Net Batches
+      			case 2 : 	rc.totalNetBatch += rc.cardArr[x].requiredBatches;
+      						rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
+    			 	 		break;
+    		
+    			//Switch case for SDET Batches
+      			case 3 : 	rc.totalSDETBatch += rc.cardArr[x].requiredBatches;
+							rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
+    				 		break;
+    				
+      			default: break;
+      		}
+
+      	}  	
+    };
+    
+    
+    
+    
+    
+    /************************************************************/  
+    /************************************************************/  
     
     // data
     rc.year = new Date().getFullYear();
     
-    //The number of graduates.  Used in 
+    //The number of graduates.
     rc.graduates = 15;
     
     //The date Trainee's are needed by.
@@ -232,14 +349,42 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     //Batch(s) StartDate variable.
     rc.startDate;
     
-    //Default batch time-period
+    //Default batch time-period.
     rc.defWeeks = 11;
     
-    //Number of Required Graduates
-    rc.requiredGrads = 40;
+    //Number of Required Graduates.
+    rc.requiredGrads;
     
-    //The number of Batches needed to be created
+    //The number of Batches needed to be created.
     rc.requiredBatches;
+    
+    rc.batchType;
+    
+    //Total number of .NET batches within 'cardArr'.
+    rc.totalNetBatch = 0;
+    
+    //Total number of SDET batches within 'cardArr'.
+    rc.totalSDETBatch = 0;
+    
+    //Total number of Java batches within 'cardArr'.
+    rc.totalJavaBatch = 0;
+    
+    //Total number of required batches within 'cardArr'.
+    rc.totalCumulativeBatches = 0;
+    
+    /**
+     *	Array of Required Trainee batch generation objects.  
+     * 	 	Each object in the array represents a list of objects
+     * 		that may be required in creating a desired number of batches.
+     */
+    rc.cardArr = [  [  this.requiredGrads ,
+	   				   this.reqDate , 
+	   				   this.requiredBatches ,
+	   				   this.startDate , 
+	   				   this.formattedStartDate ,
+	   				   this.batchType
+	   				]
+    			 ];
     
     rc.currOrder = "name";
 
