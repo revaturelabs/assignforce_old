@@ -7,9 +7,16 @@
 
                 <span flex> </span>
 
-                <md-button class="md-icon-button" ng-click="pCtrl.setResume()">
-                    <md-tooltip> Add/Update Resume </md-tooltip>
+                <!--<input class="ng-hide" id="input-file-id" multiple type="file" />-->
+                <!--<md-button class="md-icon-button" ng-click="pCtrl.setResume()">-->
+                    <!--<md-tooltip> Add/Update Resume </md-tooltip>-->
+                    <!--<md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>-->
+                <!--</md-button>-->
+
+                <md-button type="button" class="md-icon-button" ng-click="pCtrl.setResume()">
+                    <md-tooltip> Add/Update Resume</md-tooltip>
                     <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
+                    <input class="ng-hide" type="file"/>
                 </md-button>
 
             </div>
@@ -73,7 +80,26 @@
 
         <md-content>
 
+            <!--&lt;!&ndash;modify table to be certifcations of one trainer&ndash;&gt;-->
+            <!--<md-list ng-if="tCtrl.trainers != undefined">-->
+                <!--<md-list-item class="md-2-line" md-ink-ripple="#ff0000" ng-repeat="trainer in tCtrl.trainers | activeItem track by trainer.trainerID" ng-click="tCtrl.goToTrainer($event)">-->
+                    <!--<div class="md-list-item-text" layout="column">-->
+                        <!--<h3> {{ trainer.firstName }} {{ trainer.lastName }} </h3>-->
+                        <!--<p ng-if="trainer.skill.length > 0"> Skills: {{ trainer.skill.map(tCtrl.joinObjArrayByName).join(", "); }} </p>-->
+                        <!--<p ng-if="trainer.skill.length <= 0"> Skills: none </p>-->
+                    <!--</div>-->
+                    <!--<span flex> </span>-->
 
+                    <!--<md-button class="md-icon-button" ng-click="">-->
+                        <!--<md-tooltip> Download Resume </md-tooltip>-->
+                        <!--<i class="material-icons" style="color: #FB8C00;">file_download</i>-->
+                    <!--</md-button>-->
+                    <!--<md-button class="md-icon-button" ng-click="tCtrl.removeTrainer(trainer)">-->
+                        <!--<md-tooltip> Deactivate Trainer </md-tooltip>-->
+                        <!--<i class="material-icons" style="color: #FB8C00;">remove_circle</i>-->
+                    <!--</md-button>-->
+                <!--</md-list-item>-->
+            <!--</md-list>-->
 
         </md-content>
 
