@@ -141,7 +141,6 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     	//Initializes a start date variable and assigns it the value in 'requiredDate'.
     	var sDate = ( requiredDate == undefined ) ? (new Date()) : requiredDate;
     	
-    	
     	//Subtract 10 weeks from the 'requiredDate' to determine the 'startDate'.  **Using 11 week default.
     	sDate.setDate( sDate.getDate() - ( 7 * (rc.defWeeks)));
     	
@@ -188,7 +187,6 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     	//Sets the 'startdate' within 'cardArr', @ the 'index' value, equal to the formatted Date.
     	rc.cardArr[index].formattedStartDate = formattedDate;
  
-    	
     };
     
     /*************************************************************/  
@@ -220,17 +218,8 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     	
     	//Sets the reportsController's 'requiredBatches' data value in each index of the 'cardArr' to the computed 'neededBatches' values.
     	rc.cardArr[index].requiredBatches = neededBatches;
-    	    	
-    	for (var x in rc.cardArr){
-    	//Outputs the contents of the cardArr to the console.
-    		console.log(rc.cardArr[x].requiredGrads);
-    		console.log(rc.cardArr[x].reqDate);
-    		console.log(rc.cardArr[x].requiredBatches);
-    		console.log(rc.cardArr[x].startDate);
-    		console.log(rc.cardArr[x].formattedStartDate);
-    		console.log(rc.cardArr[x].batchType);
-    	}
 
+    	//Calculates the total number of desired batches, across all sections.
     	rc.cumulativeBatches();
     	
     	//Returns the reqBatches variable.  Needs to be both the 
@@ -253,7 +242,6 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     	
     	rc.cardArr[index].batchType = bType;
     	    	
-    	
     	if(rc.cardArr[index].requiredGrads > 0){	
     		rc.cumulativeBatches();
     	}
@@ -279,13 +267,13 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 					 this.formattedStartDate , 
 					 this.batchType
 				   ];
+    	
     	//pushes the value onto the end of the array.
     	rc.cardArr.push(temp);
     	
     };
     
     /************************************************************/  
-
     /**
      * @Author:  Jaina L. Brehm
      * This method will add 
@@ -303,7 +291,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     	rc.totalSDETBatch = 0;
     	rc.totalCumulativeBatches = 0;
     	
-      	for (var x in rc.cardArr){
+      	for ( x in rc.cardArr){
         	
       		batchVal = rc.cardArr[x].batchType;
       		
@@ -326,14 +314,9 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     				
       			default: break;
       		}
-
       	}  	
     };
-    
-    
-    
-    
-    
+     
     /************************************************************/  
     /************************************************************/  
     
@@ -392,7 +375,6 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 
     /*************************************************************/
 
-    
     // page initialization
     // data gathering
     batchService.getAll(function (response) {
@@ -414,8 +396,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     // Only batches and curricula are necessary now, but these are here in the event that new reports require the use of other object lists
     // Nate Vardell Deleted the commented out block that was here because SonarQube wouldn't pass with it.
     // Contained 4 functions for getting skills, trainers, & locations.
-    // I have the deleted methods if we need them in the future.
-    
+    // I have the deleted methods if we need them in the future. 
     
 });
 
