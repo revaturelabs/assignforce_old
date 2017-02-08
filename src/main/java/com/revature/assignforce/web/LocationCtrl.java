@@ -83,6 +83,7 @@ public class LocationCtrl {
 		Boolean active = in.getActive();
 
 		Location out = new Location(ID, name, city, state, buildings, active);
+		System.out.println("****************************************************");
 		out = locationService.saveItem(out);
 
 		if (out == null) {
