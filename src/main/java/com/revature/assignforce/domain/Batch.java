@@ -43,7 +43,7 @@ public class Batch {
 	@JoinColumn(name = "ROOM")
 	@Fetch(FetchMode.JOIN)
 	private Room room;
-	//This needs to be gone
+	
 	@ManyToOne
 	@JoinColumn(name = "LOCATION")
 	@Fetch(FetchMode.JOIN)
