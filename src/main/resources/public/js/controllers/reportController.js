@@ -268,6 +268,18 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 					 this.batchType
 				   ];
     	
+    	
+    	for ( i in rc.cardArr){
+    		console.log(rc.cardArr[i].requiredGrads);
+    		console.log(rc.cardArr[i].reqDate);
+    		console.log(rc.cardArr[i].requiredBatches);
+    		console.log(rc.cardArr[i].startDate);
+    		console.log(rc.cardArr[i].formattedStartDate);
+    		console.log(rc.cardArr[i].batchType);
+    		
+    	}
+    	
+    	
     	//pushes the value onto the end of the array.
     	rc.cardArr.push(temp);
     	
@@ -285,7 +297,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     
     rc.cumulativeBatches = function(){
     	
-    	var batchVal = 0;
+    	var batchVal;
     	rc.totalJavaBatch = 0;
     	rc.totalNetBatch = 0;
     	rc.totalSDETBatch = 0;
@@ -294,6 +306,8 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
       	for ( x in rc.cardArr){
         	
       		batchVal = rc.cardArr[x].batchType;
+      		
+      		console.log(x[5]);
       		
       		switch(batchVal){
     		
