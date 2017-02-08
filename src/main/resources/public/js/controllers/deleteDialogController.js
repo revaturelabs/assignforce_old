@@ -28,6 +28,7 @@
                 title += " " + dc.summary.locations + " locations";
             }
             title += "?";
+            
 
             dc.desc = title;
         }formatText();
