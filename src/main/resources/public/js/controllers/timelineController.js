@@ -215,7 +215,34 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 	var xAxis = d3.svg.axis()
 		.scale(xScale)
 		.orient('top')
-		.tickSize(6,0);
+		.tickSize(6,0)
+	
+	//Used to create line breaks in table word data.
+	var wrap = function (text, width) {
+		  text.each(function() {
+			    var el = d3.select(this),
+			        words = el.text().split(/\s+/).reverse(),
+			        word,
+			        line = [],
+			        lineNumber = 0,
+			        lineHeight = 1.1, // ems
+			        x = el.attr("x")
+			        y = el.attr("y"),
+			        dy = parseFloat(el.attr("dy")),
+			        tspan = el.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
+			    
+			    while (word = words.pop()) {
+			      line.push(word);
+			      tspan.text(line.join(" "));
+			      if (tspan.node().getComputedTextLength() > width) {
+			        line.pop();
+			        tspan.text(line.join(" "));
+			        line = [word];
+			        tspan = el.append("tspan").attr("x", x).attr("y", y).attr("dy", lineNumber++ * lineHeight + dy + "em").text(word);
+			      }
+			    }
+			  });
+			}
 	
 	//Filter & sort data for that in range of Timeline
 	timelineData = timelineData.filter(function(batch){
@@ -419,8 +446,13 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 				return (y+25);
 			})
 			.attr('x', function(d) {return xScale(d.trainer ? (d.trainer.trainerID) : 'No trainer')-7;})
-			.text(function(d) {return numWeeks(d.startDate,d.endDate);});
+			.text(function(d) {return numWeeks(d.startDate,d.endDate) + " W E E K S";})
+				.attr("dy", 0);
 	
+	d3.selectAll('.rect')
+		.selectAll("text")
+			.call(wrap, 0.1);
+			
 	//Add between batch length to timeline
 	svg.append('g')
 		.attr('class','betweenbatches');
