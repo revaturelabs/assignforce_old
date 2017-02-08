@@ -285,7 +285,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     
     rc.cumulativeBatches = function(){
     	
-    	var batchVal;
+    	var batchVal = 0;
     	rc.totalJavaBatch = 0;
     	rc.totalNetBatch = 0;
     	rc.totalSDETBatch = 0;
