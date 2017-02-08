@@ -9,7 +9,8 @@ public class RoomDTO {
 
 	private int roomID;
 	private String roomName;
-	private List<Unavailable> unavailabilities;
+	private int buildingID;
+	private List<Unavailable> unavailabilities;	
 	
 	public int getRoomID() {
 		return roomID;
@@ -23,6 +24,12 @@ public class RoomDTO {
 	public void setRoomName(String name) {
 		roomName = name;
 	}
+	public void setBuildingID(int building){
+		buildingID = building;
+	}
+	public int getBuildingID() {		
+		return this.buildingID;
+	}	
 	public List<Unavailable> getUnavailabilities() {
 		return unavailabilities;
 	}
