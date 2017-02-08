@@ -8,6 +8,9 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 @Entity
 @Table(name = "BUILDING")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -21,10 +24,11 @@ public class Building implements Activatable {
 	private int ID;
 
 	@Column(name = "NAME", unique = true, nullable = false)
-	private String name;
-
+	private String name;	
+	
 	@Column(name = "LOCATION")
-	@JoinColumn(name="building")
+	@JoinColumn(name="LOCATION")//is it building or location??
+	@Fetch(FetchMode.JOIN)
 	private int location;
 
 	@Column(name = "active", insertable = false)
@@ -59,6 +63,10 @@ public class Building implements Activatable {
 	public Boolean getActive() {
 		return active;
 	}
+	
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
 
 	public int getID() {
 		return ID;
@@ -90,16 +98,11 @@ public class Building implements Activatable {
 
 	public void setRooms(List<Room> rooms) {
 		this.rooms = rooms;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
+	}	
 
 	@Override
 	public String toString() {
-		return "Building [ID=" + ID + ", name=" + name + ", location=" + location + ", active=" + active + ", rooms="
+		return "Building [ID = " + ID + ", name = " + name + ", location = " + location + ", active = " + active + ", rooms = "
 				+ rooms + "]";
 	}
-
 }
