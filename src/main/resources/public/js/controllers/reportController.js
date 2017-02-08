@@ -12,7 +12,8 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 
     $scope.options = [{
         title: 'Graduates summary table for 2017',
-        content: 'Grad - Table'
+        content: 'Grad - Table',
+        template: '<get-Data></get-Data>'
     }, {
         title: 'Graduates summary graph for 2017',
         content: 'Grad - Graph'
@@ -361,14 +362,6 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
             },
             series: rc.graphData()
         })};
-
-        rc.randomColor = function() {
-            var test = Math.floor(Math.random()*16777215).toString(16);
-            console.log(test);
-            return test;
-        };
-
-
 });
 
 
@@ -381,7 +374,7 @@ assignforce.directive('getData', function() {
         template: '<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>',
         bindToController: true,
         controller: function($scope) {
-            console.log("Get Data Directive.");
+            // console.log("Get Data Directive.");
             $scope.myGraph();
         }
     };
