@@ -35,6 +35,7 @@ public class Location implements Activatable {
 	private List<Building> buildings;
 
 	public Location() {
+	
 	}
 
 	public Location(int iD, String name, String city, String state, List<Building> buildings, Boolean active) {

@@ -1,0 +1,46 @@
+
+    <md-dialog>
+
+        <form name="buildingForm" ng-submit="bldgCtrl.save(buildingForm.$valid)" novalidate>
+
+            <div ng-if="bldgCtrl.locations != undefined">
+                
+                <md-dialog-content>
+
+                    <md-toolbar layout="columns">
+                        <div class="md-toolbar-tools">
+                            <!--span> {{ bldgCtrl.title }} </span-->
+                            <span>TEST TITLE</span>
+                        </div>
+                    </md-toolbar>
+
+                        <div class="md-padding">
+                            <div layout layout-wrap>
+
+                                <md-input-container flex="100">
+                                    <label> Building Name </label>
+                                    <input ng-model="bldgCtrl.building.buildingName" required>
+                                </md-input-container>
+
+                            </div>
+                        </div>
+
+                </md-dialog-content>
+
+                <md-dialog-actions>
+
+                    <md-button class="md-primary" type="submit"> Save </md-button>
+                    <md-button class="md-primary" ng-click="bldgCtrl.cancel()"> Cancel </md-button>
+                
+                </md-dialog-actions>
+            </div>
+
+            <div ng-if="bldgCtrl.locations == undefined" layout="column" layout-wrap layout-align="center center">
+                <div flex="100"> &nbsp; </div>
+                <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
+                <div flex="100"> &nbsp; </div>
+            </div>
+
+        </form>
+
+    </md-dialog>
