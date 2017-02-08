@@ -1,7 +1,7 @@
 
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "batchCtrl", function($scope, $timeout, batchService, curriculumService, skillService, trainerService, locationService, calendarService, $location, $anchorScroll, $filter) {
+    assignforce.controller( "batchCtrl", function($scope, $timeout, batchService, curriculumService, skillService, trainerService, locationService, calendarService, $location, $anchorScroll, $filter, $window) {
         var bc = this;
         var availableTrainers;
         
@@ -32,8 +32,12 @@
                 bc.batch.trainer    = (incomingBatch.trainer)    ? incomingBatch.trainer.trainerID   : undefined;
                 bc.batch.cotrainer  = (incomingBatch.cotrainer)  ? incomingBatch.cotrainer.trainerID : undefined;
                 
-                bc.batch.location   = incomingBatch.location.id;
+              //bc.batch.location   = incomingBatch.location.id;
+              //bc.batch.building	= incomingBatch.building.id;
                 bc.batch.room       = (incomingBatch.room)       ? incomingBatch.room.roomID         : undefined;
+              //bc.batch.room.unavailability.startDate = incomingBatch.startDate;
+              //bc.batch.room.unavailability.endDate = incomingBatch.endDate;
+              //These need to exist to test...
                 
                 bc.batch.startDate  = (incomingBatch.startDate)  ? new Date(incomingBatch.startDate) : undefined;
                 bc.batch.endDate    = (incomingBatch.endDate)    ? new Date(incomingBatch.endDate)   : undefined;
@@ -61,10 +65,13 @@
 
         		for (c in bc.selectedCurriculum.skill)
         		{
+        			//console.log(c);
         			if (bc.selectedCurriculum.skill.hasOwnProperty(c))
         			{
 	        			for (s in trainer.skill)
 	        			{
+	        				
+	        				//console.log(s);
 	        				if (trainer.skill.hasOwnProperty(s))
 	        				{
 		        				if (c === s)
@@ -122,7 +129,10 @@
             }
         };
 
-            // filters rooms based on selected location
+            // filters rooms based on selected location SAM
+        // filterRooms should be filtered rooms based on selected building
+        // This exact function should be for buildings (if there is only one building at the location, 
+        // it should be automatically populated.
         bc.filterRooms = function(locationID){
             if(locationID != undefined){
                 return bc.locations.filter(function(location){return location.id===locationID})[0].rooms;
@@ -131,6 +141,13 @@
                 return [];
             }
         };
+        
+        /*
+        bc.filterRooms = function(locationID){
+        	if(locationID != undefined){
+        		return bc.locations[locationID + -1].rooms;
+        	}
+        };*/
 
             // counts the number of weeks between the start and end dates
         bc.updateWeeks = function(){
@@ -251,12 +268,13 @@
             // batch table button functions
               // edit batch
         bc.edit = function( batch ){
+        	// the element you wish to scroll to.
+            //$location.hash('batchInfoDiv');
             bc.changeState( "edit", batch );
-            // the element you wish to scroll to.
-            $location.hash('batchInfoDiv');
+            $window.scrollTo(0, 0);
 
             // call $anchorScroll()
-            $anchorScroll();
+            //$anchorScroll();
         };
 
               // clone batch
@@ -394,5 +412,4 @@
         }, function(error) {
             bc.showToast( "Could not fetch locations.");
         });
-
     })
