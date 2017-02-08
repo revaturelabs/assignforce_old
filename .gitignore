@@ -4,6 +4,7 @@
 .mtj.tmp/
 
 # Package Files #
+*.exe.stackdump
 *.jar
 *.war
 *.ear
@@ -19,4 +20,3 @@ bin/
 .settings/
 .classpath
 .project
-*.iml
