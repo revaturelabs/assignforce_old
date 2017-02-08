@@ -1,0 +1,30 @@
+<md-card md-whiteframe="8" ng-cloak>
+    <md-toolbar layout="columns"  ng-click="sCtrl.viewContent()">
+        <div class="md-toolbar-tools">
+            <span>Settings</span>
+
+            <span flex> </span>
+
+            <md-button class="md-icon-button" ng-click="sCtrl.showContent()">
+                <md-tooltip> </md-tooltip>
+                <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
+            </md-button>
+
+            <md-button class="md-icon-button" ng-click="sCtrl.hideContent()">
+                <md-tooltip> </md-tooltip>
+                <i class="material-icons">remove_circle</i>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-content class="md-padding" ng-show="sCtrl.hidden">
+        <md-list>
+            <md-list-item class="md-3-line">
+                <div class="md-list-item-text">
+                    <h3>Hello</h3>
+                </div>
+                <md-button class="md-secondary">Respond</md-button>
+                <md-divider ng-if="!$last"></md-divider>
+            </md-list-item>
+        </md-list>
+    </md-content>
+</md-card>

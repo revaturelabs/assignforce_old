@@ -38,6 +38,10 @@
 					templateUrl : "html/views/profile.html",
 					controller  : "profileCtrl as pCtrl"
 				})
+				.when("/settings", {
+					templateUrl : "html/views/settings.html",
+					controller  : "settingsCtrl as sCtrl"
+				})
 				.otherwise({"redirectTo": "/home"});
 			
 			$locationProvider.html5Mode(true);
