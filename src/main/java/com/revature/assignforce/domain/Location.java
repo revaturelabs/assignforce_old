@@ -97,8 +97,8 @@ public class Location implements Activatable {
 
 	@Override
 	public String toString() {
-		return "Location [ID=" + ID + ", name=" + name + ", city=" + city + ", state=" + state + ", active=" + active
-				+ ", buildings=" + buildings + "]";
+		return "Location [ID = " + ID + ", name = " + name + ", city = "
+				+ city + ", state = " + state + ", active = " + active
+				+ ", buildings = " + buildings + "]";
 	}
-
 }

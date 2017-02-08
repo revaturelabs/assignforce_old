@@ -35,6 +35,10 @@ public class Building implements Activatable {
 	public Boolean getActive() {
 		return active;
 	}
+	
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
 
 	public int getID() {
 		return ID;
@@ -66,15 +70,11 @@ public class Building implements Activatable {
 
 	public void setRooms(List<Room> rooms) {
 		this.rooms = rooms;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
+	}	
 
 	@Override
 	public String toString() {
-		return "Building [ID=" + ID + ", name=" + name + ", location=" + location + ", active=" + active + ", rooms="
+		return "Building [ID = " + ID + ", name = " + name + ", location = " + location + ", active = " + active + ", rooms = "
 				+ rooms + "]";
 	}
 

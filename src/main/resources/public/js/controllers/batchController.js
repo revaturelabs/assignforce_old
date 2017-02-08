@@ -129,7 +129,10 @@
             }
         };
 
-            // filters rooms based on selected location
+            // filters rooms based on selected location SAM
+        // filterRooms should be filtered rooms based on selected building
+        // This exact function should be for buildings (if there is only one building at the location, 
+        // it should be automatically populated.
         bc.filterRooms = function(locationID){
             if(locationID != undefined){
                 return bc.locations.filter(function(location){return location.id===locationID})[0].rooms;
@@ -138,6 +141,13 @@
                 return [];
             }
         };
+        
+        /*
+        bc.filterRooms = function(locationID){
+        	if(locationID != undefined){
+        		return bc.locations[locationID + -1].rooms;
+        	}
+        };*/
 
             // counts the number of weeks between the start and end dates
         bc.updateWeeks = function(){
@@ -401,5 +411,4 @@
         }, function(error) {
             bc.showToast( "Could not fetch locations.");
         });
-
     })

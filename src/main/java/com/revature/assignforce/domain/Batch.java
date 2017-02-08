@@ -81,7 +81,21 @@ public class Batch {
 		this.trainer = trainer;
 		this.cotrainer = cotrainer;
 	}
-
+	
+	public Batch(int iD, String name, Timestamp startDate, Timestamp endDate, Curriculum curriculum, Room room,
+			Location location, BatchStatusLookup batchStatus, Trainer trainer, Trainer coTrainer) {
+		super();
+		ID = iD;
+		Name = name;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.curriculum = curriculum;
+		this.room = room;
+		this.location = location;
+		this.batchStatus = batchStatus;
+		this.trainer = trainer;
+		this.cotrainer = coTrainer;
+	}
 
 	public int getID() {
 		return ID;
@@ -121,9 +135,6 @@ public class Batch {
 	public void setEndDate(Timestamp endDate) {
 		this.endDate = endDate;
 	}
-
-
-
 
 	public Curriculum getCurriculum() {
 		return curriculum;
@@ -177,8 +188,9 @@ public class Batch {
 
 	@Override
 	public String toString() {
-		return "Batch [ID=" + ID + ", Name=" + Name + ", startDate=" + startDate + ", endDate=" + endDate + ", curriculum=" + curriculum + ", room=" + room + ", location=" + location + ", batchStatus="
-				+ batchStatus + ", trainer=" + trainer + "]";
+		return "Batch [ID=" + ID + ", Name =" + Name + ", startDate =" + startDate + ", endDate =" + endDate
+				+ ", curriculum =" + curriculum + ", room =" + room + ", location =" + location + ", batchStatus ="
+				+ batchStatus + ", trainer =" + trainer + ", cotrainer = " + cotrainer + "]";
 	}
 
 
@@ -190,21 +202,4 @@ public class Batch {
 	public void setCotrainer(Trainer coTrainer) {
 		this.cotrainer = coTrainer;
 	}
-
-
-	public Batch(int iD, String name, Timestamp startDate, Timestamp endDate, Curriculum curriculum, Room room,
-			Location location, BatchStatusLookup batchStatus, Trainer trainer, Trainer coTrainer) {
-		super();
-		ID = iD;
-		Name = name;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.curriculum = curriculum;
-		this.room = room;
-		this.location = location;
-		this.batchStatus = batchStatus;
-		this.trainer = trainer;
-		this.cotrainer = coTrainer;
-	}
-
 }
