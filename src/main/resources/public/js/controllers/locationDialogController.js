@@ -13,8 +13,9 @@
 
             // save changes/new
         ldc.save = function(isValid) {
-
+        	console.log("save has been called");
             if (isValid) {
+            	console.log("Save is valid");
                 if (ldc.state == "edit") {
                     locationService.update( ldc.location, function(){
                         $mdDialog.hide();

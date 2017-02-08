@@ -1,5 +1,7 @@
 package com.revature.assignforce.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;
@@ -9,6 +11,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "BUILDING")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
+//@JsonIgnoreProperties(ignoreUnknown = true)
 public class Building implements Activatable {
 
 	@Id
@@ -29,8 +32,29 @@ public class Building implements Activatable {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "BUILDING")
+	//@JsonIgnore
 	// @JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private List<Room> rooms;
+	
+	public Building() {
+		System.out.println("Failure");
+	}
+	
+	public Building(int location) {
+		System.out.println("ALMOST EMPTY CONSTRUCTOR CALLED");
+		System.out.println(location);
+		this.location = location;
+	}
+
+	public Building(int ID, String name, List<Room> rooms, boolean active, int location) {
+		super();
+		this.ID = ID;
+		this.name = name;
+		this.rooms = rooms;
+		this.location = location;
+		this.active = active;
+		System.out.println("Failure DOS");
+	}
 
 	public Boolean getActive() {
 		return active;

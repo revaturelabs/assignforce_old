@@ -15,21 +15,21 @@ assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
 	bdc.save = function(isValid) {
 
 		if (isValid) {
-
-			// shouldn't need this, this just concatenates the OLD building name
-			// onto the room name
-
-			// if (bdc.building) {
-			// bdc.room.roomName = bdc.building + " - " + bdc.room.roomName;
-			// }
+			
+			console.log(bdc.building.name);
 
 			if (bdc.state == "edit") {
 				bdc.swapBuilding(bdc.building);
 			} else if (bdc.state == "create") {
 				bdc.location.buildings.push(bdc.building);
 			}
-
-			locationService.update(bdc.location, function() {
+//TODO may have to adjust this to have building contain location
+//			buildingService.update(bdc.building, function() {
+//				$mdDialog.hide();
+//			}, function() {
+//				$mdDialog.cancel();
+//			});
+			buildingService.create(bdc.building, function() {
 				$mdDialog.hide();
 			}, function() {
 				$mdDialog.cancel();
@@ -63,20 +63,21 @@ assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
 		} else {
 			bdc.location.buildings.forEach(function(building) {
 				if (building.buildingID == newBuilding.buildingID) {
-					building.buildingName = newbuilding.buildingName;
+					building.name = newbuilding.name;
 				}
 			});
 		}
 	};
 
 	// data
-	if (bdc.building.buildingName.split("-").length > 1) {
-		bdc.building = bdc.building.buildingName.split("-")[0].trim();
-		bdc.building.buildingName = bdc.building.buildingName.split("-")[1]
-				.trim();
-	} else {
-		bdc.building = "";
-	}
+
+//	if (bdc.building.name.split("-").length > 1) {
+//		bdc.building = bdc.building.name.split("-")[0].trim();
+//		bdc.building.name = bdc.building.name.split("-")[1]
+//				.trim(); 
+//	} else {
+//		bdc.building = "";
+//	}
 
 	// page initialization
 	// data gathering
@@ -87,7 +88,7 @@ assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
 			bdc.title = "Add new building to " + bdc.location.name;
 		} else if (bdc.state == "edit") {
 			bdc.findLocationFromBuilding();
-			bdc.title = "Edit " + bdc.building.buildingName + " at "
+			bdc.title = "Edit " + bdc.building.name + " at "
 					+ bdc.location.name;
 		}
 	}, function(error) {

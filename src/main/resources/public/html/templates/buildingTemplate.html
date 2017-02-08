@@ -1,7 +1,7 @@
 
     <md-dialog>
 
-        <form name="buibldgingForm" ng-submit="bldgCtrl.save(buibldgingForm.$valid)" novalidate>
+        <form name="buildingForm" ng-submit="bldgCtrl.save(buildingForm.$valid)" novalidate>
 
             <div ng-if="bldgCtrl.locations != undefined">
                 
@@ -9,8 +9,7 @@
 
                     <md-toolbar layout="columns">
                         <div class="md-toolbar-tools">
-                            <!--span> {{ bldgCtrl.title }} </span-->
-                            <span>TEST TITLE</span>
+                            <span> {{ bldgCtrl.title }} </span>
                         </div>
                     </md-toolbar>
 
@@ -19,7 +18,7 @@
 
                                 <md-input-container flex="100">
                                     <label> Building Name </label>
-                                    <input ng-model="bldgCtrl.buibldging.buibldgingName" required>
+                                    <input ng-model="bldgCtrl.building.name" required>
                                 </md-input-container>
 
                             </div>
