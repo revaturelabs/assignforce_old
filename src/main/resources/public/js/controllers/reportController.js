@@ -267,19 +267,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 					 this.formattedStartDate , 
 					 this.batchType
 				   ];
-    	
-    	
-    	for ( i in rc.cardArr){
-    		console.log(rc.cardArr[i].requiredGrads);
-    		console.log(rc.cardArr[i].reqDate);
-    		console.log(rc.cardArr[i].requiredBatches);
-    		console.log(rc.cardArr[i].startDate);
-    		console.log(rc.cardArr[i].formattedStartDate);
-    		console.log(rc.cardArr[i].batchType);
-    		
-    	}
-    	
-    	
+        	
     	//pushes the value onto the end of the array.
     	rc.cardArr.push(temp);
     	
