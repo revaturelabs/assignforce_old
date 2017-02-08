@@ -41,15 +41,15 @@ public class Batch {
 	private Curriculum curriculum;
 	
 	@OneToOne
-	@JoinColumn(name = "ROOM")
+	@JoinColumn(name = "ROOM") //one batch only belongs to one room
 	@Fetch(FetchMode.JOIN)
 	private Room room;
-	
+	/*
 	@ManyToOne
 	@JoinColumn(name = "LOCATION")
 	@Fetch(FetchMode.JOIN)
 	private Location location;
-	
+	*/
 	@ManyToOne
 	@JoinColumn(name = "STATUS")
 	@Fetch(FetchMode.JOIN)
@@ -77,14 +77,14 @@ public class Batch {
 		this.endDate = endDate;
 		this.curriculum = curriculum;
 		this.room = room;
-		this.location = location;
+		//this.location = location;
 		this.batchStatus = status;
 		this.trainer = trainer;
 		this.cotrainer = cotrainer;
 	}
 	
 	public Batch(int iD, String name, Timestamp startDate, Timestamp endDate, Curriculum curriculum, Room room,
-			Location location, BatchStatusLookup batchStatus, Trainer trainer, Trainer coTrainer) {
+			/*Location location, */BatchStatusLookup batchStatus, Trainer trainer, Trainer coTrainer) {
 		super();
 		ID = iD;
 		Name = name;
@@ -92,7 +92,7 @@ public class Batch {
 		this.endDate = endDate;
 		this.curriculum = curriculum;
 		this.room = room;
-		this.location = location;
+		//this.location = location;
 		this.batchStatus = batchStatus;
 		this.trainer = trainer;
 		this.cotrainer = coTrainer;
@@ -156,7 +156,7 @@ public class Batch {
 		this.room = room;
 	}
 
-
+/*
 	public Location getLocation() {
 		return location;
 	}
@@ -165,7 +165,7 @@ public class Batch {
 	public void setLocation(Location location) {
 		this.location = location;
 	}
-
+*/
 
 	public BatchStatusLookup getBatchStatus() {
 		return batchStatus;
@@ -190,7 +190,7 @@ public class Batch {
 	@Override
 	public String toString() {
 		return "Batch [ID=" + ID + ", Name =" + Name + ", startDate =" + startDate + ", endDate =" + endDate
-				+ ", curriculum =" + curriculum + ", room =" + room + ", location =" + location + ", batchStatus ="
+				+ ", curriculum =" + curriculum + ", room =" + room + ", batchStatus ="
 				+ batchStatus + ", trainer =" + trainer + ", cotrainer = " + cotrainer + "]";
 	}
 

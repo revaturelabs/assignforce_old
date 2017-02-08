@@ -4,6 +4,9 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import com.fasterxml.jackson.annotation.*;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 
@@ -21,8 +24,10 @@ public class Room implements Activatable {
 
 	@Column(name = "NAME", nullable = false)
 	private String roomName;
-
-	@Column(name = "BUILDING")
+	
+	//it is a one to one relationship, but we only need an id here..  Right?
+	@JoinColumn(name = "BUILDING")
+	@Fetch(FetchMode.JOIN)
 	private int building;
 
 	@ManyToMany(fetch = FetchType.LAZY)
@@ -40,10 +45,11 @@ public class Room implements Activatable {
 	public Room() {
 	}
 
-	public Room(int roomID, String roomName, List<Unavailable> unavailable) {
+	public Room(int roomID, String roomName, int building, List<Unavailable> unavailable) {
 		super();
 		this.roomID = roomID;
 		this.roomName = roomName;
+		this.building = building;
 		this.unavailable = unavailable;
 	}
 
