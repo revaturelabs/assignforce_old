@@ -72,7 +72,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 
         for (var month = 0; month < 12; month++) {
             total = 0;
-            rc.batches.forEach(function (batch) {
+            angular.forEach(rc.batches, function (batch) {
 
                 if (batch.curriculum && curriculum) {
                     date = new Date(batch.endDate);
@@ -284,36 +284,39 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
      */
     
     rc.cumulativeBatches = function(){
-    	
-    	var batchVal = 0;
+
     	rc.totalJavaBatch = 0;
     	rc.totalNetBatch = 0;
     	rc.totalSDETBatch = 0;
     	rc.totalCumulativeBatches = 0;
-    	
+
+
+
       	for ( x in rc.cardArr){
-        	
-      		batchVal = rc.cardArr[x].batchType;
-      		
-      		switch(batchVal){
-    		
-      			//Switch case for Java Batches
-      			case 1 : 	rc.totalJavaBatch += rc.cardArr[x].requiredBatches;
-      						rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
-    				 		break;
-    				 		
-    			//Switch case for .Net Batches
-      			case 2 : 	rc.totalNetBatch += rc.cardArr[x].requiredBatches;
-      						rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
-    			 	 		break;
-    		
-    			//Switch case for SDET Batches
-      			case 3 : 	rc.totalSDETBatch += rc.cardArr[x].requiredBatches;
-							rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
-    				 		break;
-    				
-      			default: break;
-      		}
+            if(rc.cardArr.hasOwnProperty(x)){
+                var batchVal = rc.cardArr[x].batchType;
+
+                switch(batchVal){
+
+                    //Switch case for Java Batches
+                    case 1 : 	rc.totalJavaBatch += rc.cardArr[x].requiredBatches;
+                        rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
+                        break;
+
+                    //Switch case for .Net Batches
+                    case 2 : 	rc.totalNetBatch += rc.cardArr[x].requiredBatches;
+                        rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
+                        break;
+
+                    //Switch case for SDET Batches
+                    case 3 : 	rc.totalSDETBatch += rc.cardArr[x].requiredBatches;
+                        rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
+                        break;
+
+                    default: break;
+                }
+            }
+
       	}  	
     };
      
