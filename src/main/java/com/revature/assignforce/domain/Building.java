@@ -77,5 +77,4 @@ public class Building implements Activatable {
 		return "Building [ID = " + ID + ", name = " + name + ", location = " + location + ", active = " + active + ", rooms = "
 				+ rooms + "]";
 	}
-
 }
