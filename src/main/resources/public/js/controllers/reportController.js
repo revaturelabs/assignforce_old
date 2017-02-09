@@ -83,21 +83,25 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
         var date = new Date();
 
         for (var month = 0; month < 12; month++) {
-            total = 0;
-            angular.forEach(rc.batches, function (batch) {
 
-                if (batch.curriculum && curriculum) {
-                    date = new Date(batch.endDate);
-                    if ((date.getMonth() == month) && (date.getFullYear() == rc.year) && (batch.curriculum.id == curriculum.id)) {
+            total = 0;
+
+            for(var x = 0; x < rc.batches.length; x++){
+                if (rc.batches[x]['curriculum'].name && curriculum) {
+                    date = new Date(rc.batches[x]['endDate']);
+                    if ((date.getMonth() == month) && (date.getFullYear() == rc.year) && (rc.batches[x]['curriculum'].id == curriculum.id)) {
                         total += rc.graduates;
                     }
                 }
-            });
+            };
             summary.push(total);
         }
 
         return summary;
     };
+
+
+
 
     // sums months for given curriculum in chosen year
     rc.sumCurrYear = function (total, num) {
