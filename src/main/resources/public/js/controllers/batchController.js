@@ -1,7 +1,6 @@
-
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "batchCtrl", function($scope, $timeout, batchService, curriculumService, skillService, trainerService, locationService, calendarService, $location, $anchorScroll, $filter, $window) {
+    assignforce.controller( "batchCtrl", function($scope, $timeout, batchService, curriculumService, skillService, trainerService, locationService, /*buildingService, */calendarService, $location, $anchorScroll, $filter, $window) {
         var bc = this;
         var availableTrainers;
         
@@ -12,18 +11,18 @@
           // functions
             // calls showToast method of aCtrl
         bc.showToast = function( message ){
-            $scope.bCtrl.showToast( message );
+            $scope.$parent.aCtrl.showToast( message );
         };
 
             // changes form state and populates fields if need-be
         bc.changeState = function( newState, incomingBatch ){ 
-            console.log(" We're inside the batch contoller's 'changeState' function... ");
-        	
-        	bc.state = newState;
+            bc.state = newState;
 
             if (newState == "create") {
                 bc.batch = batchService.getEmptyBatch();
                 bc.batch.location = bc.findHQ();
+                bc.batch.building = bc.findHQBuilding();
+              //bc.batch.room = bc.setToFirstAvaialableRoom(bc.batch.building);
             } else {
 
                 bc.batch.id         = (bc.state == "edit")       ? incomingBatch.id                  : undefined;
@@ -103,9 +102,13 @@
 
             // defaults location to Reston branch 
               // HARD CODED, I couldn't think of a better way to do it that would reliably select only the main branch
-        	//update - it should be saved per admin profile
+        	//update - it should be determined per admin profile's config settings
         bc.findHQ = function(){
             return 1;
+        }
+        
+        bc.findHQBuilding = function(){
+        	return 1;
         }
             // select end date based on start date
         bc.selectEndDate = function(){
@@ -224,7 +227,7 @@
             bc.changeState( "create", null );
         };
 
-            // table checkbox functions
+            /* table checkbox functions*/
               // toggle all
         bc.toggleAll = function(){
 
@@ -267,16 +270,11 @@
             });
         };
 
-            // batch table button functions
-              // edit batch
+            /* batch table button functions*/
+        // edit batch
         bc.edit = function( batch ){
-        	// the element you wish to scroll to.
-            //$location.hash('batchInfoDiv');
             bc.changeState( "edit", batch );
             $window.scrollTo(0, 0);
-
-            // call $anchorScroll()
-            //$anchorScroll();
         };
 
               // clone batch
@@ -414,4 +412,11 @@
         }, function(error) {
             bc.showToast( "Could not fetch locations.");
         });
+        /*
+        buildingService.getAll(function(response){
+        	bc.buildings = response;
+        }, function(error) {
+        	bc.showToast("Could not fetch buildings.");
+        });*/
+        
     })
