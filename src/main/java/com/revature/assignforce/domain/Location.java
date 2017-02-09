@@ -35,6 +35,7 @@ public class Location implements Activatable {
 	private List<Building> buildings;
 
 	public Location() {
+	
 	}
 
 	public Location(int iD, String name, String city, String state, List<Building> buildings, Boolean active) {
@@ -97,8 +98,8 @@ public class Location implements Activatable {
 
 	@Override
 	public String toString() {
-		return "Location [ID=" + ID + ", name=" + name + ", city=" + city + ", state=" + state + ", active=" + active
-				+ ", buildings=" + buildings + "]";
+		return "Location [ID = " + ID + ", name = " + name + ", city = "
+				+ city + ", state = " + state + ", active = " + active
+				+ ", buildings = " + buildings + "]";
 	}
-
 }

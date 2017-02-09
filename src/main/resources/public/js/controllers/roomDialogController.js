@@ -1,7 +1,6 @@
+var assignforce = angular.module( "batchApp" );
 
-    var assignforce = angular.module( "batchApp" );
-
-    assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationService, roomService ){
+assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationService, roomService ){
         //console.log("Beginning room dialog controller.");
         var rdc = this;
         

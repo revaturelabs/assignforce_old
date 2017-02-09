@@ -35,9 +35,10 @@ public class RoomCtrl {
 	
 		int ID = in.getRoomID();
 		String name = in.getRoomName();
+		int building = in.getBuildingID();
 		List<Unavailable> unavailabilities = in.getUnavailabilities();
 		
-		Room out = new Room( ID, name, unavailabilities );
+		Room out = new Room( ID, name, building, unavailabilities );
 		out = roomService.saveItem( out );
 		
 		if (out == null) {
@@ -67,9 +68,10 @@ public class RoomCtrl {
 	
 		int ID = in.getRoomID();
 		String name = in.getRoomName();
+		int building = in.getBuildingID();
 		List<Unavailable> unavailabilities = in.getUnavailabilities();
 		
-		Room out = new Room( ID, name, unavailabilities );
+		Room out = new Room( ID, name, building, unavailabilities );
 		out = roomService.saveItem( out );
 		
 		if (out == null) {
