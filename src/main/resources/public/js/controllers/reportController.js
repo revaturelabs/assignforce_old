@@ -79,19 +79,19 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     rc.currSummary = function (curriculum) {
 
         var summary = [];
-        var total = 0;
-        var date = new Date();
+        var total;
+        var date;
 
         for (var month = 0; month < 12; month++) {
 
             total = 0;
 
             for(var x = 0; x < rc.batches.length; x++){
-                if (rc.batches[x]['curriculum'].name && curriculum) {
-                    date = new Date(rc.batches[x]['endDate']);
-                    if ((date.getMonth() == month) && (date.getFullYear() == rc.year) && (rc.batches[x]['curriculum'].id == curriculum.id)) {
+                date = new Date(rc.batches[x]['endDate']);
+                if (rc.batches[x]['curriculum'].name && curriculum && (date.getMonth() == month) && (date.getFullYear() == rc.year) && (rc.batches[x]['curriculum'].id == curriculum.id)) {
+                    // if ((date.getMonth() == month) && (date.getFullYear() == rc.year) && (rc.batches[x]['curriculum'].id == curriculum.id)) {
                         total += rc.graduates;
-                    }
+                    // }
                 }
             };
             summary.push(total);
@@ -182,6 +182,9 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 
             default: break;
         }
+
+
+        var wkDayArr = ['Sun', 'Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun'];
 
 
         //Formats the date to 'mm-dd-yyyy' and assigns the output for easier user visibility and comprehension.
@@ -299,7 +302,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 
 
 
-        for ( x in rc.cardArr){
+        for (var x in rc.cardArr){
             if(rc.cardArr.hasOwnProperty(x)){
                 var batchVal = rc.cardArr[x].batchType;
 
@@ -384,21 +387,19 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 
     rc.monthList = monthList;
 
-    var wkDayArr = ['Sun', 'Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun'];
-
     /*************************************************************/
 
 
     // data gathering
     batchService.getAll(function (response) {
         rc.batches = response;
-    }, function (error) {
+    }, function () {
         rc.showToast("Could not fetch batches.");
     });
 
     curriculumService.getAll(function (response) {
         rc.curricula = response;
-    }, function (error) {
+    }, function () {
         rc.showToast("Could not fetch curricula.");
     });
 
