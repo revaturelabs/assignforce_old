@@ -37,7 +37,6 @@ public class Unavailable {
 	
 	public Unavailable(){}
 
-
 	public Unavailable(int iD, Calendar startDate, Calendar endDate) {
 		super();
 		ID = iD;
@@ -45,48 +44,32 @@ public class Unavailable {
 		this.endDate = endDate;
 	}
 
-
-
 	public int getID() {
 		return ID;
 	}
-
-
 
 	public void setID(int iD) {
 		ID = iD;
 	}
 
-
-
 	public Calendar getStartDate() {
 		return startDate;
 	}
-
-
 
 	public void setStartDate(Calendar startDate) {
 		this.startDate = startDate;
 	}
 
-
-
 	public Calendar getEndDate() {
 		return endDate;
 	}
-
-
 
 	public void setEndDate(Calendar endDate) {
 		this.endDate = endDate;
 	}
 
-
-
 	@Override
 	public String toString() {
-		return "Unavailable [ID=" + ID + ", startDate=" + startDate + ", endDate=" + endDate + "]";
-	}
-
-	
+		return "Unavailable [ID = " + ID + ", startDate = " + startDate + ", endDate = " + endDate + "]";
+	}	
 }

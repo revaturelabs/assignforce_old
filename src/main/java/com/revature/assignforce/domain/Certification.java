@@ -62,9 +62,9 @@ public class Certification {
     @Override
     public String toString() {
         return "Certification{" +
-                "ID=" + ID +
-                ", url='" + url + '\'' +
-                ", trainer=" + trainer +
+                "ID = " + ID +
+                ", url = '" + url + '\'' +
+                ", trainer = " + trainer +
                 '}';
     }
 }
