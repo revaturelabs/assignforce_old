@@ -180,9 +180,6 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
         }
 
 
-        //'Day of the Week' abbreviation array.
-        var wkDayArr = ['Sun', 'Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun'];
-
         //Formats the date to 'mm-dd-yyyy' and assigns the output for easier user visibility and comprehension.
         var formattedDate = monthList[sDate.getMonth()] + "-" + sDate.getDate() + "-" + sDate.getFullYear() + " (" + wkDayArr[sDate.getDay()] +")";
 
@@ -481,7 +478,6 @@ assignforce.directive('getData', function() {
 
 
 assignforce.directive('accordionDynamic', function(){
-    console.log("Accordion  Directive");
     return{
         restrict: 'ACE',
         link: function(scope, element){
