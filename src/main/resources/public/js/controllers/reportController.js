@@ -93,7 +93,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
                         total += rc.graduates;
                     // }
                 }
-            };
+            }
             summary.push(total);
         }
 
