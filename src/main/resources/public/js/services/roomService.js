@@ -8,6 +8,10 @@ app.service( "roomService", function($resource) {
     rs.getEmptyRoom = function(){
         return new Room();
     };
+    
+    rs.getAlmostEmptyRoom = function(buildingID){
+    	return new Room(buildingID);
+    }
 
     rs.cloneRoom = function(room){
         return new Room(room);

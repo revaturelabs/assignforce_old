@@ -1,6 +1,6 @@
 var assignforce = angular.module( "batchApp" );
 
-assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationService, roomService ){
+assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationService, buildingService, roomService ){
         //console.log("Beginning room dialog controller.");
         var rdc = this;
         
@@ -22,10 +22,10 @@ assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationS
                 if (rdc.state == "edit") {
                     rdc.swapRoom( rdc.room );
                 } else if (rdc.state == "create") {
-                    rdc.location.rooms.push( rdc.room );
+                    rdc.building.rooms.push( rdc.room );
                 }
 
-                locationService.update( rdc.location, function(){
+                buildingService.update( rdc.building, function(){
                     $mdDialog.hide();
                 }, function(){
                     $mdDialog.cancel();
@@ -34,15 +34,15 @@ assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationS
             }
         };
 
-            // returns locations that contains given room
-        rdc.findLocationFromRoom = function() {
+            // returns building that contains given room
+        rdc.findBuildingFromRoom = function() {
 
-            if (rdc.locations != undefined) {
-                rdc.locations.forEach( function(location){
-                    if (location.rooms.length != 0) {
-                        location.rooms.forEach( function(room){
+            if (rdc.buildings != undefined) {
+                rdc.buildings.forEach( function(building){
+                    if (building.rooms.length != 0) {
+                        building.rooms.forEach( function(room){
                             if (room.roomID == rdc.room.roomID) {
-                                rdc.location = location;
+                                rdc.building = building;
                                 return;
                             }
                         });
@@ -54,10 +54,10 @@ assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationS
             // swaps editted room out for old one
         rdc.swapRoom = function(newRoom) {
             
-            if (rdc.location.rooms.length == 0) {
-                rdc.location.rooms.push(newRoom);
+            if (rdc.building.rooms.length == 0) {
+                rdc.building.rooms.push(newRoom);
             } else {
-                rdc.location.rooms.forEach( function(room){
+                rdc.building.rooms.forEach( function(room){
                     if (room.roomID == newRoom.roomID) {
                         room.roomName = newRoom.roomName;
                     }
@@ -66,26 +66,26 @@ assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationS
         };
 
           // data
-        if (rdc.room.roomName.split("-").length > 1) {
+        /*if (rdc.room.roomName.split("-").length > 1) {// Cannot split undefined
             rdc.building = rdc.room.roomName.split("-")[0].trim();
             rdc.room.roomName = rdc.room.roomName.split("-")[1].trim();
         } else {
             rdc.building = "";
-        }
+        }*/
         
           // page initialization
             // data gathering
-        locationService.getAll( function(response) {
+        buildingService.getAll( function(response) {
             //console.log("  (RDC) Retrieving all locations.")
-            rdc.locations = response;
+            rdc.buildings = response;
             if (rdc.state == "create") {
-                rdc.title = "Add new room to " + rdc.location.name;
+                rdc.title = "Add new room to " + rdc.building.name;
             } else if (rdc.state == "edit") {
-                rdc.findLocationFromRoom();
-                rdc.title = "Edit " + rdc.room.roomName + " at " + rdc.location.name;
+                rdc.findBuildingFromRoom();
+                rdc.title = "Edit " + rdc.room.roomName + " at " + rdc.building.name;
             }
         }, function(error) {
-            //console.log("  (RDC) Failed to retrieve all locations with error:", error.data.message);
+            //console.log("  (RDC) Failed to retrieve all buildings with error:", error.data.message);
             $mdDialog.cancel();
         });
     });
