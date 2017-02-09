@@ -241,7 +241,10 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     rc.assignCurr = function(bType, index){
     	
     	rc.cardArr[index].batchType = bType;
-    	    	
+    	
+    	console.log(rc.cardArr[index].batchType);
+    	
+    	
     	if(rc.cardArr[index].requiredGrads > 0){	
     		rc.cumulativeBatches();
     	}
@@ -296,7 +299,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
       	for ( x in rc.cardArr){
 
             if(rc.cardArr.hasOwnProperty(x)){
-                batchVal = rc.cardArr[x].batchType;
+                batchVal = rc.cardArr[x].batchType.id;
 
                 switch(batchVal){
 
@@ -322,7 +325,52 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 
       	}  	
     };
+    
+    /************************************************************/
+    
+    
+     rc.createBatchClick = function(index){
+    	 
+    	 var x;
+    	 
+    	 rc.newBatch = batchService.getEmptyBatch();
+    	
+    	 //batchService.create(rc.newBatch, success(), error());
+    	
+    	for (var i = 0; i < rc.cardArr[index].requiredBatches; i++){
+    	 			
+    		console.log( "Entered the loop..." );
+    		
+    		
+    		 rc.newBatch.name = " ";
+        	 rc.newBatch.startDate = rc.cardArr[index].startDate;
+        	 rc.newBatch.endDate = rc.cardArr[index].endDate;
+        	 rc.newBatch.curriculum = rc.cardArr[index].batchType;
+    			
+    		//Create batch method called here...
+    		//$scope.changeState("create", newBatch);
+    		batchService.create(rc.newBatch, 	function success (){
+        		console.log("success");
+        	}, function error(){
+        		console.log("error");
+        	});
+    		
+    		
+    		console.log( "Should have created Batch..." );
+    	}
+    /**	 			
+    	function success (){
+    		console.log("success");
+    	}, function error(){
+    		console.log("error");
+    	}
+    	*/
+    	
+    	
+    	
+     };
      
+    
     /************************************************************/  
     /************************************************************/  
     

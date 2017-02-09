@@ -12,12 +12,14 @@
           // functions
             // calls showToast method of aCtrl
         bc.showToast = function( message ){
-            $scope.$parent.aCtrl.showToast( message );
+            $scope.bCtrl.showToast( message );
         };
 
             // changes form state and populates fields if need-be
         bc.changeState = function( newState, incomingBatch ){ 
-            bc.state = newState;
+            console.log(" We're inside the batch contoller's 'changeState' function... ");
+        	
+        	bc.state = newState;
 
             if (newState == "create") {
                 bc.batch = batchService.getEmptyBatch();

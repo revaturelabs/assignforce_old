@@ -204,11 +204,12 @@ Highcharts.chart('container', {
 	                        	<input ng-model="rCtrl.cardArr[$index].reqDate" ng-change="rCtrl.calcStarDate(rCtrl.cardArr[$index].reqDate, $index)" type="date">
 	                        </md-input-container>
 							
+							
 							<!--  Batch Curriculum  -->
 							<md-input-container flex>                       
 	                            <label>Curriculum:</label>
-	                            <md-select ng-model="rCtrl.cardArr[$index].batchType" ng-change="rCtrl.assignCurr( rCtrl.cardArr[$index].batchType, $index)" type="number" >
-	                                <md-option ng-value="curriculum.id" ng-repeat="curriculum in rCtrl.curricula" > {{ curriculum.name }} </md-option>
+	                            <md-select ng-model="rCtrl.cardArr[$index].batchType" ng-change="rCtrl.assignCurr( rCtrl.cardArr[$index].batchType, $index)" >
+	                                <md-option ng-value="curriculum" ng-repeat="curriculum in rCtrl.curricula" > {{ curriculum.name }} </md-option>
 	                            </md-select>
 	                        </md-input-container>
 							
@@ -224,7 +225,7 @@ Highcharts.chart('container', {
 								<p>  Required Batches: {{ rCtrl.cardArr[$index].requiredBatches }}</p>
 							</div>
 							
-							<md-card-actions layout="row" layout-align="end center">
+							<md-card-actions layout="row" layout-align="end center" ng-click="rCtrl.createBatchClick($index)">
 								<md-button>Create Batch</md-button>
 							</md-card-actions>
 	    	 			 </md-card>
