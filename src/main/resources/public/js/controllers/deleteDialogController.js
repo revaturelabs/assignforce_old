@@ -73,8 +73,7 @@
             locationService.update( elem, function(){
                 dc.deleteHelper(delList);
             }, function(error){
-                // console.log(" (LC) Failed to delete room/location with
-				// error:", error.data.message);
+                console.log(" (LC) Failed to delete room/location with error:", error.data.message);
                 $mdDialog.cancel();
             });
         };

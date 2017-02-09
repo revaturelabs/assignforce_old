@@ -80,9 +80,9 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 	// add room to location
 	lc.addRoom = function() {
 		if (lc.selectedList.length > 1) {
-			lc.showToast("Please select only one location.");
+			lc.showToast("Please select only one building.");
 		}
-		// indicates that the list item is actually a room and not a location
+		// indicates that the list item is actually a building and not a location
 		else if (!Array.isArray(lc.selectedList[0].rooms)) {
 			lc.showToast("Please select a location.");
 		} else {
@@ -100,10 +100,10 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 				bindToController : true,
 				clickOutsideToClose : true
 			}).then(function() {
-				lc.showToast("Room updated.");
+				lc.showToast("Room added.");
 				lc.repull();
 			}, function() {
-				lc.showToast("Failed to update room.");
+				lc.showToast("Failed to add room.");
 			});
 		}
 	};
@@ -201,7 +201,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			lc.showToast(lc.formatMessage(summary) + " deleted.");
 			lc.repull();
 		}, function() {
-			lc.showToast("Failed to delete rooms/locations.");
+			lc.showToast("Failed to delete rooms/buildings/locations.");
 		});
 	};
 
@@ -213,6 +213,12 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			message += "1 room";
 		} else if (summary.rooms > 1) {
 			message += summary.rooms + " rooms";
+		}
+		
+		if(summary.buildings == 1) {
+			message += "1 building";
+		} else if (summary.buildings > 1){
+			message += summary.buildings + " buildings";
 		}
 
 		if (summary.locations == 1) {
@@ -234,13 +240,18 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 
 		var summary = {
 			rooms : 0,
+			buildings: 0,
 			locations : 0
 		};
 		if (lc.selectedList.length > 0) {
 			lc.selectedList.forEach(function(item) {
 				if (Array.isArray(item.rooms)) {
 					summary.locations++;
-				} else {
+				}
+				else if (Array.isArray(item.buildings)){
+					summary.buildings++;
+				}
+				else{
 					summary.rooms++;
 				}
 			});
