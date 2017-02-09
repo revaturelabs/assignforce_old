@@ -33,19 +33,19 @@ public class BuildingCtrl {
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createBuilding(@RequestBody BuildingDTO in) {
 		
-		int ID = in.getID();
-		String name = in.getName();
-		int location = in.getLocation();
-		List<Room> rooms = in.getRooms();
+		int ID = in.getID(); //we shouldn't need the building id - it will be generated...  right?
+		String name = in.getName(); //building name
+		int location = in.getLocation(); //building's location id.  This is where it is was breaking - said the location id is 0
+		List<Room> rooms = in.getRooms(); //list of rooms(if being created in this step, no rooms..)
 
 		// int iD, String name, String city, String state, List<Building>
 		// buildings, Boolean active
 		Building out = new Building(ID, name, rooms, true, location);
 		System.out.println("locationid: " + out.getLocation());
-		System.out.println("location name: " + out.getName());
-		System.out.println("location active: " + out.getActive());
+		System.out.println("Building name: " + out.getName());
+		System.out.println("Building active: " + out.getActive());
 		//TODO HERE
-		out = buildingService.saveItem(out);
+		out = buildingService.saveItem(out);// I need to see this: active is being set to null in the db. Is it because it should be 1 in the db instead of true?  idk
 		if (out == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Building failed to save."),
 					HttpStatus.NOT_IMPLEMENTED);
@@ -83,7 +83,7 @@ public class BuildingCtrl {
 		Building out = new Building(ID, name, rooms, active, location);
 		System.out.println("SAVEITEM BEFORE");
 		out = buildingService.saveItem(out);
-		System.out.println("SAVEITEM BEFORE");
+		System.out.println("SAVEITEM AFTER");
 		if (out == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Building failed to update."),
 					HttpStatus.NOT_MODIFIED);

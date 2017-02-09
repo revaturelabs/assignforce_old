@@ -62,7 +62,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 				controllerAs : "bldgCtrl",
 				locals : {
 					location : lc.selectedList[0],
-					building : buildingService.getEmptyBuilding(),
+					building : buildingService.getAlmostEmptyBuilding(lc.selectedList[0].id), //two ways: use a different method than getEmptyBuilding(where the hell is that, btw?, or reference the location on the buildingTemplate form
 					//TODO FIND WAY TO ADD lc.selectedList[0].id TO BUILDING'S LOCATION FIELD
 					state : "create"
 				},

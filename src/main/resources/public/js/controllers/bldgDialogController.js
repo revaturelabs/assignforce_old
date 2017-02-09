@@ -15,12 +15,11 @@ assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
 	bdc.save = function(isValid) {
 
 		if (isValid) {
-			
-			console.log(bdc.building.name);
 
 			if (bdc.state == "edit") {
 				bdc.swapBuilding(bdc.building);
 			} else if (bdc.state == "create") {
+				bdc.building.location = bdc.location.id; //saves the location id reference to building
 				bdc.location.buildings.push(bdc.building);
 			}
 //TODO may have to adjust this to have building contain location

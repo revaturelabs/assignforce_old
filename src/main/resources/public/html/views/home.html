@@ -12,7 +12,7 @@
                     <div flex> </div>
 
                     <md-button ng-click="hCtrl.exportTable()" ng-csv="hCtrl.formatBatches()" filename="batches.csv" class="md-icon-button">
-                        <md-tooltip> Export to CSV </md-tooltip>
+                        <md-tooltip class="md-title"> Export to CSV </md-tooltip>
                         <md-icon md-menu-origin class="material-icons"> file_download </md-icon>
                     </md-button>
                 </div>
@@ -22,7 +22,7 @@
                 <md-menu md-position-mode="target-right target">
 
                     <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button">
-                        <md-tooltip> Filter </md-tooltip>
+                        <md-tooltip class="md-title"> Filter </md-tooltip>
                         <md-icon md-menu-origin md-svg-icon="img/ic_filter_list_white_24px.svg"> </md-icon>
                     </md-button>
 

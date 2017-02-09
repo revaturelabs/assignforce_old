@@ -10,7 +10,7 @@
         <!--  bCtrl is Batch Controller -->
         <md-content>
             <form class="batchForm" name="batchForm" ng-submit="bCtrl.saveBatch(batchForm.$valid)" novalidate>
-<div flex layout="columns">
+		<div flex layout="columns">
                           
                     <!-- Location, Room -->
                     <md-input-container>                       
@@ -43,12 +43,12 @@
                     <div flex> </div>
 
                     <md-button type="submit" class="md-icon-button">
-                        <md-tooltip> {{ bCtrl.stateMux[bCtrl.state].submit }} </md-tooltip>
+                        <md-tooltip class="md-title"> {{ bCtrl.stateMux[bCtrl.state].submit }} </md-tooltip>
                         <md-icon md-svg-src="img/ic_done_white_24px.svg"></md-icon>
                     </md-button>
 
                     <md-button class="md-icon-button" ng-click="bCtrl.resetForm()">
-                        <md-tooltip> Cancel </md-tooltip>
+                        <md-tooltip class="md-title"> Cancel </md-tooltip>
                         <md-icon md-svg-src="img/ic_cancel_white_24px.svg"></md-icon>
                     </md-button>
 
@@ -184,15 +184,15 @@
                                 <td md-cell> {{ batch.endDate | date:'MMM. d, yyyy' }} </td>
                                 <td md-cell layout layout-align="end center"> 
                                     <md-button class="md-fab md-mini" ng-click="bCtrl.edit(batch)"> 
-                                        <md-tooltip> Edit </md-tooltip>
+                                        <md-tooltip class="md-title"> Edit </md-tooltip>
                                         <md-icon md-svg-src="img/ic_edit_white_24px.svg"></md-icon>
                                     </md-button>
                                     <md-button class="md-fab md-mini" ng-click="bCtrl.clone(batch)"> 
-                                        <md-tooltip> Clone </md-tooltip>
+                                        <md-tooltip class="md-title"> Clone </md-tooltip>
                                         <md-icon md-svg-src="img/ic_content_copy_white_24px.svg"></md-icon>
                                     </md-button>
                                     <md-button class="md-fab md-mini" ng-click="bCtrl.delete(batch)"> 
-                                        <md-tooltip> Delete </md-tooltip>
+                                        <md-tooltip class="md-title"> Delete </md-tooltip>
                                         <md-icon md-svg-src="img/ic_delete_white_24px.svg"></md-icon>
                                     </md-button>
                                 </td>

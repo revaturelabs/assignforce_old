@@ -10,13 +10,13 @@
                 <span flex> </span>
 
                 <md-button class="md-icon-button" ng-click="tCtrl.addTrainer()">
-                    <md-tooltip> Add Trainer </md-tooltip>
+                    <md-tooltip class="md-title"> Add Trainer </md-tooltip>
                     <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
                 </md-button>
 
                 <md-menu md-offset="-10 70">
                     <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button">
-                        <md-tooltip> Configurations </md-tooltip>
+                        <md-tooltip class="md-title"> Configurations </md-tooltip>
                         <md-icon md-menu-origin md-svg-icon="img/ic_settings_white_24px.svg"> </md-icon>
                     </md-button>
 
@@ -49,11 +49,11 @@
                     <span flex> </span>
 
                     <md-button class="md-icon-button" ng-click="">
-                        <md-tooltip> Download Resume </md-tooltip>
+                        <md-tooltip class="md-title"> Download Resume </md-tooltip>
                         <i class="material-icons" style="color: #FB8C00;">file_download</i>
                     </md-button>
                     <md-button class="md-icon-button" ng-click="tCtrl.removeTrainer(trainer)">
-                        <md-tooltip> Deactivate Trainer </md-tooltip>
+                        <md-tooltip class="md-title"> Deactivate Trainer </md-tooltip>
                         <i class="material-icons" style="color: #FB8C00;">remove_circle</i>
                     </md-button>
                 </md-list-item>

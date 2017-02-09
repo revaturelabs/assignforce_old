@@ -48,7 +48,10 @@ public class Building implements Activatable {
 		this.rooms = rooms;
 		this.location = location;
 		this.active = active;
-		System.out.println("Failure DOS");
+	}
+	
+	public Building(int location){
+		this.location = location;
 	}
 
 	public Boolean getActive() {
