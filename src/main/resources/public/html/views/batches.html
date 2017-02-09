@@ -231,14 +231,24 @@
                     <div class="md-padding" layout="columns">
                         <md-input-container flex="none">
                             <label> Start Date </label>
-                            <md-datepicker ng-model="tlCtrl.minDate" md-current-view="year" md-open-on-focus md-hide-icons="calendar" ng-change="tlCtrl.updateTimeline()"> </md-datepicker>
+                            <md-datepicker ng-model="tlCtrl.minDate" md-current-view="year" md-open-on-focus md-hide-icons="calendar"> </md-datepicker>
+                        </md-input-container>
+                        
+                        <div flex> </div>
+                        
+                        <md-input-container flex="none">
+                        	<label> Batches to View </label>
+                            <md-select ng-model="tlCtrl.selectedCurriculum" ng-change="tlCtrl.repull()" ng-style="{'width': 160 + 'px'}">
+                            	<md-option ng-value = "0">All</md-option>
+                                <md-option ng-value="curriculum.id" ng-repeat="curriculum in tlCtrl.curricula"> {{ curriculum.name }} </md-option>
+                            </md-select>
                         </md-input-container>
                         
                         <div flex> </div>
 
                         <md-input-container flex="none">
                             <label> End Date </label>
-                            <md-datepicker ng-model="tlCtrl.maxDate" md-current-view="year" md-open-on-focus md-hide-icons="calendar" ng-change="tlCtrl.updateTimeline()"> </md-datepicker>
+                            <md-datepicker ng-model="tlCtrl.maxDate" md-current-view="year" md-open-on-focus md-hide-icons="calendar"> </md-datepicker>
                         </md-input-container>
                     </div>
                 </div>
