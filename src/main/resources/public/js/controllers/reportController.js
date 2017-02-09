@@ -462,6 +462,41 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
             },
             series: rc.graphData()
         })};
+
+});
+
+
+
+
+assignforce.directive('getData', function() {
+    return {
+        restrict: 'E',
+        scope: true,
+        template: '<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>',
+        bindToController: true,
+        controller: function($scope) {
+            $scope.myGraph();
+        }
+    };
+});
+
+
+
+
+assignforce.directive('accordionDynamic', function(){
+    return{
+        restrict: 'ACE',
+        link: function(scope, element){
+            var ele = angular.element(element);
+            ele.bind('click',function(){
+                ele.toggleClass('active');
+                ele.next('.content').stop().slideToggle();
+                ele.parents('li').siblings().find('md-toolbar').removeClass('active');
+                ele.parents('li').siblings().find('.content').slideUp();
+                return false;
+            });
+        }
+    }
 });
 
 
