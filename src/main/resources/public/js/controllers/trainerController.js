@@ -86,6 +86,10 @@
                 tc.showToast("Could not fetch trainers.");
             });
         };
+        
+        tc.convertUnavailability = function(incoming){
+        	return new Date(incoming);
+        }
 
         //data
         tc.weeks = 5;

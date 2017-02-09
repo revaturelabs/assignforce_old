@@ -59,9 +59,6 @@ public class Skill implements Activatable{
 
 	@Override
 	public String toString() {
-		return "Skill [ID=" + ID + ", Name=" + Name + "]";
-	}
-
-	
-	
+		return "Skill [ID = " + ID + ", Name = " + Name + "]";
+	}	
 }

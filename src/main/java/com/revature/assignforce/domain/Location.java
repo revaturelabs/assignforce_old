@@ -1,4 +1,5 @@
 package com.revature.assignforce.domain;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -9,40 +10,41 @@ import javax.persistence.*;
 @Entity
 @Table(name = "LOCATION")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class Location implements Activatable{
-	
+public class Location implements Activatable {
+
 	@Id
 	@Column(name = "ID")
 	@SequenceGenerator(allocationSize = 1, name = "locationSeq", sequenceName = "LOCATION_SEQ")
 	@GeneratedValue(generator = "locationSeq", strategy = GenerationType.SEQUENCE)
 	private int ID;
-	
-	@Column(name = "NAME", unique=true, nullable=false)
+
+	@Column(name = "NAME", unique = true, nullable = false)
 	private String name;
-	
+
 	@Column(name = "CITY")
 	private String city;
-	
+
 	@Column(name = "STATE")
 	private String state;
 
-	@Column(name="active", insertable = false)
+	@Column(name = "active", insertable = false)
 	private Boolean active;
-	
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name="LOCATION")
-	//@JsonProperty(access = JsonProperty.Access.READ_ONLY)
-	private List<Room> rooms;
-	
-	public Location(){}
 
-	public Location(int iD, String name, String city, String state, List<Room> rooms, Boolean active) {
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "LOCATION")
+	private List<Building> buildings;
+
+	public Location() {
+	
+	}
+
+	public Location(int iD, String name, String city, String state, List<Building> buildings, Boolean active) {
 		super();
 		ID = iD;
 		this.name = name;
 		this.city = city;
 		this.state = state;
-		this.rooms = rooms;
+		this.buildings = buildings;
 		this.active = active;
 	}
 
@@ -78,14 +80,6 @@ public class Location implements Activatable{
 		this.state = state;
 	}
 
-	public List<Room> getRooms() {
-		return rooms;
-	}
-
-	public void setRooms(List<Room> rooms) {
-		this.rooms = rooms;
-	}
-
 	public Boolean getActive() {
 		return active;
 	}
@@ -94,12 +88,18 @@ public class Location implements Activatable{
 		this.active = active;
 	}
 
-	@Override
-	public String toString() {
-		return "Location [ID=" + ID + ", name=" + name + ", city=" + city + ", state=" + state + ", rooms=" + rooms
-				+ "]";
+	public List<Building> getBuildings() {
+		return buildings;
 	}
 
-	
-	
+	public void setBuildings(List<Building> buildings) {
+		this.buildings = buildings;
+	}
+
+	@Override
+	public String toString() {
+		return "Location [ID = " + ID + ", name = " + name + ", city = "
+				+ city + ", state = " + state + ", active = " + active
+				+ ", buildings = " + buildings + "]";
+	}
 }

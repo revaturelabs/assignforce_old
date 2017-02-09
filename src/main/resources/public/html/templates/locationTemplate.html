@@ -25,7 +25,12 @@
                                 <input ng-model="ldCtrl.location.city">
                             </md-input-container>
                             
-                            <md-input-container flex>                       
+                            <!--md-input-container flex="50"> 
+                                <label> Building </label>
+                                <input ng-model="ldCtrl.location.building">
+                            </md-input-container-->
+                            
+                            <md-input-container flex="50">                       
                                 <label> State </label>
                                 <md-select ng-model="ldCtrl.location.state">
                                     <md-option ng-value="stateAbr" ng-repeat="stateAbr in ldCtrl.USstates"> {{ stateAbr }} </md-option>
