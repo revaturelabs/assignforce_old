@@ -17,17 +17,12 @@ assignforce.controller("skillDialogCtrl", function ($scope, $mdDialog, skillServ
     //save updated skill
     sdc.save = function (isValid) {
         if (isValid){
-            console.log("running sdc.save")
             skillService.update(sdc.newSkill, function () {
                 $mdDialog.hide();
             }, function () {
                 $mdDialog.cancel();
             });
             $mdDialog.hide();
-            console.log("ending sdc.save")
-            console.log(sdc.newSkill);
         }
     };
-
-    console.log(sdc.skills);
 });

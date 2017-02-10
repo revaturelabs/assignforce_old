@@ -22,7 +22,7 @@
         };
 
         ss.update = function(skill, success, error){
-            skill.$update(success, error);
+            Skill.update(skill, success, error);
         };
 
         ss.delete = function(skill, success, error){
