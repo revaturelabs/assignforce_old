@@ -1,7 +1,8 @@
+
 var assignforce = angular.module("batchApp");
 
 assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
-		locationService) {
+		locationService, buildingService, roomService) {
 	var lc = this;
 
 	// functions
@@ -29,7 +30,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 	lc.addLocation = function() {
 		$mdDialog.show({
 			templateUrl : "html/templates/locationTemplate.html",
-			controller : "locationDialogCtrl",
+			controller : "locationDialogCtrl", //locationDialogController.js
 			controllerAs : "ldCtrl",
 			locals : {
 				location : locationService.getEmptyLocation(),
@@ -55,16 +56,14 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 		else if (!(Array.isArray(lc.selectedList[0].buildings))) {
 			lc.showToast("Please select a location.");
 		} else {
-			// console.log("taco");
 			$mdDialog.show({
 				templateUrl : "html/templates/buildingTemplate.html",
-				controller : "bldgDialogCtrl",
+				controller : "bldgDialogCtrl", //bldgDialogController.js
 				controllerAs : "bldgCtrl",
 				locals : {
 					location : lc.selectedList[0],
-					building : {
-						buildingName : ""
-					},
+					building : buildingService.getAlmostEmptyBuilding(lc.selectedList[0].id), //two ways: use a different method than getEmptyBuilding(where the hell is that, btw?, or reference the location on the buildingTemplate form
+					//TODO FIND WAY TO ADD lc.selectedList[0].id TO BUILDING'S LOCATION FIELD
 					state : "create"
 				},
 				bindToController : true,
@@ -81,30 +80,28 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 	// add room to location
 	lc.addRoom = function() {
 		if (lc.selectedList.length > 1) {
-			lc.showToast("Please select only one location.");
+			lc.showToast("Please select only one building.");
 		}
-		// indicates that the list item is actually a room and not a location
+		// indicates that the list item is actually a building and not a location
 		else if (!Array.isArray(lc.selectedList[0].rooms)) {
-			lc.showToast("Please select a location.");
+			lc.showToast("Please select a building.");
 		} else {
 			$mdDialog.show({
 				templateUrl : "html/templates/roomTemplate.html",
-				controller : "roomDialogCtrl",
-				controllerAs : "ldCtrl",
+				controller : "roomDialogCtrl", //roomDialogController.js
+				controllerAs : "rdCtrl",
 				locals : {
-					location : lc.selectedList[0],
-					room : {
-						roomName : ""
-					},
+					building : lc.selectedList[0], //TODO - scrap getAlmostEmptyRoom and replace with getEmptyRoom when finished with testing.
+					room : roomService.getAlmostEmptyRoom(lc.selectedList[0].id),
 					state : "create"
 				},
 				bindToController : true,
 				clickOutsideToClose : true
 			}).then(function() {
-				lc.showToast("Room updated.");
+				lc.showToast("Room added.");
 				lc.repull();
 			}, function() {
-				lc.showToast("Failed to update room.");
+				lc.showToast("Failed to add room.");
 			});
 		}
 	};
@@ -165,7 +162,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 				$mdDialog.show({
 					templateUrl : "html/templates/roomTemplate.html",
 					controller : "roomDialogCtrl",
-					controllerAs : "ldCtrl",
+					controllerAs : "rdCtrl",
 					locals : {
 						room : lc.selectedList[0],
 						state : "edit"
@@ -190,7 +187,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 
 		$mdDialog.show({
 			templateUrl : "html/templates/deleteTemplate.html",
-			controller : "deleteDialogCtrl",
+			controller : "deleteDialogCtrl", //deleteDialogController.js
 			controllerAs : "dCtrl",
 			locals : {
 				list : lc.selectedList,
@@ -202,7 +199,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			lc.showToast(lc.formatMessage(summary) + " deleted.");
 			lc.repull();
 		}, function() {
-			lc.showToast("Failed to delete rooms/locations.");
+			lc.showToast("Failed to delete rooms/buildings/locations.");
 		});
 	};
 
@@ -214,6 +211,12 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			message += "1 room";
 		} else if (summary.rooms > 1) {
 			message += summary.rooms + " rooms";
+		}
+		
+		if(summary.buildings == 1) {
+			message += "1 building";
+		} else if (summary.buildings > 1){
+			message += summary.buildings + " buildings";
 		}
 
 		if (summary.locations == 1) {
@@ -230,19 +233,30 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 		return message;
 	};
 
-	// counts the number of rooms and locations selected
+	// counts the number of rooms/buildings/locations selected
 	lc.categorizeSelected = function() {
 
 		var summary = {
 			rooms : 0,
+			buildings: 0,
 			locations : 0
-		};
-		if (lc.selectedList.length > 0) {
+		}; //this is where the deletion is mucking up
+		if (lc.selectedList.length > 0) {			
 			lc.selectedList.forEach(function(item) {
 				if (Array.isArray(item.rooms)) {
+					item.rooms.forEach(function(room){
+						summary.rooms++;
+					});
+					summary.buildings++;
+				}
+				else if (Array.isArray(item.buildings)){
+					item.buildings.forEach(function(building){
+						summary.buildings++;
+					});
 					summary.locations++;
-				} else {
-					summary.rooms++;
+				}
+				else{
+					summary.locations++;
 				}
 			});
 		}

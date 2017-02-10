@@ -64,10 +64,13 @@ public class TrainerCtrl {
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object updateTrainer( @RequestBody TrainerDTO in ) {
 
-		int ID = in.getID();
+		//int ID = in.getID();
+		int ID = 0;
 
-		if(in.getActive() == false){
+//		if(in.getActive() == false){
 			List<Trainer> trainers = trainerService.getAllItems();
+
+			//if no trainer found, need to break out of this method
 
 			for(int i = 0; i < trainers.size(); i++){
 				if(in.getFirstName().equals(trainers.get(i).getFirstName()) && in.getLastName().equals(trainers.get(i).getLastName())){//add lookup by last name
@@ -75,7 +78,7 @@ public class TrainerCtrl {
 					break;
 				}
 			}
-		}
+//		}
 
 
 		String firstName = in.getFirstName();
