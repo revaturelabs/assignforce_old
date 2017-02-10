@@ -18,6 +18,9 @@ app.service( "roomService", function($resource) {
     };
 
     rs.create = function(room, success, error){
+    	console.log("=== IN CREATION ===");
+    	console.log("Room's Building: " + room.building);
+    	console.log("Room's BuildingID: " + room.building.id);
         room.$save(success, error);
     };
 

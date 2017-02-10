@@ -24,10 +24,14 @@ assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationS
                     rdc.swapRoom( rdc.room );
                 } else if (rdc.state == "create") {
                 	rdc.room.building = rdc.building.id;
+                	console.log("=== SAVING ===");
+                	console.log("Room's Buiilding here: " + rdc.room.building);
+                	console.log("Building here: " + rdc.building);
+                	console.log("Building ID here: " + rdc.building.id);
                     rdc.building.rooms.push( rdc.room );
                 }
 
-                buildingService.update( rdc.building, function(){
+                roomService.create( rdc.room, function(){
                     $mdDialog.hide();
                 }, function(){
                     $mdDialog.cancel();

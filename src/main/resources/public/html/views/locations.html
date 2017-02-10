@@ -40,7 +40,7 @@
 
             <md-list ng-if="lCtrl.locations != undefined">
 
-                <md-list-item class="md-2-line locListItem" md-ink-ripple ng-repeat-start="location in lCtrl.locations | activeItem track by location.id" 
+                <md-list-item class="md-2-line" md-ink-ripple ng-repeat-start="location in lCtrl.locations | activeItem track by location.id" 
                 	ng-click="lCtrl.openLocation(location)" layout-align="center center">
 
                     <md-icon md-svg-icon="img/ic_location_city_black_48px.svg"> </md-icon>
