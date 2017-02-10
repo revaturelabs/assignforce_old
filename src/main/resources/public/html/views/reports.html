@@ -127,16 +127,18 @@
                             <label>Trainee's Needed:</label>
                             <input ng-model="rCtrl.cardArr[$index].requiredGrads" ng-change="rCtrl.calcReqBatch(rCtrl.cardArr[$index].requiredGrads, $index)" type="number">
                         </md-input-container>
-                        <!--  'Needed-by Date  -->
+                        
+                        <!--  'Needed-by' Date  -->
                         <md-input-container>
                             <label>Hire Date:</label>
-                            <input ng-model="rCtrl.cardArr[$index].reqDate" ng-change="rCtrl.calcStarDate(rCtrl.cardArr[$index].reqDate, $index)" type="date">
+                            <input ng-model="rCtrl.cardArr[$index].reqDate" ng-change="rCtrl.calcStartDate(rCtrl.cardArr[$index].reqDate, $index)" type="date">
                         </md-input-container>
+                        
                         <!--  Batch Curriculum  -->
                         <md-input-container flex>
                             <label>Curriculum:</label>
-                            <md-select ng-model="rCtrl.cardArr[$index].batchType" ng-change="rCtrl.assignCurr( rCtrl.cardArr[$index].batchType, $index)" type="number">
-                                <md-option ng-value="curriculum.id" ng-repeat="curriculum in rCtrl.curricula"> {{ curriculum.name }} </md-option>
+                            <md-select ng-model="rCtrl.cardArr[$index].batchType" ng-change="rCtrl.assignCurr( rCtrl.cardArr[$index].batchType, $index)">
+                                <md-option ng-value="curriculum" ng-repeat="curriculum in rCtrl.curricula"> {{ curriculum.name }} </md-option>
                             </md-select>
                         </md-input-container>
                         <!--  Start Date  -->
@@ -147,7 +149,7 @@
                         <div ng-model="rCtrl.cardArr[$index].requiredBatches">
                             <p> Required Batches: {{ rCtrl.cardArr[$index].requiredBatches }}</p>
                         </div>
-                        <md-card-actions layout="row" layout-align="end center">
+                        <md-card-actions layout="row" layout-align="end center" ng-click="rCtrl.createBatchClick($index)">
                             <md-button class="md-raised md-warn">Create Batch</md-button>
                         </md-card-actions>
                         </md-card-content>

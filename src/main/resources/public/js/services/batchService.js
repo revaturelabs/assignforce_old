@@ -1,4 +1,3 @@
-
 var app = angular.module("batchApp");
 
 app.service('batchService', function($resource) {
@@ -6,7 +5,7 @@ app.service('batchService', function($resource) {
     var bs = this;
 
     bs.getEmptyBatch = function(){
-    	console.log("Inside the 'getEmptyBatch' function... ");
+    	console.log("Inside the 'get Empty Batch' function... ");
     	return new Batch();
     };
     
