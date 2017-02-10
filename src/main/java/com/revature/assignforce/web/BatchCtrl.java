@@ -90,7 +90,7 @@ public class BatchCtrl {
 	
 		int ID = in.getBatchId();
 		String name = in.getName();
-		Curriculum curriculum = currService.getOneItem(in.getCurriculum());
+		Curriculum curriculum = skillService.getOneItem(in.getCurriculum());
 		Location location = locationService.getOneItem(in.getLocation());
 		Room room = roomService.getOneItem(in.getRoom());
 		Trainer trainer = trainerService.getOneItem(in.getTrainer());
