@@ -76,6 +76,25 @@
             tc.showToast("Could not fetch trainers.");
         });
 
+        tc.showCalendar = function () {
+            console.log("lol");
+            $mdDialog.show({
+                templateUrl: "html/templates/calendarTemplate.html",
+                // controller: "ptoCalendarCtrl",
+                // controllerAs: "ptoCtrl",
+                // locals: {
+                //     trainer : trainerService.getEmptyTrainer(),
+                //     state    : "create" },
+                bindToController: true,
+                clickOutsideToClose: true
+            }).then(function () {
+                // tc.showToast("Trainer success.");
+                // tc.rePullTrainers();
+            }, function () {
+                // tc.showToast("Trainer Fails.")
+            });
+        };
+
         // trainerService.getById(1, function (response) {
         //     tc.singleTrainer = response;
         // }, function (error) {
