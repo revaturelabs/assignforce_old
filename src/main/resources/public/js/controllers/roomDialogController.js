@@ -75,8 +75,7 @@ assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationS
                 rdc.findBuildingFromRoom();
                 rdc.title = "Edit " + rdc.room.roomName + " at " + rdc.building.name;
             }
-        }, function(error) {
-        	console.log(data.error.message);
+        }, function() {
             $mdDialog.cancel();
         });
     });
