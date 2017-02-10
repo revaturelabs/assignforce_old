@@ -18,7 +18,7 @@
                 controllerAs: "tdCtrl",
                 locals: {
                     trainer : trainerService.getEmptyTrainer(),
-                    state    : "create" },
+                    state   : "create" },
                 bindToController: true,
                 clickOutsideToClose: true
             }).then(function () {
