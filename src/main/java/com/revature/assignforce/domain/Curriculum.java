@@ -39,7 +39,6 @@ public class Curriculum implements Activatable{
 
 	@Column(name="active", insertable = false)
 	private Boolean active;
-
 	
 	public Curriculum(){}
 	
@@ -84,9 +83,6 @@ public class Curriculum implements Activatable{
 
 	@Override
 	public String toString() {
-		return "Curriculum [ID=" + ID + ", name=" + name + ", skill=" + skill + "]";
-	}
-
-	
-	
+		return "Curriculum [ID = " + ID + ", name = " + name + ", skills = " + skill + "]";
+	}	
 }
