@@ -104,8 +104,5 @@ public class RoomCtrl {
 		} else {
 			return new ResponseEntity< List<Room> >(all, HttpStatus.OK);
 		}
-	}
-	
+	}	
 }
-
-
