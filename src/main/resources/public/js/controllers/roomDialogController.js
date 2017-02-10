@@ -14,20 +14,12 @@ assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationS
             // save changes/new
         rdc.save = function(isValid) {
 
-            if (isValid) {
-                
-                if (rdc.building) {
-                    rdc.room.roomName = rdc.room.roomName;//rdc.building + " - " + rdc.room.roomName;
-                }
+            if (isValid) {               
                 
                 if (rdc.state == "edit") {
                     rdc.swapRoom( rdc.room );
                 } else if (rdc.state == "create") {
                 	rdc.room.building = rdc.building.id;
-                	console.log("=== SAVING ===");
-                	console.log("Room's Buiilding here: " + rdc.room.building);
-                	console.log("Building here: " + rdc.building);
-                	console.log("Building ID here: " + rdc.building.id);
                     rdc.building.rooms.push( rdc.room );
                 }
 
@@ -72,12 +64,6 @@ assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationS
         };
 
           // data
-        /*if (rdc.room.roomName.split("-").length > 1) {// Cannot split undefined
-            rdc.building = rdc.room.roomName.split("-")[0].trim();
-            rdc.room.roomName = rdc.room.roomName.split("-")[1].trim();
-        } else {
-            rdc.building = "";
-        }*/
         
           // page initialization
             // data gathering
@@ -91,7 +77,6 @@ assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationS
                 rdc.title = "Edit " + rdc.room.roomName + " at " + rdc.building.name;
             }
         }, function(error) {
-            //console.log("  (RDC) Failed to retrieve all buildings with error:", error.data.message);
             $mdDialog.cancel();
         });
     });
