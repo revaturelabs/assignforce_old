@@ -3,7 +3,6 @@ package com.revature.assignforce.domain.dto;
 import java.util.List;
 
 import com.revature.assignforce.domain.Building;
-import com.revature.assignforce.domain.Room;
 
 public class LocationDTO {
 
@@ -39,14 +38,10 @@ public class LocationDTO {
 	}
 
 	public String getCity() {
-		System.out.println("getCITY CALLED");
-		System.out.println(city == null);
 		return city;
 	}
 
 	public void setCity(String city) {
-		System.out.println("setCITY CALLED");
-		System.out.println(city == null);
 		this.city = city;
 	}
 
@@ -55,21 +50,15 @@ public class LocationDTO {
 	}
 
 	public void setState(String state) {
-		
 		this.state = state;
 	}
-	
+
 	public void setBuildings(List<Building> buildings) {
-		System.out.println("SETBUILDINGS CALLED");
 		this.buildings = buildings;
 	}
 
 	public List<Building> getBuildings() {
-		System.out.println("getbuildings CALLED");
-		System.out.println(buildings == null);
 		return buildings;
 	}
-
-	
 
 }

@@ -12,6 +12,7 @@ import org.hibernate.annotations.FetchMode;
 @Entity
 @Table(name = "BUILDING")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
+//@JsonIgnoreProperties(ignoreUnknown = true)
 public class Building implements Activatable {
 
 	@Id
@@ -33,8 +34,25 @@ public class Building implements Activatable {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "BUILDING")
+	//@JsonIgnore
 	// @JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private List<Room> rooms;
+	
+	public Building() {
+	}
+
+	public Building(int ID, String name, List<Room> rooms, boolean active, int location) {
+		super();
+		this.ID = ID;
+		this.name = name;
+		this.rooms = rooms;
+		this.location = location;
+		this.active = active;
+	}
+	
+	public Building(int location){
+		this.location = location;
+	}
 
 	public Boolean getActive() {
 		return active;

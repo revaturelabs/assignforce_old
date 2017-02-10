@@ -13,7 +13,6 @@
 
             // save changes/new
         ldc.save = function(isValid) {
-
             if (isValid) {
                 if (ldc.state == "edit") {
                     locationService.update( ldc.location, function(){
