@@ -251,9 +251,40 @@
                             <md-datepicker ng-model="tlCtrl.maxDate" md-current-view="year" md-open-on-focus md-hide-icons="calendar"> </md-datepicker>
                         </md-input-container>
                     </div>
+	                <div class="md-padding" layout="columns">
+                        <md-input-container flex="none">
+                        	<label> Trainers Per Page (0 to see All) </label>
+                            <input type = "number" min = "0" ng-model="tlCtrl.trainersPerPage" ng-change="tlCtrl.changeTrainersPerPage(); tlCtrl.repull()" ng-style="{'width': 320 + 'px'}"/>
+                        </md-input-container>
+                        
+                        <div class="md-padding" layout="columns">
+	                        <md-button id = "previousTrainerPageButton" class="md-fab md-mini" ng-click="tlCtrl.previousTrainerPage(); tlCtrl.repull()" ng-disabled = "tlCtrl.previousPageButtonDisabled"> 
+	                            <md-tooltip class="md-title"> Previous Page </md-tooltip>
+	                            <md-icon md-svg-src="img/ic_arrow_back_white_24px.svg"></md-icon>
+	                        </md-button>
+	                        
+	                        <div flex> </div>
+	                        
+	                        <div>
+	                        	<div ng-if = "tlCtrl.trainersPerPage > 0">
+	                        		Viewing Page:  <b>{{tlCtrl.trainerPage}}</b> / {{tlCtrl.maxTrainerPages}}
+	                        	</div>
+	                        	<div ng-if = "tlCtrl.trainersPerPage <= 0">
+	                        		Viewing All Trainers' Batches
+	                        	</div>
+	                        </div>
+	                        
+	                        <div flex> </div>
+	                        
+	                        <md-button id = "nextTrainerPageButton"  class="md-fab md-mini" ng-click="tlCtrl.nextTrainerPage(); tlCtrl.repull()" ng-disabled = "tlCtrl.nextPageButtonDisabled"> 
+	                            <md-tooltip class="md-title"> Next Page </md-tooltip>
+	                            <md-icon md-svg-src="img/ic_arrow_forward_white_24px.svg"></md-icon>
+	                        </md-button>
+                        </div>
+	                </div>
                 </div>
                 <br ng-show="(tlCtrl.batches != undefined) && (tlCtrl.trainers != undefined)">
-                <div id="timeline" ng-show="(tlCtrl.batches != undefined) && (tlCtrl.trainers != undefined)"> </div>
+                <div id="timeline" ng-show="(tlCtrl.batches != undefined) && (tlCtrl.trainers != undefined)" style="overflow: scroll"> </div>
                 
                 <div ng-if="(tlCtrl.batches == undefined) || (tlCtrl.trainers == undefined)" layout="column" layout-wrap layout-align="center center">
                     <div flex="100"> &nbsp; </div>
