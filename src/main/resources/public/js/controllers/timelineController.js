@@ -10,6 +10,26 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     tlc.removeNoTrainer = function(batch) {
         return (batch.trainer);
     };
+    
+    tlc.removeIrrelevantBatches = function(batch) {
+		var trainerIndex = tlc.filteredTrainers.findIndex(function (d)
+		{
+			return (d == trainerColumnName(batch.trainer));
+		});
+		
+        return (trainerIndex > -1);
+    };
+    
+    tlc.removeTrainersOutOfPage = function(trainer) {
+		var trainerIndex = tlc.trainers.findIndex(function (d)
+		{
+			return (d == trainer);
+		});
+		
+		var trainerDisplayed = (tlc.trainerListEndIndex == 0 || (trainerIndex > -1 && trainerIndex >= tlc.trainerListStartIndex && trainerIndex < tlc.trainerListEndIndex));
+		
+        return trainerDisplayed;
+    };
 
 	//Options for datepicker
 	tlc.options = {
@@ -22,6 +42,15 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	tlc.maxDate = new Date(2000, 12, 0);
 	tlc.maxTrainerNameCharacters = 6;
 	tlc.selectedCurriculum = 0;
+	tlc.trainersPerPage = 0;
+	tlc.trainerPage = 1;
+	tlc.maxTrainerPages = 1;
+	tlc.trainerListStartIndex = 0;
+	tlc.trainerListEndIndex = 0;
+	tlc.previousPageButtonDisabled = false;
+	tlc.nextPageButtonDisabled = false;
+	tlc.filteredTrainers;
+	tlc.filteredBatches;
 	
 	//Set the min and max dates based on the batches.
 	//Also grabs the length of the longest trainer name.
@@ -87,7 +116,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 
 	        if (!angular.isUndefined(tlc.trainers) && tlc.trainers !== null && !angular.isUndefined(tlc.trainerNames) && tlc.trainerNames !== null)
 	        {
-				projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, -100, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers, tlc.maxTrainerNameCharacters, tlc.selectedCurriculum);
+				tlc.projectTimeline(0);
 	        }
 	    }, function(error) {
 	    });
@@ -96,13 +125,14 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	tlc.getAllTrainers = function()
 	{
 	    trainerService.getAll( function(response) {
-			tlc.trainers = response.map(function(trainer){return ("(" + trainer.trainerID + ")" + " " + trainer.firstName + " " + trainer.lastName)});
+			tlc.trainers = response.map(function(trainer){return trainerColumnName(trainer)});
 			tlc.trainerNames = response.map(function(trainer){return (trainer.firstName + " " + trainer.lastName)});
 			tlc.getDateRange();
 
 	        if (!angular.isUndefined(tlc.batches) && tlc.batches !== null && !angular.isUndefined(tlc.trainerNames) && tlc.trainerNames !== null)
 	        {
-				projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, -100, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers, tlc.maxTrainerNameCharacters, tlc.selectedCurriculum);
+	        	tlc.projectTimeline(0);
+
 	        }
 	    }, function(error) {
 	    });
@@ -124,7 +154,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		},
 		function(){
 			if(tlc.batches !== undefined && tlc.trainers !== undefined){
-				projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, -100, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers, tlc.maxTrainerNameCharacters, tlc.selectedCurriculum);
+				tlc.projectTimeline(0);
 			}
 		}
 	);
@@ -135,7 +165,8 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		},
 		function(){
 			if(tlc.batches !== undefined && tlc.trainers !== undefined) {
-                projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, -100, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers, tlc.maxTrainerNameCharacters, tlc.selectedCurriculum);
+				tlc.projectTimeline(0);
+
             }
 		}
 	);
@@ -167,7 +198,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 			var bottomFraction = 1 - topFraction; 
 
 			// Draw the zoompoint
-			projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, mousedownY, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers, tlc.maxTrainerNameCharacters, tlc.selectedCurriculum);
+			tlc.projectTimeline(mousedownY);
 			
 			// Fire when there is a mousemove event on the #timeline element
 			$(".toastContainer").mousemove(function(evt){
@@ -198,8 +229,8 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 					tlc.maxDate = new Date(maxDateMilliseconds + bottomMilliseconds);
 				}
 
-				projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, mousedownY, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers, tlc.maxTrainerNameCharacters, tlc.selectedCurriculum);
-				
+			    tlc.projectTimeline(mousedownY);
+			    
 				// Update the last coordinate of the mouse
 				pageY = evt.pageY;
 			});
@@ -208,7 +239,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 
 	$(".toastContainer").mouseup(function(){
 		// Erase the zoompoint(or move out of view)
-		projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, -100, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers, tlc.maxTrainerNameCharacters, tlc.selectedCurriculum);
+		tlc.projectTimeline(-100);
 		// Remove mousemove listener from the container
 		$(".toastContainer").off("mousemove");
 	});
@@ -218,17 +249,91 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     tlc.repull = function(){
     	$scope.$broadcast("repullTimeline");
     };
+    
+    //Pagination functions
+	tlc.changeTrainersPerPage = function()
+	{
+		var numTrainers = (tlc.trainers ? tlc.trainers.length : 0);
+		
+		if (tlc.trainersPerPage < 0 || !angular.isNumber(tlc.trainersPerPage)) {tlc.trainersPerPage = 0;}
+		
+		tlc.trainersPerPage = Math.min(tlc.trainersPerPage, numTrainers);
+		
+		tlc.trainerListStartIndex = 0;
+		
+		tlc.trainerListEndIndex = Math.min(tlc.trainersPerPage, numTrainers);
+		
+		tlc.trainerPage = 1;
+		tlc.maxTrainerPages = Math.ceil(numTrainers / tlc.trainersPerPage);
+		
+		tlc.previousPageButtonStatus();
+		tlc.nextPageButtonStatus();
+	}
+	
+	tlc.previousTrainerPage = function()
+	{
+		tlc.trainerListStartIndex -= tlc.trainersPerPage;
+		tlc.trainerListEndIndex -= tlc.trainersPerPage;
+		
+		tlc.trainerPage -= 1;
+		
+		tlc.previousPageButtonStatus();
+		tlc.nextPageButtonStatus();
+	}
+	
+	tlc.nextTrainerPage = function()
+	{
+		tlc.trainerListStartIndex += tlc.trainersPerPage;
+		tlc.trainerListEndIndex += tlc.trainersPerPage;
+		
+		tlc.trainerPage += 1;
+		
+		tlc.previousPageButtonStatus();
+		tlc.nextPageButtonStatus();
+	}
+	
+	tlc.previousPageButtonStatus = function()
+	{
+		//True = disabled, false = enabled.
+		if (tlc.trainerListStartIndex == 0 || tlc.trainersPerPage == 0) { tlc.previousPageButtonDisabled = true; }
+		else { tlc.previousPageButtonDisabled = false; }
+	}
+	
+	tlc.nextPageButtonStatus = function()
+	{
+		var numTrainers = (tlc.trainers ? tlc.trainers.length : 0);
+		
+		//True = disabled, false = enabled.
+		if (tlc.trainerListStartIndex + tlc.trainersPerPage >= numTrainers || tlc.trainersPerPage == 0) { tlc.nextPageButtonDisabled = true; }
+		else { tlc.nextPageButtonDisabled = false; }
+	}
+	
+	tlc.changeTrainersPerPage();
+	
+	tlc.projectTimeline = function(yOffset)
+	{
+		tlc.filteredTrainers = tlc.trainers.filter(tlc.removeTrainersOutOfPage);
+		
+		tlc.filteredBatches = tlc.batches.filter(tlc.removeNoTrainer).filter(tlc.removeIrrelevantBatches);
+		
+		projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, yOffset, tlc.filteredBatches, $scope.$parent, calendarService.countWeeks, tlc.filteredTrainers, tlc.maxTrainerNameCharacters, tlc.selectedCurriculum);
+	}
 });
+
+//Generates the string used in the columns
+function trainerColumnName(trainer)
+{
+	return ("(" + trainer.trainerID + ")" + " " + trainer.firstName + " " + trainer.lastName);
+}
 
 // Draw timeline
 function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, parentScope, numWeeks, trainerNames, maxTrainerNameCharacters, selectedCurriculum){
-	
 	//Timeline variables
 	var margin = {top: 80, right: 16, bottom: 32, left: 72},
 	width = windowWidth - margin.left - margin.right,
 	height = 2000 - margin.top - margin.bottom,
 	xPadding = 8 * maxTrainerNameCharacters;
-
+	
 	//Define Scales
 	var colorScale = d3.scale.category20();
 	
@@ -238,7 +343,7 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 	
 	var xScale = d3.scale.ordinal()
 		.domain(trainerNames)
-		.rangePoints([xPadding,width-xPadding]);
+		.rangePoints([xPadding, width - xPadding]);
 	
 	//Define axis
 	var yAxis = d3.svg.axis()
@@ -281,7 +386,10 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 	//Filter & sort data for that in range of Timeline
 	//Also for the selected curriculum type.
 	timelineData = timelineData.filter(function(batch){
-		return ((new Date(batch.startDate) <= maxDate) && (new Date(batch.endDate) >= minDate) && (selectedCurriculum == 0 || (!(angular.isUndefined(batch.curriculum)) && (batch.curriculum.id == selectedCurriculum))));
+		var dateInRange = ((new Date(batch.startDate) <= maxDate) && (new Date(batch.endDate) >= minDate));
+		var matchingCurriculum = (selectedCurriculum == 0 || (!(angular.isUndefined(batch.curriculum)) && (batch.curriculum.id == selectedCurriculum)));
+
+		return (dateInRange && matchingCurriculum);
 	});
 	
 	timelineData.sort(function(a,b){
@@ -300,11 +408,11 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 	var batchCount = {};
 	for(var x = 0; x < timelineData.length; x++){
 		
-		if(batchCount[timelineData[x].trainer ? ("(" + timelineData[x].trainer.trainerID + ")" + " " + timelineData[x].trainer.firstName + " " + timelineData[x].trainer.lastName) : 'No trainer'] === undefined){
-			batchCount[timelineData[x].trainer ? ("(" + timelineData[x].trainer.trainerID + ")" + " " + timelineData[x].trainer.firstName + " " + timelineData[x].trainer.lastName) : 'No trainer'] = [];
+		if(batchCount[timelineData[x].trainer ? trainerColumnName(timelineData[x].trainer) : 'No trainer'] === undefined){
+			batchCount[timelineData[x].trainer ? trainerColumnName(timelineData[x].trainer) : 'No trainer'] = [];
 		}
 		
-		batchCount[timelineData[x].trainer ? ("(" + timelineData[x].trainer.trainerID + ")" + " " + timelineData[x].trainer.firstName + " " + timelineData[x].trainer.lastName) : 'No trainer'].push(timelineData[x]);
+		batchCount[timelineData[x].trainer ? trainerColumnName(timelineData[x].trainer) : 'No trainer'].push(timelineData[x]);
 	}
 	
 	var betweenBatches = [];
@@ -312,7 +420,7 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 	for(var trainer in batchCount){
 		if (batchCount.hasOwnProperty(trainer)){
 			for(x = 0; x < batchCount[trainer].length-1; x++){
-				var between = {x: xScale(batchCount[trainer][x].trainer ? ("(" + batchCount[trainer][x].trainer.trainerID + ")" + " " + batchCount[trainer][x].trainer.firstName + " " + batchCount[trainer][x].trainer.lastName) : 'No trainer'),
+				var between = {x: xScale(batchCount[trainer][x].trainer ? trainerColumnName(batchCount[trainer][x].trainer) : 'No trainer'),
 						y1: yScale(new Date(batchCount[trainer][x].endDate)),
 						y2: yScale(new Date(batchCount[trainer][x+1].startDate)),
 						length:numWeeks(batchCount[trainer][x].endDate,batchCount[trainer][x+1].startDate)};
@@ -326,6 +434,18 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 	//Create timeline
     var svg = d3.select("#timeline");
     svg.selectAll("*").remove();
+    
+	var tip = d3.tip()
+	  .attr('class', 'd3-tip')
+	  .html(function(d) {
+		  var msg = "";
+		  
+		  msg += d.curriculum ? ("<span style='color:orange'>" + d.curriculum.name + "</span> Batch <br/>") : "<span style='color:red'>No curriculum</span> for this batch. <br/>";
+		  msg += d.trainer ? ("Trainer:  <span style='color:gold'>" + d.trainer.firstName + " " + d.trainer.lastName + "</span> <br/>") : "<span style='color:gold'>No trainer</span> for this batch. <br/>";
+		  msg += d.cotrainer ? ("Cotrainer:  <span style='color:gold'>" + d.cotrainer.firstName + " " + d.trainer.lastName + "</span> <br/>") : "<span style='color:gold'>No cotrainer</span> for this batch. <br/>";
+		  
+		  return msg;
+	  });
 	
 	svg = d3.select('#timeline')
 		.append('svg')
@@ -334,6 +454,8 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 		.append('g')
 			.attr('transform','translate('+margin.left+','+margin.top+')');
 			
+	svg.call(tip);
+	
 	svg.append('g')
 		.attr('class','x axis')
 		.call(xAxis);
@@ -434,7 +556,7 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 				}
 				return y;
 			})
-			.attr('x', function(d) {return xScale(d.trainer ? ("(" + d.trainer.trainerID + ")" + " " + d.trainer.firstName + " " + d.trainer.lastName) : 'No trainer')-15;})
+			.attr('x', function(d) {return xScale(d.trainer ? trainerColumnName(d.trainer) : 'No trainer')-15;})
 			.attr('width', 30)
 			.attr('height', function(d) {
 				var start = yScale(new Date(d.startDate));
@@ -447,22 +569,30 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 				}
 				return end - start;
 			})
-			.on('mouseover', function()
+			.on('mouseover', function(d)
 			{
-				//tip.show;
+			    var mouse_coordinates;
+			    
+			    mouse_coordinates = d3.mouse(this);
+				tip.offset([mouse_coordinates[1] - d3.select(this).attr("y") - 8, mouse_coordinates[0] - d3.select(this).attr("x") - 16]).show(d);
 				d3.event.stopPropagation();
 			})
-			.on('mouseout', function()
+			.on('mouseout', function(d)
 			{
-				//tip.hide;
+				tip.hide(d);
 				d3.event.stopPropagation();
 			})
 			.on('mousedown', function()
 			{
 				d3.event.stopPropagation();
 			})
-			.on('mousemove', function()
+			.on('mousemove', function(d)
 			{
+			    var mouse_coordinates;
+			    
+			    mouse_coordinates = d3.mouse(this);
+			    tip.hide(d);
+				tip.offset([mouse_coordinates[1] - d3.select(this).attr("y") - 8, mouse_coordinates[0] - d3.select(this).attr("x") - 16]).show(d);
 				d3.event.stopPropagation();
 			})
 			.on('click', function(d){
@@ -480,7 +610,7 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 				}
 				return (y+25);
 			})
-			.attr('x', function(d) {return xScale(d.trainer ? ("(" + d.trainer.trainerID + ")" + " " + d.trainer.firstName + " " + d.trainer.lastName) : 'No trainer')-7;})
+			.attr('x', function(d) {return xScale(d.trainer ?  trainerColumnName(d.trainer) : 'No trainer')-7;})
 			.text(function(d) {return numWeeks(d.startDate,d.endDate) + " W E E K S";})
 				.attr("dy", 0);
 	

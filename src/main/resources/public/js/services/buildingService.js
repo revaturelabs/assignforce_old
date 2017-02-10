@@ -2,35 +2,39 @@
 var app = angular.module("batchApp");
 
 app.service( "buildingService", function($resource) {
-    var Building = $resource('api/v2/building/:buildingID',{buildingD: '@buildingID'},{update:{method:'PUT', url:'api/v2/building'}});
-    var rs = this;
+    var Building = $resource('/api/v2/building/:id',{id: '@id'},{update:{method:'PUT', url:'api/v2/building'}});
+    var bs = this;
 
-    rs.getEmptyBuilding = function(){
+    bs.getEmptyBuilding = function(){
         return new Building();
     };
-
-    rs.cloneBuilding = function(building){
-        return new Building(building);
+    
+    bs.getAlmostEmptyBuilding = function(locationID){
+        return new Building(locationID);
     };
-
-    rs.create = function(building, success, error){
+    
+    bs.create = function(building, success, error){
         building.$save(success, error);
     };
-
-    rs.getAll = function(success, error) {
+    
+    bs.getAll = function(success, error) {
         Building.query(success, error);
     };
 
-    rs.getById = function(id, success, error){
+    bs.getById = function(id, success, error){
         Building.get({id: id}, success, error);
     };
 
-    rs.update = function(building, success, error){
+    bs.update = function(building, success, error){
         building.$update(success, error);
     };
 
-    rs.delete = function(building, success, error){
+    bs.delete = function(building, success, error){
         building.$remove(success, error);
+    };
+    
+    bs.cloneBuilding = function(building){
+        return new Building(building);
     };
 
 });
