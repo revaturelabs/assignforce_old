@@ -1,7 +1,8 @@
+
 var assignforce = angular.module( "batchApp" );
 
 assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationService, buildingService, roomService ){
-        //console.log("Beginning room dialog controller.");
+        
         var rdc = this;
         
           // functions
@@ -16,12 +17,13 @@ assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationS
             if (isValid) {
                 
                 if (rdc.building) {
-                    rdc.room.roomName = rdc.building + " - " + rdc.room.roomName;
+                    rdc.room.roomName = rdc.room.roomName;//rdc.building + " - " + rdc.room.roomName;
                 }
                 
                 if (rdc.state == "edit") {
                     rdc.swapRoom( rdc.room );
                 } else if (rdc.state == "create") {
+                	rdc.room.building = rdc.building.id;
                     rdc.building.rooms.push( rdc.room );
                 }
 
