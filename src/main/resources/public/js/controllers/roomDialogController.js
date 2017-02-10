@@ -68,7 +68,6 @@ assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationS
           // page initialization
             // data gathering
         buildingService.getAll( function(response) {
-            //console.log("  (RDC) Retrieving all locations.")
             rdc.buildings = response;
             if (rdc.state == "create") {
                 rdc.title = "Add new room to " + rdc.building.name;
@@ -77,6 +76,7 @@ assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationS
                 rdc.title = "Edit " + rdc.room.roomName + " at " + rdc.building.name;
             }
         }, function(error) {
+        	console.log(data.error.message);
             $mdDialog.cancel();
         });
     });
