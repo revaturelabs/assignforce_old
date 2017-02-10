@@ -27,7 +27,7 @@ assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationS
                     rdc.building.rooms.push( rdc.room );
                 }
 
-                buildingService.update( rdc.building, function(){
+                roomService.create( rdc.room, function(){
                     $mdDialog.hide();
                 }, function(){
                     $mdDialog.cancel();
