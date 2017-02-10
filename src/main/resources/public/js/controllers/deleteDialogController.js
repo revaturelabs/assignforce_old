@@ -44,14 +44,17 @@
         dc.deleteHelper = function( delList ){
             
             if (delList.length == 0) {
+            	console.log("taco");
                 $mdDialog.hide();
                 return;
             }
 
             var elem = delList.shift();
-
+            // checks if elem has a .rooms array and then subsequently iterates
+			// through said list, deactivating each item in the list.
             if ( Array.isArray(elem.rooms) ) {
                 elem.active = false;
+                //Here is the mentioned iteration that deletes all rooms
                 elem.rooms.forEach( function(room){
                     room.active = false;
                 });
