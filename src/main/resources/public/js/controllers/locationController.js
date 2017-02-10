@@ -55,7 +55,6 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 		else if (!(Array.isArray(lc.selectedList[0].buildings))) {
 			lc.showToast("Please select a location.");
 		} else {
-			console.log( lc.selectedList[0].id);
 			$mdDialog.show({
 				templateUrl : "html/templates/buildingTemplate.html",
 				controller : "bldgDialogCtrl",

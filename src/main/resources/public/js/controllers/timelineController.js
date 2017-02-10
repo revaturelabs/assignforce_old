@@ -100,8 +100,8 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	}
 	
 	//Project timeline when data changes
-	var batches = [];
-	var trainerNames = [];
+	var batches;
+	var trainerNames;
 	
 	$scope.$on("repullTimeline", function(event, data){
 		tlc.getAllTrainers();
