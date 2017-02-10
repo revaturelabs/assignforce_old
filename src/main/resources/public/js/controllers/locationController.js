@@ -56,7 +56,6 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 		else if (!(Array.isArray(lc.selectedList[0].buildings))) {
 			lc.showToast("Please select a location.");
 		} else {
-			console.log( lc.selectedList[0].id);
 			$mdDialog.show({
 				templateUrl : "html/templates/buildingTemplate.html",
 				controller : "bldgDialogCtrl", //bldgDialogController.js
@@ -244,9 +243,6 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 		}; //this is where the deletion is mucking up
 		if (lc.selectedList.length > 0) {			
 			lc.selectedList.forEach(function(item) {
-				console.log("item.rooms" + item.rooms);
-				console.log("item.buildings = " + item.buildings);
-				console.log("item.locations = " + item.locations);
 				if (Array.isArray(item.rooms)) {
 					item.rooms.forEach(function(room){
 						summary.rooms++;

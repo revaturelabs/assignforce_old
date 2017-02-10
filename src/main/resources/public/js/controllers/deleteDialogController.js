@@ -44,7 +44,6 @@
           // delete rooms/locations
         dc.delete = function(){
             dc.thinking = true;
-            console.log(dc.list + " is what dc.list is.")
             var delList = dc.list;//wth is list coming from?
             dc.deleteHelper(delList);
         };
@@ -52,17 +51,14 @@
             // recursively inactivates the first entry in bc.batchesSelected until
 			// it is empty
         dc.deleteHelper = function( delList ){
-            console.log("In deleteHelper")
             if (delList.length == 0) {
                 $mdDialog.hide();
                 return;
             }
 
             var elem = delList.shift();
-            
             //if a location was selected, recurse building/room inactivation
             if (Array.isArray(elem.buildings)){
-            	console.log("A location was selected");
             	//if it has buildings
             	if(elem.buildings.length > 0){
             		elem.buildings.forEach(function(building){
@@ -71,18 +67,14 @@
             				building.rooms.forEach(function(room){
             					room.active = false;
             					roomService.update( room, function(){
-            		            	console.log("roomService.update call success!")
             		            }, function(error){
-            		                console.log(" (LC) Failed to delete room with error:", error.data.message);
             		                $mdDialog.cancel();
             		            });
             				});
             			}
             			building.active = false;
-            			buildingService.update( building, function(){
-                        	console.log("buildingService.update call success!")                            
+            			buildingService.update( building, function(){                          
                         }, function(error){
-                            console.log(" (LC) Failed to delete building with error:", error.data.message);
                             $mdDialog.cancel();
                         });
             		});            		
@@ -90,43 +82,32 @@
             	elem.active = false;
                 //runs the locationService update, concentric with another deleteHelper call upon success.
                 locationService.update( elem, function(){
-                	console.log("locationService.update call")
                     //dc.deleteHelper(delList);
                 }, function(error){
-                    console.log(" (LC) Failed to delete location with error:", error.data.message);
-                    $mdDialog.cancel();
+                    ancel();
                 });
             }
 
             //else if a building was selected, recurse room inactivation
-            else if ( Array.isArray(elem.rooms) ) {
-            	console.log("A building was selected");                
+            else if ( Array.isArray(elem.rooms) ) {   
                 elem.rooms.forEach( function(room){
                     room.active = false;
                     roomService.update( room, function(){
-		            	console.log("roomService.update call success!")
 		            }, function(error){
-		                console.log(" (LC) Failed to delete room with error:", error.data.message);
 		                $mdDialog.cancel();
 		            });
                 });
                 elem.active = false;
-                buildingService.update( elem, function(){
-                	console.log("buildingService.update call success!")                            
+                buildingService.update( elem, function(){                      
                 }, function(error){
-                    console.log(" (LC) Failed to delete building with error:", error.data.message);
                     $mdDialog.cancel();
                 });
             }
             //else room was called, so simply:
             else {
             	elem.active = false;
-            	console.log("Room's corresponding buildingID: " + elem.buildingID);
-            	console.log("If that didn't work, try this: " + elem.building);
             	roomService.update( elem, function(){
-	            	console.log("roomService.update call success!")
 	            }, function(error){
-	                console.log(" (LC) Failed to delete room with error:", error.data.message);
 	                $mdDialog.cancel();
 	            });
             }
