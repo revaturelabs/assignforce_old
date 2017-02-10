@@ -10,12 +10,10 @@ app.service( "buildingService", function($resource) {
     };
     
     bs.getAlmostEmptyBuilding = function(locationID){
-    	console.log("almost empty function called"); //this message is not displayed.. hrmm..
         return new Building(locationID);
     };
     
     bs.create = function(building, success, error){
-    	console.log(building);
         building.$save(success, error);
     };
     
