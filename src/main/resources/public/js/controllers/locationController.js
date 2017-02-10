@@ -1,7 +1,8 @@
+
 var assignforce = angular.module("batchApp");
 
 assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
-		locationService, buildingService) {
+		locationService, buildingService, roomService) {
 	var lc = this;
 
 	// functions
@@ -29,7 +30,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 	lc.addLocation = function() {
 		$mdDialog.show({
 			templateUrl : "html/templates/locationTemplate.html",
-			controller : "locationDialogCtrl",
+			controller : "locationDialogCtrl", //locationDialogController.js
 			controllerAs : "ldCtrl",
 			locals : {
 				location : locationService.getEmptyLocation(),
@@ -58,7 +59,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			console.log( lc.selectedList[0].id);
 			$mdDialog.show({
 				templateUrl : "html/templates/buildingTemplate.html",
-				controller : "bldgDialogCtrl",
+				controller : "bldgDialogCtrl", //bldgDialogController.js
 				controllerAs : "bldgCtrl",
 				locals : {
 					location : lc.selectedList[0],
@@ -84,17 +85,15 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 		}
 		// indicates that the list item is actually a building and not a location
 		else if (!Array.isArray(lc.selectedList[0].rooms)) {
-			lc.showToast("Please select a location.");
+			lc.showToast("Please select a building.");
 		} else {
 			$mdDialog.show({
 				templateUrl : "html/templates/roomTemplate.html",
-				controller : "roomDialogCtrl",
-				controllerAs : "ldCtrl",
+				controller : "roomDialogCtrl", //roomDialogController.js
+				controllerAs : "rdCtrl",
 				locals : {
-					location : lc.selectedList[0],
-					room : {
-						roomName : ""
-					},
+					building : lc.selectedList[0], //TODO - scrap getAlmostEmptyRoom and replace with getEmptyRoom when finished with testing.
+					room : roomService.getAlmostEmptyRoom(lc.selectedList[0].id),
 					state : "create"
 				},
 				bindToController : true,
@@ -164,7 +163,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 				$mdDialog.show({
 					templateUrl : "html/templates/roomTemplate.html",
 					controller : "roomDialogCtrl",
-					controllerAs : "ldCtrl",
+					controllerAs : "rdCtrl",
 					locals : {
 						room : lc.selectedList[0],
 						state : "edit"
@@ -189,7 +188,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 
 		$mdDialog.show({
 			templateUrl : "html/templates/deleteTemplate.html",
-			controller : "deleteDialogCtrl",
+			controller : "deleteDialogCtrl", //deleteDialogController.js
 			controllerAs : "dCtrl",
 			locals : {
 				list : lc.selectedList,
@@ -235,24 +234,33 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 		return message;
 	};
 
-	// counts the number of rooms and locations selected
+	// counts the number of rooms/buildings/locations selected
 	lc.categorizeSelected = function() {
 
 		var summary = {
 			rooms : 0,
 			buildings: 0,
 			locations : 0
-		};
-		if (lc.selectedList.length > 0) {
+		}; //this is where the deletion is mucking up
+		if (lc.selectedList.length > 0) {			
 			lc.selectedList.forEach(function(item) {
+				console.log("item.rooms" + item.rooms);
+				console.log("item.buildings = " + item.buildings);
+				console.log("item.locations = " + item.locations);
 				if (Array.isArray(item.rooms)) {
-					summary.locations++;
-				}
-				else if (Array.isArray(item.buildings)){
+					item.rooms.forEach(function(room){
+						summary.rooms++;
+					});
 					summary.buildings++;
 				}
+				else if (Array.isArray(item.buildings)){
+					item.buildings.forEach(function(building){
+						summary.buildings++;
+					});
+					summary.locations++;
+				}
 				else{
-					summary.rooms++;
+					summary.locations++;
 				}
 			});
 		}
