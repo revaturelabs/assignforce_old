@@ -52,16 +52,6 @@
         //         accessKeyId: 'AKIAIJCZHWEPE6SODSXQ',
         //         secretAccessKey: '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'
         //     });
-        //
-        //     var params = {
-        //         Bucket: bucketName,
-        //     };
-        //
-        //     //aws stuff
-        //     bucket.headBucket(params, function (err, data){
-        //        if(err){} else {}
-        //     });
-        //
         // };
 
             // reformats how an array of objects is joined
@@ -98,10 +88,4 @@
         }, function(error) {
             tc.showToast("Could not fetch trainers.");
         });
-
-        // trainerService.getById(1, function (response) {
-        //     tc.singleTrainer = response;
-        // }, function (error) {
-        //     tc.showToast("could not fetch a trainer")
-        // });
     });//end trainer controller

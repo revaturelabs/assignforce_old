@@ -47,7 +47,7 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
         sc.settings = response;
         //this will initialize the Locations variable after the settings are loaded in.
         sc.getLocations();
-    }, function (error) {
+    }, function () {
         sc.showToast("Could not fetch settings.");
     });
 
@@ -61,28 +61,13 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
                     sc.defaultLocation = location.name;
                 }
             })
-        }, function (error) {
+        }, function () {
             sc.showToast("could not fetch locations.");
         });
     };
-
 
     //data
     sc.defaultLocation;
     sc.settings;
     sc.locations;
-
-
-    // angular.forEach(values, function(value, key) {
-    //     this.push(key + ': ' + value);
-    // }, log);
-    // expect(log).toEqual(['name: misko', 'gender: male']);
-
-    //Get one setting by its ID
-    // settingService.getById(1, function (response) {
-    //     sc.setting = response;
-    //     console.log(sc.setting);
-    // }, function (error) {
-    //     sc.showToast("Setting not found");
-    // })
 });
