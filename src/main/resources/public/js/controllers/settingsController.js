@@ -17,14 +17,14 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
 
         for(var i = 0; i < sc.settings.length-1; i++){
             //save each setting
-            settingService.update(sc.settings[i], function () {
-                
-            }, function () {
-                
-            });
+            settingService.update(sc.settings[i], thing(), thing());
         }
 
         sc.showToast("Settings updated!");
+    };
+
+    var thing = function () {
+
     };
 
     sc.resetSettings = function () {
@@ -36,11 +36,7 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
 
         for(var i = 0; i < sc.settings.length-1; i++){
             //save each setting
-            settingService.update(sc.settings[i], function () {
-                
-            }, function () {
-                
-            });
+            settingService.update(sc.settings[i], thing(), thing());
         }
 
         sc.showToast("Settings updated!");
@@ -49,7 +45,6 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
     //Get all Settings
     settingService.getAll( function (response) {
         sc.settings = response;
-        console.log(sc.settings);
         //this will initialize the Locations variable after the settings are loaded in.
         sc.getLocations();
     }, function (error) {

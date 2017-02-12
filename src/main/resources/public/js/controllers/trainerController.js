@@ -45,26 +45,24 @@
 
 
         //connects to aws s3 to grab an object
-        tc.grabS3Resume = function () {
-            var bucketName = "revature-assignforce";
-
-            var bucket = new AWS.S3({
-                accessKeyId: 'AKIAIJCZHWEPE6SODSXQ',
-                secretAccessKey: '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'
-            });
-
-            var params = {
-                Bucket: bucketName,
-            };
-
-            //aws stuff
-            bucket.headBucket(params, function (err, data){
-               if(err){
-               } else {
-               }
-            });
-
-        };
+        // tc.grabS3Resume = function () {
+        //     var bucketName = "revature-assignforce";
+        //
+        //     var bucket = new AWS.S3({
+        //         accessKeyId: 'AKIAIJCZHWEPE6SODSXQ',
+        //         secretAccessKey: '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'
+        //     });
+        //
+        //     var params = {
+        //         Bucket: bucketName,
+        //     };
+        //
+        //     //aws stuff
+        //     bucket.headBucket(params, function (err, data){
+        //        if(err){} else {}
+        //     });
+        //
+        // };
 
             // reformats how an array of objects is joined
         tc.joinObjArrayByName = function(elem) {
