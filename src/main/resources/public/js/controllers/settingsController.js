@@ -10,30 +10,82 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
     sc.showToast = function (message) {
         $scope.$parent.aCtrl.showToast(message);
     };
-    $scope.testing = {};
+
     sc.updateSettings = function () {
 
-      console.log($scope.testing);
-      for(var i = 0; i < sc.settings.length; i++){
-          console.log(sc.settings[i].settingValue);
+        for(var i = 0; i < sc.settings.length-1; i++){
+            //setting the default location in settings
+            if (i == 2){
+                sc.settings[i].settingValue = sc.defaultLocation.id;
+            }
+
+            //save each setting
+            settingService.update(sc.settings[i], function (success) {
+                status = true;
+            }, function (error) {
+                status = false;
+            });
+
+        }
+
+        if(status){
+            sc.showToast("Settings updated!");
+            status = false;
+        } else {
+            sc.showToast("Failed to update!");
+        }
+    };
+
+    sc.resetSettings = function () {
+        for(var i = 0; i < sc.settings.length-1; i++){
+            switch (i){
+                case 0:
+                    sc.settings[i].settingValue = 5;
+                    break;
+
+                case 1:
+                    sc.settings[i].settingValue = 12;
+                    break;
+
+                case 2:
+                    sc.settings[i].settingValue = 1;
+                    break;
+
+                case 3:
+                    sc.settings[i].settingValue = 1;
+                    break;
+            }
+
+            //save each setting
+            settingService.update(sc.settings[i], function (success) {
+                status = true;
+            }, function (error) {
+                status = false;
+            });
+
+        }
+
+        if(status){
+            sc.showToast("Settings updated!");
+            status = false;
+        } else {
+            sc.showToast("Failed to update!");
         }
     };
 
     //Get all Settings
     settingService.getAll( function (response) {
         sc.settings = response;
-        console.log(sc.settings);
+        //this will initialize the Locations variable after the settings are loaded in.
         sc.getLocations();
     }, function (error) {
         sc.showToast("Could not fetch settings.");
-        console.log(error);
     });
 
     //get all locations
     sc.getLocations = function() {
         locationService.getAll(function (response) {
             sc.locations = response;
-            console.log(sc.locations);
 
             angular.forEach(sc.locations, function (location) {
                 if (sc.settings[2].settingValue == location.id) {
@@ -50,6 +102,7 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
     sc.defaultLocation;
     sc.settings;
     sc.locations;
+    var status = false;
 
 
 

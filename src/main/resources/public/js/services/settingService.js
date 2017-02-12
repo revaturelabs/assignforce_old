@@ -19,5 +19,5 @@ app.service('settingService', function ($resource) {
 
     ss.update = function (setting, success, error) {
         setting.$update(success, error);
-    }
+    };
 });

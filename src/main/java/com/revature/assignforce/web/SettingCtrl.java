@@ -60,7 +60,14 @@ public class SettingCtrl {
     @RequestMapping( method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object updateSetting(@RequestBody SettingDTO in ){
 
-        int ID = in.getSettingId();
+        int ID = 0;
+        List<Setting> settings = settingService.getAllItems();
+
+        for (int i = 0; i < settings.size(); i++){
+            if (in.getSettingName().equals(settings.get(i).getSettingName())){
+                ID = settings.get(i).getId();
+            }
+        }
         String name = in.getSettingName();
         double value = in.getSettingValue();
 
