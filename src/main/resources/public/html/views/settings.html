@@ -1,0 +1,37 @@
+<md-card md-whiteframe="8" ng-cloak>
+    <md-toolbar layout="columns"  ng-click="sCtrl.viewContent()">
+        <div class="md-toolbar-tools">
+            <span>Settings</span>
+        </div>
+    </md-toolbar>
+    <md-content class="md-padding">
+        <md-list ng-if="sCtrl.locations != undefined">
+            <md-list-item ng-repeat="setting in sCtrl.settings">
+                <div class="md-list-item-text">
+                    <h3>{{setting.settingName}}</h3>
+                </div>
+                <span flex></span>
+
+                <md-input-container ng-if="setting.id == 3">
+                    <md-select ng-model="sCtrl.defaultLocation" placeholder="No Defualt Location" >
+                        <md-option ng-value="location" ng-repeat="location in sCtrl.locations" ng-selected="location.id == setting.settingValue">{{ location.name }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container  ng-if="setting.id != 3">
+                    <label></label>
+                    <input ng-model= "setting.settingValue" class="settInput" type="Number" min="0">
+                </md-input-container>
+                <md-divider></md-divider>
+            </md-list-item>
+            <md-button class="md-primary" ng-click="sCtrl.updateSettings()" >Save</md-button>
+            <md-button class="md-secondary" ng-click="sCtrl.resetSettings()">Reset</md-button>
+        </md-list>
+
+        <div ng-if="sCtrl.locations == undefined" layout="column" layout-wrap layout-align="center center">
+            <div flex="100"> &nbsp; </div>
+            <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
+            <div flex="100"> &nbsp; </div>
+        </div>
+    </md-content>
+</md-card>
