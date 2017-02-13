@@ -4,7 +4,7 @@ var app = angular.module('batchApp');
 
 /*--------------------------CONTROLLER---------------------------*/
 
-app.controller("TimelineCtrl", function($scope, $window, batchService, calendarService, trainerService, curriculumService){
+app.controller("TimelineCtrl", function($scope, $window, batchService, calendarService, trainerService, curriculumService, settingService){
     var tlc = this;
 
     tlc.removeNoTrainer = function(batch) {
@@ -133,7 +133,11 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     curriculumService.getAll( function(response) {
         tlc.curricula = response;
     }, function(error) {
-        tlc.showToast( "Could not fetch curricula.");
+    });
+    
+    settingService.getById(5, function (response) {
+        tlc.trainersPerPage = response;
+    }, function () {
     });
     
 	$scope.$watch(
