@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -39,16 +40,16 @@ public class Batch {
 	@Fetch(FetchMode.JOIN)
 	private Curriculum curriculum;
 	
-	@ManyToOne
-	@JoinColumn(name = "ROOM")
+	@OneToOne
+	@JoinColumn(name = "ROOM") //one batch only belongs to one room
 	@Fetch(FetchMode.JOIN)
 	private Room room;
-	
+	/*
 	@ManyToOne
 	@JoinColumn(name = "LOCATION")
 	@Fetch(FetchMode.JOIN)
 	private Location location;
-	
+	*/
 	@ManyToOne
 	@JoinColumn(name = "STATUS")
 	@Fetch(FetchMode.JOIN)
@@ -76,12 +77,26 @@ public class Batch {
 		this.endDate = endDate;
 		this.curriculum = curriculum;
 		this.room = room;
-		this.location = location;
+		//this.location = location;
 		this.batchStatus = status;
 		this.trainer = trainer;
 		this.cotrainer = cotrainer;
 	}
-
+	
+	public Batch(int iD, String name, Timestamp startDate, Timestamp endDate, Curriculum curriculum, Room room,
+			/*Location location, */BatchStatusLookup batchStatus, Trainer trainer, Trainer coTrainer) {
+		super();
+		ID = iD;
+		Name = name;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.curriculum = curriculum;
+		this.room = room;
+		//this.location = location;
+		this.batchStatus = batchStatus;
+		this.trainer = trainer;
+		this.cotrainer = coTrainer;
+	}
 
 	public int getID() {
 		return ID;
@@ -122,9 +137,6 @@ public class Batch {
 		this.endDate = endDate;
 	}
 
-
-
-
 	public Curriculum getCurriculum() {
 		return curriculum;
 	}
@@ -144,7 +156,7 @@ public class Batch {
 		this.room = room;
 	}
 
-
+/*
 	public Location getLocation() {
 		return location;
 	}
@@ -153,7 +165,7 @@ public class Batch {
 	public void setLocation(Location location) {
 		this.location = location;
 	}
-
+*/
 
 	public BatchStatusLookup getBatchStatus() {
 		return batchStatus;
@@ -177,8 +189,9 @@ public class Batch {
 
 	@Override
 	public String toString() {
-		return "Batch [ID=" + ID + ", Name=" + Name + ", startDate=" + startDate + ", endDate=" + endDate + ", curriculum=" + curriculum + ", room=" + room + ", location=" + location + ", batchStatus="
-				+ batchStatus + ", trainer=" + trainer + "]";
+		return "Batch [ID=" + ID + ", Name =" + Name + ", startDate =" + startDate + ", endDate =" + endDate
+				+ ", curriculum =" + curriculum + ", room =" + room + ", batchStatus ="
+				+ batchStatus + ", trainer =" + trainer + ", cotrainer = " + cotrainer + "]";
 	}
 
 
@@ -190,21 +203,4 @@ public class Batch {
 	public void setCotrainer(Trainer coTrainer) {
 		this.cotrainer = coTrainer;
 	}
-
-
-	public Batch(int iD, String name, Timestamp startDate, Timestamp endDate, Curriculum curriculum, Room room,
-			Location location, BatchStatusLookup batchStatus, Trainer trainer, Trainer coTrainer) {
-		super();
-		ID = iD;
-		Name = name;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.curriculum = curriculum;
-		this.room = room;
-		this.location = location;
-		this.batchStatus = batchStatus;
-		this.trainer = trainer;
-		this.cotrainer = coTrainer;
-	}
-
 }

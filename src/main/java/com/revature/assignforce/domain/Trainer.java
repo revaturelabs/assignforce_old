@@ -2,18 +2,7 @@ package com.revature.assignforce.domain;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -48,22 +37,28 @@ public class Trainer implements Activatable{
 	@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")						// ADDED this to fix serialization/infinite loop issues
 	private List<Skill> skill;
 
+	@OneToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+	@JoinColumn(name="Trainer")
+	private List<Certification> certification;
+
+
 	@Column(name="active", insertable = false)
 	private Boolean active;
 
-	public int getTrainerID() {
-		return trainerID;
+	public int getTrainerID() {		
+		return trainerID;		
 	}
 	
 	public Trainer(){}
 
-	public Trainer(int trainerID, String firstName, String lastName, List<Unavailable> unavailable, List<Skill> skill) {
+	public Trainer(int trainerID, String firstName, String lastName, List<Unavailable> unavailable, List<Skill> skill, List<Certification> certification) {
 		super();
 		this.trainerID = trainerID;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.unavailable = unavailable;
 		this.skill = skill;
+		this.certification = certification;
 	}
 
 
@@ -109,5 +104,13 @@ public class Trainer implements Activatable{
 
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	public List<Certification> getCertification() {
+		return certification;
+	}
+
+	public void setCertification(List<Certification> certification) {
+		this.certification = certification;
 	}
 }

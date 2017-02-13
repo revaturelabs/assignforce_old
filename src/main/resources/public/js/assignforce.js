@@ -28,11 +28,19 @@
 				})
 				.when("/locations", {
 					templateUrl : "html/views/locations.html",
-					controller  : "locationCtrl as lCtrl"
+					controller  : "locationCtrl as lCtrl" //locationController.js
 				})
                 .when("/reports", {
 					templateUrl : "html/views/reports.html",
 					controller  : "reportCtrl as rCtrl"
+				})
+				.when("/profile", {
+					templateUrl : "html/views/profile.html",
+					controller  : "profileCtrl as pCtrl"
+				})
+				.when("/settings", {
+					templateUrl : "html/views/settings.html",
+					controller  : "settingsCtrl as sCtrl"
 				})
 				.otherwise({"redirectTo": "/home"});
 			

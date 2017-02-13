@@ -22,7 +22,7 @@ app.service( "locationService", function($resource) {
     };
 
     ls.update = function(location, success, error){
-        location.$update(success, error);
+        Location.update(location, success, error);
     };
 
     //I am not really changing ls

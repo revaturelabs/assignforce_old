@@ -1,9 +1,13 @@
 
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "batchCtrl", function($scope, $timeout, batchService, curriculumService, skillService, trainerService, locationService, calendarService ) {
-        //console.log("Beginning batch controller.");
+    assignforce.controller( "batchCtrl", function($scope, $timeout, batchService, curriculumService, skillService, trainerService, locationService, /*buildingService, */calendarService, $location, $anchorScroll, $filter, $window) {
         var bc = this;
+        var availableTrainers;
+        
+        bc.convertUnavailability = function(incoming){
+        	return new Date(incoming);
+        }
 
           // functions
             // calls showToast method of aCtrl
@@ -13,12 +17,13 @@
 
             // changes form state and populates fields if need-be
         bc.changeState = function( newState, incomingBatch ){ 
-            //console.log("  (BC)  Changing to state [" + newState + "] from [" + bc.state + "].");
             bc.state = newState;
 
             if (newState == "create") {
                 bc.batch = batchService.getEmptyBatch();
                 bc.batch.location = bc.findHQ();
+                bc.batch.building = bc.findHQBuilding();
+              //bc.batch.room = bc.setToFirstAvaialableRoom(bc.batch.building);
             } else {
 
                 bc.batch.id         = (bc.state == "edit")       ? incomingBatch.id                  : undefined;
@@ -29,8 +34,12 @@
                 bc.batch.trainer    = (incomingBatch.trainer)    ? incomingBatch.trainer.trainerID   : undefined;
                 bc.batch.cotrainer  = (incomingBatch.cotrainer)  ? incomingBatch.cotrainer.trainerID : undefined;
                 
-                bc.batch.location   = incomingBatch.location.id;
+              //bc.batch.location   = incomingBatch.location.id;
+              //bc.batch.building	= incomingBatch.building.id;
                 bc.batch.room       = (incomingBatch.room)       ? incomingBatch.room.roomID         : undefined;
+              //bc.batch.room.unavailability.startDate = incomingBatch.startDate;
+              //bc.batch.room.unavailability.endDate = incomingBatch.endDate;
+              //These need to exist to test...
                 
                 bc.batch.startDate  = (incomingBatch.startDate)  ? new Date(incomingBatch.startDate) : undefined;
                 bc.batch.endDate    = (incomingBatch.endDate)    ? new Date(incomingBatch.endDate)   : undefined;
@@ -38,11 +47,69 @@
                 bc.updateWeeks();
             }
         };
+        
+        //Filters trainers based on available dates by calling the trainerSelection filter
+        bc.updateTrainers = function(trainers, batchStart, batchEnd){
+        	bc.availableTrainers = $filter('trainerSelection')(trainers, batchStart, batchEnd);
+        };
+        
+        	// calculates the percentage to which a trainer's skills correspond
+        	// to the batch's curriculum.
+        bc.calcTrainerCurriculumRatio = function(trainer)
+        {
+    		if (angular.isUndefined(bc.selectedCurriculum) || bc.selectedCurriculum === null) { return 0; }
+    		else if (bc.selectedCurriculum.skill.length == 0) { return 100; }
+        	else
+        	{
+        		var matches = 0;
+        		var total = 0;
+        		
+
+        		for (c in bc.selectedCurriculum.skill)
+        		{
+        			//console.log(c);
+        			if (bc.selectedCurriculum.skill.hasOwnProperty(c))
+        			{
+	        			for (s in trainer.skill)
+	        			{
+	        				
+	        				//console.log(s);
+	        				if (trainer.skill.hasOwnProperty(s))
+	        				{
+		        				if (c === s)
+		        				{
+		        					matches += 1;
+		        					break;
+		        				}
+	        				}
+	        			}
+	        			total += 1;
+        			}
+        		}
+        		
+        		if (total > 0) { return Math.floor((matches / total) * 100); }
+        		else { return 100; }
+        	}
+        }
+        
+        bc.getSelectedCurriculum = function()
+        {
+    		curriculumService.getById(bc.batch.curriculum, function(response) {
+                bc.selectedCurriculum = response;
+            }, function(error) {
+                bc.showToast( "Could not fetch curriculum.");
+            });
+        }
 
             // defaults location to Reston branch 
               // HARD CODED, I couldn't think of a better way to do it that would reliably select only the main branch
+        	//update - it should be determined per admin profile's config settings
         bc.findHQ = function(){
             return 1;
+        }
+        
+        bc.findHQBuilding = function(){
+        	return 1;
         }
             // select end date based on start date
         bc.selectEndDate = function(){
@@ -68,7 +135,10 @@
             }
         };
 
-            // filters rooms based on selected location
+            // filters rooms based on selected location SAM
+        // filterRooms should be filtered rooms based on selected building
+        // This exact function should be for buildings (if there is only one building at the location, 
+        // it should be automatically populated.
         bc.filterRooms = function(locationID){
             if(locationID != undefined){
                 return bc.locations.filter(function(location){return location.id===locationID})[0].rooms;
@@ -77,6 +147,13 @@
                 return [];
             }
         };
+        
+        /*
+        bc.filterRooms = function(locationID){
+        	if(locationID != undefined){
+        		return bc.locations[locationID + -1].rooms;
+        	}
+        };*/
 
             // counts the number of weeks between the start and end dates
         bc.updateWeeks = function(){
@@ -151,7 +228,7 @@
             bc.changeState( "create", null );
         };
 
-            // table checkbox functions
+            /* table checkbox functions*/
               // toggle all
         bc.toggleAll = function(){
 
@@ -187,19 +264,18 @@
             bc.batchesSelected = [];
             bc.changeState( "create", null );
             batchService.getAll( function(response) {
-                //console.log("  (BC)  Retrieving all batches.")
                 bc.batches = response;
                 $scope.$broadcast("repullTimeline");
             }, function(error) {
-                //console.log("  (BC)  Failed to retrieve all batches with error:", error.data.message);
                 bc.showToast( "Could not fetch batches.");
             });
         };
 
-            // batch table button functions
-              // edit batch
+            /* batch table button functions*/
+        // edit batch
         bc.edit = function( batch ){
             bc.changeState( "edit", batch );
+            $window.scrollTo(0, 0);
         };
 
               // clone batch
@@ -213,7 +289,6 @@
                 bc.showToast("Batch deleted.");
                 bc.repull();
             }, function(error){
-                //console.log("  (BC)  Failed to delete batch.");
                 bc.showToast("Failed to delete batch.");
             });
         };
@@ -239,7 +314,6 @@
             batchService.delete( first, function(){
                 return bc.deleteMultipleHelper(delList);
             }, function(error){
-                //console.log("  (BC)  Failed to delete batches with error:", error.data.message);
                 bc.showToast("Failed to delete batches.");
                 return false;
             });
@@ -255,7 +329,6 @@
                             bc.showToast("Batch saved.");
                             bc.repull();
                         }, function(error){
-                            //console.log("  (BC)  Failed to save batch with error:", error.data.message);
                             bc.showToast("Failed to save batch.");
                         });
                         break;
@@ -265,7 +338,6 @@
                             bc.showToast("Batch updated.");
                             bc.repull();
                         }, function(error){
-                            //console.log("  (BC)  Failed to update batch with error:", error.data.message);
                             bc.showToast("Failed to update batch.");
                         });
                         break;
@@ -276,7 +348,6 @@
                             bc.showToast("Batch cloned.");
                             bc.repull();
                         }, function(error){
-                            //console.log("  (BC)  Failed to clone batch with error:", error.data.message);
                             bc.showToast("Failed to clone batch.");
                         });
                         break;
@@ -296,6 +367,8 @@
         bc.batch = batchService.getEmptyBatch();
         
         bc.batchesSelected = [];
+        
+        bc.selectedCurriculum;
 
             // state information
         bc.state = "create";
@@ -309,18 +382,14 @@
           // page initialization
             // data gathering
         batchService.getAll( function(response) {
-            //console.log("  (BC)  Retrieving all batches.");
             bc.batches = response;
         }, function(error) {
-            //console.log("  (BC)  Failed to retrieve all batches with error:", error.data.message);
             bc.showToast( "Could not fetch batches.");
         });
 
         curriculumService.getAll( function(response) {
-            //console.log("  (BC)  Retrieving all curricula.");
             bc.curricula = response;
         }, function(error) {
-            //console.log("  (BC)  Failed to retrieve all curricula with error:", error.data.message);
             bc.showToast( "Could not fetch curricula.");
         });
 
@@ -333,20 +402,22 @@
         // });
 
         trainerService.getAll( function(response) {
-            //console.log("  (BC)  Retrieving all trainers.");
             bc.trainers = response;
         }, function(error) {
-            //console.log("  (BC)  Failed to retrieve all trainers with error:", error.data.message);
             bc.showToast( "Could not fetch trainers.");
         });
 
         locationService.getAll( function(response) {
-            //console.log("  (BC)  Retrieving all locations.");
             bc.locations = response;
             bc.batch.location = bc.findHQ();
         }, function(error) {
-            //console.log("  (BC)  Failed to retrieve all locations with error:", error.data.message);
             bc.showToast( "Could not fetch locations.");
         });
-
-    });
+        /*
+        buildingService.getAll(function(response){
+        	bc.buildings = response;
+        }, function(error) {
+        	bc.showToast("Could not fetch buildings.");
+        });*/
+        
+    })
