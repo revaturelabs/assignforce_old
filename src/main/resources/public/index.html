@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <!-- New .js files MUST be referenced here -->
     <title>AssignForce</title>
@@ -20,6 +19,7 @@
     <link rel="stylesheet" href="css/md-expansion-panel.min.css">
     <link rel="stylesheet" href="css/AFMaterialStyle.css">
     <link rel="stylesheet" href="css/md-data-table.css">
+    <link rel="stylesheet" href="//rawgithub.com/Caged/d3-tip/master/examples/example-styles.css">
 </head>
 
 <body ng-app="batchApp" ng-controller="AuthCtrl as aCtrl" layout-fill>
@@ -67,6 +67,7 @@
 <script type="text/javascript" src="js/controllers/locationController.js"></script>
 <script type="text/javascript" src="js/controllers/reportController.js"></script>
 <script type="text/javascript" src="js/controllers/profileController.js"></script>
+<script type="text/javascript" src="js/controllers/settingsController.js"></script>
 
 <!-- Services -->
 <script type="text/javascript" src="js/services/calendarService.js"></script>
@@ -78,6 +79,7 @@
 <script type="text/javascript" src="js/services/skillService.js"></script>
 <script type="text/javascript" src="js/services/trainerService.js"></script>
 <script type="text/javascript" src="js/services/userService.js"></script>
+<script type="text/javascript" src="js/services/settingService.js"></script>
 
 <!-- Filters -->
 <script type="text/javascript" src="js/filters/timeModeFilter.js"></script>
@@ -92,6 +94,7 @@
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
 <script type="text/javascript" src="//use.fontawesome.com/8d8fa1da46.js"></script>
 <script type="text/javascript" src="//use.typekit.net/pvo4jdm.js"></script>
+<script type="text/javascript" src="misc/d3-tip.js"></script>
 
 <!-- HighCharts -->
 <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -114,7 +117,5 @@
         visibility: hidden;
     }
 </style>
-
 </body>
-
 </html>
