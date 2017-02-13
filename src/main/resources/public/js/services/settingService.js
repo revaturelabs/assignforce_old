@@ -14,7 +14,7 @@ app.service('settingService', function ($resource) {
     };
 
     ss.getById = function (id, success, error) {
-        Setting.get({settingID: id}, success, error);
+        return Setting.get({settingID: id}, success, error);
     };
 
     ss.update = function (setting, success, error) {
