@@ -251,6 +251,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 		}; //this is where the deletion is mucking up
 		if (lc.selectedList.length > 0) {			
 			lc.selectedList.forEach(function(item) {
+				
 				if (Array.isArray(item.rooms)) {
 					item.rooms.forEach(function(room){
 						summary.rooms++;
