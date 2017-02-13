@@ -34,11 +34,11 @@
                 bc.batch.trainer    = (incomingBatch.trainer)    ? incomingBatch.trainer.trainerID   : undefined;
                 bc.batch.cotrainer  = (incomingBatch.cotrainer)  ? incomingBatch.cotrainer.trainerID : undefined;
                 
-              //bc.batch.location   = incomingBatch.location.id;
-              //bc.batch.building	= incomingBatch.building.id;
+                bc.batch.location   = incomingBatch.location.id;
+                bc.batch.building	= incomingBatch.building.id;
                 bc.batch.room       = (incomingBatch.room)       ? incomingBatch.room.roomID         : undefined;
-              //bc.batch.room.unavailability.startDate = incomingBatch.startDate;
-              //bc.batch.room.unavailability.endDate = incomingBatch.endDate;
+                bc.batch.room.unavailability.startDate = incomingBatch.startDate;
+                bc.batch.room.unavailability.endDate = incomingBatch.endDate;
               //These need to exist to test...
                 
                 bc.batch.startDate  = (incomingBatch.startDate)  ? new Date(incomingBatch.startDate) : undefined;
@@ -141,9 +141,9 @@
         // filterRooms should be filtered rooms based on selected building
         // This exact function should be for buildings (if there is only one building at the location, 
         // it should be automatically populated.
-        bc.filterRooms = function(locationID){
-            if(locationID != undefined){
-                return bc.locations.filter(function(location){return location.id===locationID})[0].rooms;
+        bc.filterRooms = function(buildingID){
+            if(buildingID != undefined){
+                return bc.buildings.filter(function(building){return building.id===buildingID})[0].rooms;
             }
             else {
                 return [];
@@ -421,6 +421,13 @@
         }, function(error) {
             //console.log("  (HC)  Failed to retrieve all location with error", error.data.message);
             bc.showToast("Could not fetch buildings.");
+        });
+        roomService.getAll( function(response) {
+            //console.log("  (HC)  Retrieving all rooms.");
+            bc.rooms = response;
+        }, function(error) {
+            //console.log("  (HC)  Failed to retrieve all rooms with error", error.data.message);
+            bc.showToast("Could not fetch rooms.");
         });
         
     })
