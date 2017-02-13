@@ -315,9 +315,6 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		tlc.trainerPage = tlc.realTrainerPage;
 		
 		tlc.trainerListStartIndex = tlc.realTrainersPerPage * (tlc.realTrainerPage - 1);
-		
-		var numTrainers = (tlc.trainers ? tlc.trainers.length : 0);
-		
 		tlc.trainerListEndIndex = tlc.trainerListStartIndex + tlc.realTrainersPerPage;
 		
 		tlc.previousPageButtonStatus();
@@ -332,9 +329,6 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		if (tlc.realTrainerPage > tlc.maxTrainerPages) { tlc.realTrainerPage = tlc.maxTrainerPages; }
 		
 		tlc.trainerListStartIndex = tlc.realTrainersPerPage * (tlc.realTrainerPage - 1);
-		
-		var numTrainers = (tlc.trainers ? tlc.trainers.length : 0);
-		
 		tlc.trainerListEndIndex = tlc.trainerListStartIndex + tlc.realTrainersPerPage;
 		
 		tlc.previousPageButtonStatus();
