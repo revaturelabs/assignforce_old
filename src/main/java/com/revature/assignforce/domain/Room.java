@@ -53,6 +53,15 @@ public class Room implements Activatable {
 		this.unavailable = unavailable;
 	}
 	
+	public Room(int roomID, String roomName, int building, List<Unavailable> unavailable, Boolean active) {
+		super();
+		this.roomID = roomID;
+		this.roomName = roomName;
+		this.building = building;
+		this.unavailable = unavailable;
+		this.active = active;
+	}
+	
 	public Room(int buildingID){
 		this.building = buildingID;
 	}

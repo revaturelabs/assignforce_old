@@ -65,13 +65,13 @@ public class RoomCtrl {
 		// updating an existing room object with information passed from room data transfer object
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object updateRoom( @RequestBody RoomDTO in ) {
-	
+		
 		int ID = in.getRoomID();
 		String name = in.getRoomName();
 		int building = in.getBuilding();
 		List<Unavailable> unavailabilities = in.getUnavailabilities();
-		
-		Room out = new Room( ID, name, building, unavailabilities );
+		Boolean active = in.getActive();
+		Room out = new Room( ID, name, building, unavailabilities, active);
 		out = roomService.saveItem( out );
 		
 		if (out == null) {

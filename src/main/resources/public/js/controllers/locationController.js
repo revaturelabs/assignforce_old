@@ -62,7 +62,9 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 				controllerAs : "bldgCtrl",
 				locals : {
 					location : lc.selectedList[0],
-					building : buildingService.getAlmostEmptyBuilding(lc.selectedList[0].id), //two ways: use a different method than getEmptyBuilding(where the hell is that, btw?, or reference the location on the buildingTemplate form
+					building : buildingService.getAlmostEmptyBuilding(lc.selectedList[0].id), 
+					/**two ways: use a different method than getEmptyBuilding(where the hell 
+					  is that, btw?), or reference the location on the buildingTemplate form*/
 					//TODO FIND WAY TO ADD lc.selectedList[0].id TO BUILDING'S LOCATION FIELD
 					state : "create"
 				},
@@ -117,7 +119,10 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			});
 		}
 	};
-
+	
+	
+	//TODO implement this? Only after finished.
+	
 	// removes rooms from selectedList on location menu close
 	// lc.removeRooms = function(location) {
 	// if (location.rooms.length > 0) {
@@ -182,9 +187,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 	// delete location
 	// TODO DELETE BUTTON CALLS THIS
 	lc.deleteSelected = function() {
-
 		var summary = lc.categorizeSelected();
-
 		$mdDialog.show({
 			templateUrl : "html/templates/deleteTemplate.html",
 			controller : "deleteDialogCtrl", //deleteDialogController.js
@@ -195,10 +198,15 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			},
 			bindToController : true,
 			clickOutsideToClose : true
-		}).then(function() {
-			lc.showToast(lc.formatMessage(summary) + " deleted.");
+	}).then(function() {
+			//lc.showToast(lc.formatMessage(summary) + " deleted.");
+			console.log("first log");
+			//lc.showToast("Item deleted.");
 			lc.repull();
+			console.log("repull log");
 		}, function() {
+
+			console.log("bad log");
 			lc.showToast("Failed to delete rooms/buildings/locations.");
 		});
 	};

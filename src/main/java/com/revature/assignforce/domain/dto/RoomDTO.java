@@ -11,6 +11,7 @@ public class RoomDTO {
 	private String roomName;
 	private int building;
 	private List<Unavailable> unavailabilities;	
+	private Boolean active;
 	
 	public int getRoomID() {
 		return roomID;
@@ -35,6 +36,12 @@ public class RoomDTO {
 	}
 	public void setUnavailabilities(List<Unavailable> unavailabilities) {
 		this.unavailabilities = unavailabilities;
+	}
+	public Boolean getActive() {
+		return active;
+	}
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 	
 }
