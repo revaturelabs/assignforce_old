@@ -1,7 +1,7 @@
 
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "batchCtrl", function($scope, $timeout, batchService, curriculumService, skillService, trainerService, locationService, /*buildingService, */calendarService, $location, $anchorScroll, $filter, $window) {
+    assignforce.controller( "batchCtrl", function($scope, $timeout, batchService, curriculumService, skillService, trainerService, locationService, buildingService, roomService, calendarService, $location, $anchorScroll, $filter, $window) {
         var bc = this;
         var availableTrainers;
         
@@ -23,7 +23,7 @@
                 bc.batch = batchService.getEmptyBatch();
                 bc.batch.location = bc.findHQ();
                 bc.batch.building = bc.findHQBuilding();
-              //bc.batch.room = bc.setToFirstAvaialableRoom(bc.batch.building);
+                //bc.batch.room = bc.setToFirstAvaialableRoom(bc.batch.building);  //setToFirstAvailableRoom not yet defined
             } else {
 
                 bc.batch.id         = (bc.state == "edit")       ? incomingBatch.id                  : undefined;
@@ -52,6 +52,8 @@
         bc.updateTrainers = function(trainers, batchStart, batchEnd){
         	bc.availableTrainers = $filter('trainerSelection')(trainers, batchStart, batchEnd);
         };
+        
+        
         
         	// calculates the percentage to which a trainer's skills correspond
         	// to the batch's curriculum.
@@ -413,11 +415,12 @@
         }, function(error) {
             bc.showToast( "Could not fetch locations.");
         });
-        /*
-        buildingService.getAll(function(response){
-        	bc.buildings = response;
+        buildingService.getAll( function(response) {
+            //console.log("  (HC)  Retrieving all locations.");
+            bc.buildings = response;
         }, function(error) {
-        	bc.showToast("Could not fetch buildings.");
-        });*/
+            //console.log("  (HC)  Failed to retrieve all location with error", error.data.message);
+            bc.showToast("Could not fetch buildings.");
+        });
         
     })
