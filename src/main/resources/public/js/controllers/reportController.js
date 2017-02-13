@@ -1,26 +1,55 @@
 var assignforce = angular.module( "batchApp" );
 
-assignforce.controller( "reportCtrl", function( $scope, batchService, curriculumService, monthList ) {
+assignforce.controller( "reportCtrl", function( $scope, settingService, batchService, curriculumService, monthList, limitToFilter ) {
 
     var rc = this;
+
+    rc.cardArr = [];
+
+
+
+    $scope.myVar = false;
+    $scope.toggle = function() {
+        $scope.myVar = !$scope.myVar;
+    };
+
+    $scope.limitedIdeas = limitToFilter($scope.ideas, 3);
+
+
+    $scope.ideas = [
+        ['ideas1', 1],
+        ['ideas2', 8],
+        ['ideas3', 5]
+    ];
+
 
 
     $scope.options = [{
         title: 'Graduates summary table for 2017',
-        content: 'Grad - Table',
+        content: '<div class="get-Data"></div>',
         template: '<get-Data></get-Data>'
     }, {
         title: 'Graduates summary graph for 2017',
-        content: 'Grad - Graph'
+        content: '<get-Data></get-Data>'
     }, {
         title: 'Incoming summary table for 2017',
-        content: 'Incoming Table'
+        content: 'Incoming Table',
+        template: ''
+
     }, {
         title: 'Incoming summary graph for 2017',
-        content: 'Incoming Graph'
+        content: 'No'
     }];
 
 
+    // rc.tryme = $scope.trustAsHtml('<p>Grad - Table</p>');
+
+
+    rc.show = true;
+    rc.showMe = function() {
+        console.log("My Show Function.... show = " + rc.show);
+        rc.show = !rc.show;
+    };
 
 
 
@@ -338,6 +367,8 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 
     //The number of graduates.
     rc.graduates = 15;
+    rc.testGrads = settingService.getById(6);
+    console.log(rc.testGrads);
 
     //The date Trainee's are needed by.
     rc.reqDate = new Date();
@@ -373,14 +404,16 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
      * 	 	Each object in the array represents a list of objects
      * 		that may be required in creating a desired number of batches.
      */
-    rc.cardArr = [  [  this.requiredGrads ,
-        this.reqDate ,
-        this.requiredBatches ,
-        this.startDate ,
-        this.formattedStartDate ,
-        this.batchType
-    ]
-    ];
+    // rc.cardArr = [  [  this.requiredGrads ,
+    //     this.reqDate ,
+    //     this.requiredBatches ,
+    //     this.startDate ,
+    //     this.formattedStartDate ,
+    //     this.batchType
+    // ]
+    // ];
+
+
 
 
     rc.currOrder = "name";
@@ -427,6 +460,41 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     };
 
 
+    // var chart = new Highcharts.Chart(chartOptions);
+
+    rc.chartOptions = {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Graduate Summary'
+        },
+        xAxis: {
+            categories: monthList,
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Graduates'
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            '<td style="padding:0"><b>{point.y}</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: rc.graphData()
+    };
 
     $scope.myGraph = function() {
         Highcharts.chart('container', {
@@ -469,7 +537,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 
 assignforce.directive('getData', function() {
     return {
-        restrict: 'E',
+        restrict: 'ACE',
         scope: true,
         template: '<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>',
         bindToController: true,
@@ -490,10 +558,70 @@ assignforce.directive('accordionDynamic', function(){
             ele.bind('click',function(){
                 ele.toggleClass('active');
                 ele.next('.content').stop().slideToggle();
-                ele.parents('li').siblings().find('md-toolbar').removeClass('active');
-                ele.parents('li').siblings().find('.content').slideUp();
+                ele.parents('md-card').siblings().find('md-toolbar').removeClass('active');
+                // ele.parents('md-card').siblings().find('.content').slideUp();
                 return false;
             });
         }
     }
 });
+
+
+
+
+assignforce.directive('hcPie', function () {
+    return {
+        restrict: 'C',
+        replace: true,
+        scope: {
+            items: '='
+        },
+        controller: function ($scope, $element, $attrs) {
+            console.log(2);
+
+        },
+        template: '<div id="container" style="margin: 0 auto">not working</div>',
+        link: function (scope, element, attrs) {
+            console.log(3);
+            var chart = new Highcharts.Chart({
+                chart: {
+                    renderTo: 'container',
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false
+                },
+                title: {
+                    text: 'Browser market shares at a specific website, 2010'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage}%</b>',
+                    percentageDecimals: 1
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            color: '#000000',
+                            connectorColor: '#000000',
+                            formatter: function () {
+                                return '<b>' + this.point.name + '</b>: ' + this.percentage + ' %';
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    name: 'Browser share',
+                    data: scope.items
+                }]
+            });
+            scope.$watch("items", function (newValue) {
+                chart.series[0].setData(newValue, true);
+            }, true);
+
+        }
+    }
+});
+
