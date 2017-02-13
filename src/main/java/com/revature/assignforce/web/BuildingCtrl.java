@@ -79,7 +79,8 @@ public class BuildingCtrl {
 		int location = in.getLocation();
 		List<Room> rooms = in.getRooms();
 		Boolean active = in.getActive();
-
+System.out.println("After initialization");
+System.out.println(ID + " " + name + " " + location + " " + active);
 		Building out = new Building(ID, name, rooms, active, location);
 		System.out.println("SAVEITEM BEFORE");
 		out = buildingService.saveItem(out);

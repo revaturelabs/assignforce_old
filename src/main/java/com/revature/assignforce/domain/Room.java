@@ -52,6 +52,10 @@ public class Room implements Activatable {
 		this.building = building;
 		this.unavailable = unavailable;
 	}
+	
+	public Room(int buildingID){
+		this.building = buildingID;
+	}
 
 	public int getBuilding() {
 		return building;
