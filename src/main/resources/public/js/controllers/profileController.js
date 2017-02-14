@@ -16,7 +16,6 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
 
     // id is hard coded for testing. fix this later
     trainerService.getById(57, function (response) {
-        console.log(response);
         pc.trainer = response;
     }, function (error) {
         pc.showToast("Could not fetch trainer.");
@@ -51,7 +50,6 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     pc.rePullTrainer = function(){
         pc.trainer = undefined;
         trainerService.getById(57, function (response) {
-            console.log(response);
             pc.trainer = response;
         }, function (error) {
             pc.showToast("Could not fetch trainer.");

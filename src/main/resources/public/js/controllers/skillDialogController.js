@@ -17,7 +17,6 @@ assignforce.controller("skillDialogCtrl", function ($scope, $mdDialog, skillServ
     // adds/removes skill from selectedSkills
     sdc.toggle = function(obj) {
         sdc.selectedSkills = sdc.trainer.skill;
-        console.log(sdc.selectedSkills);
 
         var idx = sdc.selectedSkills.indexOf(obj);
         if (idx == -1) {
@@ -30,7 +29,6 @@ assignforce.controller("skillDialogCtrl", function ($scope, $mdDialog, skillServ
     // checks box if location/room is in selectedList
     sdc.exists = function(obj) {
         // sdc.selectedSkills = sdc.trainer.skill;
-        console.log(sdc.selectedSkills.indexOf(obj));
         return sdc.selectedSkills.indexOf(obj) > -1;
     };
 
