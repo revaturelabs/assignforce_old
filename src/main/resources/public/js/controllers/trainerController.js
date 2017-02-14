@@ -1,9 +1,26 @@
 
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "trainerCtrl", function( $scope, $mdDialog, $mdToast, trainerService ) {
+    assignforce.directive("fileModel", ['$parse', function ($parse) {
+        return {
+            restrict: 'A', //restricts this directive to be only invoked by attributes
+            link: function(scope, element, attrs) {
+                var model = $parse(attrs.fileModel);
+                var modelSetter = model.assign;
+
+                element.bind('change', function(){
+                    scope.$apply(function(){
+                        modelSetter(scope, element[0].files[0]);
+                    });
+                });
+            }
+        };
+    }]);
+
+    assignforce.controller( "trainerCtrl", function( $scope, $mdDialog, $mdToast, trainerService, s3Service ) {
         var tc = this;
         // console.log("start trainers")
+
           // functions
             // calls showToast method of aCtrl
         tc.showToast = function( message ) {
@@ -37,7 +54,6 @@
             //calls the update method to set active to false in the database.
             trainerService.update(trainerRM, function () {
                 tc.showToast("success");
-                // tc.rePullTrainers(); might not need this since i set actice to false already
             }, function () {
                 tc.showToast("failed");
             });
@@ -45,14 +61,59 @@
 
 
         //connects to aws s3 to grab an object
-        // tc.grabS3Resume = function () {
-        //     var bucketName = "revature-assignforce";
-        //
-        //     var bucket = new AWS.S3({
-        //         accessKeyId: 'AKIAIJCZHWEPE6SODSXQ',
-        //         secretAccessKey: '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'
-        //     });
-        // };
+        tc.grabS3Resume = function (fileName) {
+            //connection for assignforce bucket
+            var params = {
+                Bucket: tc.creds.BucketName,
+                Key: 'user1.doc',
+                ACL: 'public-read-write',
+                Body: tc.myFile
+            };
+
+            // params.Key = fileName;
+
+            var bucket = new AWS.S3({
+                accessKeyId: tc.creds.ID,
+                secretAccessKey: tc.creds.SecretKey
+            });
+
+
+            //mybucket put object
+            // var paramsPut = {
+            //     Bucket: 'af-laz-bucket',
+            //     Key: 'user1.doc',
+            //     ACL: 'public-read-write',
+            //     Body: tc.myFile
+            // };
+
+            // var paramsGet = {
+            //     Bucket: 'af-laz-bucket',
+            //     Key: 'user1.doc',
+            //      Expires: 60 //url expires in 60 seconds with signed urls
+            // };
+
+            // var bucket = new AWS.S3({
+            //     accessKeyId: 'AKIAJPT72TFPL76575BA',
+            //     secretAccessKey: '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'
+            // });
+
+            bucket.putObject(params, function(err, data) {
+                if (err) console.log(err, err.stack); // an error occurred
+                else     console.log(data);           // successful response
+            });
+
+            //downloading a file
+            // tc.url = bucket.getSignedUrl('getObject', paramsGet);
+            // console.log('The URL is', tc.url);
+            //
+            // var link = document.createElement("a");
+            // link.download = "test.png";
+            // link.href = tc.url;
+            // document.body.appendChild(link);
+            // link.click();
+            // document.body.removeChild(link);
+            // delete link;
+        };
 
             // reformats how an array of objects is joined
         tc.joinObjArrayByName = function(elem) {
@@ -69,23 +130,31 @@
             tc.trainers = undefined;
             trainerService.getAll( function(response) {
                 tc.trainers = response;
-            }, function(error) {
+            }, function() {
                 tc.showToast("Could not fetch trainers.");
             });
         };
         
         tc.convertUnavailability = function(incoming){
         	return new Date(incoming);
-        }
+        };
 
         //data
-        tc.weeks = 5;
+        tc.myFile;
+
+
+        s3Service.getCreds(function (response) {
+            tc.creds = response;
+            console.log(tc.creds);
+        }, function (error) {
+            console.log(error);
+        });
 
           // page initialization
             // gets all trainers and stores them in variable trainers
         trainerService.getAll( function(response) {
             tc.trainers = response;
-        }, function(error) {
+        }, function() {
             tc.showToast("Could not fetch trainers.");
         });
     });//end trainer controller
