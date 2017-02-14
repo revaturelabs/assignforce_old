@@ -15,6 +15,11 @@
                 </md-button>
             </div>
         </md-toolbar>
+        <input class="ng-hide" id="input-file-id"  type="file" file-model="tCtrl.myFile">
+        <label for="input-file-id" class="md-button md-icon-button">
+            <md-icon md-menu-origin class="material-icons"> add_circle </md-icon>
+            <md-tooltip> Add/Update Resume </md-tooltip>
+        </label>
         <md-content>
             <md-list ng-if="tCtrl.trainers != undefined">
                 <md-list-item class="md-2-line" md-ink-ripple="#ff0000" ng-repeat="trainer in tCtrl.trainers | activeItem track by trainer.trainerID" ng-click="tCtrl.goToTrainer($event)">
