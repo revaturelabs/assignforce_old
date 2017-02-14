@@ -4,7 +4,6 @@ var assignforce = angular.module( "batchApp");
 assignforce.controller("settingsCtrl", function ($scope, settingService, locationService) {
     var sc = this;
 
-
     //functions
         //calls Show Toast method of aCtrl
     sc.showToast = function (message) {
@@ -15,16 +14,12 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
         //setting the default location in settings
         sc.settings[2].settingValue = sc.defaultLocation.id;
 
-        for(var i = 0; i < sc.settings.length-1; i++){
+        for(var i = 0; i < sc.settings.length; i++){
             //save each setting
-            settingService.update(sc.settings[i], thing(), thing());
+            settingService.update(sc.settings[i]);
         }
 
         sc.showToast("Settings updated!");
-    };
-
-    var thing = function () {
-
     };
 
     sc.resetSettings = function () {
@@ -32,11 +27,12 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
         sc.settings[0].settingValue = 5;
         sc.settings[1].settingValue = 12;
         sc.settings[2].settingValue = 1;
-        sc.settings[3].settingValue = 1;
+        sc.settings[3].settingValue = 1
+        //add the rest of the settings
 
-        for(var i = 0; i < sc.settings.length-1; i++){
+        for(var i = 0; i < sc.settings.length; i++){
             //save each setting
-            settingService.update(sc.settings[i], thing(), thing());
+            settingService.update(sc.settings[i]);
         }
 
         sc.showToast("Settings updated!");
@@ -65,6 +61,9 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
             sc.showToast("could not fetch locations.");
         });
     };
+
+    //ex of getting a single setting
+    // sc.test = settingService.getById(1);
 
     //data
     sc.defaultLocation;

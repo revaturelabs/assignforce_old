@@ -134,7 +134,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
         tlc.curricula = response;
     }, function(error) {
     });
-    
+
     settingService.getById(5, function (response) {
         tlc.trainersPerPage = response;
     }, function () {

@@ -12,18 +12,12 @@
                     <md-icon md-svg-src="img/ic_done_white_24px.svg"></md-icon>
                 </md-button>
 
-                <!--<input class="ng-hide" id="input-file-id" multiple type="file" />-->
-                <!--<md-button class="md-icon-button" ng-click="pCtrl.setResume()">-->
-                    <!--<md-tooltip> Add/Update Resume </md-tooltip>-->
-                    <!--<md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>-->
-                <!--</md-button>-->
 
-                <md-button type="button" class="md-icon-button" ng-click="pCtrl.setResume()">
-                    <md-tooltip> Add/Update Resume</md-tooltip>
-                    <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
-                    <input class="ng-hide" type="file"/>
-                </md-button>
-
+                <input class="ng-hide" id="input-file-id"  type="file" file-model="pCtrl.myFile">
+                <label for="input-file-id" class="md-button md-icon-button">
+                    <md-icon md-menu-origin class="material-icons"> add_circle </md-icon>
+                    <md-tooltip> Add/Update Resume </md-tooltip>
+                </label>
             </div>
         </md-toolbar>
 
