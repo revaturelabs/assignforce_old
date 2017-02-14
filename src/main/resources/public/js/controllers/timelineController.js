@@ -8,7 +8,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     var tlc = this;
 
     tlc.removeNoTrainer = function(batch) {
-        return (batch.trainer);
+        return (batch.trainer && batch.startDate && batch.endDate);
     };
     
     tlc.removeIrrelevantBatches = function(batch) {
@@ -65,7 +65,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 			
 			for (b in tlc.batches)
 			{
-				if (!angular.isUndefined(tlc.batches[b].trainer) && tlc.batches[b].trainer !== null)
+				if (!angular.isUndefined(tlc.batches[b].trainer) && tlc.batches[b].trainer !== null && !angular.isUndefined(tlc.batches[b].startDate) && tlc.batches[b].startDate !== null && !angular.isUndefined(tlc.batches[b].endDate) && tlc.batches[b].endDate !== null)
 				{
 					if (angular.isUndefined(tlc.minDate))
 					{
@@ -136,7 +136,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     });
     
     settingService.getById(5, function (response) {
-        tlc.trainersPerPage = response;
+        tlc.trainersPerPage = response.settingValue;
     }, function () {
     });
     
@@ -715,7 +715,7 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 				d3.event.stopPropagation();
 			})
 			.text(function(d) {return numWeeks(d.startDate,d.endDate) + " W E E K S";})
-				.attr("dy", 0);
+				.attr("dy", 0)
 	
 	d3.selectAll('.rect')
 		.selectAll("text")
