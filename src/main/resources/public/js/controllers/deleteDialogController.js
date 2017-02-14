@@ -9,20 +9,32 @@
             // format text
         function formatText() {
             var title = "Delete ";
-
+            var sumActiveRooms = 0;
+            var sumActiveBldgs = 0;
             if (dc.summary.rooms == 1) {
                 title += " 1 room";
             } else if (dc.summary.rooms > 1) {
-                title += dc.summary.rooms + " rooms"; 
+            	
+            	for(var i = 0; i < dc.list[0].rooms.length; i++){
+            		if(dc.list[0].rooms[i].active){
+            			sumActiveRooms++;
+            		}
+            	}
+                title += sumActiveRooms + " rooms"; 
             }
             
-            if (dc.summary.buildings ==1){
+            if (dc.summary.buildings == 1){
             	if(dc.summary.rooms > 0){
             		title += " and";
             	}
             	title += " 1 building";
             } else if (dc.summary.buildings > 1){
-            	title += dc.summary.buildings + " buildings";
+            	for(var i = 0; i < dc.list[0].buildings.length; i++){
+        		if(dc.list[0].buildings[i].active){
+        			sumActiveBldgs++;
+        		}
+        	}
+            	title += sumActiveBldgs + " buildings";
             }
 
             if (dc.summary.locations == 1) {
@@ -37,7 +49,6 @@
                 title += " " + dc.summary.locations + " locations";
             }
             title += "?";
-
             dc.desc = title;
         }formatText();
 
@@ -66,14 +77,18 @@
             			if(building.rooms.length > 0){
             				building.rooms.forEach(function(room){
             					room.active = false;
+            					
             					roomService.update( room, function(){
+            						$mdDialog.hide();
             		            }, function(error){
             		                $mdDialog.cancel();
             		            });
+            					
             				});
             			}
             			building.active = false;
-            			buildingService.update( building, function(){                          
+            			buildingService.update( building, function(){   
+            				$mdDialog.hide();
                         }, function(error){
                             $mdDialog.cancel();
                         });
@@ -82,9 +97,10 @@
             	elem.active = false;
                 //runs the locationService update, concentric with another deleteHelper call upon success.
                 locationService.update( elem, function(){
+                	$mdDialog.hide();
                     //dc.deleteHelper(delList);
                 }, function(error){
-                    ancel();
+                	$mdDialog.cancel();
                 });
             }
 
@@ -93,12 +109,14 @@
                 elem.rooms.forEach( function(room){
                     room.active = false;
                     roomService.update( room, function(){
+                    	$mdDialog.hide();
 		            }, function(error){
 		                $mdDialog.cancel();
 		            });
                 });
                 elem.active = false;
-                buildingService.update( elem, function(){                      
+                buildingService.update( elem, function(){   
+                	$mdDialog.hide();
                 }, function(error){
                     $mdDialog.cancel();
                 });
@@ -107,6 +125,7 @@
             else {
             	elem.active = false;
             	roomService.update( elem, function(){
+            		$mdDialog.hide();
 	            }, function(error){
 	                $mdDialog.cancel();
 	            });

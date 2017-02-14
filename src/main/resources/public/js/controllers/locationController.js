@@ -144,7 +144,9 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			lc.showToast("Please select an item.");
 		} else {
 			// edit location
-			if (Array.isArray(lc.selectedList[0].rooms)) {
+			//if statement checks if the selected has a list of buildings (only locations gots those)
+			if (Array.isArray(lc.selectedList[0].buildings)) {
+				console.log("First if reached");
 				$mdDialog.show({
 					templateUrl : "html/templates/locationTemplate.html",
 					controller : "locationDialogCtrl",
@@ -162,8 +164,27 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 					lc.showToast("Failed to update location.");
 				});
 			}
-			// edit room
-			else {
+			//Now we check if there's a list of rooms (only buildings got those)
+			else if(Array.isArray(lc.selectedList[0].rooms)){
+				$mdDialog.show({
+					templateUrl : "html/templates/buildingTemplate.html",
+					controller : "bldgDialogCtrl",
+					controllerAs : "bldgCtrl",
+					locals : {
+						building : lc.selectedList[0],
+						state : "edit"
+					},
+					bindToController : true,
+					clickOutsideToClose : true
+				}).then(function() {
+					lc.showToast("Building updated.");
+					lc.repull();
+				}, function() {
+					lc.showToast("Failed to update building.");
+				});
+			}
+			
+			else{
 				$mdDialog.show({
 					templateUrl : "html/templates/roomTemplate.html",
 					controller : "roomDialogCtrl",
@@ -181,6 +202,11 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 					lc.showToast("Failed to update room.");
 				});
 			}
+			
+			
+			
+			
+		
 		}
 	};
 
@@ -199,14 +225,10 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			bindToController : true,
 			clickOutsideToClose : true
 	}).then(function() {
-			//lc.showToast(lc.formatMessage(summary) + " deleted.");
-			console.log("first log");
-			//lc.showToast("Item deleted.");
+			lc.showToast(lc.formatMessage(summary) + " deleted.");
+			lc.showToast("Item deleted.");
 			lc.repull();
-			console.log("repull log");
 		}, function() {
-
-			console.log("bad log");
 			lc.showToast("Failed to delete rooms/buildings/locations.");
 		});
 	};
@@ -251,7 +273,6 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 		}; //this is where the deletion is mucking up
 		if (lc.selectedList.length > 0) {			
 			lc.selectedList.forEach(function(item) {
-				
 				if (Array.isArray(item.rooms)) {
 					item.rooms.forEach(function(room){
 						summary.rooms++;

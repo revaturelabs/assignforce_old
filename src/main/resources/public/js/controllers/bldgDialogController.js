@@ -13,14 +13,27 @@ assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
 
 	// save changes/new
 	bdc.save = function(isValid) {
-
 		if (isValid) {
 
 			if (bdc.state == "edit") {
 				bdc.swapBuilding(bdc.building);
+				
+				buildingService.update(bdc.building, function() {
+					$mdDialog.hide();
+				}, function() {
+					$mdDialog.cancel();
+				});
+				
 			} else if (bdc.state == "create") {
 				bdc.building.location = bdc.location.id; //saves the location id reference to building
 				bdc.location.buildings.push(bdc.building);
+				
+				buildingService.create(bdc.building, function() {
+					$mdDialog.hide();
+				}, function() {
+					$mdDialog.cancel();
+				});
+				
 			}
 //TODO may have to adjust this to have building contain location
 //			buildingService.update(bdc.building, function() {
@@ -28,11 +41,7 @@ assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
 //			}, function() {
 //				$mdDialog.cancel();
 //			});
-			buildingService.create(bdc.building, function() {
-				$mdDialog.hide();
-			}, function() {
-				$mdDialog.cancel();
-			});
+			
 
 		}
 	};
@@ -62,7 +71,7 @@ assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
 		} else {
 			bdc.location.buildings.forEach(function(building) {
 				if (building.buildingID == newBuilding.buildingID) {
-					building.name = newbuilding.name;
+					building.name = newBuilding.name;
 				}
 			});
 		}
