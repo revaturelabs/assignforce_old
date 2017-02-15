@@ -32,11 +32,12 @@ public class TrainerCtrl {
 		int ID = in.getID(); 
 		String firstName = in.getFirstName();
 		String lastName = in.getLastName();
+		String resume = in.getResume();
 		List<Skill> skills = in.getSkills();
 		List<Certification> certifications = in.getCertifications();
 		List<Unavailable> unavailabilities = in.getUnavailabilities();
-		
-		Trainer out = new Trainer( ID, firstName, lastName, unavailabilities, skills, certifications );
+
+		Trainer out = new Trainer( ID, firstName, lastName, resume, unavailabilities, skills, certifications );
 		out = trainerService.saveItem( out );
 		
 		if (out == null) {
@@ -63,31 +64,24 @@ public class TrainerCtrl {
 		// updating an existing trainer object with information passed from trainer data transfer object
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object updateTrainer( @RequestBody TrainerDTO in ) {
-
-		//int ID = in.getID();
 		int ID = 0;
+		List<Trainer> trainers = trainerService.getAllItems();
 
-//		if(in.getActive() == false){
-			List<Trainer> trainers = trainerService.getAllItems();
-
-			//if no trainer found, need to break out of this method
-
-			for(int i = 0; i < trainers.size(); i++){
-				if(in.getFirstName().equals(trainers.get(i).getFirstName()) && in.getLastName().equals(trainers.get(i).getLastName())){//add lookup by last name
-					ID = trainers.get(i).getTrainerID();
-					break;
-				}
+		for(int i = 0; i < trainers.size(); i++){
+			if(in.getFirstName().equals(trainers.get(i).getFirstName()) && in.getLastName().equals(trainers.get(i).getLastName())){//add lookup by last name
+				ID = trainers.get(i).getTrainerID();
+				break;
 			}
-//		}
-
+		}
 
 		String firstName = in.getFirstName();
 		String lastName = in.getLastName();
+		String resume = in.getResume();
 		List<Skill> skills = in.getSkills();
 		List<Unavailable> unavailabilities = in.getUnavailabilities();
 		List<Certification> certifications = in.getCertifications();
 
-		Trainer out = new Trainer( ID, firstName, lastName, unavailabilities, skills, certifications);
+		Trainer out = new Trainer( ID, firstName, lastName, resume, unavailabilities, skills, certifications);
 		out.setActive(in.getActive());
 		out = trainerService.saveItem( out );
 
