@@ -5,12 +5,10 @@ app.service('batchService', function($resource) {
     var bs = this;
 
     bs.getEmptyBatch = function(){
-    	console.log("Inside the 'get Empty Batch' function... ");
     	return new Batch();
     };
     
     bs.create = function(batch, success, error){
-    	console.log("Inside the 'create' function... ");
         batch.$save(success, error);
     };
 

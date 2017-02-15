@@ -281,8 +281,10 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 
     rc.genCard = function(){
 
-    	var temp = new Object();
-        temp.requiredGrads = rc.requiredGrads;
+    	//var temp = new Object();
+        var temp = {};
+    	
+    	temp.requiredGrads = rc.requiredGrads;
         temp.reqDate = new Date();
         temp.requiredBatches = rc.requiredBatches;
         temp.startDate = rc.startDate;
@@ -376,10 +378,10 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     rc.createBatchClick = function(index){
     	
     	// Create 'can submit' flag here.  '0' implies successful submit, '1' implies submission failure.
-    	var canSubmit = 1;
+    	//var canSubmit = 1;
     	
     	// Create 'userValidation' flag here.  '0' implies valid user confirmation, '1' implies user confirmation rejection. 
-    	var userValidation = 1;
+    	//var userValidation = 1;
     	
     	// Verify 'start date' isn't null and isn't before 'current date'.
     	//		If 'start date' is null, or 'start date' is before 'current date', set 'canSubmit' flag to 1.
@@ -476,17 +478,16 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 	            //Create batch method called here...
 	            batchService.create(rc.newBatch, success, error);
 	        }
-       
-	        function success (){
-	        	 rc.showToast("Successfully created Batch.");
-	        }
-
-	        function error(){
-	        	 rc.showToast("Failed to created Batch.");
-	        }
-	        
+            
         }
         
+       function success (){
+       	 rc.showToast("Successfully created Batch.");
+       }
+
+       function error(){
+       	 rc.showToast("Failed to created Batch.");
+       }
     }
     
     /************************************************************/
