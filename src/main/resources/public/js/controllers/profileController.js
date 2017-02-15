@@ -49,42 +49,45 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     };
 
     pc.uploadResume = function () {
+        //This initializes a bucket with the keys obtained from Creds rest controller
         var bucket = new AWS.S3({
             accessKeyId: pc.creds.ID,
             secretAccessKey: pc.creds.SecretKey,
             region: 'us-east-1'
         });
 
-        //connection fro assignforce bucket put
+        //set the parameters needed to put an object in the aws s3 bucket
         var params = {
             Bucket: pc.creds.BucketName,
-            Key: 'user1.doc',
-            ACL: 'public-read-write',
+            Key: pc.myFile.name,
+            // ACL: 'public-read-write',
             Body: pc.myFile
         };
 
-        // bucket.listObjects({Bucket: pc.creds.BucketName}, function(err, data) {
-        //     if (err) console.log(err, err.stack); // an error occurred
-        //     else     console.log(data);           // successful response
-        // });
-
-        //putting an object
-        bucket.putObject(params, function(err, data) {
-            if (err) console.log(err, err.stack); // an error occurred
-            else     console.log(data);           // successful response
+        //putting an object in the s3 bucket
+        bucket.putObject(params, function (err, data) {
+            if (err){
+                console.log(err);
+            } else {
+                console.log(data);
+            }
         });
 
-        console.log(pc.myFile);
-    };
-
-    pc.updateResume = function () {
-        // console.log(pc.myFile);
+        //set the trainer to the file name which is the s3 file key in order to grab that object
         pc.trainer.resume = pc.myFile.name;
+        //save the modified trainer resume field
+        trainerService.update(pc.trainer, function () {
+            pc.showToast("Resume upload finished");
+        }, function () {
+            pc.showToast("Failed to upload resume");
+        });
+
+        //set myfile to undefined so that update and label will be hidden in the html
         pc.myFile = undefined;
     };
 
     // id is hard coded for testing. fix this later
-    trainerService.getById(2, function (response) {
+    trainerService.getById(3, function (response) {
         pc.trainer = response;
     }, function () {
         pc.showToast("Could not fetch trainer.");
@@ -98,9 +101,8 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
 
     s3Service.getCreds(function (response) {
         pc.creds = response;
-        console.log(pc.creds);
-    }, function (error) {
-        console.log(error);
+    }, function () {
+        pc.showToast("Failed to fetch Credentials")
     });
 
     //queries the database for trainers. to be called after a change to the trainers array
@@ -119,4 +121,5 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     pc.resume = "file.txt";
     pc.resumeBaseURL = "https://console.aws.amazon.com/s3/home?region=us-east-1#&bucket=revature-assignforce&prefix=";
     pc.myFile;
+    pc.creds;
 });

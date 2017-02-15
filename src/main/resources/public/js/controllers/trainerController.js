@@ -46,25 +46,30 @@
 
         //connects to aws s3 to grab an object
         tc.grabS3Resume = function (fileName) {
-            console.log(fileName);
+            //if the trainer has a null resume in the database then it will show the toast and stop running the function
+            if(fileName == null){
+                tc.showToast("This Trainer does not have any resume uploaded.")
+                return
+            }
 
+            //This initializes a bucket with the keys obtained from Creds rest controller
             var bucket = new AWS.S3({
                 accessKeyId: tc.creds.ID,
                 secretAccessKey: tc.creds.SecretKey,
                 region: 'us-east-1'
             });
 
+            //set the parameters needed to get an object from aws s3 bucket
             var params = {
                 Bucket: tc.creds.BucketName,
-                // Key: 'Project3_User_Stories.doc',
-                Key: 'user1.doc'
-                // Expires: 60 //url expires in 60 seconds with signed urls
+                Key: fileName,
+                Expires: 60 //url expires in 60 seconds with signed urls
             };
 
-            //downloading a file
+            //grabs a url to the object in the s3 bucket
             tc.url = bucket.getSignedUrl('getObject', params);
-            console.log('The URL is', tc.url);
 
+            //this will create a link, set download and href, and invoke the click action on it having it download the file then delete that link
             var link = document.createElement("a");
             link.download = "test.png";
             link.href = tc.url;
@@ -99,13 +104,11 @@
         };
 
         // page initialization
-
         //get the S3 bucket credentials and store them in creds
         s3Service.getCreds(function (response) {
             tc.creds = response;
-            console.log(tc.creds);
-        }, function (error) {
-            console.log(error);
+        }, function () {
+            tc.showToast("failed to get credentials")
         });
 
         // gets all trainers and stores them in variable trainers

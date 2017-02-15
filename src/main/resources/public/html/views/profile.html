@@ -24,12 +24,12 @@
                     <form class="nameForm" name="nameForm" ng-submit="pCtrl.updateName(nameForm.$valid)" novalidate>
                         <md-input-container flex>
                             <label> First Name </label>
-                            <input ng-model="pCtrl.firstName" required>
+                            <input ng-model="pCtrl.trainer.firstName" required>
                         </md-input-container>
 
                         <md-input-container flex>
                             <label> Last Name </label>
-                            <input ng-model="pCtrl.lastName" required>
+                            <input ng-model="pCtrl.trainer.lastName" required>
                         </md-input-container>
                     </form>
                 </div>
