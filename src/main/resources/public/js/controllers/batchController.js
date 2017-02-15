@@ -35,16 +35,7 @@
                 bc.batch.room       = (incomingBatch.room)       ? incomingBatch.room.roomID         : undefined;
                 bc.batch.building	= (incomingBatch.room.building)	 ? incomingBatch.room.building		 : undefined;
                 bc.batch.location = 1;//locationService.getById(1, function(){}, function(){});//(incomingBatch.room.building.location) ? incomingBatch.room.building.location : undefined;
-                console.log("bc.batch.building = " + bc.batch.building);
-                console.log("bc.batch:");
-                console.log(bc.batch);
-                console.log("bc.batch.location");
-                console.log(bc.batch.location);
-                console.log("incomingBatch.room.building.location = " + incomingBatch.room.building.locationID);
-                console.log("incomingBatch.room.building.location = " + incomingBatch.room.building.locationID);
-                
-                
-                
+                               
                 //bc.batch.room.unavailability.startDate = (incomingBatch.room.unavailability.startDate) ? incomingBatch.room.;
                 //bc.batch.room.unavailability.endDate = (incomingBatch.room.unavailability.endDate) ? incomingBatch.room.unavailability.endDate;
               //These need to exist to test...
