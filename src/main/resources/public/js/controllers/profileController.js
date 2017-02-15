@@ -49,29 +49,36 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     };
 
     pc.uploadResume = function () {
-        console.log(pc.myFile);
+        var bucket = new AWS.S3({
+            accessKeyId: pc.creds.ID,
+            secretAccessKey: pc.creds.SecretKey,
+            region: 'us-east-1'
+        });
+
         //connection fro assignforce bucket put
         var params = {
-            Bucket: '',
+            Bucket: pc.creds.BucketName,
             Key: 'user1.doc',
             ACL: 'public-read-write',
             Body: pc.myFile
         };
 
-        var bucket = new AWS.S3({
-            accessKeyID: '',
-            secretAccessKey: ''
-        });
-
-        //putting an object
-        // bucket.putObject(params, function(err, data) {
+        // bucket.listObjects({Bucket: pc.creds.BucketName}, function(err, data) {
         //     if (err) console.log(err, err.stack); // an error occurred
         //     else     console.log(data);           // successful response
         // });
+
+        //putting an object
+        bucket.putObject(params, function(err, data) {
+            if (err) console.log(err, err.stack); // an error occurred
+            else     console.log(data);           // successful response
+        });
+
+        console.log(pc.myFile);
     };
 
     pc.updateResume = function () {
-        console.log(pc.myFile);
+        // console.log(pc.myFile);
         pc.trainer.resume = pc.myFile.name;
         pc.myFile = undefined;
     };
@@ -91,6 +98,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
 
     s3Service.getCreds(function (response) {
         pc.creds = response;
+        console.log(pc.creds);
     }, function (error) {
         console.log(error);
     });

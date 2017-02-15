@@ -49,27 +49,29 @@
             console.log(fileName);
 
             var bucket = new AWS.S3({
-                accessKeyID: '',
-                secretAccessKey: ''
+                accessKeyId: tc.creds.ID,
+                secretAccessKey: tc.creds.SecretKey,
+                region: 'us-east-1'
             });
 
-            var paramsGet = {
-                Bucket: '',
-                Key: fileName,
-                Expires: 60 //url expires in 60 seconds with signed urls
+            var params = {
+                Bucket: tc.creds.BucketName,
+                // Key: 'Project3_User_Stories.doc',
+                Key: 'user1.doc'
+                // Expires: 60 //url expires in 60 seconds with signed urls
             };
 
             //downloading a file
-            // tc.url = bucket.getSignedUrl('getObject', paramsGet);
-            // console.log('The URL is', tc.url);
+            tc.url = bucket.getSignedUrl('getObject', params);
+            console.log('The URL is', tc.url);
 
-            // var link = document.createElement("a");
-            // link.download = "test.png";
-            // link.href = tc.url;
-            // document.body.appendChild(link);
-            // link.click();
-            // document.body.removeChild(link);
-            // delete link;
+            var link = document.createElement("a");
+            link.download = "test.png";
+            link.href = tc.url;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            delete link;
         };
 
             // reformats how an array of objects is joined
@@ -101,6 +103,7 @@
         //get the S3 bucket credentials and store them in creds
         s3Service.getCreds(function (response) {
             tc.creds = response;
+            console.log(tc.creds);
         }, function (error) {
             console.log(error);
         });
