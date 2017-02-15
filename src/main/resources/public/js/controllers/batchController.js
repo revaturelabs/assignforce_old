@@ -29,21 +29,32 @@
                 bc.batch.id         = (bc.state == "edit")       ? incomingBatch.id                  : undefined;
 
                 bc.batch.name       = incomingBatch.name;
-                bc.batch.curriculum = (incomingBatch.curriculum) ? incomingBatch.curriculum.id       : undefined;
+                bc.batch.curriculum = (incomingBatch.curriculum) ? incomingBatch.curriculum.id       : undefined;               
                 
-                bc.batch.trainer    = (incomingBatch.trainer)    ? incomingBatch.trainer.trainerID   : undefined;
-                bc.batch.cotrainer  = (incomingBatch.cotrainer)  ? incomingBatch.cotrainer.trainerID : undefined;
-                
-                bc.batch.location   = incomingBatch.location.id;
-                bc.batch.building	= incomingBatch.building.id;
+                //bc.batch.location   = (incomingBatch.location)   ? incomingBatch.location.id		 : undefined;
                 bc.batch.room       = (incomingBatch.room)       ? incomingBatch.room.roomID         : undefined;
-                bc.batch.room.unavailability.startDate = incomingBatch.startDate;
-                bc.batch.room.unavailability.endDate = incomingBatch.endDate;
+                bc.batch.building	= (incomingBatch.room.building)	 ? incomingBatch.room.building		 : undefined;
+                bc.batch.location = 1;//locationService.getById(1, function(){}, function(){});//(incomingBatch.room.building.location) ? incomingBatch.room.building.location : undefined;
+                console.log("bc.batch.building = " + bc.batch.building);
+                console.log("bc.batch:");
+                console.log(bc.batch);
+                console.log("bc.batch.location");
+                console.log(bc.batch.location);
+                console.log("incomingBatch.room.building.location = " + incomingBatch.room.building.locationID);
+                console.log("incomingBatch.room.building.location = " + incomingBatch.room.building.locationID);
+                
+                
+                
+                //bc.batch.room.unavailability.startDate = (incomingBatch.room.unavailability.startDate) ? incomingBatch.room.;
+                //bc.batch.room.unavailability.endDate = (incomingBatch.room.unavailability.endDate) ? incomingBatch.room.unavailability.endDate;
               //These need to exist to test...
                 
                 bc.batch.startDate  = (incomingBatch.startDate)  ? new Date(incomingBatch.startDate) : undefined;
                 bc.batch.endDate    = (incomingBatch.endDate)    ? new Date(incomingBatch.endDate)   : undefined;
 
+                bc.batch.trainer    = (incomingBatch.trainer)    ? incomingBatch.trainer.trainerID   : undefined;
+                bc.batch.cotrainer  = (incomingBatch.cotrainer)  ? incomingBatch.cotrainer.trainerID : undefined;
+                
                 bc.updateWeeks();
             }
         };
