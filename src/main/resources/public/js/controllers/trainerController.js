@@ -29,17 +29,30 @@
             });
         };
 
+        //deactivates a single trainer
         tc.removeTrainer = function (trainerRM) {
-            // $mdToast.show( $mdToast.simple().textContent( "Do you want to remove this trainer" ).action("OKAY").position("top right").highlightAction(true) );
+            //set active to false deactivating the trainer in the front end
             trainerRM.active = false;
 
+            //calls the update method to set active to false in the database.
             trainerService.update(trainerRM, function () {
                 tc.showToast("success");
-                tc.rePullTrainers();
+                // tc.rePullTrainers(); might not need this since i set actice to false already
             }, function () {
                 tc.showToast("failed");
             });
         };
+
+
+        //connects to aws s3 to grab an object
+        // tc.grabS3Resume = function () {
+        //     var bucketName = "revature-assignforce";
+        //
+        //     var bucket = new AWS.S3({
+        //         accessKeyId: 'AKIAIJCZHWEPE6SODSXQ',
+        //         secretAccessKey: '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'
+        //     });
+        // };
 
             // reformats how an array of objects is joined
         tc.joinObjArrayByName = function(elem) {
@@ -75,10 +88,4 @@
         }, function(error) {
             tc.showToast("Could not fetch trainers.");
         });
-
-        // trainerService.getById(1, function (response) {
-        //     tc.singleTrainer = response;
-        // }, function (error) {
-        //     tc.showToast("could not fetch a trainer")
-        // });
     });//end trainer controller

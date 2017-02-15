@@ -35,7 +35,7 @@ public class RoomCtrl {
 	
 		int ID = in.getRoomID();
 		String name = in.getRoomName();
-		int building = in.getBuildingID();
+		int building = in.getBuilding();
 		List<Unavailable> unavailabilities = in.getUnavailabilities();
 		
 		Room out = new Room( ID, name, building, unavailabilities );
@@ -68,7 +68,7 @@ public class RoomCtrl {
 	
 		int ID = in.getRoomID();
 		String name = in.getRoomName();
-		int building = in.getBuildingID();
+		int building = in.getBuilding();
 		List<Unavailable> unavailabilities = in.getUnavailabilities();
 		
 		Room out = new Room( ID, name, building, unavailabilities );
@@ -104,8 +104,5 @@ public class RoomCtrl {
 		} else {
 			return new ResponseEntity< List<Room> >(all, HttpStatus.OK);
 		}
-	}
-	
+	}	
 }
-
-

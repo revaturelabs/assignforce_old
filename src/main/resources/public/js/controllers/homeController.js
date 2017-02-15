@@ -1,7 +1,7 @@
 
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "homeCtrl", function( $scope, $filter, batchService, trainerService, locationService ) {
+    assignforce.controller( "homeCtrl", function( $scope, $filter, batchService, trainerService, locationService, buildingService, roomService ) {
         //console.log("Beginning overview controller.");
         var hc = this;
 
@@ -153,5 +153,12 @@
         }, function(error) {
             //console.log("  (HC)  Failed to retrieve all location with error", error.data.message);
             hc.showToast("Could not fetch locations.");
+        });
+        buildingService.getAll( function(response) {
+            //console.log("  (HC)  Retrieving all locations.");
+            hc.buildings = response;
+        }, function(error) {
+            //console.log("  (HC)  Failed to retrieve all location with error", error.data.message);
+            hc.showToast("Could not fetch buildings.");
         });
     });

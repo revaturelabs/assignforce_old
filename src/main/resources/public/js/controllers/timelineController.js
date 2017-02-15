@@ -4,11 +4,31 @@ var app = angular.module('batchApp');
 
 /*--------------------------CONTROLLER---------------------------*/
 
-app.controller("TimelineCtrl", function($scope, $window, batchService, calendarService, trainerService, curriculumService){
+app.controller("TimelineCtrl", function($scope, $window, batchService, calendarService, trainerService, curriculumService, settingService){
     var tlc = this;
 
     tlc.removeNoTrainer = function(batch) {
-        return (batch.trainer);
+        return (batch.trainer && batch.startDate && batch.endDate);
+    };
+    
+    tlc.removeIrrelevantBatches = function(batch) {
+		var trainerIndex = tlc.filteredTrainers.findIndex(function (d)
+		{
+			return (d == trainerColumnName(batch.trainer));
+		});
+		
+        return (trainerIndex > -1);
+    };
+    
+    tlc.removeTrainersOutOfPage = function(trainer) {
+		var trainerIndex = tlc.trainers.findIndex(function (d)
+		{
+			return (d == trainer);
+		});
+		
+		var trainerDisplayed = (tlc.trainerListEndIndex == 0 || (trainerIndex > -1 && trainerIndex >= tlc.trainerListStartIndex && trainerIndex < tlc.trainerListEndIndex));
+		
+        return trainerDisplayed;
     };
 
 	//Options for datepicker
@@ -22,6 +42,17 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	tlc.maxDate = new Date(2000, 12, 0);
 	tlc.maxTrainerNameCharacters = 6;
 	tlc.selectedCurriculum = 0;
+	tlc.trainersPerPage = 0;
+	tlc.realTrainersPerPage = 0;
+	tlc.trainerPage = 1;
+	tlc.realTrainerPage = 1;
+	tlc.maxTrainerPages = 1;
+	tlc.trainerListStartIndex = 0;
+	tlc.trainerListEndIndex = 0;
+	tlc.previousPageButtonDisabled = false;
+	tlc.nextPageButtonDisabled = false;
+	tlc.filteredTrainers;
+	tlc.filteredBatches;
 	
 	//Set the min and max dates based on the batches.
 	//Also grabs the length of the longest trainer name.
@@ -34,7 +65,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 			
 			for (b in tlc.batches)
 			{
-				if (!angular.isUndefined(tlc.batches[b].trainer) && tlc.batches[b].trainer !== null)
+				if (!angular.isUndefined(tlc.batches[b].trainer) && tlc.batches[b].trainer !== null && !angular.isUndefined(tlc.batches[b].startDate) && tlc.batches[b].startDate !== null && !angular.isUndefined(tlc.batches[b].endDate) && tlc.batches[b].endDate !== null)
 				{
 					if (angular.isUndefined(tlc.minDate))
 					{
@@ -75,47 +106,38 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	var trainerNames;
 	
 	$scope.$on("repullTimeline", function(event, data){
-		tlc.getAllTrainers();
-		tlc.getAllBatches();
+		tlc.repull();
 	});
 
-	tlc.getAllBatches = function()
+	tlc.getAllBatches = new Promise(function(resolve, reject)
 	{
 	    batchService.getAll( function(response) {
 	        tlc.batches = response;
 	        tlc.getDateRange();
-
-	        if (!angular.isUndefined(tlc.trainers) && tlc.trainers !== null && !angular.isUndefined(tlc.trainerNames) && tlc.trainerNames !== null)
-	        {
-				projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, 0, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers, tlc.maxTrainerNameCharacters, tlc.selectedCurriculum);
-	        }
+	        resolve(1);
 	    }, function(error) {
+	    	resolve(0);
 	    });
-	}
+	});
 
-	tlc.getAllTrainers = function()
+	tlc.getAllTrainers = new Promise(function(resolve, reject)
 	{
 	    trainerService.getAll( function(response) {
-			tlc.trainers = response.map(function(trainer){return ("(" + trainer.trainerID + ")" + " " + trainer.firstName + " " + trainer.lastName)});
-			tlc.trainerNames = response.map(function(trainer){return (trainer.firstName + " " + trainer.lastName)});
-			tlc.getDateRange();
-
-	        if (!angular.isUndefined(tlc.batches) && tlc.batches !== null && !angular.isUndefined(tlc.trainerNames) && tlc.trainerNames !== null)
-	        {
-				projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, 0, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers, tlc.maxTrainerNameCharacters, tlc.selectedCurriculum);
-	        }
+			tlc.trainers = response.map(function(trainer){return trainerColumnName(trainer)});
+			resolve(1);
 	    }, function(error) {
+	    	resolve(0);
 	    });
-	}
-	
-	tlc.getAllBatches();
-
-    tlc.getAllTrainers();
+	});
     
     curriculumService.getAll( function(response) {
         tlc.curricula = response;
     }, function(error) {
-        tlc.showToast( "Could not fetch curricula.");
+    });
+    
+    settingService.getById(5, function (response) {
+        tlc.trainersPerPage = response.settingValue;
+    }, function () {
     });
     
 	$scope.$watch(
@@ -124,7 +146,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		},
 		function(){
 			if(tlc.batches !== undefined && tlc.trainers !== undefined){
-				projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, 0, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers, tlc.maxTrainerNameCharacters, tlc.selectedCurriculum);
+				tlc.projectTimeline(0);
 			}
 		}
 	);
@@ -135,7 +157,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		},
 		function(){
 			if(tlc.batches !== undefined && tlc.trainers !== undefined) {
-                projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, 0, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers, tlc.maxTrainerNameCharacters, tlc.selectedCurriculum);
+				tlc.projectTimeline(0);
             }
 		}
 	);
@@ -143,6 +165,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	// Events for the timeline
 
 	$("#timeline").mousedown(function(evt){
+		evt.stopPropagation();
 
 		if(evt.offsetY > 30 && evt.offsetY < 1970){
 
@@ -162,12 +185,13 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 			var bottomFraction = 1 - topFraction; 
 
 			// Draw the zoompoint
-			projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, mousedownY, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers, tlc.maxTrainerNameCharacters, tlc.selectedCurriculum);
+			tlc.projectTimeline(mousedownY);
 			
 			// // Fire when there is a mousemove event on the #timeline element
 			$(".toastContainer").mousemove(function(evt){
 
 				evt.preventDefault();
+				evt.stopPropagation();
 
 				// Recalculate the scaling factor based on the number of milliseconds(more accuracy) currently on the timeline
 				tlc.scalingFactor = (new Date(tlc.maxDate).getTime() - new Date(tlc.minDate).getTime()) / 10;
@@ -186,8 +210,8 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 					tlc.maxDate = new Date(new Date(tlc.maxDate).getTime() + Math.trunc(tlc.scalingFactor * bottomFraction));
 				}
 
-				projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, mousedownY, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers, tlc.maxTrainerNameCharacters, tlc.selectedCurriculum);
-				
+			    tlc.projectTimeline(mousedownY);
+			    
 				// Update the last coordinate of the mouse
 				pageY = evt.pageY;
 				
@@ -195,29 +219,179 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		}
 	});
 
-	$(".toastContainer").mouseup(function(){
+	$(".toastContainer").mouseup(function(evt){
 		// Erase the zoompoint(or move out of view)
-		projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, -100, tlc.batches.filter(tlc.removeNoTrainer), $scope.$parent, calendarService.countWeeks, tlc.trainers, tlc.maxTrainerNameCharacters, tlc.selectedCurriculum);
+		tlc.projectTimeline(-100);
 		// Remove mousemove listener from the 
 		$(".toastContainer").off("mousemove");
+		evt.stopPropagation();
 	});
 	
-	$scope.$broadcast("repullTimeline");
+    tlc.repullPromise = new Promise(function(resolve, reject){
+    	tlc.getAllBatches.then(function(result)
+    	{
+	    	tlc.getAllTrainers.then(function(result)
+	    	{
+	    		resolve(1);
+	    	});
+    	});
+    });
+    
+    tlc.repullPromise.then(function(result)
+    {
+    	if (result) { tlc.projectTimeline(0); }
+    }, function(error){});
+    
+    tlc.repull = function()
+    {
+        tlc.repullPromise.then(function(result)
+	    {
+        	if (result) { tlc.projectTimeline(0); }
+	    }, function(error){});
+    }
+    
+    //Pagination functions
+	tlc.changeTrainersPerPage = function()
+	{
+		var numTrainers = (tlc.trainers ? tlc.trainers.length : 0);
+		
+		tlc.realTrainersPerPage = tlc.trainersPerPage;
+		
+		if (tlc.realTrainersPerPage < 0 || !angular.isNumber(tlc.realTrainersPerPage)) {tlc.realTrainersPerPage = 0;}
+		
+		tlc.realTrainersPerPage = Math.min(tlc.realTrainersPerPage, numTrainers);
+		
+		tlc.trainerListStartIndex = 0;
+		
+		tlc.trainerListEndIndex = Math.min(tlc.realTrainersPerPage, numTrainers);
+		
+		tlc.realTrainerPage = 1;
+		tlc.trainerPage = tlc.realTrainerPage;
+		tlc.maxTrainerPages = Math.ceil(numTrainers / tlc.realTrainersPerPage);
+		
+		tlc.previousPageButtonStatus();
+		tlc.nextPageButtonStatus();
+	}
 	
-    tlc.repull = function(){
-    	$scope.$broadcast("repullTimeline");
-    };
+	tlc.previousTrainerPage = function()
+	{
+		tlc.trainerListStartIndex -= tlc.realTrainersPerPage;
+		tlc.trainerListEndIndex -= tlc.realTrainersPerPage;
+		
+		tlc.realTrainerPage -= 1;
+		tlc.trainerPage = tlc.realTrainerPage;
+		
+		tlc.previousPageButtonStatus();
+		tlc.nextPageButtonStatus();
+	}
+	
+	tlc.nextTrainerPage = function()
+	{
+		tlc.trainerListStartIndex += tlc.realTrainersPerPage;
+		tlc.trainerListEndIndex += tlc.realTrainersPerPage;
+		
+		tlc.realTrainerPage += 1;
+		tlc.trainerPage = tlc.realTrainerPage;
+		
+		tlc.previousPageButtonStatus();
+		tlc.nextPageButtonStatus();
+	}
+	
+	tlc.firstTrainerPage = function()
+	{
+		tlc.realTrainerPage = 1;
+		tlc.trainerPage = tlc.realTrainerPage;
+		
+		tlc.trainerListStartIndex = 0;
+		tlc.trainerListEndIndex = tlc.realTrainersPerPage;
+		
+		tlc.previousPageButtonStatus();
+		tlc.nextPageButtonStatus();
+	}
+	
+	tlc.lastTrainerPage = function()
+	{
+		tlc.realTrainerPage = tlc.maxTrainerPages;
+		tlc.trainerPage = tlc.realTrainerPage;
+		
+		tlc.trainerListStartIndex = tlc.realTrainersPerPage * (tlc.realTrainerPage - 1);
+		tlc.trainerListEndIndex = tlc.trainerListStartIndex + tlc.realTrainersPerPage;
+		
+		tlc.previousPageButtonStatus();
+		tlc.nextPageButtonStatus();
+	}
+	
+	tlc.goToTrainerPage = function()
+	{
+		tlc.realTrainerPage = tlc.trainerPage;
+		
+		if (tlc.realTrainerPage < 0 || !angular.isNumber(tlc.realTrainerPage)) {tlc.realTrainerPage = 1;}
+		if (tlc.realTrainerPage > tlc.maxTrainerPages) { tlc.realTrainerPage = tlc.maxTrainerPages; }
+		
+		tlc.trainerListStartIndex = tlc.realTrainersPerPage * (tlc.realTrainerPage - 1);
+		tlc.trainerListEndIndex = tlc.trainerListStartIndex + tlc.realTrainersPerPage;
+		
+		tlc.previousPageButtonStatus();
+		tlc.nextPageButtonStatus();
+	}
+	
+	tlc.previousPageButtonStatus = function()
+	{
+		//True = disabled, false = enabled.
+		if (tlc.trainerListStartIndex == 0 || tlc.realTrainersPerPage == 0) { tlc.previousPageButtonDisabled = true; }
+		else { tlc.previousPageButtonDisabled = false; }
+	}
+	
+	tlc.nextPageButtonStatus = function()
+	{
+		var numTrainers = (tlc.trainers ? tlc.trainers.length : 0);
+		
+		//True = disabled, false = enabled.
+		if (tlc.trainerListStartIndex + tlc.realTrainersPerPage >= numTrainers || tlc.realTrainersPerPage == 0) { tlc.nextPageButtonDisabled = true; }
+		else { tlc.nextPageButtonDisabled = false; }
+	}
+	
+	tlc.changeTrainersPerPage();
+	
+	tlc.projectTimeline = function(yOffset)
+	{
+		if (tlc.trainers && tlc.batches)
+		{
+			tlc.filteredTrainers = tlc.trainers.filter(tlc.removeTrainersOutOfPage);
+			
+			tlc.filteredBatches = tlc.batches.filter(tlc.removeNoTrainer).filter(tlc.removeIrrelevantBatches);
+			
+			tlc.filteredTrainers.sort(function(a,b){
+				if(a.trainerID < b.trainerID){
+					return -1;
+				}
+				else if(a.trainerID > b.trainerID){
+					return 1;
+				}
+				else{
+					return 0;
+				}
+			});
+			
+			projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, yOffset, tlc.filteredBatches, $scope.$parent, calendarService.countWeeks, tlc.filteredTrainers, tlc.selectedCurriculum);
+		}
+	}
 });
 
+//Generates the string used in the columns
+function trainerColumnName(trainer)
+{
+	return ("(" + trainer.trainerID + ")" + " " + trainer.firstName + " " + trainer.lastName);
+}
+
 // Draw timeline
-function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, parentScope, numWeeks, trainerNames, maxTrainerNameCharacters, selectedCurriculum){
-	
+function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, parentScope, numWeeks, trainerNames, selectedCurriculum){
 	//Timeline variables
 	var margin = {top: 80, right: 16, bottom: 32, left:72},
 	width = windowWidth - margin.left - margin.right,
 	height = 2000 - margin.top - margin.bottom,
-	xPadding = 8 * maxTrainerNameCharacters;
-
+	xPadding = 72;
+	
 	//Define Scales
 	var colorScale = d3.scale.category20();
 	
@@ -227,7 +401,7 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 	
 	var xScale = d3.scale.ordinal()
 		.domain(trainerNames)
-		.rangePoints([xPadding,width-xPadding]);
+		.rangePoints([xPadding, width - xPadding]);
 	
 	//Define axis
 	var yAxis = d3.svg.axis()
@@ -270,7 +444,10 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 	//Filter & sort data for that in range of Timeline
 	//Also for the selected curriculum type.
 	timelineData = timelineData.filter(function(batch){
-		return ((new Date(batch.startDate) <= maxDate) && (new Date(batch.endDate) >= minDate) && (selectedCurriculum == 0 || (!(angular.isUndefined(batch.curriculum)) && (batch.curriculum.id == selectedCurriculum))));
+		var dateInRange = ((new Date(batch.startDate) <= maxDate) && (new Date(batch.endDate) >= minDate));
+		var matchingCurriculum = (selectedCurriculum == 0 || (!(angular.isUndefined(batch.curriculum)) && (batch.curriculum.id == selectedCurriculum)));
+
+		return (dateInRange && matchingCurriculum);
 	});
 	
 	timelineData.sort(function(a,b){
@@ -289,11 +466,11 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 	var batchCount = {};
 	for(var x = 0; x < timelineData.length; x++){
 		
-		if(batchCount[timelineData[x].trainer ? ("(" + timelineData[x].trainer.trainerID + ")" + " " + timelineData[x].trainer.firstName + " " + timelineData[x].trainer.lastName) : 'No trainer'] === undefined){
-			batchCount[timelineData[x].trainer ? ("(" + timelineData[x].trainer.trainerID + ")" + " " + timelineData[x].trainer.firstName + " " + timelineData[x].trainer.lastName) : 'No trainer'] = [];
+		if(batchCount[timelineData[x].trainer ? trainerColumnName(timelineData[x].trainer) : 'No trainer'] === undefined){
+			batchCount[timelineData[x].trainer ? trainerColumnName(timelineData[x].trainer) : 'No trainer'] = [];
 		}
 		
-		batchCount[timelineData[x].trainer ? ("(" + timelineData[x].trainer.trainerID + ")" + " " + timelineData[x].trainer.firstName + " " + timelineData[x].trainer.lastName) : 'No trainer'].push(timelineData[x]);
+		batchCount[timelineData[x].trainer ? trainerColumnName(timelineData[x].trainer) : 'No trainer'].push(timelineData[x]);
 	}
 	
 	var betweenBatches = [];
@@ -301,7 +478,7 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 	for(var trainer in batchCount){
 		if (batchCount.hasOwnProperty(trainer)){
 			for(x = 0; x < batchCount[trainer].length-1; x++){
-				var between = {x: xScale(batchCount[trainer][x].trainer ? ("(" + batchCount[trainer][x].trainer.trainerID + ")" + " " + batchCount[trainer][x].trainer.firstName + " " + batchCount[trainer][x].trainer.lastName) : 'No trainer'),
+				var between = {x: xScale(batchCount[trainer][x].trainer ? trainerColumnName(batchCount[trainer][x].trainer) : 'No trainer'),
 						y1: yScale(new Date(batchCount[trainer][x].endDate)),
 						y2: yScale(new Date(batchCount[trainer][x+1].startDate)),
 						length:numWeeks(batchCount[trainer][x].endDate,batchCount[trainer][x+1].startDate)};
@@ -315,6 +492,18 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 	//Create timeline
     var svg = d3.select("#timeline");
     svg.selectAll("*").remove();
+    
+	var tip = d3.tip()
+	  .attr('class', 'd3-tip')
+	  .html(function(d) {
+		  var msg = "";
+		  
+		  msg += d.curriculum ? ("<span style='color:orange'>" + d.curriculum.name + "</span> Batch <br/>") : "<span style='color:red'>No curriculum</span> for this batch. <br/>";
+		  msg += d.trainer ? ("Trainer:  <span style='color:gold'>" + d.trainer.firstName + " " + d.trainer.lastName + "</span> <br/>") : "<span style='color:gold'>No trainer</span> for this batch. <br/>";
+		  msg += d.cotrainer ? ("Cotrainer:  <span style='color:gold'>" + d.cotrainer.firstName + " " + d.cotrainer.lastName + "</span> <br/>") : "<span style='color:gold'>No cotrainer</span> for this batch. <br/>";
+		  
+		  return msg;
+	  });
 	
 	svg = d3.select('#timeline')
 		.append('svg')
@@ -323,6 +512,8 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 		.append('g')
 			.attr('transform','translate('+margin.left+','+margin.top+')');
 			
+	svg.call(tip);
+	
 	svg.append('g')
 		.attr('class','x axis')
 		.call(xAxis);
@@ -423,8 +614,8 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 				}
 				return y;
 			})
-			.attr('x', function(d) {return xScale(d.trainer ? ("(" + d.trainer.trainerID + ")" + " " + d.trainer.firstName + " " + d.trainer.lastName) : 'No trainer')-15;})
-			.attr('width', 30)
+			.attr('width', 32)
+			.attr('x', function(d) {return xScale(d.trainer ? trainerColumnName(d.trainer) : 'No trainer') - (d3.select(this).attr("width") / 2);})
 			.attr('height', function(d) {
 				var start = yScale(new Date(d.startDate));
 				var end = yScale(new Date(d.endDate));
@@ -436,27 +627,42 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 				}
 				return end - start;
 			})
-			.on('mouseover', function()
+			.on('mouseover', function(d)
 			{
-				//tip.show;
+			    var mouse_coordinates;
+			    
+			    mouse_coordinates = d3.mouse(this);
+				tip.offset([mouse_coordinates[1] - d3.select(this).attr("y") - 8, mouse_coordinates[0] - d3.select(this).attr("x") - (d3.select(this).attr("width") / 2)]).show(d);
 				d3.event.stopPropagation();
 			})
-			.on('mouseout', function()
+			.on('mouseout', function(d)
 			{
-				//tip.hide;
-				d3.event.stopPropagation();
-			})
-			.on('mousedown', function()
-			{
-				d3.event.stopPropagation();
-			})
-			.on('mousemove', function()
-			{
+				tip.hide(d);
 				d3.event.stopPropagation();
 			})
 			.on('click', function(d){
+				tip.hide(d);
 				parentScope.bCtrl.highlightBatch(d);
 				parentScope.$apply();
+				d3.event.stopPropagation();
+			})
+			.on('mousedown', function(d)
+			{
+				tip.hide(d);
+				d3.event.stopPropagation();
+			})
+			.on('mouseup', function(d)
+			{
+			    tip.show(d);
+				d3.event.stopPropagation();
+			})
+			.on('mousemove', function(d)
+			{
+			    var mouse_coordinates;
+			    
+			    mouse_coordinates = d3.mouse(this);
+			    tip.hide(d);
+				tip.offset([mouse_coordinates[1] - d3.select(this).attr("y") - 8, mouse_coordinates[0] - d3.select(this).attr("x") - (d3.select(this).attr("width") / 2)]).show(d);
 				d3.event.stopPropagation();
 			})
 			.style('fill', function(d) {return colorScale(d.curriculum ? d.curriculum.name : 'No curriculum');});
@@ -469,9 +675,47 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 				}
 				return (y+25);
 			})
-			.attr('x', function(d) {return xScale(d.trainer ? ("(" + d.trainer.trainerID + ")" + " " + d.trainer.firstName + " " + d.trainer.lastName) : 'No trainer')-7;})
+			.attr('x', function(d) {return xScale(d.trainer ?  trainerColumnName(d.trainer) : 'No trainer')-7;})
+			.on('mouseover', function(d)
+			{
+			    var mouse_coordinates;
+			    
+			    mouse_coordinates = d3.mouse(this);
+				tip.offset([mouse_coordinates[1] - d3.select(this).attr("y"), mouse_coordinates[0] - d3.select(this).attr("x") - 8]).show(d);
+				d3.event.stopPropagation();
+			})
+			.on('mouseout', function(d)
+			{
+				tip.hide(d);
+				d3.event.stopPropagation();
+			})
+			.on('click', function(d){
+				tip.hide(d);
+				parentScope.bCtrl.highlightBatch(d);
+				parentScope.$apply();
+				d3.event.stopPropagation();
+			})
+			.on('mousedown', function(d)
+			{
+				tip.hide(d);
+				d3.event.stopPropagation();
+			})
+			.on('mouseup', function(d)
+			{
+			    tip.show(d);
+				d3.event.stopPropagation();
+			})
+			.on('mousemove', function(d)
+			{
+			    var mouse_coordinates;
+			    
+			    mouse_coordinates = d3.mouse(this);
+			    tip.hide(d);
+				tip.offset([mouse_coordinates[1] - d3.select(this).attr("y"), mouse_coordinates[0] - d3.select(this).attr("x") - 8]).show(d);
+				d3.event.stopPropagation();
+			})
 			.text(function(d) {return numWeeks(d.startDate,d.endDate) + " W E E K S";})
-				.attr("dy", 0);
+				.attr("dy", 0)
 	
 	d3.selectAll('.rect')
 		.selectAll("text")
