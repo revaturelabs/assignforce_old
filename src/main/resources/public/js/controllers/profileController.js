@@ -68,7 +68,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         };
 
         //putting an object in the s3 bucket
-        bucket.putObject(params, function (err, data) {
+        bucket.putObject(params, function (err) {
             if (err){
                 pc.showToast("could not upload file.");
                 return;
@@ -101,7 +101,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     //queries the database for the trainer. to be called after a change to the trainer's properties
     pc.rePullTrainer = function(){
         pc.trainer = undefined;
-        trainerService.getById(57, function (response) {
+        trainerService.getById(3, function (response) {
             pc.trainer = response;
         }, function () {
             pc.showToast("Could not fetch trainer.");

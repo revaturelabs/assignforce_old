@@ -62,7 +62,7 @@
             //set the parameters needed to get an object from aws s3 bucket
             var params = {
                 Bucket: tc.creds.BucketName,
-                Key: 'dd.jpg',
+                Key: fileName,
                 Expires: 60 //url expires in 60 seconds with signed urls
             };
 
@@ -76,7 +76,6 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            // delete link;
         };
 
             // reformats how an array of objects is joined
