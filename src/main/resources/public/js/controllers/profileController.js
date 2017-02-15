@@ -15,7 +15,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     // data gathering
 
     // id is hard coded for testing. fix this later
-    trainerService.getById(1, function (response) {
+    trainerService.getById(57, function (response) {
         pc.trainer = response;
     }, function (error) {
         pc.showToast("Could not fetch trainer.");
@@ -33,9 +33,9 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
             controller: "skillDialogCtrl",
             controllerAs: "sdCtrl",
             locals: {
-                trainer : pc.trainer,
-                skills  : pc.skills,
-                newSkill   : skillService.getEmptySkill()},
+                trainer        : pc.trainer,
+                skills         : pc.skills,
+                newSkill       : skillService.getEmptySkill()},
             bindToController: true,
             clickOutsideToClose: true
         }).then(function () {
@@ -46,7 +46,17 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         });
     };
 
-    //queries the database for trainers. to be called after a change to the trainers array
+    //queries the database for the trainer. to be called after a change to the trainer's properties
+    pc.rePullTrainer = function(){
+        pc.trainer = undefined;
+        trainerService.getById(57, function (response) {
+            pc.trainer = response;
+        }, function (error) {
+            pc.showToast("Could not fetch trainer.");
+        });
+    };
+
+    //queries the database for skills. to be called after a change to the skills array
     pc.rePullSkills = function(){
         pc.skills = undefined;
         skillService.getAll( function(response) {
