@@ -42,12 +42,9 @@ assignforce.controller("skillDialogCtrl", function ($scope, $mdDialog, skillServ
                     $mdDialog.cancel();
                 });
             }
-            console.log(sdc.selectedSkills);
 
             trainerService.update(sdc.trainer, function(){
-                console.log(sdc.trainer);
                 //pc.rePullTrainer();
-                //console.log(pc.trainer);
             }, function (){
                 sdc.showToast("Error updating trainer.");
             });
