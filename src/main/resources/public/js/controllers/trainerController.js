@@ -76,7 +76,7 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            delete link;
+            // delete link;
         };
 
             // reformats how an array of objects is joined

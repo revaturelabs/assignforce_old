@@ -67,9 +67,8 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         //putting an object in the s3 bucket
         bucket.putObject(params, function (err, data) {
             if (err){
-                console.log(err);
-            } else {
-                console.log(data);
+                pc.showToast("could not upload file.");
+                return;
             }
         });
 
