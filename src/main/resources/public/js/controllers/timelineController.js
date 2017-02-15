@@ -40,7 +40,6 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	//Timeline axis range variables
 	tlc.minDate = new Date(3000, 7, 0);
 	tlc.maxDate = new Date(2000, 12, 0);
-	tlc.maxTrainerNameCharacters = 6;
 	tlc.selectedCurriculum = 0;
 	tlc.trainersPerPage = 0;
 	tlc.realTrainersPerPage = 0;
@@ -63,7 +62,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 			var startDate;
 			var endDate;
 			
-			for (b in tlc.batches)
+			for (var b in tlc.batches)
 			{
 				if (!angular.isUndefined(tlc.batches[b].trainer) && tlc.batches[b].trainer !== null && !angular.isUndefined(tlc.batches[b].startDate) && tlc.batches[b].startDate !== null && !angular.isUndefined(tlc.batches[b].endDate) && tlc.batches[b].endDate !== null)
 				{
@@ -86,16 +85,6 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 						endDate = new Date(tlc.batches[b].endDate);
 						if (endDate.getTime() > tlc.maxDate.getTime()) {tlc.maxDate = endDate;}
 					}
-					
-					if (tlc.batches[b].trainer.firstName.length > tlc.maxTrainerNameCharacters)
-					{
-						tlc.maxTrainerNameCharacters = tlc.batches[b].trainer.firstName.length;
-					}
-					
-					if (tlc.batches[b].trainer.lastName.length > tlc.maxTrainerNameCharacters)
-					{
-						tlc.maxTrainerNameCharacters = tlc.batches[b].trainer.lastName.length;
-					}
 				}
 			}
 		}
@@ -105,7 +94,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	var batches;
 	var trainerNames;
 	
-	$scope.$on("repullTimeline", function(event, data){
+	$scope.$on("repullTimeline", function(){
 		tlc.repull();
 	});
 
@@ -115,7 +104,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	        tlc.batches = response;
 	        tlc.getDateRange();
 	        resolve(1);
-	    }, function(error) {
+	    }, function(reject) {
 	    	resolve(0);
 	    });
 	});
@@ -125,7 +114,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	    trainerService.getAll( function(response) {
 			tlc.trainers = response.map(function(trainer){return trainerColumnName(trainer)});
 			resolve(1);
-	    }, function(error) {
+	    }, function(reject) {
 	    	resolve(0);
 	    });
 	});
