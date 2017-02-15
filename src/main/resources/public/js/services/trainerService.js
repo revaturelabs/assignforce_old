@@ -24,7 +24,7 @@ app.service('trainerService', function($resource) {
     }
 
     ts.update = function (trainer, success, error) {
-        trainer.$update(success, error);
+        Trainer.update(trainer, success, error);
     }
 
     ts.delete = function (id, success, error) {
