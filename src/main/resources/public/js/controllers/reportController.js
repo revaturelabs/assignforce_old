@@ -452,33 +452,37 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     
     rc.createAllBatchClick = function(){
          
-        for ( index in rc.cardArr ) {
-        	
-        	//Create a batch object in the Reports Controller, using the batchService.
-            rc.newBatch = batchService.getEmptyBatch();
-            
-            //Declare a generic name for batch objects being created.
-            var dName = " - ";
+        for ( var index in rc.cardArr ) {
         
-	        for ( var i = 0; i < rc.cardArr[index].requiredBatches; i++ ) {
-	
-	        	//Assigns the 'generic name' the batch object.
-	            rc.newBatch.name = dName;
+        	if(rc.cardArr.hasOwnProperty(index)){
+        		
+	        	//Create a batch object in the Reports Controller, using the batchService.
+	            rc.newBatch = batchService.getEmptyBatch();
 	            
-	            //Assigns the 'start date' to the batch object. 
-	            rc.newBatch.startDate = rc.cardArr[index].startDate;
+	            //Declare a generic name for batch objects being created.
+	            var dName = " - ";
+	        
+		        for ( var i = 0; i < rc.cardArr[index].requiredBatches; i++ ) {
+		
+		        	//Assigns the 'generic name' the batch object.
+		            rc.newBatch.name = dName;
+		            
+		            //Assigns the 'start date' to the batch object. 
+		            rc.newBatch.startDate = rc.cardArr[index].startDate;
+		            
+		            //Assigns the 'end date' to the batch object.
+		            rc.newBatch.endDate = rc.cardArr[index].reqDate;
+		            
+		            //Assigns the 'id' value of the Curriculum ('batch type' variable) to
+		            //	to the batch object.
+		            rc.newBatch.curriculum = rc.cardArr[index].batchType.id;
+		            
+		            //Create batch method called here...
+		            batchService.create(rc.newBatch, success, error);
+		        }
 	            
-	            //Assigns the 'end date' to the batch object.
-	            rc.newBatch.endDate = rc.cardArr[index].reqDate;
+        	} 
 	            
-	            //Assigns the 'id' value of the Curriculum ('batch type' variable) to
-	            //	to the batch object.
-	            rc.newBatch.curriculum = rc.cardArr[index].batchType.id;
-	            
-	            //Create batch method called here...
-	            batchService.create(rc.newBatch, success, error);
-	        }
-            
         }
         
        function success (){
@@ -534,7 +538,8 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
      * The 'newObj' object, and it's assignments, are used to generate new objects
      * 	to be placed within the 'cardArr' array object.
      */
-    rc.newObj = new Object();
+    //rc.newObj = new Object();
+    rc.newObj = {};
     rc.newObj.requiredGrads = rc.requiredGrads;
     rc.newObj.reqDate = rc.reqDate;
     rc.newObj.requiredBatches = rc.requiredBatches;
