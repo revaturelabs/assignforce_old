@@ -71,10 +71,6 @@
     </md-content>
 </md-card><br><br><br>
 
-
-
-
-
 <!--Graduates Summary Graph -->
 <md-card>
     <md-toolbar layout="columns" class="md-primary md-hue-2">
@@ -94,22 +90,27 @@
     </md-content>
 </md-card><br><br><br>
 
-
-
-
-
 <!--  Required Trainee's Tab  -->
 <md-card md-whiteframe="8" ng-cloak>
     <!-- Graduates annual report -->
     <md-content>
         <md-toolbar layout="columns" class="md-primary md-hue-2">
             <div class="md-toolbar-tools">
-                <span>Required Trainee's</span>
+                <span>Batch Projection</span>
                 <span flex> </span>
+                
+                <!--  Generate a New Card Object Button -->
                 <md-button class="md-icon-button" ng-click="rCtrl.genCard()">
-                    <md-tooltip> Add New Card </md-tooltip>
+                    <md-tooltip class="md-title"> Add New Card </md-tooltip>
                     <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
                 </md-button>
+                
+                <!--  Create All Batches Button  -->
+                <md-button class="md-icon-button" ng-click="rCtrl.createAllBatchClick()">
+                    <md-tooltip class="md-title"> Create All Batches </md-tooltip>
+                	<md-icon md-svg-icon="img/ic_done_white_24px.svg"></md-icon>
+                </md-button>
+                             
             </div>
         </md-toolbar>
         <div ng-if="rCtrl.batches != undefined" class="md-padding" layout="row">
@@ -117,11 +118,22 @@
                 <div flex-xs="" flex-gt-xs="20" layout="column" ng-repeat="n in rCtrl.cardArr track by $index">
                     <md-card md-theme="{{ showDarkTheme ? 'dark-purple' : 'default' }}" md-theme-watch="">
                         <md-card-content class="md-padding" layout="column">
+                        
                         <md-card-title>
                             <md-card-title-text>
                                 <span class="md-headline"></span>
                             </md-card-title-text>
+                        	
+                        	<span flex> </span>
+                        	
+                        	<!--  Create All Batches Button  -->
+                			<md-button class="md-icon-button" ng-click="rCtrl.createAllBatchClick()">
+                    			<md-tooltip class="md-title"> Create All Batches </md-tooltip>
+                				<md-icon md-svg-icon="img/ic_done_white_24px.svg"></md-icon>
+                			</md-button>	
+                        
                         </md-card-title>
+                        
                         <!--  Needed Trainee's Field  -->
                         <md-input-container>
                             <label>Trainee's Needed:</label>
