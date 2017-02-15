@@ -495,13 +495,13 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 		  {
 			  switch (day)
 			  {
-			  	case 0: return "Sun."; break;
-			  	case 1: return "Mon."; break;
-			  	case 2: return "Tue."; break;
-			  	case 3: return "Wed."; break;
-			  	case 4: return "Thu."; break;
-			  	case 5: return "Fri."; break;
-			  	case 6: return "Sat."; break;
+			  	case 0: return "Sun.";
+			  	case 1: return "Mon.";
+			  	case 2: return "Tue.";
+			  	case 3: return "Wed.";
+			  	case 4: return "Thu.";
+			  	case 5: return "Fri.";
+			  	case 6: return "Sat.";
 			  }
 		  }
 		  
@@ -509,18 +509,18 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 		  {
 			  switch (month)
 			  {
-			  	case 0: return "Jan."; break;
-			  	case 1: return "Feb."; break;
-			  	case 2: return "Mar."; break;
-			  	case 3: return "Apr."; break;
-			  	case 4: return "May"; break;
-			  	case 5: return "Jun."; break;
-			  	case 6: return "Jul."; break;
-			  	case 7: return "Aug."; break;
-			  	case 8: return "Sep."; break;
-			  	case 9: return "Oct."; break;
-			  	case 10: return "Nov."; break;
-			  	case 11: return "Dec."; break;
+			  	case 0: return "Jan.";
+			  	case 1: return "Feb.";
+			  	case 2: return "Mar.";
+			  	case 3: return "Apr.";
+			  	case 4: return "May";
+			  	case 5: return "Jun.";
+			  	case 6: return "Jul.";
+			  	case 7: return "Aug.";
+			  	case 8: return "Sep.";
+			  	case 9: return "Oct.";
+			  	case 10: return "Nov.";
+			  	case 11: return "Dec.";
 			  }
 		  }
 		  
