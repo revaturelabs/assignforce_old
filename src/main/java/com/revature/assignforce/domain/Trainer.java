@@ -23,6 +23,9 @@ public class Trainer implements Activatable{
 	@Column(name = "LAST_NAME", nullable = false)
 	private String lastName;
 
+	@Column(name = "TRAINER_RESUME")
+	private String resume;
+
 	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(name="TRAINER_UNAVAILABILITY_JT", 
 	joinColumns=@JoinColumn(name="TRAINER"), 
@@ -41,17 +44,12 @@ public class Trainer implements Activatable{
 	@JoinColumn(name="Trainer")
 	private List<Certification> certification;
 
-
 	@Column(name="active", insertable = false)
 	private Boolean active;
 
-	public int getTrainerID() {		
-		return trainerID;		
-	}
-	
 	public Trainer(){}
 
-	public Trainer(int trainerID, String firstName, String lastName, List<Unavailable> unavailable, List<Skill> skill, List<Certification> certification) {
+	public Trainer(int trainerID, String firstName, String lastName, String resume, List<Unavailable> unavailable, List<Skill> skill, List<Certification> certification) {
 		super();
 		this.trainerID = trainerID;
 		this.firstName = firstName;
@@ -59,8 +57,12 @@ public class Trainer implements Activatable{
 		this.unavailable = unavailable;
 		this.skill = skill;
 		this.certification = certification;
+		this.resume = resume;
 	}
 
+    public int getTrainerID() {
+        return trainerID;
+    }
 
 	public void setTrainerID(int trainerID) {
 		this.trainerID = trainerID;
@@ -112,5 +114,13 @@ public class Trainer implements Activatable{
 
 	public void setCertification(List<Certification> certification) {
 		this.certification = certification;
+	}
+
+	public String getResume() {
+		return resume;
+	}
+
+	public void setResume(String resume) {
+		this.resume = resume;
 	}
 }

@@ -15,6 +15,7 @@ public class TrainerDTO {
 	private List<Certification> certifications;
 	private List<Unavailable> unavailabilities;
 	private Boolean active;
+	private String resume;
 	
 	public int getID() {
 		return ID;
@@ -57,5 +58,11 @@ public class TrainerDTO {
 	}
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+	public String getResume() {
+		return resume;
+	}
+	public void setResume(String resume) {
+		this.resume = resume;
 	}
 }
