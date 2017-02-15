@@ -35,6 +35,7 @@ assignforce.controller("skillDialogCtrl", function ($scope, $mdDialog, skillServ
     //save updated skill
     sdc.save = function (isValid) {
         if (isValid){
+            //this creates a skill and adds it to the database
             if (sdc.newSkill.name != null) {
                 skillService.update(sdc.newSkill, function () {
                     $mdDialog.hide();
@@ -42,7 +43,9 @@ assignforce.controller("skillDialogCtrl", function ($scope, $mdDialog, skillServ
                     $mdDialog.cancel();
                 });
             }
-
+            //end
+            console.log(sdc.selectedSkills);
+            sdc.trainer.skill = sdc.selectedSkills;
             trainerService.update(sdc.trainer, function(){
                 //pc.rePullTrainer();
             }, function (){
@@ -51,4 +54,7 @@ assignforce.controller("skillDialogCtrl", function ($scope, $mdDialog, skillServ
             $mdDialog.hide();
         }
     };
+
+    //this will be an array of skills
+    sdc.selectedSkills;
 });

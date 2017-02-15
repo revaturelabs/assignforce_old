@@ -57,10 +57,9 @@
 
         </md-content>
 
+        <!--skills section-->
         <md-content>
-
             <md-toolbar class="md-primary md-hue-2" layout="columns">
-
                 <div class="md-toolbar-tools">
 
                     <span> Skills </span>
@@ -75,25 +74,23 @@
                 </div>
             </md-toolbar>
 
+            <span ng-if="pCtrl.trainer.skill == undefined || pCtrl.trainer.skill.length == 0"> You have no skills selected. Try adding some. </span>
 
-            <md-list ng-if="pCtrl.trainer.skill != undefined">
+            <!--adding skill using the skill dialog-->
+            <!--<md-list ng-if="pCtrl.trainer.skill != undefined">-->
+                <!--<md-list-item class="md-2-line" md-ink-ripple="#ff0000" ng-repeat="skill in pCtrl.trainer.skill">-->
+                    <!--<md-icon md-svg-icon="img/ic_assessment_black_24px.svg"> </md-icon>-->
+                    <!--<div class="md-list-item-text" layout="column">-->
+                        <!--<h3> {{skill.name}} </h3>-->
+                    <!--</div>-->
+                <!--</md-list-item>-->
+            <!--</md-list>-->
 
-                <md-list-item class="md-2-line" md-ink-ripple="#ff0000" ng-repeat="skill in pCtrl.trainer.skill">
 
-                    <md-icon md-svg-icon="img/ic_assessment_black_24px.svg"> </md-icon>
-                    <div class="md-list-item-text" layout="column">
-                        <h3> {{skill.name}} </h3>
-                    </div>
-
-                </md-list-item>
-
-            </md-list>
-
-            <span ng-if="pCtrl.trainer.skill == undefined"> You have no skills selected. Try adding some. </span>
 
         </md-content>
 
-    <md-content>
+        <md-content>
 
             <md-toolbar class="md-primary md-hue-2" layout="columns">
                 <div class="md-toolbar-tools">

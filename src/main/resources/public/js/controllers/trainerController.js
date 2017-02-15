@@ -62,7 +62,7 @@
             //set the parameters needed to get an object from aws s3 bucket
             var params = {
                 Bucket: tc.creds.BucketName,
-                Key: fileName,
+                Key: 'dd.jpg',
                 Expires: 60 //url expires in 60 seconds with signed urls
             };
 
