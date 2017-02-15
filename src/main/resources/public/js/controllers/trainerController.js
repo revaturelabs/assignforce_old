@@ -1,22 +1,6 @@
 
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.directive("fileModel", ['$parse', function ($parse) {
-        return {
-            restrict: 'A', //restricts this directive to be only invoked by attributes
-            link: function(scope, element, attrs) {
-                var model = $parse(attrs.fileModel);
-                var modelSetter = model.assign;
-
-                element.bind('change', function(){
-                    scope.$apply(function(){
-                        modelSetter(scope, element[0].files[0]);
-                    });
-                });
-            }
-        };
-    }]);
-
     assignforce.controller( "trainerCtrl", function( $scope, $mdDialog, $mdToast, trainerService, s3Service ) {
         var tc = this;
         // console.log("start trainers")
@@ -62,50 +46,23 @@
 
         //connects to aws s3 to grab an object
         tc.grabS3Resume = function (fileName) {
-            //connection for assignforce bucket
-            var params = {
-                Bucket: tc.creds.BucketName,
-                Key: 'user1.doc',
-                ACL: 'public-read-write',
-                Body: tc.myFile
-            };
-
-            // params.Key = fileName;
+            console.log(fileName);
 
             var bucket = new AWS.S3({
-                accessKeyId: tc.creds.ID,
-                secretAccessKey: tc.creds.SecretKey
+                accessKeyID: '',
+                secretAccessKey: ''
             });
 
-
-            //mybucket put object
-            // var paramsPut = {
-            //     Bucket: 'af-laz-bucket',
-            //     Key: 'user1.doc',
-            //     ACL: 'public-read-write',
-            //     Body: tc.myFile
-            // };
-
-            // var paramsGet = {
-            //     Bucket: 'af-laz-bucket',
-            //     Key: 'user1.doc',
-            //      Expires: 60 //url expires in 60 seconds with signed urls
-            // };
-
-            // var bucket = new AWS.S3({
-            //     accessKeyId: 'AKIAJPT72TFPL76575BA',
-            //     secretAccessKey: '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'
-            // });
-
-            bucket.putObject(params, function(err, data) {
-                if (err) console.log(err, err.stack); // an error occurred
-                else     console.log(data);           // successful response
-            });
+            var paramsGet = {
+                Bucket: '',
+                Key: fileName,
+                Expires: 60 //url expires in 60 seconds with signed urls
+            };
 
             //downloading a file
             // tc.url = bucket.getSignedUrl('getObject', paramsGet);
             // console.log('The URL is', tc.url);
-            //
+
             // var link = document.createElement("a");
             // link.download = "test.png";
             // link.href = tc.url;
@@ -139,19 +96,16 @@
         	return new Date(incoming);
         };
 
-        //data
-        tc.myFile;
+        // page initialization
 
-
+        //get the S3 bucket credentials and store them in creds
         s3Service.getCreds(function (response) {
             tc.creds = response;
-            console.log(tc.creds);
         }, function (error) {
             console.log(error);
         });
 
-          // page initialization
-            // gets all trainers and stores them in variable trainers
+        // gets all trainers and stores them in variable trainers
         trainerService.getAll( function(response) {
             tc.trainers = response;
         }, function() {

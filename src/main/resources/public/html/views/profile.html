@@ -11,13 +11,6 @@
                     <md-tooltip> Save Name </md-tooltip>
                     <md-icon md-svg-src="img/ic_done_white_24px.svg"></md-icon>
                 </md-button>
-
-
-                <input class="ng-hide" id="input-file-id"  type="file" file-model="pCtrl.myFile">
-                <label for="input-file-id" class="md-button md-icon-button">
-                    <md-icon md-menu-origin class="material-icons"> add_circle </md-icon>
-                    <md-tooltip> Add/Update Resume </md-tooltip>
-                </label>
             </div>
         </md-toolbar>
 
@@ -28,9 +21,7 @@
             <div layout="column">
 
                 <div layout="row" flex layout-fill>
-
                     <form class="nameForm" name="nameForm" ng-submit="pCtrl.updateName(nameForm.$valid)" novalidate>
-
                         <md-input-container flex>
                             <label> First Name </label>
                             <input ng-model="pCtrl.firstName" required>
@@ -40,19 +31,26 @@
                             <label> Last Name </label>
                             <input ng-model="pCtrl.lastName" required>
                         </md-input-container>
-
                     </form>
-
                 </div>
 
                 <div layout="row">
-
                     <!--need to figure out accessing the file, as far as permissions go-->
                     <md-label for="resumeLink"> Current Resume: </md-label>
-                    <a ng-if="!!pCtrl.resume" ng-href="{{pCtrl.resumeBaseURL + pCtrl.resume}}" id="resumeLink">{{pCtrl.resume}}</a>
+                    <md-label ng-if="pCtrl.trainer.resume != null"> {{pCtrl.trainer.resume}}</md-label>
+                    <md-label ng-if="pCtrl.trainer.resume == null">No resume on file</md-label> <br>
+                </div>
 
-                    <a ng-if="!pCtrl.resume" id="noResume" >No resume on file</a>
-
+                <div layout="row">
+                    <input class="ng-hide" id="input-file-id"  type="file" file-model="pCtrl.myFile">
+                    <label for="input-file-id" class="md-button md-icon-button">
+                        <md-icon md-menu-origin class="material-icons" style="color: #FB8C00;"> add_circle </md-icon>
+                        <md-tooltip> Add/Update Resume </md-tooltip>
+                    </label>
+                    <div ng-if="pCtrl.myFile != undefined">
+                        <label>{{pCtrl.myFile.name}}</label>
+                        <md-button ng-click="pCtrl.updateResume()">Update</md-button>
+                    </div>
                 </div>
 
             </div>

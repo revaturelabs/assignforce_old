@@ -4,6 +4,22 @@
 
 var assignforce = angular.module( "batchApp" );
 
+assignforce.directive("fileModel", ['$parse', function ($parse) {
+    return {
+        restrict: 'A', //restricts this directive to be only invoked by attributes
+        link: function(scope, element, attrs) {
+            var model = $parse(attrs.fileModel);
+            var modelSetter = model.assign;
+
+            element.bind('change', function(){
+                scope.$apply(function(){
+                    modelSetter(scope, element[0].files[0]);
+                });
+            });
+        }
+    };
+}]);
+
 assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, trainerService, skillService, s3Service) {
         var pc = this;
 
@@ -33,29 +49,48 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     };
 
     pc.uploadResume = function () {
+        console.log(pc.myFile);
         //connection fro assignforce bucket put
         var params = {
-            Bucket: pc.c
-        }
+            Bucket: '',
+            Key: 'user1.doc',
+            ACL: 'public-read-write',
+            Body: pc.myFile
+        };
 
+        var bucket = new AWS.S3({
+            accessKeyID: '',
+            secretAccessKey: ''
+        });
+
+        //putting an object
+        // bucket.putObject(params, function(err, data) {
+        //     if (err) console.log(err, err.stack); // an error occurred
+        //     else     console.log(data);           // successful response
+        // });
+    };
+
+    pc.updateResume = function () {
+        console.log(pc.myFile);
+        pc.trainer.resume = pc.myFile.name;
+        pc.myFile = undefined;
     };
 
     // id is hard coded for testing. fix this later
-    trainerService.getById(1, function (response) {
+    trainerService.getById(2, function (response) {
         pc.trainer = response;
-    }, function (error) {
+    }, function () {
         pc.showToast("Could not fetch trainer.");
     });
 
     skillService.getAll( function(response) {
         pc.skills = response;
-    }, function(error) {
+    }, function() {
         pc.showToast("Could not fetch skills.");
     });
 
     s3Service.getCreds(function (response) {
         pc.creds = response;
-        console.log(pc.creds);
     }, function (error) {
         console.log(error);
     });
@@ -65,7 +100,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         pc.skills = undefined;
         skillService.getAll( function(response) {
             pc.skills = response;
-        }, function(error) {
+        }, function() {
             pc.showToast("Could not fetch skills.");
         });
     };
