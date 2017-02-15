@@ -137,6 +137,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     
     settingService.getById(5, function (response) {
         tlc.trainersPerPage = response.settingValue;
+        tlc.changeTrainersPerPage();
     }, function () {
     });
     
@@ -255,9 +256,10 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	{
 		var numTrainers = (tlc.trainers ? tlc.trainers.length : 0);
 		
-		tlc.realTrainersPerPage = tlc.trainersPerPage;
 		
-		if (tlc.realTrainersPerPage < 0 || !angular.isNumber(tlc.realTrainersPerPage)) {tlc.realTrainersPerPage = 0;}
+		tlc.realTrainersPerPage = Math.floor(tlc.trainersPerPage);
+		
+		if (!angular.isNumber(tlc.realTrainersPerPage) || isNaN(parseInt(tlc.realTrainersPerPage)) || tlc.realTrainersPerPage < 0) { tlc.realTrainersPerPage = 0; }
 		
 		tlc.realTrainersPerPage = Math.min(tlc.realTrainersPerPage, numTrainers);
 		
@@ -323,9 +325,9 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	
 	tlc.goToTrainerPage = function()
 	{
-		tlc.realTrainerPage = tlc.trainerPage;
+		tlc.realTrainerPage = Math.floor(tlc.trainerPage);
 		
-		if (tlc.realTrainerPage < 0 || !angular.isNumber(tlc.realTrainerPage)) {tlc.realTrainerPage = 1;}
+		if (tlc.realTrainerPage < 0 || !angular.isNumber(tlc.realTrainerPage) || isNaN(tlc.realTrainerPage)) {tlc.realTrainerPage = 1;}
 		if (tlc.realTrainerPage > tlc.maxTrainerPages) { tlc.realTrainerPage = tlc.maxTrainerPages; }
 		
 		tlc.trainerListStartIndex = tlc.realTrainersPerPage * (tlc.realTrainerPage - 1);
@@ -361,17 +363,17 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 			
 			tlc.filteredBatches = tlc.batches.filter(tlc.removeNoTrainer).filter(tlc.removeIrrelevantBatches);
 			
-			tlc.filteredTrainers.sort(function(a,b){
-				if(a.trainerID < b.trainerID){
-					return -1;
-				}
-				else if(a.trainerID > b.trainerID){
-					return 1;
-				}
-				else{
-					return 0;
-				}
+			tlc.filteredTrainers.sort(function(a,b)
+			{
+				var aID = parseInt(a.substring(1, a.indexOf(')')));
+				var bID = parseInt(b.substring(1, b.indexOf(')')));
+				
+				if(aID < bID){ return -1; }
+				else if(aID > bID){ return 1; }
+				return 0;
 			});
+			
+			
 			
 			projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, yOffset, tlc.filteredBatches, $scope.$parent, calendarService.countWeeks, tlc.filteredTrainers, tlc.selectedCurriculum);
 		}
@@ -497,10 +499,47 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 	  .attr('class', 'd3-tip')
 	  .html(function(d) {
 		  var msg = "";
+		  var startDate = new Date(d.startDate);
+		  var endDate = new Date(d.endDate);
+		  
+		  var parseDay = function(day)
+		  {
+			  switch (day)
+			  {
+			  	case 0: return "Sun."; break;
+			  	case 1: return "Mon."; break;
+			  	case 2: return "Tue."; break;
+			  	case 3: return "Wed."; break;
+			  	case 4: return "Thu."; break;
+			  	case 5: return "Fri."; break;
+			  	case 6: return "Sat."; break;
+			  }
+		  }
+		  
+		  var parseMonth = function(month)
+		  {
+			  switch (month)
+			  {
+			  	case 0: return "Jan."; break;
+			  	case 1: return "Feb."; break;
+			  	case 2: return "Mar."; break;
+			  	case 3: return "Apr."; break;
+			  	case 4: return "May"; break;
+			  	case 5: return "Jun."; break;
+			  	case 6: return "Jul."; break;
+			  	case 7: return "Aug."; break;
+			  	case 8: return "Sep."; break;
+			  	case 9: return "Oct."; break;
+			  	case 10: return "Nov."; break;
+			  	case 11: return "Dec."; break;
+			  }
+		  }
 		  
 		  msg += d.curriculum ? ("<span style='color:orange'>" + d.curriculum.name + "</span> Batch <br/>") : "<span style='color:red'>No curriculum</span> for this batch. <br/>";
 		  msg += d.trainer ? ("Trainer:  <span style='color:gold'>" + d.trainer.firstName + " " + d.trainer.lastName + "</span> <br/>") : "<span style='color:gold'>No trainer</span> for this batch. <br/>";
 		  msg += d.cotrainer ? ("Cotrainer:  <span style='color:gold'>" + d.cotrainer.firstName + " " + d.cotrainer.lastName + "</span> <br/>") : "<span style='color:gold'>No cotrainer</span> for this batch. <br/>";
+		  msg += d.startDate ? ("Start Date:  <span style='color:gold'>" + parseDay(startDate.getDay()) + ", " + parseMonth(startDate.getMonth()) + " " + startDate.getDate() + ", " + startDate.getFullYear() + "</span> <br/>") : "<span style='color:gold'>No start date</span> for this batch. <br/>";
+		  msg += d.endDate ? ("End Date:  <span style='color:gold'>" + parseDay(endDate.getDay()) + ", " + parseMonth(endDate.getMonth()) + " " + endDate.getDate() + ", " + endDate.getFullYear() + "</span> <br/>") : "<span style='color:gold'>No end date</span> for this batch. <br/>";
 		  
 		  return msg;
 	  });
@@ -531,9 +570,17 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 		.data(trainerNames)
 		.enter()
 		.append('line')
-			.attr('x1', function(d){return xScale(d)+lanePadding;})
+			.attr('x1', function(d){
+				var x = xScale(d)+lanePadding;
+				
+				return isNaN(x) ? 0 : x;
+			})
 			.attr('y1', 0)
-			.attr('x2', function(d){return xScale(d)+lanePadding;})
+			.attr('x2', function(d){
+				var x = xScale(d)+lanePadding;
+				
+				return isNaN(x) ? 0 : x;
+			})
 			.attr('y2', height)
 			.attr('stroke','lightgray');
 	
@@ -609,9 +656,9 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 			.attr('id',function(d){return 'id'+d.id;})
 			.attr('y', function(d) {
 				var y = yScale(new Date(d.startDate));
-				if (y < 0){
-					y = 0;
-				}
+				
+				if (y < 0){ y = 0; }
+				
 				return y;
 			})
 			.attr('width', 32)
@@ -619,12 +666,10 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 			.attr('height', function(d) {
 				var start = yScale(new Date(d.startDate));
 				var end = yScale(new Date(d.endDate));
-				if (start < 0){
-					start = 0;
-				}
-				if(end > height){
-					end = 1940;
-				}
+				
+				if (start < 0){ start = 0; }
+				if(end > height){ end = 1940; }
+				
 				return end - start;
 			})
 			.on('mouseover', function(d)
@@ -670,9 +715,9 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 		.append('text')
 			.attr('y', function(d) { 
 				var y = yScale(new Date(d.startDate));
-				if (y < 0){
-					y = 0;
-				}
+				
+				if (y < 0){ y = 0; }
+				
 				return (y+25);
 			})
 			.attr('x', function(d) {return xScale(d.trainer ?  trainerColumnName(d.trainer) : 'No trainer')-7;})
