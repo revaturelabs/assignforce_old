@@ -5,7 +5,7 @@
             <span> Reports </span>
             <span flex> </span>
             <md-button ng-click="null" ng-csv="rCtrl.export()" filename="{{rCtrl.year}}report.csv" class="md-icon-button">
-                <md-tooltip> Export to CSV </md-tooltip>
+                <md-tooltip class="md-title"> Export to CSV </md-tooltip>
                 <md-icon md-menu-origin class="material-icons"> file_download </md-icon>
             </md-button>
         </div>
@@ -19,7 +19,7 @@
             <span flex> </span>
             <md-menu md-position-mode="target-right target">
                 <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button">
-                    <md-tooltip> Settings </md-tooltip>
+                    <md-tooltip class="md-title"> Settings </md-tooltip>
                     <md-icon md-menu-origin md-svg-icon="img/ic_settings_white_24px.svg"> </md-icon>
                 </md-button>
                 <md-menu-content width="4" class="md-padding">
@@ -71,10 +71,6 @@
     </md-content>
 </md-card><br><br><br>
 
-
-
-
-
 <!--Graduates Summary Graph -->
 <md-card>
     <md-toolbar layout="columns" class="md-primary md-hue-2">
@@ -94,22 +90,21 @@
     </md-content>
 </md-card><br><br><br>
 
-
-
-
-
 <!--  Required Trainee's Tab  -->
 <md-card md-whiteframe="8" ng-cloak>
     <!-- Graduates annual report -->
     <md-content>
         <md-toolbar layout="columns" class="md-primary md-hue-2">
             <div class="md-toolbar-tools">
-                <span>Required Trainee's</span>
+                <span>Batch Projection</span>
                 <span flex> </span>
+                
+                <!--  Generate a New Card Object Button -->
                 <md-button class="md-icon-button" ng-click="rCtrl.genCard()">
-                    <md-tooltip> Add New Card </md-tooltip>
+                    <md-tooltip class="md-title"> Add New Card </md-tooltip>
                     <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
                 </md-button>
+                             
             </div>
         </md-toolbar>
         <div ng-if="rCtrl.batches != undefined" class="md-padding" layout="row">
@@ -117,26 +112,39 @@
                 <div flex-xs="" flex-gt-xs="20" layout="column" ng-repeat="n in rCtrl.cardArr track by $index">
                     <md-card md-theme="{{ showDarkTheme ? 'dark-purple' : 'default' }}" md-theme-watch="">
                         <md-card-content class="md-padding" layout="column">
+                        
                         <md-card-title>
                             <md-card-title-text>
                                 <span class="md-headline"></span>
                             </md-card-title-text>
+                        	
+                        	<span flex> </span>
+                        	
+                        	<!--  Delete Card Button  -->
+                			<md-button class="md-icon-button" ng-click="rCtrl.removeCardClick($index)">
+                        		<md-tooltip class="md-title"> Remove Card </md-tooltip>
+                        		<i class="material-icons" style="color: #FB8C00;">remove_circle</i>
+                   			</md-button>
+                        
                         </md-card-title>
+                        
                         <!--  Needed Trainee's Field  -->
                         <md-input-container>
                             <label>Trainee's Needed:</label>
                             <input ng-model="rCtrl.cardArr[$index].requiredGrads" ng-change="rCtrl.calcReqBatch(rCtrl.cardArr[$index].requiredGrads, $index)" type="number">
                         </md-input-container>
-                        <!--  'Needed-by Date  -->
+                        
+                        <!--  'Needed-by' Date  -->
                         <md-input-container>
                             <label>Hire Date:</label>
-                            <input ng-model="rCtrl.cardArr[$index].reqDate" ng-change="rCtrl.calcStarDate(rCtrl.cardArr[$index].reqDate, $index)" type="date">
+                            <input ng-model="rCtrl.cardArr[$index].reqDate" ng-change="rCtrl.calcStartDate(rCtrl.cardArr[$index].reqDate, $index)" type="date">
                         </md-input-container>
+                        
                         <!--  Batch Curriculum  -->
                         <md-input-container flex>
                             <label>Curriculum:</label>
-                            <md-select ng-model="rCtrl.cardArr[$index].batchType" ng-change="rCtrl.assignCurr( rCtrl.cardArr[$index].batchType, $index)" type="number">
-                                <md-option ng-value="curriculum.id" ng-repeat="curriculum in rCtrl.curricula"> {{ curriculum.name }} </md-option>
+                            <md-select ng-model="rCtrl.cardArr[$index].batchType" ng-change="rCtrl.assignCurr( rCtrl.cardArr[$index].batchType, $index)">
+                                <md-option ng-value="curriculum" ng-repeat="curriculum in rCtrl.curricula"> {{ curriculum.name }} </md-option>
                             </md-select>
                         </md-input-container>
                         <!--  Start Date  -->
@@ -147,7 +155,7 @@
                         <div ng-model="rCtrl.cardArr[$index].requiredBatches">
                             <p> Required Batches: {{ rCtrl.cardArr[$index].requiredBatches }}</p>
                         </div>
-                        <md-card-actions layout="row" layout-align="end center">
+                        <md-card-actions layout="row" layout-align="end center" ng-click="rCtrl.createBatchClick($index)">
                             <md-button class="md-raised md-warn">Create Batch</md-button>
                         </md-card-actions>
                         </md-card-content>
@@ -178,6 +186,11 @@
                         <div ng-model="rCtrl.cardArr[$index].requiredBatches">
                             <p> Cumulative Number of Batches: {{rCtrl.totalCumulativeBatches}}</p>
                         </div>
+                       
+                        <md-card-actions layout="row" layout-align="end center" ng-click="rCtrl.createAllBatchClick()">
+                            <md-button class="md-raised md-warn">Create All Batches</md-button>
+                        </md-card-actions>
+                        
                         </md-card-content>
                     </md-card>
                 </div>
@@ -208,4 +221,5 @@
         <br>
         <br>
     </md-content>
+
 </div><br><br><br>
