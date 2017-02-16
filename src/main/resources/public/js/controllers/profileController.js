@@ -17,6 +17,11 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     // id is hard coded for testing. fix this later
     trainerService.getById(57, function (response) {
         pc.trainer = response;
+        pc.firstName = pc.trainer.firstName;
+        pc.lastName = pc.trainer.lastName;
+        pc.resume = pc.trainer.resume;
+
+        console.log(pc.trainer);
     }, function (error) {
         pc.showToast("Could not fetch trainer.");
     })
@@ -41,19 +46,27 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         }).then(function () {
             pc.showToast("Skill(s) added.");
             pc.rePullSkills();
+            // pc.rePullTrainer();
         }, function () {
-            pc.showToast("Skill(s) not added.")
+            pc.showToast("Skill(s) not added.");
+            // pc.rePullTrainer();
         });
     };
 
     //queries the database for the trainer. to be called after a change to the trainer's properties
     pc.rePullTrainer = function(){
+        console.log("start of rePullTrainer");
+        console.log(pc.trainer);
         pc.trainer = undefined;
         trainerService.getById(57, function (response) {
+            console.log("getById response:");
+            console.log(response);
             pc.trainer = response;
         }, function (error) {
             pc.showToast("Could not fetch trainer.");
         });
+        console.log("end of rePullTrainer:");
+        console.log(pc.trainer);
     };
 
     //queries the database for skills. to be called after a change to the skills array
@@ -67,9 +80,9 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     };
 
     //Simply hard coded for now. Just for testing view
-    pc.firstName = "Profile";
-    pc.lastName = "Test";
-    pc.resume = "file.txt";
-    pc.resumeBaseURL = "https://console.aws.amazon.com/s3/home?region=us-east-1#&bucket=revature-assignforce&prefix=";
+    // pc.firstName = "Profile";
+    // pc.lastName = "Test";
+    // pc.resume = "file.txt";
+    // pc.resumeBaseURL = "https://console.aws.amazon.com/s3/home?region=us-east-1#&bucket=revature-assignforce&prefix=";
 
 })

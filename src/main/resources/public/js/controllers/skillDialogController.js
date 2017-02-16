@@ -4,11 +4,12 @@
 
 var assignforce = angular.module("batchApp");
 
-assignforce.controller("skillDialogCtrl", function ($scope, $mdDialog, skillService, trainerService) {
+assignforce.controller("skillDialogCtrl", function ($scope, $mdDialog, $mdToast, skillService, trainerService) {
 
     var sdc = this;
 
     //functions
+
     //close dialog
     sdc.cancel = function () {
         $mdDialog.cancel();
@@ -28,7 +29,7 @@ assignforce.controller("skillDialogCtrl", function ($scope, $mdDialog, skillServ
 
     // checks box if location/room is in selectedList
     sdc.exists = function(obj) {
-        // sdc.selectedSkills = sdc.trainer.skill;
+        sdc.selectedSkills = sdc.trainer.skill;
         return sdc.selectedSkills.indexOf(obj) > -1;
     };
 
@@ -43,12 +44,27 @@ assignforce.controller("skillDialogCtrl", function ($scope, $mdDialog, skillServ
                 });
             }
 
-            trainerService.update(sdc.trainer, function(){
-                //pc.rePullTrainer();
-            }, function (){
-                sdc.showToast("Error updating trainer.");
+            trainerService.update(sdc.trainer, function(response){
+                // sdc.showToast("Trainer updated.");
+                sdc.rePullTrainer();
+            }, function (error){
+                // sdc.showToast("Error updating trainer.");
             });
             $mdDialog.hide();
         }
+    };
+
+    //queries the database for the trainer. to be called after a change to the trainer's properties
+    sdc.rePullTrainer = function(){
+        console.log("starting sdc.rePullTrainer");
+        console.log(sdc.trainer);
+        //sdc.trainer = undefined;
+        trainerService.getById(57, function (response) {
+            sdc.trainer = response;
+        }, function (error) {
+            sdc.showToast("Could not fetch trainer.");
+        });
+        console.log("ending sdc.rePullTrainer");
+        console.log(sdc.trainer);
     };
 });
