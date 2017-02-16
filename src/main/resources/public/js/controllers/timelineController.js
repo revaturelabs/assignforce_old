@@ -30,6 +30,15 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		
         return trainerDisplayed;
     };
+    
+    tlc.removeBatchlessTrainers = function(trainer) {
+		var trainerIndex = tlc.filteredBatches.findIndex(function (d)
+		{
+			return (d.trainer.trainerID == parseInt(trainer.substring(1, trainer.indexOf(')'))));
+		});
+		
+        return (trainerIndex > -1);
+    };
 
 	//Options for datepicker
 	tlc.options = {
@@ -50,6 +59,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	tlc.trainerListEndIndex = 0;
 	tlc.previousPageButtonDisabled = false;
 	tlc.nextPageButtonDisabled = false;
+	tlc.hideBatchlessTrainers = false;
 	tlc.filteredTrainers;
 	tlc.filteredBatches;
 	
@@ -352,6 +362,11 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 			
 			tlc.filteredBatches = tlc.batches.filter(tlc.removeNoTrainer).filter(tlc.removeIrrelevantBatches);
 			
+			if (tlc.hideBatchlessTrainers)
+			{
+				tlc.filteredTrainers = tlc.trainers.filter(tlc.removeBatchlessTrainers).filter(tlc.removeTrainersOutOfPage);
+			}
+				
 			tlc.filteredTrainers.sort(function(a,b)
 			{
 				var aID = parseInt(a.substring(1, a.indexOf(')')));
@@ -361,8 +376,6 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 				else if(aID > bID){ return 1; }
 				return 0;
 			});
-			
-			
 			
 			projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, yOffset, tlc.filteredBatches, $scope.$parent, calendarService.countWeeks, tlc.filteredTrainers, tlc.selectedCurriculum);
 		}
