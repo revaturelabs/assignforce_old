@@ -44,10 +44,8 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         }).then(function () {
             pc.showToast("Skill(s) added.");
             pc.rePullSkills();
-            // pc.rePullTrainer();
         }, function () {
             pc.showToast("Skill(s) not added.");
-            // pc.rePullTrainer();
         });
     };
 
