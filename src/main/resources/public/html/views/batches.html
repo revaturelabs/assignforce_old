@@ -139,7 +139,7 @@
                 <span flex> </span>
 
                 <md-button class="md-icon-button" ng-click="bCtrl.deleteMultiple()" ng-show="bCtrl.batchesSelected.length >= 2"> 
-                    <md-tooltip> Delete selected </md-tooltip>
+                    <md-tooltip class="md-title"> Delete selected </md-tooltip>
                     <md-icon md-svg-src="img/ic_delete_white_24px.svg"></md-icon>
                 </md-button>
                 
@@ -159,7 +159,7 @@
                                 <th md-column md-order-by="name"><b> Name </b></th>
                                 <th md-column md-order-by="curriculum.name"> Curriculum </th>
                                 <th md-column md-order-by="trainer.firstName"> Trainer / Cotrainer </th>
-                                <th md-column md-order-by="location.name"> Location </th>
+                                <th md-column md-order-by="building.name"> Building </th>
                                 <th md-column md-order-by="room.roomName"> Room </th>
                                 <th md-column md-order-by="startDate"> Start date </th>
                                 <th md-column md-order-by="endDate"> End date </th>
@@ -178,7 +178,7 @@
                                 <td md-cell ng-if="batch.cotrainer == null"> {{ batch.trainer.firstName | limitTo:20 }} {{ batch.trainer.lastName | limitTo:20 }} </td>
                                 <td md-cell ng-if="batch.cotrainer != null"> {{ batch.trainer.firstName | limitTo:20 }} {{ batch.trainer.lastName | limitTo:20 }} / 
                                                                              {{ batch.cotrainer.firstName | limitTo:20 }} {{ batch.cotrainer.lastName | limitTo:20 }} </td>
-                                <td md-cell> {{ batch.location.name | limitTo:20 }} </td>
+                                <td md-cell> Reston 11730 </td>
                                 <td md-cell> {{ batch.room.roomName | limitTo:20 }} </td>
                                 <td md-cell> {{ batch.startDate | date:'MMM. d, yyyy' }} </td>
                                 <td md-cell> {{ batch.endDate | date:'MMM. d, yyyy' }} </td>
