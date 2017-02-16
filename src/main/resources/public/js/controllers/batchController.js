@@ -22,7 +22,6 @@
             if (newState == "create") {
                 bc.batch = batchService.getEmptyBatch();
                 bc.batch.location = bc.findHQ();
-                bc.batch.building = bc.findHQBuilding();
                 //bc.batch.room = bc.setToFirstAvaialableRoom(bc.batch.building);  //setToFirstAvailableRoom not yet defined
             } else {
 
@@ -33,7 +32,9 @@
                 
                 //bc.batch.location   = (incomingBatch.location)   ? incomingBatch.location.id		 : undefined;
                 bc.batch.room       = (incomingBatch.room)       ? incomingBatch.room.roomID         : undefined;
-                bc.batch.building	= (incomingBatch.room.building)	 ? incomingBatch.room.building		 : undefined;
+                //if (bc.batch.room) {bc.batch.building	= (incomingBatch.room.building)	 ? incomingBatch.room.buildingID		 : undefined;}
+                //else {bc.batch.building = 1;}
+                bc.batch.building = 1;
                 bc.batch.location = 1;//locationService.getById(1, function(){}, function(){});//(incomingBatch.room.building.location) ? incomingBatch.room.building.location : undefined;
                                
                 //bc.batch.room.unavailability.startDate = (incomingBatch.room.unavailability.startDate) ? incomingBatch.room.;
@@ -420,6 +421,7 @@
         buildingService.getAll( function(response) {
             //console.log("  (HC)  Retrieving all locations.");
             bc.buildings = response;
+            bc.batch.building = 1;
         }, function(error) {
             //console.log("  (HC)  Failed to retrieve all location with error", error.data.message);
             bc.showToast("Could not fetch buildings.");
