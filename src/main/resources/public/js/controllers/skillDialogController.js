@@ -29,13 +29,13 @@ assignforce.controller("skillDialogCtrl", function ($scope, $mdDialog, $mdToast,
 
     // checks box if location/room is in selectedList
     sdc.exists = function(obj) {
-        sdc.selectedSkills = sdc.trainer.skill;
         return sdc.selectedSkills.indexOf(obj) > -1;
     };
 
     //save updated skill
     sdc.save = function (isValid) {
         if (isValid){
+            //this creates a skill and adds it to the database
             if (sdc.newSkill.name != null) {
                 skillService.update(sdc.newSkill, function () {
                     $mdDialog.hide();
@@ -43,28 +43,10 @@ assignforce.controller("skillDialogCtrl", function ($scope, $mdDialog, $mdToast,
                     $mdDialog.cancel();
                 });
             }
-
-            trainerService.update(sdc.trainer, function(response){
-                // sdc.showToast("Trainer updated.");
-                sdc.rePullTrainer();
-            }, function (error){
-                // sdc.showToast("Error updating trainer.");
-            });
             $mdDialog.hide();
         }
     };
 
-    //queries the database for the trainer. to be called after a change to the trainer's properties
-    sdc.rePullTrainer = function(){
-        console.log("starting sdc.rePullTrainer");
-        console.log(sdc.trainer);
-        //sdc.trainer = undefined;
-        trainerService.getById(57, function (response) {
-            sdc.trainer = response;
-        }, function (error) {
-            sdc.showToast("Could not fetch trainer.");
-        });
-        console.log("ending sdc.rePullTrainer");
-        console.log(sdc.trainer);
-    };
+    //this will be an array of skills
+    sdc.selectedSkills;
 });

@@ -1,7 +1,7 @@
 
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "batchCtrl", function($scope, $timeout, batchService, curriculumService, skillService, trainerService, locationService, /*buildingService, */calendarService, $location, $anchorScroll, $filter, $window) {
+    assignforce.controller( "batchCtrl", function($scope, batchService, curriculumService, trainerService, locationService, buildingService, roomService, calendarService, $filter, $window) {
         var bc = this;
         var availableTrainers;
         
@@ -10,7 +10,6 @@
         }
 
           // functions
-            // calls showToast method of aCtrl
         bc.showToast = function( message ){
             $scope.$parent.aCtrl.showToast( message );
         };
@@ -21,29 +20,31 @@
 
             if (newState == "create") {
                 bc.batch = batchService.getEmptyBatch();
-                bc.batch.location = bc.findHQ();
-                bc.batch.building = bc.findHQBuilding();
-              //bc.batch.room = bc.setToFirstAvaialableRoom(bc.batch.building);
+                bc.batch.location = bc.findHQ();                
             } else {
 
                 bc.batch.id         = (bc.state == "edit")       ? incomingBatch.id                  : undefined;
 
                 bc.batch.name       = incomingBatch.name;
-                bc.batch.curriculum = (incomingBatch.curriculum) ? incomingBatch.curriculum.id       : undefined;
+                bc.batch.curriculum = (incomingBatch.curriculum) ? incomingBatch.curriculum.id       : undefined;               
                 
-                bc.batch.trainer    = (incomingBatch.trainer)    ? incomingBatch.trainer.trainerID   : undefined;
-                bc.batch.cotrainer  = (incomingBatch.cotrainer)  ? incomingBatch.cotrainer.trainerID : undefined;
-                
-              //bc.batch.location   = incomingBatch.location.id;
-              //bc.batch.building	= incomingBatch.building.id;
+                //bc.batch.location   = (incomingBatch.location)   ? incomingBatch.location.id		 : undefined;
                 bc.batch.room       = (incomingBatch.room)       ? incomingBatch.room.roomID         : undefined;
-              //bc.batch.room.unavailability.startDate = incomingBatch.startDate;
-              //bc.batch.room.unavailability.endDate = incomingBatch.endDate;
-              //These need to exist to test...
+                //if (bc.batch.room) {bc.batch.building	= (incomingBatch.room.building)	 ? incomingBatch.room.buildingID		 : undefined;}
+                
+                bc.batch.building = 1;
+                bc.batch.location = 1;                
+                               
+                //bc.batch.room.unavailability.startDate = (incomingBatch.room.unavailability.startDate) ? incomingBatch.room.;
+                //bc.batch.room.unavailability.endDate = (incomingBatch.room.unavailability.endDate) ? incomingBatch.room.unavailability.endDate;
+              
                 
                 bc.batch.startDate  = (incomingBatch.startDate)  ? new Date(incomingBatch.startDate) : undefined;
                 bc.batch.endDate    = (incomingBatch.endDate)    ? new Date(incomingBatch.endDate)   : undefined;
 
+                bc.batch.trainer    = (incomingBatch.trainer)    ? incomingBatch.trainer.trainerID   : undefined;
+                bc.batch.cotrainer  = (incomingBatch.cotrainer)  ? incomingBatch.cotrainer.trainerID : undefined;
+                
                 bc.updateWeeks();
             }
         };
@@ -52,6 +53,8 @@
         bc.updateTrainers = function(trainers, batchStart, batchEnd){
         	bc.availableTrainers = $filter('trainerSelection')(trainers, batchStart, batchEnd);
         };
+        
+        
         
         	// calculates the percentage to which a trainer's skills correspond
         	// to the batch's curriculum.
@@ -67,13 +70,10 @@
 
         		for (c in bc.selectedCurriculum.skill)
         		{
-        			//console.log(c);
         			if (bc.selectedCurriculum.skill.hasOwnProperty(c))
         			{
 	        			for (s in trainer.skill)
 	        			{
-	        				
-	        				//console.log(s);
 	        				if (trainer.skill.hasOwnProperty(s))
 	        				{
 		        				if (c === s)
@@ -102,8 +102,6 @@
         }
 
             // defaults location to Reston branch 
-              // HARD CODED, I couldn't think of a better way to do it that would reliably select only the main branch
-        	//update - it should be determined per admin profile's config settings
         bc.findHQ = function(){
             return 1;
         }
@@ -139,21 +137,14 @@
         // filterRooms should be filtered rooms based on selected building
         // This exact function should be for buildings (if there is only one building at the location, 
         // it should be automatically populated.
-        bc.filterRooms = function(locationID){
-            if(locationID != undefined){
-                return bc.locations.filter(function(location){return location.id===locationID})[0].rooms;
+        bc.filterRooms = function(buildingID){
+            if(buildingID != undefined){
+                return bc.buildings.filter(function(building){return building.id===buildingID})[0].rooms;
             }
             else {
                 return [];
             }
         };
-        
-        /*
-        bc.filterRooms = function(locationID){
-        	if(locationID != undefined){
-        		return bc.locations[locationID + -1].rooms;
-        	}
-        };*/
 
             // counts the number of weeks between the start and end dates
         bc.updateWeeks = function(){
@@ -413,11 +404,20 @@
         }, function(error) {
             bc.showToast( "Could not fetch locations.");
         });
-        /*
-        buildingService.getAll(function(response){
-        	bc.buildings = response;
+        buildingService.getAll( function(response) {
+            //console.log("  (HC)  Retrieving all locations.");
+            bc.buildings = response;
+            bc.batch.building = 1;
         }, function(error) {
-        	bc.showToast("Could not fetch buildings.");
-        });*/
+            //console.log("  (HC)  Failed to retrieve all location with error", error.data.message);
+            bc.showToast("Could not fetch buildings.");
+        });
+        roomService.getAll( function(response) {
+            //console.log("  (HC)  Retrieving all rooms.");
+            bc.rooms = response;
+        }, function(error) {
+            //console.log("  (HC)  Failed to retrieve all rooms with error", error.data.message);
+            bc.showToast("Could not fetch rooms.");
+        });
         
     })

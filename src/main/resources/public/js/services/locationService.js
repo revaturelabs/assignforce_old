@@ -17,12 +17,12 @@ app.service( "locationService", function($resource) {
         Location.query(success, error);
     };
 
-    ls.getById = function(id, success){
+    ls.getById = function(id, success, error){
         Location.get({id: id}, success, error);
     };
 
     ls.update = function(location, success, error){
-        location.$update(success, error);
+        Location.update(location, success, error);
     };
 
     //I am not really changing ls
