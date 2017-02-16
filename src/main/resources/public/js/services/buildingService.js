@@ -26,7 +26,7 @@ app.service( "buildingService", function($resource) {
     };
 
     bs.update = function(building, success, error){
-        building.$update(success, error);
+        Building.update(building, success, error);
     };
 
     bs.delete = function(building, success, error){

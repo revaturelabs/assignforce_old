@@ -4,7 +4,7 @@
 
 var assignforce = angular.module("batchApp");
 
-assignforce.controller("skillDialogCtrl", function ($scope, $mdDialog, skillService) {
+assignforce.controller("skillDialogCtrl", function ($scope, $mdDialog, skillService, trainerService) {
 
     var sdc = this;
 
@@ -14,13 +14,39 @@ assignforce.controller("skillDialogCtrl", function ($scope, $mdDialog, skillServ
         $mdDialog.cancel();
     };
 
+    // adds/removes skill from selectedSkills
+    sdc.toggle = function(obj) {
+        sdc.selectedSkills = sdc.trainer.skill;
+
+        var idx = sdc.selectedSkills.indexOf(obj);
+        if (idx == -1) {
+            sdc.selectedSkills.push(obj);
+        } else {
+            sdc.selectedSkills.splice(idx, 1);
+        }
+    };
+
+    // checks box if location/room is in selectedList
+    sdc.exists = function(obj) {
+        // sdc.selectedSkills = sdc.trainer.skill;
+        return sdc.selectedSkills.indexOf(obj) > -1;
+    };
+
     //save updated skill
     sdc.save = function (isValid) {
         if (isValid){
-            skillService.update(sdc.newSkill, function () {
-                $mdDialog.hide();
-            }, function () {
-                $mdDialog.cancel();
+            if (sdc.newSkill.name != null) {
+                skillService.update(sdc.newSkill, function () {
+                    $mdDialog.hide();
+                }, function () {
+                    $mdDialog.cancel();
+                });
+            }
+
+            trainerService.update(sdc.trainer, function(){
+                //pc.rePullTrainer();
+            }, function (){
+                sdc.showToast("Error updating trainer.");
             });
             $mdDialog.hide();
         }
