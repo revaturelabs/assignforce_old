@@ -72,11 +72,11 @@
         			//console.log(c);
         			if (bc.selectedCurriculum.skill.hasOwnProperty(c))
         			{
-	        			for (s in trainer.skill)
+	        			for (s in trainer.skills)
 	        			{
 	        				
 	        				//console.log(s);
-	        				if (trainer.skill.hasOwnProperty(s))
+	        				if (trainer.skills.hasOwnProperty(s))
 	        				{
 		        				if (c === s)
 		        				{
