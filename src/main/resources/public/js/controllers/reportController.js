@@ -94,9 +94,8 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
             for(var x = 0; x < rc.batches.length; x++){
                 date = new Date(rc.batches[x]['endDate']);
                 if (rc.batches[x]['curriculum'].name && curriculum && (date.getMonth() == month) && (date.getFullYear() == rc.year) && (rc.batches[x]['curriculum'].id == curriculum.id)) {
-                    // if ((date.getMonth() == month) && (date.getFullYear() == rc.year) && (rc.batches[x]['curriculum'].id == curriculum.id)) {
                     total += rc.graduates;
-                    // }
+               
                 }
             }
             summary.push(total);
@@ -310,7 +309,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     rc.removeCardClick = function(index){
     	//  **implement code here**
     	
-    	
+    	index = index + 1;
     	
     	
     	
@@ -376,35 +375,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
      */
     
     rc.createBatchClick = function(index){
-    	
-    	// Create 'can submit' flag here.  '0' implies successful submit, '1' implies submission failure.
-    	//var canSubmit = 1;
-    	
-    	// Create 'userValidation' flag here.  '0' implies valid user confirmation, '1' implies user confirmation rejection. 
-    	//var userValidation = 1;
-    	
-    	// Verify 'start date' isn't null and isn't before 'current date'.
-    	//		If 'start date' is null, or 'start date' is before 'current date', set 'canSubmit' flag to 1.
-    	//			else, set canSubmit flag to '0';
-    	
-    	// Verify that 'curriculum' is not null & is a valid curriculum.
-    	//		If curriculum is null or isn't a valid curriculum, set 'canSubmit' flag to 1.
-    	
-    	
-    	// Assert that the 'canSubmit' flag is set to 0.
-    	//		If the 'canSubmit' flag is '0', display splash pop-up to request submit confirmation from the user.
-    	//		If the 'canSubmit' flag is '1', display a 'failure' toast and break out of loop. 	
-    	 	
-    	/** 
-    	 * if (( canSubmit == 0 ) && ( userValidation == 0 )){
-    	 *  	// ** Do normal batch creation stuff... **
-    	 *  } else {
-    	 *  	// **  Display failure toast here  **
-    	 *  	// **  Break out of method call here  **
-    	 *  }
-    	 *  	
-    	 */
-
+ 
     	//Create a batch object in the Reports Controller, using the batchService.
         rc.newBatch = batchService.getEmptyBatch();
         
@@ -479,11 +450,9 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 		            
 		            //Create batch method called here...
 		            batchService.create(rc.newBatch, success, error);
-		        }
-	            
+		        }	        
         	} 
-	            
-        }
+       }
         
        function success (){
        	 rc.showToast("Successfully created Batch.");
@@ -538,7 +507,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
      * The 'newObj' object, and it's assignments, are used to generate new objects
      * 	to be placed within the 'cardArr' array object.
      */
-    //rc.newObj = new Object();
+
     rc.newObj = {};
     rc.newObj.requiredGrads = rc.requiredGrads;
     rc.newObj.reqDate = rc.reqDate;
