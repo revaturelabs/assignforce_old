@@ -97,14 +97,11 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         skill.id = pc.skills[1].id;
         skill.name = pc.skills[1].name;
         skill.active = true;
-        console.log(skill);
-        console.log(pc.trainer);
         pc.trainer.skills.push(skill);
-        console.log(pc.trainer);
         trainerService.update(pc.trainer, function () {
-            console.log("pass");
+            pc.showToast("pass");
         }, function (error) {
-            console.log(error);
+            pc.showToast(error);
         })
     };
 
@@ -112,7 +109,6 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     pc.addSkill = function (skill) {
         for(var i = 0; i < pc.skillsList.length; i++){
             if(pc.skillsList[i].name == skill.name){
-                console.log(skill);
                 pc.skillsList.splice(i, 1);
             }
         }
