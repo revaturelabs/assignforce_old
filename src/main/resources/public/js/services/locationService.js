@@ -17,7 +17,7 @@ app.service( "locationService", function($resource) {
         Location.query(success, error);
     };
 
-    ls.getById = function(id, success){
+    ls.getById = function(id, success, error){
         Location.get({id: id}, success, error);
     };
 
