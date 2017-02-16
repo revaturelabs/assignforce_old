@@ -268,7 +268,7 @@
 
 
 <div ng-if="rCtrl.batches != undefined" id="accordionDynamic" class="accordionWrap">
-    <md-card class="accordion-block" ng-repeat="option in options" ng-class="{'active-block':$first}">
+    <md-card class="accordion-block" ng-repeat="option in options" ng-class="{'active-block':$first}" md-whiteframe="8" ng-cloak>
         <md-content>
             <md-toolbar accordion-dynamic class="md-toolbar" ng-class="{active:$first}">{{option.title}}</md-toolbar>
             <div class="content">
@@ -303,4 +303,4 @@
 
 
 
-<div class="hc-pie" items="limitedIdeas"></div><br><br><br>
+<div class="hc-pie"></div><br><br><br>
