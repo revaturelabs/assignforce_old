@@ -240,12 +240,6 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
         //Calculates the total number of desired batches, across all sections.
         rc.cumulativeBatches();
 
-        /**
-         * Returns the reqBatches variable.  Needs to be both the 'reqStartDate' and 
-         * 		the 'reqBatches', at a later point. 
-         */
-        return neededBatches;
-
     };
 
     /*************************************************************/
@@ -262,8 +256,10 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 
         rc.cardArr[index].batchType = bType;
 
-        if(rc.cardArr[index].requiredGrads > 0){
+        if(rc.cardArr[index].requiredGrads > 0) {
+        	
             rc.cumulativeBatches();
+        
         }
     };
 
@@ -280,7 +276,6 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 
     rc.genCard = function(){
 
-    	//var temp = new Object();
         var temp = {};
     	
     	temp.requiredGrads = rc.requiredGrads;
@@ -307,12 +302,12 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
      */
     
     rc.removeCardClick = function(index){
-    	//  **implement code here**
+   
+    	//Removes a card object from the array at a specifically designated index.
+    	rc.cardArr.splice(index, 1);
     	
-    	index = index + 1;
-    	
-    	
-    	
+    	//Re-evaluates the cumulative batches.
+    	rc.cumulativeBatches();
     	
     };
     
