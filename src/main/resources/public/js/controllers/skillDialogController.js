@@ -4,11 +4,12 @@
 
 var assignforce = angular.module("batchApp");
 
-assignforce.controller("skillDialogCtrl", function ($scope, $mdDialog, skillService, trainerService) {
+assignforce.controller("skillDialogCtrl", function ($scope, $mdDialog, $mdToast, skillService) {
 
     var sdc = this;
 
     //functions
+
     //close dialog
     sdc.cancel = function () {
         $mdDialog.cancel();
@@ -28,7 +29,6 @@ assignforce.controller("skillDialogCtrl", function ($scope, $mdDialog, skillServ
 
     // checks box if location/room is in selectedList
     sdc.exists = function(obj) {
-        // selectedSkills equals trainers skill
         return sdc.selectedSkills.indexOf(obj) > -1;
     };
 
@@ -43,13 +43,6 @@ assignforce.controller("skillDialogCtrl", function ($scope, $mdDialog, skillServ
                     $mdDialog.cancel();
                 });
             }
-            //end
-            sdc.trainer.skill = sdc.selectedSkills;
-            trainerService.update(sdc.trainer, function(){
-                //rePullTrainer function will be called
-            }, function (){
-                sdc.showToast("Error updating trainer.");
-            });
             $mdDialog.hide();
         }
     };
