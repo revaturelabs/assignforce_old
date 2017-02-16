@@ -28,13 +28,14 @@ assignforce.controller("skillDialogCtrl", function ($scope, $mdDialog, skillServ
 
     // checks box if location/room is in selectedList
     sdc.exists = function(obj) {
-        // sdc.selectedSkills = sdc.trainer.skill;
+        // selectedSkills equals trainers skill
         return sdc.selectedSkills.indexOf(obj) > -1;
     };
 
     //save updated skill
     sdc.save = function (isValid) {
         if (isValid){
+            //this creates a skill and adds it to the database
             if (sdc.newSkill.name != null) {
                 skillService.update(sdc.newSkill, function () {
                     $mdDialog.hide();
@@ -42,13 +43,17 @@ assignforce.controller("skillDialogCtrl", function ($scope, $mdDialog, skillServ
                     $mdDialog.cancel();
                 });
             }
-
+            //end
+            sdc.trainer.skill = sdc.selectedSkills;
             trainerService.update(sdc.trainer, function(){
-                //pc.rePullTrainer();
+                //rePullTrainer function will be called
             }, function (){
                 sdc.showToast("Error updating trainer.");
             });
             $mdDialog.hide();
         }
     };
+
+    //this will be an array of skills
+    sdc.selectedSkills;
 });

@@ -23,7 +23,6 @@
                     <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
                     <input class="ng-hide" type="file"/>
                 </md-button>
-
             </div>
         </md-toolbar>
 
@@ -34,41 +33,45 @@
             <div layout="column">
 
                 <div layout="row" flex layout-fill>
-
                     <form class="nameForm" name="nameForm" ng-submit="pCtrl.updateName(nameForm.$valid)" novalidate>
-
                         <md-input-container flex>
                             <label> First Name </label>
-                            <input ng-model="pCtrl.firstName" required>
+                            <input ng-model="pCtrl.trainer.firstName" required>
                         </md-input-container>
 
                         <md-input-container flex>
                             <label> Last Name </label>
-                            <input ng-model="pCtrl.lastName" required>
+                            <input ng-model="pCtrl.trainer.lastName" required>
                         </md-input-container>
-
                     </form>
-
                 </div>
 
                 <div layout="row">
-
                     <!--need to figure out accessing the file, as far as permissions go-->
                     <md-label for="resumeLink"> Current Resume: </md-label>
-                    <a ng-if="!!pCtrl.resume" ng-href="{{pCtrl.resumeBaseURL + pCtrl.resume}}" id="resumeLink">{{pCtrl.resume}}</a>
+                    <md-label ng-if="pCtrl.trainer.resume != null"> {{pCtrl.trainer.resume}}</md-label>
+                    <md-label ng-if="pCtrl.trainer.resume == null">No resume on file</md-label> <br>
+                </div>
 
-                    <a ng-if="!pCtrl.resume" id="noResume" >No resume on file</a>
-
+                <div layout="row">
+                    <input class="ng-hide" id="input-file-id"  type="file" file-model="pCtrl.myFile">
+                    <label for="input-file-id" class="md-button md-icon-button">
+                        <md-icon md-menu-origin class="material-icons" style="color: #FB8C00;"> add_circle </md-icon>
+                        <md-tooltip> Add/Update Resume </md-tooltip>
+                    </label>
+                    <div ng-if="pCtrl.myFile != undefined">
+                        <label>{{pCtrl.myFile.name}}</label>
+                        <md-button ng-click="pCtrl.uploadResume()">Update</md-button>
+                    </div>
                 </div>
 
             </div>
 
         </md-content>
 
+        <!--skills section-->
         <md-content>
-
             <md-toolbar class="md-primary md-hue-2" layout="columns">
-
                 <div class="md-toolbar-tools">
 
                     <span> Skills </span>
@@ -83,25 +86,23 @@
                 </div>
             </md-toolbar>
 
+            <span ng-if="pCtrl.trainer.skill == undefined || pCtrl.trainer.skill.length == 0"> You have no skills selected. Try adding some. </span>
 
-            <md-list ng-if="pCtrl.trainer.skill != undefined">
+            <!--adding skill using the skill dialog-->
+            <!--<md-list ng-if="pCtrl.trainer.skill != undefined">-->
+                <!--<md-list-item class="md-2-line" md-ink-ripple="#ff0000" ng-repeat="skill in pCtrl.trainer.skill">-->
+                    <!--<md-icon md-svg-icon="img/ic_assessment_black_24px.svg"> </md-icon>-->
+                    <!--<div class="md-list-item-text" layout="column">-->
+                        <!--<h3> {{skill.name}} </h3>-->
+                    <!--</div>-->
+                <!--</md-list-item>-->
+            <!--</md-list>-->
 
-                <md-list-item class="md-2-line" md-ink-ripple="#ff0000" ng-repeat="skill in pCtrl.trainer.skill">
 
-                    <md-icon md-svg-icon="img/ic_assessment_black_24px.svg"> </md-icon>
-                    <div class="md-list-item-text" layout="column">
-                        <h3> {{skill.name}} </h3>
-                    </div>
-
-                </md-list-item>
-
-            </md-list>
-
-            <span ng-if="pCtrl.trainer.skill == undefined"> You have no skills selected. Try adding some. </span>
 
         </md-content>
 
-    <md-content>
+        <md-content>
 
             <md-toolbar class="md-primary md-hue-2" layout="columns">
                 <div class="md-toolbar-tools">
