@@ -75,9 +75,10 @@
         		{
         			if (bc.selectedCurriculum.skill.hasOwnProperty(c))
         			{
-	        			for (s in trainer.skill)
-	        			{
-	        				if (trainer.skill.hasOwnProperty(s))
+	        			for (s in trainer.skills)
+	        			{	        				
+	        				if (trainer.skills.hasOwnProperty(s))
+
 	        				{
 		        				if (c === s)
 		        				{

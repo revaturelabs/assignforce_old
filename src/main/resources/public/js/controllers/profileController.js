@@ -44,21 +44,24 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         }).then(function () {
             pc.showToast("Skill(s) added.");
             pc.rePullSkills();
-            // pc.rePullTrainer();
         }, function () {
             pc.showToast("Skill(s) not added.");
-            // pc.rePullTrainer();
         });
     };
 
     pc.uploadResume = function () {
+
         //This initializes a bucket with the keys obtained from Creds rest controller
         var bucket = new AWS.S3({
+            apiVersion: '2006-03-01',
             accessKeyId: pc.creds.ID,
             secretAccessKey: pc.creds.SecretKey,
-            region: 'us-east-1'
+            region: 'us-east-1',
+            sslEnabled: false,
+            httpOptions:{
+                proxy: 'http://dev.assignforce.revature.pro/'
+            }
         });
-
         //set the parameters needed to put an object in the aws s3 bucket
         var params = {
             Bucket: pc.creds.BucketName,
@@ -82,10 +85,39 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
             pc.showToast("Resume upload finished");
         }, function () {
             pc.showToast("Failed to upload resume");
+            return;
         });
 
-        //set myfile to undefined so that update and label will be hidden in the html
+        //set my file to undefined so that update and label will be hidden in the html
         pc.myFile = undefined;
+    };
+
+    pc.saveTSkills = function () {
+        var skill = skillService.getEmptySkill();
+        skill.id = pc.skills[1].id;
+        skill.name = pc.skills[1].name;
+        skill.active = true;
+        pc.trainer.skills.push(skill);
+        trainerService.update(pc.trainer, function () {
+            pc.showToast("pass");
+        }, function (error) {
+            pc.showToast(error);
+        })
+    };
+
+    //add a skill to the current trainer
+    pc.addSkill = function (skill) {
+        for(var i = 0; i < pc.skillsList.length; i++){
+            if(pc.skillsList[i].name == skill.name){
+                pc.skillsList.splice(i, 1);
+            }
+        }
+
+        pc.trainer.skills.push(skill);
+    };
+
+    pc.removeSkill = function (skill) {
+
     };
 
     //queries the database for skills. to be called after a change to the skills array
@@ -110,6 +142,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
 
     // data gathering
 
+
     // id is hard coded for testing. fix this later
     trainerService.getById(3, function (response) {
         pc.trainer = response;
@@ -125,15 +158,15 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
 
     skillService.getAll( function(response) {
         pc.skills = response;
+        pc.skillsList = pc.skills;
     }, function () {
         pc.showToast("Could not fetch skills.");
     });
 
     //Simply hard coded for now. Just for testing view
-    pc.firstName = "Profile";
-    pc.lastName = "Test";
-    pc.resume = "file.txt";
-    pc.resumeBaseURL = "https://console.aws.amazon.com/s3/home?region=us-east-1#&bucket=revature-assignforce&prefix=";
+    pc.test = [];
     pc.myFile;
     pc.creds;
+    pc.skills;
+    pc.skillsList;
 });

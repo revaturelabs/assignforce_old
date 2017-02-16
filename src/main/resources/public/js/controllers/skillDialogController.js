@@ -4,7 +4,7 @@
 
 var assignforce = angular.module("batchApp");
 
-assignforce.controller("skillDialogCtrl", function ($scope, $mdDialog, $mdToast, skillService, trainerService) {
+assignforce.controller("skillDialogCtrl", function ($scope, $mdDialog, $mdToast, skillService) {
 
     var sdc = this;
 
