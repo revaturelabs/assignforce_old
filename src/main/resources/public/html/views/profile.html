@@ -85,7 +85,6 @@
 
                 </div>
             </md-toolbar>
-
             <span ng-if="pCtrl.trainer.skill == undefined || pCtrl.trainer.skill.length == 0"> You have no skills selected. Try adding some. </span>
 
             <!--adding skill using the skill dialog-->
@@ -97,8 +96,6 @@
                     <!--</div>-->
                 <!--</md-list-item>-->
             <!--</md-list>-->
-
-
 
         </md-content>
 
@@ -118,7 +115,20 @@
                 </div>
             </md-toolbar>
 
+            <span ng-if="pCtrl.trainer.certifcation == undefined || pCtrl.trainer.certification.length == 0">
+                You have no certifications selected. Try adding some.
+            </span>
 
+            <md-list ng-if="pCtrl.trainer.certification != undefined">
+                <md-list-item class="md-2-line" md-ink-ripple="#ff0000" ng-repeat="cert in pCtrl.trainer.certification">
+
+                    <md-icon md-svg-icon="img/ic_sim_card_black_24px.svg"> </md-icon>
+                    <div class="md-list-item-text" layout="column">
+                        <h3> {{skill.name}} </h3>
+                    </div>
+
+                </md-list-item>
+            </md-list>
 
         </md-content>
 
