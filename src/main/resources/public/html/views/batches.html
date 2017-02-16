@@ -254,7 +254,7 @@
 	                <div class="md-padding" layout="columns">
                         <md-input-container flex="none">
                         	<label> Trainers Per Page (0 to see All) </label>
-                            <input type = "number" nmin = "0" max = "tlCtrl.maxTrainerPages" ng-model="tlCtrl.trainersPerPage" ng-change="tlCtrl.changeTrainersPerPage(); tlCtrl.repull()" ng-style="{'width': 320 + 'px'}"/>
+                            <input type = "number" min = "0" max = "tlCtrl.maxTrainerPages" ng-model="tlCtrl.trainersPerPage" ng-change="tlCtrl.changeTrainersPerPage(); tlCtrl.repull()" ng-style="{'width': 320 + 'px'}"/>
                         </md-input-container>
                         
                         <div class="md-padding" layout="columns">
@@ -302,6 +302,12 @@
 	                            <md-tooltip class="md-title"> Jump to Last Page </md-tooltip>
 	                            <md-icon md-svg-src="img/ic_skip_next_white_24px.svg"></md-icon>
 	                        </md-button>
+	                        
+	                        <div flex> </div>
+	                        
+	                        <md-checkbox aria-label="Hide Batchless Trainers?" ng-model="tlCtrl.hideBatchlessTrainers" ng-change="tlCtrl.repull()">
+	                        	Hide Batchless Trainers?
+	                        </md-checkbox>
                         </div>
 	                </div>
                 </div>
