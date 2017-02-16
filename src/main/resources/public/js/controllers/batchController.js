@@ -165,15 +165,6 @@
                 return [];
             }
         };
-        
-        /*******************************************************************/
-        
-        /*
-        bc.filterRooms = function(locationID){
-        	if(locationID != undefined){
-        		return bc.locations[locationID + -1].rooms;
-        	}
-        };*/
 
         /*******************************************************************/
         
