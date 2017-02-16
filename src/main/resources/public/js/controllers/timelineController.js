@@ -8,8 +8,21 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     var tlc = this;
 
     tlc.removeNoTrainer = function(batch) {
-        return (batch.trainer && batch.startDate && batch.endDate);
+        return (batch.trainer);
     };
+    
+    tlc.removeDateless = function(batch) {
+        return (batch.startDate && batch.endDate);
+    };
+    
+    tlc.removeOutOfDateRange = function(batch) {
+    	return ((new Date(batch.startDate) <= tlc.maxDate) && (new Date(batch.endDate) >= tlc.minDate));
+    }
+    
+    tlc.removeUnmatchingCurriculum = function(batch)
+    {
+    	return (tlc.selectedCurriculum == 0 || (!(angular.isUndefined(batch.curriculum)) && (batch.curriculum.id == tlc.selectedCurriculum)));
+    }
     
     tlc.removeIrrelevantBatches = function(batch) {
 		var trainerIndex = tlc.filteredTrainers.findIndex(function (d)
@@ -29,6 +42,15 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		var trainerDisplayed = (tlc.trainerListEndIndex == 0 || (trainerIndex > -1 && trainerIndex >= tlc.trainerListStartIndex && trainerIndex < tlc.trainerListEndIndex));
 		
         return trainerDisplayed;
+    };
+    
+    tlc.removeBatchlessTrainers = function(trainer) {
+		var trainerIndex = tlc.filteredBatches.findIndex(function (d)
+		{
+			return (d.trainer.trainerID == parseInt(trainer.substring(1, trainer.indexOf(')'))));
+		});
+		
+        return (trainerIndex > -1);
     };
 
 	//Options for datepicker
@@ -50,6 +72,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	tlc.trainerListEndIndex = 0;
 	tlc.previousPageButtonDisabled = false;
 	tlc.nextPageButtonDisabled = false;
+	tlc.hideBatchlessTrainers = false;
 	tlc.filteredTrainers;
 	tlc.filteredBatches;
 	
@@ -350,8 +373,13 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		{
 			tlc.filteredTrainers = tlc.trainers.filter(tlc.removeTrainersOutOfPage);
 			
-			tlc.filteredBatches = tlc.batches.filter(tlc.removeNoTrainer).filter(tlc.removeIrrelevantBatches);
+			tlc.filteredBatches = tlc.batches.filter(tlc.removeNoTrainer).filter(tlc.removeIrrelevantBatches).filter(tlc.removeDateless).filter(tlc.removeOutOfDateRange).filter(tlc.removeUnmatchingCurriculum);
 			
+			if (tlc.hideBatchlessTrainers)
+			{
+				tlc.filteredTrainers = tlc.trainers.filter(tlc.removeBatchlessTrainers).filter(tlc.removeTrainersOutOfPage);
+			}
+				
 			tlc.filteredTrainers.sort(function(a,b)
 			{
 				var aID = parseInt(a.substring(1, a.indexOf(')')));
@@ -362,9 +390,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 				return 0;
 			});
 			
-			
-			
-			projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, yOffset, tlc.filteredBatches, $scope.$parent, calendarService.countWeeks, tlc.filteredTrainers, tlc.selectedCurriculum);
+			projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, yOffset, tlc.filteredBatches, $scope.$parent, calendarService.countWeeks, tlc.filteredTrainers);
 		}
 	}
 });
@@ -376,7 +402,7 @@ function trainerColumnName(trainer)
 }
 
 // Draw timeline
-function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, parentScope, numWeeks, trainerNames, selectedCurriculum){
+function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, parentScope, numWeeks, trainerNames){
 	//Timeline variables
 	var margin = {top: 80, right: 16, bottom: 32, left:72},
 	width = windowWidth - margin.left - margin.right,
@@ -432,14 +458,7 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 			  });
 			}
 	
-	//Filter & sort data for that in range of Timeline
-	//Also for the selected curriculum type.
-	timelineData = timelineData.filter(function(batch){
-		var dateInRange = ((new Date(batch.startDate) <= maxDate) && (new Date(batch.endDate) >= minDate));
-		var matchingCurriculum = (selectedCurriculum == 0 || (!(angular.isUndefined(batch.curriculum)) && (batch.curriculum.id == selectedCurriculum)));
-
-		return (dateInRange && matchingCurriculum);
-	});
+	//Sort data for Timeline
 	
 	timelineData.sort(function(a,b){
 		if(new Date(a.startDate) < new Date(b.startDate)){
