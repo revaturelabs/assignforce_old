@@ -1,4 +1,3 @@
-
 var app = angular.module("batchApp");
 
 app.service('batchService', function($resource) {
