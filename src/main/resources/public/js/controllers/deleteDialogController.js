@@ -55,7 +55,7 @@
           // delete rooms/locations
         dc.delete = function(){
             dc.thinking = true;
-            var delList = dc.list;//wth is list coming from?
+            var delList = dc.list;
             dc.deleteHelper(delList);
         };
 
@@ -66,8 +66,11 @@
                 $mdDialog.hide();
                 return;
             }
-
-            var elem = delList.shift();
+            //TODO LOOP HERE
+            for(var i = 0; i < delList.length; i++){
+            	
+            var elem = delList[i];
+            console.log(elem);
             //if a location was selected, recurse building/room inactivation
             if (Array.isArray(elem.buildings)){
             	//if it has buildings
@@ -79,7 +82,7 @@
             					room.active = false;
             					
             					roomService.update( room, function(){
-            						$mdDialog.hide();
+            						//$mdDialog.hide();
             		            }, function(error){
             		                $mdDialog.cancel();
             		            });
@@ -88,7 +91,7 @@
             			}
             			building.active = false;
             			buildingService.update( building, function(){   
-            				$mdDialog.hide();
+            				//$mdDialog.hide();
                         }, function(error){
                             $mdDialog.cancel();
                         });
@@ -97,7 +100,7 @@
             	elem.active = false;
                 //runs the locationService update, concentric with another deleteHelper call upon success.
                 locationService.update( elem, function(){
-                	$mdDialog.hide();
+                	//$mdDialog.hide();
                     //dc.deleteHelper(delList);
                 }, function(error){
                 	$mdDialog.cancel();
@@ -109,14 +112,14 @@
                 elem.rooms.forEach( function(room){
                     room.active = false;
                     roomService.update( room, function(){
-                    	$mdDialog.hide();
+                    	//$mdDialog.hide();
 		            }, function(error){
 		                $mdDialog.cancel();
 		            });
                 });
                 elem.active = false;
                 buildingService.update( elem, function(){   
-                	$mdDialog.hide();
+                	//$mdDialog.hide();
                 }, function(error){
                     $mdDialog.cancel();
                 });
@@ -125,12 +128,14 @@
             else {
             	elem.active = false;
             	roomService.update( elem, function(){
-            		$mdDialog.hide();
+            		//$mdDialog.hide();
 	            }, function(error){
 	                $mdDialog.cancel();
 	            });
             }
-        };
+           }
+            $mdDialog.hide();
+          };
             
             //leftovers for reference:
             	

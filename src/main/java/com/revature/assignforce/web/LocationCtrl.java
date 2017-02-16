@@ -16,10 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.assignforce.domain.Building;
 import com.revature.assignforce.domain.Location;
-import com.revature.assignforce.domain.Room;
 import com.revature.assignforce.domain.dto.LocationDTO;
 import com.revature.assignforce.domain.dto.ResponseErrorDTO;
-import com.revature.assignforce.service.DaoService;
 
 @RestController
 @RequestMapping("/api/v2/location")
