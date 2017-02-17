@@ -103,14 +103,24 @@
                     	<md-input-container flex>                       
                             <label> Trainer </label>
                             <md-select ng-model="bCtrl.batch.trainer">
-                                <md-option ng-value="trainer.trainerID" ng-repeat="trainer in bCtrl.availableTrainers"> {{ trainer.firstName }}  {{ trainer.lastName }} ({{ bCtrl.calcTrainerCurriculumRatio(trainer, bCtrl.batch.curriculum)}} % skill match to selected curriculum.)</md-option>
+                                <div ng-repeat="trainer in bCtrl.availableTrainers">
+                                    <md-option ng-value="trainer.trainerId"> {{ trainer.firstName }}  {{ trainer.lastName }} ({{ bCtrl.calcTrainerCurriculumRatio(trainer, bCtrl.batch.curriculum)}} % skill match to selected curriculum.)</md-option>
+                                    <td colspan="9" class="progressBar">
+                                        <md-progress-linear class="md-accent" style="height: 2px" md-mode="determinate" value="{{ bCtrl.calcTrainerCurriculumRatio(trainer, bCtrl.batch.curriculum) }}"> </md-progress-linear>
+                                    </td>
+                                </div>
                             </md-select>
                     	</md-input-container>
 
                     	<md-input-container flex>                       
                             <label> Co-Trainer </label>
                             <md-select ng-model="bCtrl.batch.cotrainer">
-                                <md-option ng-value="cotrainer.trainerID" ng-repeat="cotrainer in bCtrl.trainers"> {{ cotrainer.firstName }}  {{ cotrainer.lastName }}</md-option>
+                                <div ng-repeat="cotrainer in bCtrl.trainers">
+                                    <md-option ng-value="cotrainer.trainerId"> {{ cotrainer.firstName }}  {{ cotrainer.lastName }} ({{ bCtrl.calcTrainerCurriculumRatio(cotrainer, bCtrl.batch.curriculum)}} % skill match to selected curriculum.)</md-option>
+                                    <td colspan="9" class="progressBar">
+                                        <md-progress-linear class="md-accent" style="height: 2px" md-mode="determinate" value="{{ bCtrl.calcTrainerCurriculumRatio(cotrainer, bCtrl.batch.curriculum) }}"> </md-progress-linear>
+                                    </td>
+                                </div>
                             </md-select>
                     	</md-input-container>
                         
