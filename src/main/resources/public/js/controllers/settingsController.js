@@ -11,8 +11,6 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
     };
 
     sc.resetSettings = function () {
-        console.log(sc.test);
-
         for(var i = 0; i < sc.settings.length; i++){
             switch(sc.settings[i].settingId){
                 case 1:
@@ -22,10 +20,7 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
                 case 2:
                     sc.settings[i].settingValue = 12;
                     break;
-                case 3:
-                    sc.settings[i].settingValue = 1;
-                    break;
-                case 4:
+                case 3, 4:
                     sc.settings[i].settingValue = 1;
                     break;
                 case 5:
@@ -61,7 +56,6 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
                 sc.settings[i].settingValue = sc.defaultLocation.id;
             }
             //save each setting
-            console.log(sc.settings);
             settingService.update(sc.settings[i]);
         }
 

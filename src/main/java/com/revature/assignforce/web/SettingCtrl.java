@@ -61,13 +61,6 @@ public class SettingCtrl {
     public Object updateSetting(@RequestBody SettingDTO in ){
 
         int ID = in.getSettingId();
-        List<Setting> settings = settingService.getAllItems();
-//fix this should be getting the id now
-//        for (int i = 0; i < settings.size(); i++){
-//            if (in.getSettingName().equals(settings.get(i).getSettingName())){
-//                ID = settings.get(i).getSettingId();
-//            }
-//        }
         String name = in.getSettingName();
         double value = in.getSettingValue();
 
