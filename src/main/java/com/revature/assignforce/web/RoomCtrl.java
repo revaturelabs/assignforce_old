@@ -85,7 +85,6 @@ public class RoomCtrl {
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object deleteRoom( @PathVariable("id") int ID ) {
 		
-		//Room delete = roomService.getOneItem(ID);
 		roomService.deleteItem(ID);
 		return new ResponseEntity<Object>(null, HttpStatus.OK);
 	}
@@ -98,7 +97,7 @@ public class RoomCtrl {
 		List<Room> all = roomService.getAllItems();
 		if (all == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Fetching all rooms failed."), HttpStatus.NOT_FOUND);
-		} else if (all.isEmpty() == true) {
+		} else if (all.isEmpty()) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No rooms available."), HttpStatus.NOT_FOUND);
 		} else {
 			return new ResponseEntity< List<Room> >(all, HttpStatus.OK);

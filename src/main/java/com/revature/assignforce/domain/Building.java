@@ -39,6 +39,7 @@ public class Building implements Activatable {
 	private List<Room> rooms;
 
 	public Building() {
+		//No arg constructor
 	}
 
 	public Building(int ID, String name, List<Room> rooms, boolean active, int location) {

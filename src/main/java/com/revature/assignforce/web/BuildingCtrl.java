@@ -103,7 +103,7 @@ public class BuildingCtrl {
 		if (all == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Fetching all buildings failed."),
 					HttpStatus.NOT_FOUND);
-		} else if (all.isEmpty() == true) {
+		} else if (all.isEmpty()) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No buildings available."),
 					HttpStatus.NOT_FOUND);
 		} else {

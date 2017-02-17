@@ -108,7 +108,7 @@ public class LocationCtrl {
 		if (all == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Fetching all locations failed."),
 					HttpStatus.NOT_FOUND);
-		} else if (all.isEmpty() == true) {
+		} else if (all.isEmpty()) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No locations available."),
 					HttpStatus.NOT_FOUND);
 		} else {
