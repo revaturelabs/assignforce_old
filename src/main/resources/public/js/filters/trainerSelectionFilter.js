@@ -16,13 +16,13 @@ assignforce.filter("trainerSelection", function() {
 			dayCount = 0;
 			
 			//Iterates through trainer unavailable dates.
-			trainer.unavailable.forEach(function(unavailable){
+			trainer.unavailability.forEach(function(unavailability){
 				batchStart = tempDate;
 				
 				if (dayCount < 10){
 					
-					var startDate = new Date(unavailable.startDate); //cannot access day, month, or year from unavailable.startDate directly for some reason...
-					var endDate = new Date(unavailable.endDate);
+					var startDate = new Date(unavailability.startDate); //cannot access day, month, or year from unavailable.startDate directly for some reason...
+					var endDate = new Date(unavailability.endDate);
 					
 					//Iterates current unavailable date range by day
 					for (var i = startDate; i <= endDate; i.setDate(i.getDate() + 1)) {
