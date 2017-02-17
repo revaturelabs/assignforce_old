@@ -146,7 +146,6 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			// edit location
 			//if statement checks if the selected has a list of buildings (only locations gots those)
 			if (Array.isArray(lc.selectedList[0].buildings)) {
-				console.log("First if reached");
 				$mdDialog.show({
 					templateUrl : "html/templates/locationTemplate.html",
 					controller : "locationDialogCtrl",

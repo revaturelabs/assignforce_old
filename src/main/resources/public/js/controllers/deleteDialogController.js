@@ -29,8 +29,8 @@
             	}
             	title += " 1 building";
             } else if (dc.summary.buildings > 1){
-            	for(var i = 0; i < dc.list[0].buildings.length; i++){
-        		if(dc.list[0].buildings[i].active){
+            	for(var j = 0; j < dc.list[0].buildings.length; j++){
+        		if(dc.list[0].buildings[j].active){
         			sumActiveBldgs++;
         		}
         	}
@@ -67,10 +67,9 @@
                 return;
             }
             //TODO LOOP HERE
-            for(var i = 0; i < delList.length; i++){
+            for(var k = 0; k < delList.length; k++){
             	
-            var elem = delList[i];
-            console.log(elem);
+            var elem = delList[k];
             //if a location was selected, recurse building/room inactivation
             if (Array.isArray(elem.buildings)){
             	//if it has buildings
