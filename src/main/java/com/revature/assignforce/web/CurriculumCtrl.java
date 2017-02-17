@@ -18,7 +18,6 @@ import com.revature.assignforce.domain.Curriculum;
 import com.revature.assignforce.domain.Skill;
 import com.revature.assignforce.domain.dto.CurriculumDTO;
 import com.revature.assignforce.domain.dto.ResponseErrorDTO;
-import com.revature.assignforce.service.DaoService;
 
 @RestController
 @RequestMapping("/api/v2/curriculum")

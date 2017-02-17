@@ -5,22 +5,26 @@ package com.revature.assignforce.domain.dto;
  */
 public class SkillDTO {
 
-    private int skillID;
+    private int skillId;
     private String name;
+    private Boolean active;
 
-    public int getSkillID() {
-        return skillID;
+    public int getSkillId() {
+        return skillId;
     }
-
-    public void setSkillID(int skillID) {
-        this.skillID = skillID;
+    public void setSkillId(int skillId) {
+        this.skillId = skillId;
     }
-
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
+    }
+    public Boolean getActive() {
+        return active;
+    }
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }

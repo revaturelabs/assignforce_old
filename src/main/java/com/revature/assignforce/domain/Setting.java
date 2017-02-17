@@ -29,11 +29,11 @@ public class Setting{
         this.settingValue = settingValue;
     }
 
-    public int getId() {
+    public int getSettingId() {
         return settingId;
     }
 
-    public void setId(int settingId) {
+    public void setSettingId(int settingId) {
         this.settingId = settingId;
     }
 

@@ -12,13 +12,13 @@
                 </div>
                 <span flex></span>
 
-                <md-input-container ng-if="setting.id == 3">
+                <md-input-container ng-if="setting.settingId == 3">
                     <md-select ng-model="sCtrl.defaultLocation" placeholder="No Defualt Location" >
                         <md-option ng-value="location" ng-repeat="location in sCtrl.locations" ng-selected="location.id == setting.settingValue">{{ location.name }}</md-option>
                     </md-select>
                 </md-input-container>
 
-                <md-input-container  ng-if="setting.id != 3">
+                <md-input-container  ng-if="setting.settingId != 3">
                     <label></label>
                     <input ng-model= "setting.settingValue" class="settInput" type="Number" min="0">
                 </md-input-container>

@@ -36,18 +36,16 @@
                 //if (bc.batch.room) {bc.batch.building	= (incomingBatch.room.building)	 ? incomingBatch.room.buildingID		 : undefined;}
                 
                 bc.batch.building = 1;
-                bc.batch.location = 1;     
-                
-                bc.batch.startDate  = (incomingBatch.startDate)  ? new Date(incomingBatch.startDate) : undefined;
-                bc.batch.endDate    = (incomingBatch.endDate)    ? new Date(incomingBatch.endDate)   : undefined;
-                
+                bc.batch.location = 1;
+
                 if (bc.batch.room.unavailability){
-                bc.batch.room.unavailability.startDate = (incomingBatch.startDate) ? incomingBatch.room.unavailability.startDate : undefined;
-                bc.batch.room.unavailability.endDate = (incomingBatch.endDate) ? incomingBatch.room.unavailability.endDate : undefined;
+                    bc.batch.room.unavailability.startDate = (incomingBatch.startDate) ? incomingBatch.room.unavailability.startDate : undefined;
+                    bc.batch.room.unavailability.endDate = (incomingBatch.endDate) ? incomingBatch.room.unavailability.endDate : undefined;
                 }
-                bc.batch.trainer    = (incomingBatch.trainer)    ? incomingBatch.trainer.trainerID   : undefined;
-                bc.batch.cotrainer  = (incomingBatch.cotrainer)  ? incomingBatch.cotrainer.trainerID : undefined;
-                
+
+                bc.batch.trainer    = (incomingBatch.trainer)    ? incomingBatch.trainer.trainerId   : undefined;
+                bc.batch.cotrainer  = (incomingBatch.cotrainer)  ? incomingBatch.cotrainer.trainerId : undefined;
+
                 bc.updateWeeks();
             }
         };
@@ -64,17 +62,17 @@
         bc.calcTrainerCurriculumRatio = function(trainer)
         {
     		if (angular.isUndefined(bc.selectedCurriculum) || bc.selectedCurriculum === null) { return 0; }
-    		else if (bc.selectedCurriculum.skill.length == 0) { return 100; }
+    		else if (bc.selectedCurriculum.skills.length == 0) { return 100; }
         	else
         	{
         		var matches = 0;
         		var total = 0;
         		
-        		for (var i = 0; i < bc.selectedCurriculum.skill.length; i += 1)
+        		for (var i = 0; i < bc.selectedCurriculum.skills.length; i += 1)
         		{
         			for (var j = 0; j < trainer.skills.length; j += 1)
         			{
-        				if (bc.selectedCurriculum.skill[i].id == (trainer.skills[j].id ? trainer.skills[j].id : -1))
+        				if (bc.selectedCurriculum.skills[i].id == (trainer.skills[j].id ? trainer.skills[j].id : -1))
         				{
         					matches += 1;
         					break;
@@ -176,7 +174,7 @@
                 var start = new Date(bc.batch.startDate);
                 var currName;
                 bc.curricula.forEach( function(curr){
-                    if (curr.id == bc.batch.curriculum) {
+                    if (curr.currId == bc.batch.curriculum) {
                         currName = curr.name;
                     }
                 });

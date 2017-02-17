@@ -17,7 +17,7 @@ assignforce.controller("skillDialogCtrl", function ($scope, $mdDialog, $mdToast,
 
     // adds/removes skill from selectedSkills
     sdc.toggle = function(obj) {
-        sdc.selectedSkills = sdc.trainer.skill;
+        sdc.selectedSkills = sdc.trainer.skills;
 
         var idx = sdc.selectedSkills.indexOf(obj);
         if (idx == -1) {

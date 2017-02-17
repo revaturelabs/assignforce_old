@@ -89,8 +89,8 @@
             <span ng-if="pCtrl.trainer.skills == undefined || pCtrl.trainer.skills.length == 0"> You have no skills selected. Try adding some. </span>
 
             <!--adding skill using the skill dialog-->
-            <!--<md-list ng-if="pCtrl.trainer.skill != undefined">-->
-                <!--<md-list-item class="md-2-line" md-ink-ripple="#ff0000" ng-repeat="skill in pCtrl.trainer.skill">-->
+            <!--<md-list ng-if="pCtrl.trainer.skills != undefined">-->
+                <!--<md-list-item class="md-2-line" md-ink-ripple="#ff0000" ng-repeat="skill in pCtrl.trainer.skills">-->
                     <!--<md-icon md-svg-icon="img/ic_assessment_black_24px.svg"> </md-icon>-->
                     <!--<div class="md-list-item-text" layout="column">-->
                         <!--<h3> {{skill.name}} </h3>-->
@@ -100,14 +100,14 @@
 
             <div class="md-padding autocomplete" layout="column">
                 <md-chips name="skills" ng-model="pCtrl.test" placeholder="">
-                    <md-chip ng-repeat="skill in pCtrl.skillsList" ng-click="pCtrl.addSkill(skill)">{{skill.name}}</md-chip>
+                    <md-chip ng-repeat="skill in pCtrl.skillsList | orderBy: 'name' | skillFilter:pCtrl.trainer.skills track by $index" ng-click="pCtrl.addSkill(skill)">{{skill.name}}</md-chip>
                     <!--add button to save any new skills that are added-->
                     <!--the skills that the trainer has should be removed from the skillsList-->
                 </md-chips>
 
                 <md-list class="fixedRows">
                     <md-subheader class="md-no-sticky"><h2>Available skills:</h2></md-subheader>
-                    <md-button class="md-list-item" ng-click="pCtrl.removeSkill(skill)" ng-repeat="(index, skill) in pCtrl.trainer.skill">
+                    <md-button class="md-list-item" ng-repeat="(index, skill) in pCtrl.trainer.skills | orderBy: 'name'" ng-click="pCtrl.removeSkill(skill)">
                         <md-icon class="md-avatar-icon material-icons">stars</md-icon>
                         <h5>{{skill.name}}</h5>
                     </md-button>
