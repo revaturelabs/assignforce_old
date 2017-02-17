@@ -452,7 +452,6 @@
         
         trainerService.getAll( function(response) {
             bc.trainers = response;
-            console.log(bc.trainers);
         }, function(error) {
             bc.showToast( "Could not fetch trainers.");
         });
