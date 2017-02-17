@@ -62,6 +62,7 @@
             // recursively inactivates the first entry in bc.batchesSelected until
 			// it is empty
         dc.deleteHelper = function( delList ){
+        	console.log("taco");
             if (delList.length == 0) {
                 $mdDialog.hide();
                 return;
@@ -129,6 +130,7 @@
                 //TODO BAD FUNCTION
                 buildingService.update( elem, function(){   
                 	//$mdDialog.hide();
+                	//TODO BAD FUNCTION
                 }, function(error){
                     $mdDialog.cancel();
                 });
@@ -136,7 +138,6 @@
             //else room was called, so simply:
             else {
             	elem.active = false;
-            	//TODO BAD FUNCTION
             	roomService.update( elem, function(){
             		//$mdDialog.hide();
 	            }, function(error){
