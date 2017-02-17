@@ -20,9 +20,6 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
                 case 2:
                     sc.settings[i].settingValue = 12;
                     break;
-                case 3, 4:
-                    sc.settings[i].settingValue = 1;
-                    break;
                 case 5:
                     sc.settings[i].settingValue = 0;
                     break;
@@ -35,10 +32,9 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
                 case 8:
                     sc.settings[i].settingValue = 18;
                     break;
-                case 9:
+                default:
                     sc.settings[i].settingValue = 1;
                     break;
-
             }
             //add the rest of the settings
 
