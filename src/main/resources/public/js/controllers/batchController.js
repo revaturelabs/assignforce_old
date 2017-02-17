@@ -65,7 +65,6 @@
             bc.trainers.forEach(function(t){
             	bc.trainerSkillRatios[t.trainerId] = bc.calcTrainerCurriculumRatio(t);
             });
-            console.log("Recaluclating ratios...");
         }
         
         	// calculates the percentage to which a trainer's skills correspond
