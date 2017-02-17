@@ -15,7 +15,6 @@ import com.revature.assignforce.domain.Trainer;
 import com.revature.assignforce.domain.Unavailable;
 import com.revature.assignforce.domain.dto.ResponseErrorDTO;
 import com.revature.assignforce.domain.dto.TrainerDTO;
-import com.revature.assignforce.service.DaoService;
 
 @RestController
 @RequestMapping("/api/v2/trainer")
@@ -29,13 +28,13 @@ public class TrainerCtrl {
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createTrainer( @RequestBody TrainerDTO in ) {
 	
-		int ID = in.getID(); 
+		int ID = in.getTrainerId();
 		String firstName = in.getFirstName();
 		String lastName = in.getLastName();
 		String resume = in.getResume();
 		List<Skill> skills = in.getSkills();
 		List<Certification> certifications = in.getCertifications();
-		List<Unavailable> unavailabilities = in.getUnavailabilities();
+		List<Unavailable> unavailabilities = in.getUnavailability();
 
 		Trainer out = new Trainer( ID, firstName, lastName, resume, unavailabilities, skills, certifications );
 		out = trainerService.saveItem( out );
@@ -64,21 +63,21 @@ public class TrainerCtrl {
 		// updating an existing trainer object with information passed from trainer data transfer object
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object updateTrainer( @RequestBody TrainerDTO in ) {
-		int ID = 0;
-		List<Trainer> trainers = trainerService.getAllItems();
-
-		for(int i = 0; i < trainers.size(); i++){
-			if(in.getFirstName().equals(trainers.get(i).getFirstName()) && in.getLastName().equals(trainers.get(i).getLastName())){//add lookup by last name
-				ID = trainers.get(i).getTrainerID();
-				break;
-			}
-		}
+		int ID = in.getTrainerId();
+//		List<Trainer> trainers = trainerService.getAllItems();
+//
+//		for(int i = 0; i < trainers.size(); i++){
+//			if(in.getFirstName().equals(trainers.get(i).getFirstName()) && in.getLastName().equals(trainers.get(i).getLastName())){//add lookup by last name
+//				ID = trainers.get(i).getTrainerId();
+//				break;
+//			}
+//		}
 
 		String firstName = in.getFirstName();
 		String lastName = in.getLastName();
 		String resume = in.getResume();
 		List<Skill> skills = in.getSkills();
-		List<Unavailable> unavailabilities = in.getUnavailabilities();
+		List<Unavailable> unavailabilities = in.getUnavailability();
 		List<Certification> certifications = in.getCertifications();
 
 		Trainer out = new Trainer( ID, firstName, lastName, resume, unavailabilities, skills, certifications);
