@@ -63,9 +63,6 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 				locals : {
 					location : lc.selectedList[0],
 					building : buildingService.getAlmostEmptyBuilding(lc.selectedList[0].id), 
-					/**two ways: use a different method than getEmptyBuilding(where the hell 
-					  is that, btw?), or reference the location on the buildingTemplate form*/
-					//TODO FIND WAY TO ADD lc.selectedList[0].id TO BUILDING'S LOCATION FIELD
 					state : "create"
 				},
 				bindToController : true,
@@ -93,7 +90,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 				controller : "roomDialogCtrl", //roomDialogController.js
 				controllerAs : "rdCtrl",
 				locals : {
-					building : lc.selectedList[0], //TODO - scrap getAlmostEmptyRoom and replace with getEmptyRoom when finished with testing.
+					building : lc.selectedList[0], 
 					room : roomService.getAlmostEmptyRoom(lc.selectedList[0].id),
 					state : "create"
 				},
@@ -121,19 +118,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 	};
 	
 	
-	//TODO implement this? Only after finished.
 	
-	// removes rooms from selectedList on location menu close
-	// lc.removeRooms = function(location) {
-	// if (location.rooms.length > 0) {
-	// location.rooms.forEach(function(room) {
-	// var idx = lc.selectedList.indexOf(room);
-	// if (idx > -1) {
-	// lc.selectedList.splice(idx, 1);
-	// }
-	// });
-	// }
-	// };
 
 	// edit location
 	lc.editSelected = function() {
@@ -210,7 +195,6 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 	};
 
 	// delete location
-	// TODO DELETE BUTTON CALLS THIS
 	lc.deleteSelected = function() {
 		var summary = lc.categorizeSelected();
 		$mdDialog.show({

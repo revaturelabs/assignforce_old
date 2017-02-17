@@ -66,7 +66,6 @@
                 $mdDialog.hide();
                 return;
             }
-            //TODO LOOP HERE
             for(var k = 0; k < delList.length; k++){
             	
             var elem = delList[k];
@@ -142,52 +141,6 @@
            }
             $mdDialog.hide();
           };
-            
-            //leftovers for reference:
-            	
-            	//elem.active = false; // inactivate whatever was selected
-            
-            //else if(Array.isArray(elem.buildings)){
-            	//console.log("isArray(elem.buildings)");
-            	//var roomIn = elem;
-            	//elem.buildings.forEach(function(building){
-            		//if(building.rooms.length > 0){
-            			//building.rooms.forEach(function(room){
-            				//if(room.roomID == roomIn.roomID){
-            					//room.active = false;
-            					//elem = building;
-            				//}
-            			//});
-            		//}
-            	//});
-            //}
-            //else {
-            	//console.log("else statement in deletedialog");
-
-                //var buildingIn = elem;
-                //dc.locations.forEach( function(location){		
-                    //if (location.buildings.length > 0) {		
-                        //location.buildings.forEach( function(building){		
-                            //if (building.buildingID == buildingIn.buildingID) {	
-                                //building.active = false;
-                                //elem = location;
-                            //}		
-                        //});		
-                    //}		
-                //});
-            //}
-            //elem.active = false;
-            //runs the locationService update, concentric with another deleteHelper call upon success.
-            //locationService.update( elem, function(){
-            	//console.log("locationService.update call")
-                //dc.deleteHelper(delList);
-            //}, function(error){
-                //console.log(" (LC) Failed to delete location with error:", error.data.message);
-                //$mdDialog.cancel();
-            //});
-            
-        
-
             // cancel deletion
         dc.cancel = function(){
             $mdDialog.cancel();
@@ -214,11 +167,8 @@
           // page initialization
             // data gathering
         locationService.getAll( function(response) {
-            // console.log(" (DC) Retrieving all locations.")
             dc.locations = response;
         }, function(error) {
-            // console.log(" (DC) Failed to retrieve all locations with error:",
-			// error.data.message);
             $mdDialog.cancel();
         });
     });
