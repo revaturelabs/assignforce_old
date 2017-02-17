@@ -62,19 +62,14 @@
             // recursively inactivates the first entry in bc.batchesSelected until
 			// it is empty
         dc.deleteHelper = function( delList ){
-        	console.log("taco");
             if (delList.length == 0) {
                 $mdDialog.hide();
                 return;
             }
             //TODO LOOP HERE
-//            for(var k = 0; k < delList.length; k++){
-//            	
-//            var elem = delList[k];
-            
-            for (var x in delList){
-                if(delList.hasOwnProperty(x)){
-                    var elem = delList[x];
+            for(var k = 0; k < delList.length; k++){
+            	
+            var elem = delList[k];
             //if a location was selected, recurse building/room inactivation
             if (Array.isArray(elem.buildings)){
             	//if it has buildings
@@ -130,7 +125,6 @@
                 //TODO BAD FUNCTION
                 buildingService.update( elem, function(){   
                 	//$mdDialog.hide();
-                	//TODO BAD FUNCTION
                 }, function(error){
                     $mdDialog.cancel();
                 });
@@ -138,6 +132,7 @@
             //else room was called, so simply:
             else {
             	elem.active = false;
+            	//TODO BAD FUNCTION
             	roomService.update( elem, function(){
             		//$mdDialog.hide();
 	            }, function(error){
@@ -146,9 +141,7 @@
             }
            }
             $mdDialog.hide();
-          
-            }
-            };
+          };
             
             //leftovers for reference:
             	
