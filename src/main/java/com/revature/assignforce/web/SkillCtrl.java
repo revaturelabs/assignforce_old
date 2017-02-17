@@ -29,7 +29,7 @@ public class SkillCtrl {
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object createSkill( @RequestBody SkillDTO in ) {
 
-        int ID = in.getSkillID();
+        int ID = in.getSkillId();
         String name = in.getName();
 
         Skill out = new Skill( ID, name );
@@ -60,7 +60,7 @@ public class SkillCtrl {
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object updateSkill( @RequestBody SkillDTO in ) {
 
-        int ID = in.getSkillID();
+        int ID = in.getSkillId();
         String name = in.getName();
 
         Skill out = new Skill( ID, name );

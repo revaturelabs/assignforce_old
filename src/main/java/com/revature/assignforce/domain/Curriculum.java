@@ -41,10 +41,10 @@ public class Curriculum implements Activatable{
 	private Boolean active;
 	
 	public Curriculum(){}
-	
-	public Curriculum(int id, String name, List<Skill> skills) {
+
+	public Curriculum(int currId, String name, List<Skill> skills) {
 		super();
-		currId = id;
+		this.currId = currId;
 		this.name = name;
 		this.skills = skills;
 	}
@@ -53,8 +53,8 @@ public class Curriculum implements Activatable{
 		return currId;
 	}
 
-	public void setCurrId(int id) {
-		currId = id;
+	public void setCurrId(int currId) {
+		this.currId = currId;
 	}
 
 	public String getName() {
@@ -69,7 +69,7 @@ public class Curriculum implements Activatable{
 		return skills;
 	}
 
-	public void setSkill(List<Skill> skills) {
+	public void setSkills(List<Skill> skills) {
 		this.skills = skills;
 	}
 
