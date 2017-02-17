@@ -20,6 +20,10 @@ assignforce.directive("fileModel", ['$parse', function ($parse) {
     };
 }]);
 
+assignforce.filter("skillFilter", function () {
+    
+});
+
 assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, trainerService, skillService, s3Service) {
     var pc = this;
 
@@ -45,7 +49,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
             pc.showToast("Skill(s) added.");
             pc.rePullSkills();
         }, function () {
-            pc.showToast("Skill(s) not added.");
+            pc.showToast("Skill(s) not added.")
         });
     };
 
@@ -93,16 +97,14 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     };
 
     pc.saveTSkills = function () {
-        var skill = skillService.getEmptySkill();
-        skill.id = pc.skills[1].id;
-        skill.name = pc.skills[1].name;
-        skill.active = true;
-        pc.trainer.skills.push(skill);
+        console.log(pc.trainer);
         trainerService.update(pc.trainer, function () {
-            pc.showToast("pass");
+            console.log("pass");
         }, function (error) {
-            pc.showToast(error);
+            console.log(error);
         })
+
+        //show the toast on completion and fail
     };
 
     //add a skill to the current trainer
@@ -112,12 +114,20 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
                 pc.skillsList.splice(i, 1);
             }
         }
-
         pc.trainer.skills.push(skill);
     };
 
     pc.removeSkill = function (skill) {
+        for(var i = 0; i < pc.skillsList.length; i++){
+            if(pc.skillsList[i].name == skill.name){
+                console.log(skill);
+                pc.trainer.skills.splice(i, 1);
+                break;
+            }
+        }
+        console.log(pc.trainer.skills);
 
+        pc.skillsList.push(skill);
     };
 
     //queries the database for skills. to be called after a change to the skills array

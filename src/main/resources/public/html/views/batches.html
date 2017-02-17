@@ -61,7 +61,7 @@
                     	<md-input-container flex>                       
                             <label> Curriculum </label>
                             <md-select ng-model="bCtrl.batch.curriculum" ng-change="bCtrl.defaultName(); bCtrl.getSelectedCurriculum(); bCtrl.updateTrainers(bCtrl.trainers,bCtrl.batch.startDate,bCtrl.batch.endDate)">
-                                <md-option ng-value="curriculum.id" ng-repeat="curriculum in bCtrl.curricula"> {{ curriculum.name }} </md-option>
+                                <md-option ng-value="curriculum.currId" ng-repeat="curriculum in bCtrl.curricula"> {{ curriculum.name }} </md-option>
                             </md-select>
                         </md-input-container>
                         
@@ -250,7 +250,7 @@
                         	<label> Batches to View </label>
                             <md-select ng-model="tlCtrl.selectedCurriculum" ng-change="tlCtrl.repull()" ng-style="{'width': 160 + 'px'}">
                             	<md-option ng-value = "0">All</md-option>
-                                <md-option ng-value="curriculum.id" ng-repeat="curriculum in tlCtrl.curricula"> {{ curriculum.name }} </md-option>
+                                <md-option ng-value="curriculum.currId" ng-repeat="curriculum in tlCtrl.curricula"> {{ curriculum.name }} </md-option>
                             </md-select>
                         </md-input-container>
                         

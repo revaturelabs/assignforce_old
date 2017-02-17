@@ -6,15 +6,15 @@ import com.revature.assignforce.domain.Skill;
 
 public class CurriculumDTO {
 
-	private int currID;
+	private int currId;
 	private String name;
 	private List<Skill> skills;
 	
-	public int getCurrID() {
-		return currID;
+	public int getCurrId() {
+		return currId;
 	}
-	public void setCurrID(int currID) {
-		this.currID = currID;
+	public void setCurrId(int currId) {
+		this.currId = currId;
 	}
 	public String getName() {
 		return name;

@@ -45,8 +45,8 @@
                 bc.batch.startDate  = (incomingBatch.startDate)  ? new Date(incomingBatch.startDate) : undefined;
                 bc.batch.endDate    = (incomingBatch.endDate)    ? new Date(incomingBatch.endDate)   : undefined;
 
-                bc.batch.trainer    = (incomingBatch.trainer)    ? incomingBatch.trainer.trainerID   : undefined;
-                bc.batch.cotrainer  = (incomingBatch.cotrainer)  ? incomingBatch.cotrainer.trainerID : undefined;
+                bc.batch.trainer    = (incomingBatch.trainer)    ? incomingBatch.trainer.trainerId   : undefined;
+                bc.batch.cotrainer  = (incomingBatch.cotrainer)  ? incomingBatch.cotrainer.trainerId : undefined;
                 
                 bc.updateWeeks();
             }
@@ -64,16 +64,16 @@
         bc.calcTrainerCurriculumRatio = function(trainer)
         {
     		if (angular.isUndefined(bc.selectedCurriculum) || bc.selectedCurriculum === null) { return 0; }
-    		else if (bc.selectedCurriculum.skill.length == 0) { return 100; }
+    		else if (bc.selectedCurriculum.skills.length == 0) { return 100; }
         	else
         	{
         		var matches = 0;
         		var total = 0;
         		
 
-        		for (c in bc.selectedCurriculum.skill)
+        		for (c in bc.selectedCurriculum.skills)
         		{
-        			if (bc.selectedCurriculum.skill.hasOwnProperty(c))
+        			if (bc.selectedCurriculum.skills.hasOwnProperty(c))
         			{
 	        			for (s in trainer.skills)
 	        			{	        				
@@ -183,7 +183,7 @@
                 var start = new Date(bc.batch.startDate);
                 var currName;
                 bc.curricula.forEach( function(curr){
-                    if (curr.id == bc.batch.curriculum) {
+                    if (curr.currId == bc.batch.curriculum) {
                         currName = curr.name;
                     }
                 });
