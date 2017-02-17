@@ -40,6 +40,16 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	//Timeline axis range variables
 	tlc.minDate = new Date(3000, 7, 0);
 	tlc.maxDate = new Date(2000, 12, 0);
+
+	//Timeline variables
+	tlc.timelineFormatting = {};
+	tlc.timelineFormatting.margin_top = 76;
+	tlc.timelineFormatting.margin_right = 36;
+	tlc.timelineFormatting.margin_left = 75;
+	tlc.timelineFormatting.margin_bottom = 0;
+	tlc.timelineFormatting.width = $window.innerWidth - tlc.timelineFormatting.margin_left - tlc.timelineFormatting.margin_right;
+	tlc.timelineFormatting.height = 2000;
+	tlc.timelineFormatting.xPadding = 72;
 	
 	tlc.maxTrainerNameCharacters = 6;
 	tlc.selectedCurriculum = 0;
@@ -156,7 +166,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		}
 	);
 
-	// Range values for timeline
+	// Range values for timeline in milliseconds
 	var MAX_RANGE = 126140000000000; // 4000 years
 	var MIN_RANGE = 1000000; // 1 minute
 
@@ -164,18 +174,18 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	$("#timeline").mousedown(function(evt){
 		evt.stopPropagation();
 
-		if(evt.offsetY > 79 && evt.offsetY < 1970){
+		if(evt.offsetY > tlc.timelineFormatting.margin_top && evt.offsetY < tlc.timelineFormatting.height + tlc.timelineFormatting.margin_top){
 
 			console.log(evt.offsetY);
 
 			// Initial y-coordinate of the mouse
-			var init = evt.offsetY - 79;
+			var init = evt.offsetY - tlc.timelineFormatting.margin_top;
 			var mousedownY = init;
 			var pageY = evt.pageY;
 
 			// Get the date with respect to the y-coordinate
 			var yScale = d3.time.scale()
-				.domain([0,1888])
+				.domain([0,tlc.timelineFormatting.height])
 				.range([tlc.minDate, tlc.maxDate]);
 
 			var yDate = new Date(yScale(init)).getTime();
@@ -259,7 +269,6 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	tlc.changeTrainersPerPage = function()
 	{
 		var numTrainers = (tlc.trainers ? tlc.trainers.length : 0);
-		
 		
 		tlc.realTrainersPerPage = Math.floor(tlc.trainersPerPage);
 		
@@ -377,9 +386,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 				return 0;
 			});
 			
-			
-			
-			projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, yOffset, tlc.filteredBatches, $scope.$parent, calendarService.countWeeks, tlc.filteredTrainers, tlc.selectedCurriculum);
+			projectTimeline(tlc.timelineFormatting, tlc.minDate, tlc.maxDate, yOffset, tlc.filteredBatches, $scope.$parent, calendarService.countWeeks, tlc.filteredTrainers, tlc.selectedCurriculum);
 		}
 	}
 });
@@ -391,23 +398,18 @@ function trainerColumnName(trainer)
 }
 
 // Draw timeline
-function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, parentScope, numWeeks, trainerNames, selectedCurriculum){
-	//Timeline variables
-	var margin = {top: 80, right: 16, bottom: 32, left: 72},
-	width = windowWidth - margin.left - margin.right,
-	height = 2000 - margin.top - margin.bottom,
-	xPadding = 72;
+function projectTimeline(timelineFormatting, minDate, maxDate, yCoord, timelineData, parentScope, numWeeks, trainerNames, selectedCurriculum){
 	
 	//Define Scales
 	var colorScale = d3.scale.category20();
 	
 	var yScale = d3.time.scale()
 		.domain([minDate, maxDate])
-		.range([0,height]);
+		.range([0,timelineFormatting.height]);
 	
 	var xScale = d3.scale.ordinal()
 		.domain(trainerNames)
-		.rangePoints([xPadding, width - xPadding]);
+		.rangePoints([timelineFormatting.xPadding, timelineFormatting.width - timelineFormatting.xPadding]);
 	
 	//Define axis
 	var yAxis = d3.svg.axis()
@@ -550,10 +552,10 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 	
 	svg = d3.select('#timeline')
 		.append('svg')
-			.attr('width',width + margin.left + margin.right)
-			.attr('height',height + margin.bottom + margin.top)
+			.attr('width',timelineFormatting.width + timelineFormatting.margin_left + timelineFormatting.margin_right)
+			.attr('height',timelineFormatting.height + timelineFormatting.margin_bottom + timelineFormatting.margin_top)
 		.append('g')
-			.attr('transform','translate('+margin.left+','+margin.top+')');
+			.attr('transform','translate('+timelineFormatting.margin_left+','+timelineFormatting.margin_top+')');
 			
 	svg.call(tip);
 	
@@ -585,7 +587,7 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 				
 				return isNaN(x) ? 0 : x;
 			})
-			.attr('y2', height)
+			.attr('y2', timelineFormatting.height)
 			.attr('stroke','lightgray');
 	
 	//Add line for current date on timeline
@@ -595,7 +597,7 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 	d3.select('.currentdate')
 		.append('line')
 			.attr('x1', 0)
-			.attr('x2', width)
+			.attr('x2', timelineFormatting.width)
 			.attr('y1', yScale(new Date()))
 			.attr('y2',yScale(new Date()))
 			.attr('stroke','#f26a25');
@@ -607,7 +609,7 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 	d3.select('.zoompoint')
 		.append('line')
 			.attr('x1', 0)
-			.attr('x2', width)
+			.attr('x2', timelineFormatting.width)
 			.attr('y1', yCoord)
 			.attr('y2', yCoord)
 			.attr('stroke','#000000')
@@ -672,7 +674,7 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 				var end = yScale(new Date(d.endDate));
 				
 				if (start < 0){ start = 0; }
-				if(end > height){ end = 1940; }
+				if(end > timelineFormatting.height){ end = 1940; }
 				
 				return end - start;
 			})
