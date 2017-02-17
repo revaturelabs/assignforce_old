@@ -100,7 +100,7 @@
 
             <div class="md-padding autocomplete" layout="column">
                 <md-chips name="skills" ng-model="pCtrl.test" placeholder="">
-                    <md-chip ng-repeat="skill in pCtrl.skillsList | orderBy: 'name'" ng-click="pCtrl.addSkill(skill)">{{skill.name}}</md-chip>
+                    <md-chip ng-repeat="skill in pCtrl.skillsList | orderBy: 'name' | skillFilter:pCtrl.trainer.skills track by $index" ng-click="pCtrl.addSkill(skill)">{{skill.name}}</md-chip>
                     <!--add button to save any new skills that are added-->
                     <!--the skills that the trainer has should be removed from the skillsList-->
                 </md-chips>

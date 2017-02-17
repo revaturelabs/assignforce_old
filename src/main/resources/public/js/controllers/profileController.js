@@ -20,8 +20,26 @@ assignforce.directive("fileModel", ['$parse', function ($parse) {
     };
 }]);
 
-assignforce.filter("skillFilter", function () {
-    
+assignforce.filter('skillFilter', function(){
+    return function(input, check){
+        var out = [];
+        var insertSkill = true;
+
+        if (input != undefined && check != undefined){
+            for (var i = 0; i < input.length; i++) {
+                for (var j = 0; j < check.length; j++) {
+                    if(input[i].skillId == check[j].skillId){
+                        insertSkill = false;
+                    }
+                }
+                if (insertSkill == true){
+                    out.push(input[i]);
+                }
+                insertSkill = true;
+            }
+        }
+        return out;
+    }
 });
 
 assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, trainerService, skillService, s3Service) {
@@ -54,7 +72,6 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     };
 
     pc.uploadResume = function () {
-
         //This initializes a bucket with the keys obtained from Creds rest controller
         var bucket = new AWS.S3({
             apiVersion: '2006-03-01',
@@ -97,37 +114,29 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     };
 
     pc.saveTSkills = function () {
-        console.log(pc.trainer);
         trainerService.update(pc.trainer, function () {
-            console.log("pass");
-        }, function (error) {
-            console.log(error);
+            pc.showToast("Skills have been saved!");
+        }, function () {
+            pc.showToast("Could not save your skills.")
         })
-
-        //show the toast on completion and fail
     };
 
     //add a skill to the current trainer
     pc.addSkill = function (skill) {
         for(var i = 0; i < pc.skillsList.length; i++){
             if(pc.skillsList[i].name == skill.name){
-                pc.skillsList.splice(i, 1);
+                pc.trainer.skills.push(skill);
             }
         }
-        pc.trainer.skills.push(skill);
     };
 
     pc.removeSkill = function (skill) {
         for(var i = 0; i < pc.skillsList.length; i++){
-            if(pc.skillsList[i].name == skill.name){
-                console.log(skill);
+            if(pc.trainer.skills[i].name == skill.name){
                 pc.trainer.skills.splice(i, 1);
                 break;
             }
         }
-        console.log(pc.trainer.skills);
-
-        pc.skillsList.push(skill);
     };
 
     //queries the database for skills. to be called after a change to the skills array
@@ -169,6 +178,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     skillService.getAll( function(response) {
         pc.skills = response;
         pc.skillsList = pc.skills;
+
     }, function () {
         pc.showToast("Could not fetch skills.");
     });
