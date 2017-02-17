@@ -72,9 +72,9 @@
         		
         		for (var i = 0; i < bc.selectedCurriculum.skill.length; i += 1)
         		{
-        			for (var j = 0; j < trainer.skill.length; j += 1)
+        			for (var j = 0; j < trainer.skills.length; j += 1)
         			{
-        				if (bc.selectedCurriculum.skill[i].id == (trainer.skill[j].id ? trainer.skill[j].id : -1))
+        				if (bc.selectedCurriculum.skill[i].id == (trainer.skills[j].id ? trainer.skills[j].id : -1))
         				{
         					matches += 1;
         					break;

@@ -25,7 +25,7 @@ public class Curriculum implements Activatable{
 	@Column(name = "ID")
 	@SequenceGenerator(allocationSize = 1, name = "curriculumSeq", sequenceName = "CURRICULUM_SEQ")
 	@GeneratedValue(generator = "curriculumSeq", strategy = GenerationType.SEQUENCE)
-	private int ID;
+	private int currId;
 	
 	@Column(name = "NAME", unique=true, nullable=false)
 	private String name;
@@ -35,26 +35,26 @@ public class Curriculum implements Activatable{
 	joinColumns=@JoinColumn(name="CURRICULUM_ID"), 
 	inverseJoinColumns=@JoinColumn(name="SKILL_ID"))
 	@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")					// ADDED this to fix serialization/infinite loop issues
-	private List<Skill> skill;
+	private List<Skill> skills;
 
 	@Column(name="active", insertable = false)
 	private Boolean active;
 	
 	public Curriculum(){}
 	
-	public Curriculum(int iD, String name, List<Skill> skill) {
+	public Curriculum(int id, String name, List<Skill> skills) {
 		super();
-		ID = iD;
+		currId = id;
 		this.name = name;
-		this.skill = skill;
+		this.skills = skills;
 	}
 
-	public int getID() {
-		return ID;
+	public int getCurrId() {
+		return currId;
 	}
 
-	public void setID(int iD) {
-		ID = iD;
+	public void setCurrId(int id) {
+		currId = id;
 	}
 
 	public String getName() {
@@ -65,12 +65,12 @@ public class Curriculum implements Activatable{
 		this.name = name;
 	}
 
-	public List<Skill> getSkill() {
-		return skill;
+	public List<Skill> getSkills() {
+		return skills;
 	}
 
-	public void setSkill(List<Skill> skill) {
-		this.skill = skill;
+	public void setSkill(List<Skill> skills) {
+		this.skills = skills;
 	}
 
 	public Boolean getActive() {
@@ -83,6 +83,6 @@ public class Curriculum implements Activatable{
 
 	@Override
 	public String toString() {
-		return "Curriculum [ID = " + ID + ", name = " + name + ", skills = " + skill + "]";
+		return "Curriculum [ID = " + currId + ", name = " + name + ", skills = " + skills + "]";
 	}	
 }
