@@ -47,7 +47,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     tlc.removeBatchlessTrainers = function(trainer) {
 		var trainerIndex = tlc.filteredBatches.findIndex(function (d)
 		{
-			return (d.trainer.trainerID == parseInt(trainer.substring(1, trainer.indexOf(')'))));
+			return (d.trainer.trainerId == parseInt(trainer.substring(1, trainer.indexOf(')'))));
 		});
 		
         return (trainerIndex > -1);
@@ -398,7 +398,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 //Generates the string used in the columns
 function trainerColumnName(trainer)
 {
-	return ("(" + trainer.trainerID + ")" + " " + trainer.firstName + " " + trainer.lastName);
+	return ("(" + trainer.trainerId + ")" + " " + trainer.firstName + " " + trainer.lastName);
 }
 
 // Draw timeline
