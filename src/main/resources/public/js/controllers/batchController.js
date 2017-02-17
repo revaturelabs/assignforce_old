@@ -3,6 +3,7 @@
     assignforce.controller( "batchCtrl", function($scope, batchService, curriculumService, trainerService, locationService, buildingService, roomService, calendarService, $filter, $window) {
         var bc = this;
         var availableTrainers;
+        bc.trainerSkillRatios = [];
         
         bc.convertUnavailability = function(incoming){
         	return new Date(incoming);
@@ -58,7 +59,17 @@
         bc.updateTrainers = function(trainers, batchStart, batchEnd){
         	bc.availableTrainers = $filter('trainerSelection')(trainers, batchStart, batchEnd);
         };
-                
+        
+        
+        //Recalculates skill ratios for trainers based on the selected curriculum.
+        bc.updateCurriculumRatios = function()
+        {
+            bc.trainers.forEach(function(t){
+            	bc.trainerSkillRatios[t.trainerId] = bc.calcTrainerCurriculumRatio(t);
+            });
+            console.log("Recaluclating ratios...");
+        }
+        
         	// calculates the percentage to which a trainer's skills correspond
         	// to the batch's curriculum.
         bc.calcTrainerCurriculumRatio = function(trainer)
@@ -452,6 +463,7 @@
         
         trainerService.getAll( function(response) {
             bc.trainers = response;
+            bc.updateCurriculumRatios();
         }, function(error) {
             bc.showToast( "Could not fetch trainers.");
         });
