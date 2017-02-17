@@ -8,7 +8,6 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import com.fasterxml.jackson.annotation.*;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 
 @Entity
 @Table(name = "ROOM")
@@ -43,6 +42,7 @@ public class Room implements Activatable {
 	private Boolean active;
 
 	public Room() {
+		//No arg constructor
 	}
 
 	public Room(int roomID, String roomName, int building, List<Unavailable> unavailable) {

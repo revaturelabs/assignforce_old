@@ -74,7 +74,7 @@
             if (Array.isArray(elem.buildings)){
             	//if it has buildings
             	if(elem.buildings.length > 0){
-            		//TODO BAD FUNCTION
+            		
             		elem.buildings.forEach(function(building){
         				//if it has rooms
             			if(building.rooms.length > 0){
@@ -99,11 +99,11 @@
             	}
             	elem.active = false;
                 //runs the locationService update, concentric with another deleteHelper call upon success.
-            	//TODO BAD FUNCTION
+            	
                 locationService.update( elem, function(){
                 	//$mdDialog.hide();
                     //dc.deleteHelper(delList);
-                	//TODO BAD FUNCTION
+                	
                 }, function(error){
                 	$mdDialog.cancel();
                 });
@@ -111,10 +111,10 @@
 
             //else if a building was selected, recurse room inactivation
             else if ( Array.isArray(elem.rooms) ) {   
-            	//TODO BAD FUNCTION
+            	
                 elem.rooms.forEach( function(room){
                     room.active = false;
-                    //TODO BAD FUNCTION
+                    
                     roomService.update( room, function(){
                     	//$mdDialog.hide();
 		            }, function(error){
@@ -122,7 +122,7 @@
 		            });
                 });
                 elem.active = false;
-                //TODO BAD FUNCTION
+                
                 buildingService.update( elem, function(){   
                 	//$mdDialog.hide();
                 }, function(error){
@@ -132,7 +132,7 @@
             //else room was called, so simply:
             else {
             	elem.active = false;
-            	//TODO BAD FUNCTION
+            	
             	roomService.update( elem, function(){
             		//$mdDialog.hide();
 	            }, function(error){

@@ -18,7 +18,6 @@ import com.revature.assignforce.domain.Room;
 import com.revature.assignforce.domain.Unavailable;
 import com.revature.assignforce.domain.dto.ResponseErrorDTO;
 import com.revature.assignforce.domain.dto.RoomDTO;
-import com.revature.assignforce.service.DaoService;
 
 @RestController
 @RequestMapping("/api/v2/room")

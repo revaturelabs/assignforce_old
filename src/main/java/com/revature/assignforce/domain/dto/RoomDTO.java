@@ -2,7 +2,6 @@ package com.revature.assignforce.domain.dto;
 
 import java.util.List;
 
-import com.revature.assignforce.domain.Location;
 import com.revature.assignforce.domain.Unavailable;
 
 public class RoomDTO {
