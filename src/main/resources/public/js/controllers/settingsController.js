@@ -58,7 +58,7 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
 
         for(var i = 0; i < sc.settings.length; i++){
             if(sc.settings[i].settingId == 3){
-                sc.settings[i].settingValue = sc.defaultLocation.git id;
+                sc.settings[i].settingValue = sc.defaultLocation.id;
             }
             //save each setting
             console.log(sc.settings);

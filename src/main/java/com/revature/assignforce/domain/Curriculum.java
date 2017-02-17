@@ -41,7 +41,7 @@ public class Curriculum implements Activatable{
 	private Boolean active;
 	
 	public Curriculum(){}
-	
+
 	public Curriculum(int currId, String name, List<Skill> skills) {
 		super();
 		this.currId = currId;

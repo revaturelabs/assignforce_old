@@ -36,18 +36,16 @@
                 //if (bc.batch.room) {bc.batch.building	= (incomingBatch.room.building)	 ? incomingBatch.room.buildingID		 : undefined;}
                 
                 bc.batch.building = 1;
-                bc.batch.location = 1;                
-                               
-                //bc.batch.room.unavailability.startDate = (incomingBatch.room.unavailability.startDate) ? incomingBatch.room.;
-                //bc.batch.room.unavailability.endDate = (incomingBatch.room.unavailability.endDate) ? incomingBatch.room.unavailability.endDate;
-              
-                
-                bc.batch.startDate  = (incomingBatch.startDate)  ? new Date(incomingBatch.startDate) : undefined;
-                bc.batch.endDate    = (incomingBatch.endDate)    ? new Date(incomingBatch.endDate)   : undefined;
+                bc.batch.location = 1;
+
+                if (bc.batch.room.unavailability){
+                    bc.batch.room.unavailability.startDate = (incomingBatch.startDate) ? incomingBatch.room.unavailability.startDate : undefined;
+                    bc.batch.room.unavailability.endDate = (incomingBatch.endDate) ? incomingBatch.room.unavailability.endDate : undefined;
+                }
 
                 bc.batch.trainer    = (incomingBatch.trainer)    ? incomingBatch.trainer.trainerId   : undefined;
                 bc.batch.cotrainer  = (incomingBatch.cotrainer)  ? incomingBatch.cotrainer.trainerId : undefined;
-                
+
                 bc.updateWeeks();
             }
         };
@@ -70,29 +68,22 @@
         		var matches = 0;
         		var total = 0;
         		
-
-        		for (c in bc.selectedCurriculum.skills)
+        		for (var i = 0; i < bc.selectedCurriculum.skills.length; i += 1)
         		{
-        			if (bc.selectedCurriculum.skills.hasOwnProperty(c))
+        			for (var j = 0; j < trainer.skills.length; j += 1)
         			{
-	        			for (s in trainer.skills)
-	        			{	        				
-	        				if (trainer.skills.hasOwnProperty(s))
-
-	        				{
-		        				if (c === s)
-		        				{
-		        					matches += 1;
-		        					break;
-		        				}
-	        				}
-	        			}
-	        			total += 1;
+        				if (bc.selectedCurriculum.skills[i].id == (trainer.skills[j].id ? trainer.skills[j].id : -1))
+        				{
+        					matches += 1;
+        					break;
+        				}
         			}
+        			total += 1;
         		}
         		
         		if (total > 0) { return Math.floor((matches / total) * 100); }
-        		else { return 100; }
+        		
+        		return 100;
         	}
         }
         
