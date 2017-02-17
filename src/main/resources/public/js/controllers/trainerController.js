@@ -116,6 +116,8 @@
 
             $mdDialog.show({
                 templateUrl: "html/templates/ptoRequest.html",
+                controller: "ptoCtrl",
+                controllerAs: "ptoCtrl",
                 bindToController: true,
                 clickOutsideToClose: true
             });

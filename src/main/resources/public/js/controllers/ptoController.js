@@ -9,9 +9,10 @@ assignforce.controller("ptoCtrl", function ($scope, $mdDialog, ptoService) {
         $mdDialog.cancel();
     };
 
-    tdc.send = function (isValid) {
-        console.log("ayy");
-        ptoService.sendRequest();
-        
+    ptoc.send = function (isValid) {
+        if(isValid){
+            console.log("ayy");
+            ptoService.sendRequest();
+        }
     };
 });
