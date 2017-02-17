@@ -33,11 +33,11 @@ public class CurriculumCtrl {
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createCurriculum( @RequestBody CurriculumDTO in ) {
 	
-		int ID = in.getCurrID();
+		int id = in.getCurrId();
 		String name = in.getName();
 		List<Skill> skills = in.getSkills();
 		
-		Curriculum out = new Curriculum( ID, name, skills );
+		Curriculum out = new Curriculum( id, name, skills );
 		out = currService.saveItem( out );
 		
 		if (out == null) {
@@ -65,11 +65,11 @@ public class CurriculumCtrl {
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object updateCurriculum( @RequestBody CurriculumDTO in ) {
 	
-		int ID = in.getCurrID();
+		int id = in.getCurrId();
 		String name = in.getName();
 		List<Skill> skills = in.getSkills();
 		
-		Curriculum out = new Curriculum( ID, name, skills );
+		Curriculum out = new Curriculum( id, name, skills );
 		out = currService.saveItem( out );
 		
 		if (out == null) {

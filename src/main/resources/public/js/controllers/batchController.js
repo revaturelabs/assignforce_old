@@ -70,29 +70,22 @@
         		var matches = 0;
         		var total = 0;
         		
-
-        		for (c in bc.selectedCurriculum.skill)
+        		for (var i = 0; i < bc.selectedCurriculum.skill.length; i += 1)
         		{
-        			if (bc.selectedCurriculum.skill.hasOwnProperty(c))
+        			for (var j = 0; j < trainer.skills.length; j += 1)
         			{
-	        			for (s in trainer.skills)
-	        			{	        				
-	        				if (trainer.skills.hasOwnProperty(s))
-
-	        				{
-		        				if (c === s)
-		        				{
-		        					matches += 1;
-		        					break;
-		        				}
-	        				}
-	        			}
-	        			total += 1;
+        				if (bc.selectedCurriculum.skill[i].id == (trainer.skills[j].id ? trainer.skills[j].id : -1))
+        				{
+        					matches += 1;
+        					break;
+        				}
         			}
+        			total += 1;
         		}
         		
         		if (total > 0) { return Math.floor((matches / total) * 100); }
-        		else { return 100; }
+        		
+        		return 100;
         	}
         }
         

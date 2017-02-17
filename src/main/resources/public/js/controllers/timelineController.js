@@ -21,7 +21,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     
     tlc.removeUnmatchingCurriculum = function(batch)
     {
-    	return (tlc.selectedCurriculum == 0 || (!(angular.isUndefined(batch.curriculum)) && (batch.curriculum.id == tlc.selectedCurriculum)));
+    	return (tlc.selectedCurriculum == 0 || (!(angular.isUndefined(batch.curriculum)) && (batch.curriculum.currId == tlc.selectedCurriculum)));
     }
     
     tlc.removeIrrelevantBatches = function(batch) {
