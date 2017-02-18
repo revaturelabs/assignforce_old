@@ -11,7 +11,7 @@ assignforce.controller("ptoCtrl", function ($scope, $mdDialog, ptoService) {
 
     ptoc.send = function (isValid) {
         if(isValid){
-            console.log("ayy");
+            // console.log("ayy");
             ptoService.sendRequest();
         }
     };
