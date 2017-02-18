@@ -200,8 +200,6 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 
 		if(evt.offsetY > tlc.timelineFormatting.margin_top && evt.offsetY < tlc.timelineFormatting.height + tlc.timelineFormatting.margin_top){
 
-			console.log(evt.offsetY);
-
 			// Initial y-coordinate of the mouse
 			var init = evt.offsetY - tlc.timelineFormatting.margin_top;
 			var mousedownY = init;
@@ -278,14 +276,18 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     
     tlc.repullPromise.then(function(result)
     {
-    	if (result) { tlc.projectTimeline(-100); }
+    	if (result){ 
+    		tlc.projectTimeline(-100); 
+    	}
     }, function(error){});
     
     tlc.repull = function()
     {
         tlc.repullPromise.then(function(result)
 	    {
-        	if (result) { tlc.projectTimeline(-100); }
+        	if (result){ 
+        		tlc.projectTimeline(-100);
+        	}
 	    }, function(error){});
     }
     
@@ -415,7 +417,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 				return 0;
 			});
 			
-			projectTimeline(tlc.timelineFormatting, tlc.minDate, tlc.maxDate, yOffset, tlc.filteredBatches, $scope.$parent, calendarService.countWeeks, tlc.filteredTrainers, tlc.selectedCurriculum);
+			projectTimeline(tlc.timelineFormatting, tlc.minDate, tlc.maxDate, yOffset, tlc.filteredBatches, $scope.$parent, calendarService.countWeeks, tlc.filteredTrainers);
 		}
 	}
 });
