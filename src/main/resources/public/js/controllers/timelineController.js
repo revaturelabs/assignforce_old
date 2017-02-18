@@ -173,7 +173,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		},
 		function(){
 			if(tlc.batches !== undefined && tlc.trainers !== undefined){
-				tlc.projectTimeline(0);
+				tlc.projectTimeline(-100);
 			}
 		}
 	);
@@ -184,7 +184,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		},
 		function(){
 			if(tlc.batches !== undefined && tlc.trainers !== undefined) {
-				tlc.projectTimeline(0);
+				tlc.projectTimeline(-100);
 
             }
 		}
@@ -278,14 +278,14 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     
     tlc.repullPromise.then(function(result)
     {
-    	if (result) { tlc.projectTimeline(0); }
+    	if (result) { tlc.projectTimeline(-100); }
     }, function(error){});
     
     tlc.repull = function()
     {
         tlc.repullPromise.then(function(result)
 	    {
-        	if (result) { tlc.projectTimeline(0); }
+        	if (result) { tlc.projectTimeline(-100); }
 	    }, function(error){});
     }
     
@@ -427,7 +427,7 @@ function trainerColumnName(trainer)
 }
 
 // Draw timeline
-function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, parentScope, numWeeks, trainerNames){
+function projectTimeline(timelineFormatting, minDate, maxDate, yCoord, timelineData, parentScope, numWeeks, trainerNames){
 	
 	//Define Scales
 	var colorScale = d3.scale.category20();
