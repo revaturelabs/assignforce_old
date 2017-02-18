@@ -696,7 +696,7 @@ function projectTimeline(timelineFormatting, minDate, maxDate, yCoord, timelineD
 				var end = yScale(new Date(d.endDate));
 				
 				if (start < 0){ start = 0; }
-				if(end > timelineFormatting.height){ end = 1940; }
+				if(end > timelineFormatting.height){ end = timelineFormatting.height; }
 				
 				return end - start;
 			})
