@@ -161,7 +161,6 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
 
     // data gathering
 
-
     // id is hard coded for testing. fix this later
     trainerService.getById(3, function (response) {
         pc.trainer = response;
@@ -189,4 +188,5 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     pc.creds;
     pc.skills;
     pc.skillsList;
+    pc.trainer;
 });
