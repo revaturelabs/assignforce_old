@@ -41,7 +41,9 @@
 
     function tip(vis) {
       svg = getSVGNode(vis)
-      if (!svg) return
+      if (!svg) {
+    	  return;
+      }
       point = svg.createSVGPoint()
       rootElement.appendChild(node)
     }
@@ -128,10 +130,12 @@
     //
     // Returns tip or direction
     tip.direction = function(v) {
-      if (!arguments.length) return direction
+      if (!arguments.length) {
+    	  return direction;
+      }
       direction = v == null ? v : functor(v)
 
-      return tip
+      return tip;
     }
 
     // Public: Sets or gets the offset of the tip
@@ -140,10 +144,12 @@
     //
     // Returns offset or
     tip.offset = function(v) {
-      if (!arguments.length) return offset
+      if (!arguments.length) {
+    	  return offset;
+      }
       offset = v == null ? v : functor(v)
 
-      return tip
+      return tip;
     }
 
     // Public: sets or gets the html value of the tooltip
@@ -152,10 +158,12 @@
     //
     // Returns html value or tip
     tip.html = function(v) {
-      if (!arguments.length) return html
+      if (!arguments.length) {
+    	  return html;
+      }
       html = v == null ? v : functor(v)
 
-      return tip
+      return tip;
     }
 
     // Public: sets or gets the root element anchor of the tooltip
@@ -164,10 +172,12 @@
     //
     // Returns root node of tip
     tip.rootElement = function(v) {
-      if (!arguments.length) return rootElement
+      if (!arguments.length) {
+    	  return rootElement;
+      }
       rootElement = v == null ? v : functor(v)
 
-      return tip
+      return tip;
     }
 
     // Public: destroys the tooltip and removes it from the DOM
@@ -275,9 +285,13 @@
 
     function getSVGNode(element) {
       var svgNode = element.node()
-      if (!svgNode) return null
-      if (svgNode.tagName.toLowerCase() === 'svg') return svgNode
-      return svgNode.ownerSVGElement
+      if (!svgNode) {
+    	  return null;
+      }
+      if (svgNode.tagName.toLowerCase() === 'svg') {
+    	  return svgNode;
+      }
+      return svgNode.ownerSVGElement;
     }
 
     function getNodeEl() {
@@ -306,7 +320,7 @@
       var targetel   = target || d3Selection.event.target
 
       while (targetel.getScreenCTM == null && targetel.parentNode == null) {
-        targetel = targetel.parentNode
+        targetel = targetel.parentNode;
       }
 
       var bbox       = {},
@@ -342,11 +356,11 @@
     // Private - replace D3JS 3.X d3.functor() function
     function functor(v) {
       return typeof v === 'function' ? v : function() {
-        return v
+        return v;
       }
     }
 
-    return tip
+    return tip;
   }
 // eslint-disable-next-line semi
 }));

@@ -15,11 +15,7 @@
                 title += " 1 room";
             } else if (dc.summary.rooms > 1) {
             	
-//            	for(var i = 0; i < dc.list[0].rooms.length; i++){
-//            		if(dc.list[0].rooms[i].active){
-//            			sumActiveRooms++;
-//            		}
-//            	}
+            	 // increment active rooms here for full functionality
                 title += sumActiveRooms + " rooms"; 
             }
             
@@ -59,7 +55,8 @@
             dc.deleteHelper(delList);
         };
 
-            // recursively inactivates the first entry in bc.batchesSelected until
+            // recursively inactivates the first entry in bc.batchesSelected
+			// until
 			// it is empty
         dc.deleteHelper = function( delList ){
             if (delList.length == 0) {
@@ -69,19 +66,19 @@
             	
             var elem = delList.shift();
             
-            //if a location was selected, recurse building/room inactivation
+            // if a location was selected, recurse building/room inactivation
             if (Array.isArray(elem.buildings)){
-            	//if it has buildings
+            	// if it has buildings
             	if(elem.buildings.length > 0){
             		angular.forEach(elem.buildings, function(building){
             		
-        				//if it has rooms
+        				// if it has rooms
             			if(building.rooms.length > 0){
             				building.rooms.forEach(function(room){
             					room.active = false;
             					
             					roomService.update( room, function(){
-            						//donothing
+            						// donothing
             		            }, function(){
             		                $mdDialog.cancel();
             		            });
@@ -90,17 +87,18 @@
             			}
             			building.active = false;
             			buildingService.update( building, function(){   
-            				//donothing
+            				// donothing
                         }, function(){
                             $mdDialog.cancel();
                         });
             		});            		
             	}
             	elem.active = false;
-                //runs the locationService update, concentric with another deleteHelper call upon success.
+                // runs the locationService update, concentric with another
+				// deleteHelper call upon success.
             	
                 locationService.update( elem, function(){
-                	//donothing
+                	// donothing
                 }, function(){
                 	$mdDialog.cancel();
                 });
@@ -109,13 +107,13 @@
             
             }
 
-            //else if a building was selected, recurse room inactivation
+            // else if a building was selected, recurse room inactivation
             else if ( Array.isArray(elem.rooms) ) {   
                angular.forEach(elem.rooms, function(room){
                     room.active = false;
                     
                     roomService.update( room, function(){
-                    	//donothing
+                    	// donothing
 		            }, function(){
 		                $mdDialog.cancel();
 		            });
@@ -123,24 +121,24 @@
                 elem.active = false;
                 
                 buildingService.update( elem, function(){
-                	//donothing
+                	// donothing
                 }, function(){
                     $mdDialog.cancel();
                 });
                 dc.deleteHelper(delList);
             }
-            //else room was called, so simply:
+            // else room was called, so simply:
             else {
             	elem.active = false;
             	
             	roomService.update( elem, function(){
-            		//donothing
+            		// donothing
 	            }, function(){
 	                $mdDialog.cancel();
 	            });
             	dc.deleteHelper(delList);
             }
-            //}
+            // }
             $mdDialog.hide();
           };
             // cancel deletion

@@ -29,6 +29,8 @@
                     break;
                 case "none":
                     result.push(item);
+                //maybe no default
+                default: result.push(item);
                 }
             });
 

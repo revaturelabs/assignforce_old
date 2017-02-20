@@ -357,7 +357,7 @@
             if (isValid) {
                 switch(bc.state) {
                     case "create":
-                        batchService.create( bc.batch, function(response){
+                        batchService.create( bc.batch, function(){
                             bc.showToast("Batch saved.");
                             bc.repull();
                         }, function(){
@@ -366,7 +366,7 @@
                         break;
                     
                     case "edit":
-                        batchService.update( bc.batch, function(response){
+                        batchService.update( bc.batch, function(){
                             bc.showToast("Batch updated.");
                             bc.repull();
                         }, function(){
@@ -376,7 +376,7 @@
                     
                     case "clone":
                         bc.batch.id = undefined;
-                        batchService.create( bc.batch, function(response){
+                        batchService.create( bc.batch, function(){
                             bc.showToast("Batch cloned.");
                             bc.repull();
                         }, function(){
@@ -434,15 +434,6 @@
 
         /*******************************************************************/
         
-        // skillService.getAll( function(response) {
-        //     //console.log("  (BC)  Retrieving all skills.");
-        //     bc.skills = response;
-        // }, function(error) {
-        //     //console.log("  (BC)  Failed to retrieve all skills with error:", error.data.message);
-            // bc.showToast( "Could not fetch skills.");
-        // });
-
-        /*******************************************************************/
         
         trainerService.getAll( function(response) {
             bc.trainers = response;
@@ -465,12 +456,12 @@
         buildingService.getAll( function(response) {
             bc.buildings = response;
             bc.batch.building = 1;
-        }, function(error) {
+        }, function() {
             bc.showToast("Could not fetch buildings.");
         });
         roomService.getAll( function(response) {
             bc.rooms = response;
-        }, function(error) {
+        }, function() {
             bc.showToast("Could not fetch rooms.");
         });
         
