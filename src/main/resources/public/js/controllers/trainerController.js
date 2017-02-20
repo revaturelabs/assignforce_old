@@ -83,7 +83,8 @@
         };
 
             // holdover until more trainer functionality is created
-        tc.goToTrainer = function(event) {
+        //may need to take an event parameter (event)
+        tc.goToTrainer = function() {
             // nothing for now
         };
 
