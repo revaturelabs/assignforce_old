@@ -6,15 +6,15 @@ var app = angular.module("batchApp");
 
 app.service('settingService', function ($resource) {
 
-    var Setting = $resource('api/v2/setting/:settingID', {settingID: '@settingID'},{update:{method:'PUT'}});
+    var Setting = $resource('api/v2/setting/:settingId', {settingId: '@settingId'},{update:{method:'PUT', url:'api/v2/setting'}});
     var ss = this;
 
     ss.getAll = function (success, error) {
         Setting.query(success, error);
     };
 
-    ss.getById = function (id, success, error) {
-        Setting.get({settingID: id}, success, error);
+    ss.getById = function (settingId, success, error) {
+        Setting.get({settingId: settingId}, success, error);
     };
 
     ss.update = function (setting, success, error) {

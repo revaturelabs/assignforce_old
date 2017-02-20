@@ -9,12 +9,17 @@
 
             <div class="md-padding">
                 <div layout layout-wrap>
-                    <md-input-container flex="100">
+                    <div layout="column">
                         <label>Choose a Skill</label>
-                        <md-select ng-model="skills" placeholder="Select Skills" multiple>
-                            <md-option ng-value="skill" ng-repeat="skill in sdCtrl.skills"> {{ skill.name }} </md-option>
-                        </md-select>
-                    </md-input-container>
+                        <md-checkbox
+                                ng-model="sdCtrl.selectedSkills"
+                                ng-repeat="skill in sdCtrl.skills"
+                                value="{{skill}}"
+                                ng-checked="sdCtrl.exists(skill)"
+                                ng-change="sdCtrl.toggle(skill)"> <!--ng-checked="sdCtrl.exists(skill)"--> <!--ng-checked="sdCtrl.selectedSkills.indexOf(skill)>-1"-->
+                            {{ skill.name }}
+                        </md-checkbox>
+                    </div>
 
                     <!-- for use if user wants to add a skill not already in the database -->
                     <md-input-container flex="100">
