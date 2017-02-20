@@ -30,7 +30,7 @@
                 bc.batch.id         = (bc.state == "edit")       ? incomingBatch.id                  : undefined;
 
                 bc.batch.name       = incomingBatch.name;
-                bc.batch.curriculum = (incomingBatch.curriculum) ? incomingBatch.curriculum.id       : undefined;               
+                bc.batch.curriculum = (incomingBatch.curriculum) ? incomingBatch.curriculum.currId       : undefined;               
                 
                 //bc.batch.location   = (incomingBatch.location)   ? incomingBatch.location.id		 : undefined;
                 bc.batch.room       = (incomingBatch.room)       ? incomingBatch.room.roomID         : undefined;
@@ -71,18 +71,22 @@
         	// to the batch's curriculum.
         bc.calcTrainerCurriculumRatio = function(trainer)
         {
-    		if (angular.isUndefined(bc.selectedCurriculum) || bc.selectedCurriculum === null) { return 0; }
-    		else if (bc.selectedCurriculum.skills.length == 0) { return 100; }
+        	var cur = bc.curricula.find(function(a){
+        		return ((a.currId ? a.currId : -1) == bc.batch.curriculum);
+        	});
+        	
+    		if (angular.isUndefined(cur) || cur === null) { return 0; }
+    		else if (cur.skills.length == 0) { return 100; }
         	else
         	{
         		var matches = 0;
         		var total = 0;
         		
-        		for (var i = 0; i < bc.selectedCurriculum.skills.length; i += 1)
+        		for (var i = 0; i < cur.skills.length; i += 1)
         		{
         			for (var j = 0; j < trainer.skills.length; j += 1)
         			{
-        				if (bc.selectedCurriculum.skills[i].id == (trainer.skills[j].id ? trainer.skills[j].id : -1))
+        				if (cur.skills[i].skillId == (trainer.skills[j] ? trainer.skills[j].skillId : -1))
         				{
         					matches += 1;
         					break;
@@ -98,16 +102,6 @@
         }
         
         /*******************************************************************/
-        
-        bc.getSelectedCurriculum = function()
-        {
-    		curriculumService.getById(bc.batch.curriculum, function(response) {
-                bc.selectedCurriculum = response;
-            }, function(error) {
-                bc.showToast( "Could not fetch curriculum.");
-            });
-        }
-
             // defaults location to Reston branch 
         bc.findHQ = function(){
             return 1;
@@ -413,8 +407,6 @@
         bc.batch = batchService.getEmptyBatch();
         
         bc.batchesSelected = [];
-        
-        bc.selectedCurriculum;
 
             // state information
         bc.state = "create";
