@@ -66,7 +66,7 @@
                 $mdDialog.hide();
                 return;
             }
-            for(var k = 0; k < delList.length; k++){
+           // for(var k = 0; k < delList.length; k++){
             	
             var elem = delList[k];
             //if a location was selected, recurse building/room inactivation
@@ -82,7 +82,7 @@
             					
             					roomService.update( room, function(){
             						//$mdDialog.hide();
-            		            }, function(error){
+            		            }, function(){
             		                $mdDialog.cancel();
             		            });
             					
@@ -91,7 +91,7 @@
             			building.active = false;
             			buildingService.update( building, function(){   
             				//$mdDialog.hide();
-                        }, function(error){
+                        }, function(){
                             $mdDialog.cancel();
                         });
             		});            		
@@ -103,7 +103,7 @@
                 	//$mdDialog.hide();
                     //dc.deleteHelper(delList);
                 	
-                }, function(error){
+                }, function(){
                 	$mdDialog.cancel();
                 });
             }
@@ -116,7 +116,7 @@
                     
                     roomService.update( room, function(){
                     	//$mdDialog.hide();
-		            }, function(error){
+		            }, function(){
 		                $mdDialog.cancel();
 		            });
                 });
@@ -124,7 +124,7 @@
                 
                 buildingService.update( elem, function(){   
                 	//$mdDialog.hide();
-                }, function(error){
+                }, function(){
                     $mdDialog.cancel();
                 });
             }
@@ -134,11 +134,11 @@
             	
             	roomService.update( elem, function(){
             		//$mdDialog.hide();
-	            }, function(error){
+	            }, function(){
 	                $mdDialog.cancel();
 	            });
             }
-           }
+          //////////////////////////////////////////////////////////// }
             $mdDialog.hide();
           };
             // cancel deletion
@@ -168,7 +168,7 @@
             // data gathering
         locationService.getAll( function(response) {
             dc.locations = response;
-        }, function(error) {
+        }, function() {
             $mdDialog.cancel();
         });
     });
