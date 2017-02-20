@@ -148,9 +148,9 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
 
         pc.trainer.certifications.push(certification);
         trainerService.update(pc.trainer, function () {
-            console.log("pass");
+            pc.showToast("pass");
         }, function (err) {
-            console.log(err);
+            pc.showToast(err);
         });
 
         var bucket = new AWS.S3({
