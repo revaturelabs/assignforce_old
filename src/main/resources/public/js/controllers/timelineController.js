@@ -5,6 +5,7 @@ var app = angular.module('batchApp');
 /*--------------------------CONTROLLER---------------------------*/
 
 app.controller("TimelineCtrl", function($scope, $window, batchService, calendarService, trainerService, curriculumService, settingService){
+	
     var tlc = this;
 
     tlc.removeNoTrainer = function(batch) {
@@ -62,6 +63,18 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	//Timeline axis range variables
 	tlc.minDate = new Date(3000, 7, 0);
 	tlc.maxDate = new Date(2000, 12, 0);
+
+	//Timeline variables
+	tlc.timelineFormatting = {};
+	tlc.timelineFormatting.margin_top = 76;
+	tlc.timelineFormatting.margin_right = 36;
+	tlc.timelineFormatting.margin_left = 75;
+	tlc.timelineFormatting.margin_bottom = 0;
+	tlc.timelineFormatting.width = $window.innerWidth - tlc.timelineFormatting.margin_left - tlc.timelineFormatting.margin_right;
+	tlc.timelineFormatting.height = 2000;
+	tlc.timelineFormatting.xPadding = 72;
+	
+	tlc.maxTrainerNameCharacters = 6;
 	tlc.selectedCurriculum = 0;
 	tlc.trainersPerPage = 0;
 	tlc.realTrainersPerPage = 0;
@@ -136,6 +149,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	{
 	    trainerService.getAll( function(response) {
 			tlc.trainers = response.map(function(trainer){return trainerColumnName(trainer)});
+
 			resolve(1);
 	    }, function(reject) {
 	    	resolve(0);
@@ -159,7 +173,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		},
 		function(){
 			if(tlc.batches !== undefined && tlc.trainers !== undefined){
-				tlc.projectTimeline(0);
+				tlc.projectTimeline(-100);
 			}
 		}
 	);
@@ -170,26 +184,30 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		},
 		function(){
 			if(tlc.batches !== undefined && tlc.trainers !== undefined) {
-				tlc.projectTimeline(0);
+				tlc.projectTimeline(-100);
+
             }
 		}
 	);
 
-	// Events for the timeline
+	// Range values for timeline in milliseconds
+	var MAX_RANGE = 126140000000000; // 4000 years
+	var MIN_RANGE = 1000000; // 1 minute
 
+	// Events for the timeline
 	$("#timeline").mousedown(function(evt){
 		evt.stopPropagation();
 
-		if(evt.offsetY > 30 && evt.offsetY < 1970){
+		if(evt.offsetY > tlc.timelineFormatting.margin_top && evt.offsetY < tlc.timelineFormatting.height + tlc.timelineFormatting.margin_top){
 
 			// Initial y-coordinate of the mouse
-			var init = evt.offsetY - 29;
+			var init = evt.offsetY - tlc.timelineFormatting.margin_top;
 			var mousedownY = init;
 			var pageY = evt.pageY;
 
-			// Get the date with respect to the y coordinate
+			// Get the date with respect to the y-coordinate
 			var yScale = d3.time.scale()
-				.domain([0,1940])
+				.domain([0,tlc.timelineFormatting.height])
 				.range([tlc.minDate, tlc.maxDate]);
 
 			var yDate = new Date(yScale(init)).getTime();
@@ -200,34 +218,40 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 			// Draw the zoompoint
 			tlc.projectTimeline(mousedownY);
 			
-			// // Fire when there is a mousemove event on the #timeline element
+			// Fire when there is a mousemove event on the #timeline element
 			$(".toastContainer").mousemove(function(evt){
 
+				// Prevent text highlighting
 				evt.preventDefault();
 				evt.stopPropagation();
 
-				// Recalculate the scaling factor based on the number of milliseconds(more accuracy) currently on the timeline
-				tlc.scalingFactor = (new Date(tlc.maxDate).getTime() - new Date(tlc.minDate).getTime()) / 10;
-				diff = tlc.maxDate.getTime() - tlc.minDate.getTime();
+				// Number of milliseconds between min and max date
+				var millisecondRange = tlc.maxDate.getTime() - tlc.minDate.getTime();
+
+				// Recalculate the scaling factor based on the number of milliseconds currently on the timeline
+				tlc.scalingFactor = millisecondRange / 10;
+				var topMilliseconds = Math.trunc(tlc.scalingFactor * topFraction);
+				var bottomMilliseconds = Math.trunc(tlc.scalingFactor * bottomFraction);
+				var minDateMilliseconds = new Date(tlc.minDate).getTime();
+				var maxDateMilliseconds = new Date(tlc.maxDate).getTime();
 
 			    // If the mouse moves up
-			    if(pageY > evt.pageY && diff > 1000000){
+			    if(pageY > evt.pageY && millisecondRange > MIN_RANGE){
 
 			    	// Set the newly calculated min and max dates
-			    	tlc.minDate = new Date(new Date(tlc.minDate).getTime() + Math.trunc(tlc.scalingFactor * topFraction));
-			    	tlc.maxDate = new Date(new Date(tlc.maxDate).getTime() - Math.trunc(tlc.scalingFactor * bottomFraction));
+			    	tlc.minDate = new Date(minDateMilliseconds + topMilliseconds);
+			    	tlc.maxDate = new Date(maxDateMilliseconds - bottomMilliseconds);
 				
-				} else if(pageY < evt.pageY && diff < 126140000000000) { // If the mouse moves down(big number is milliseconds in 4000 years)
+				} else if(pageY < evt.pageY && millisecondRange < MAX_RANGE) {
 
-					tlc.minDate = new Date(new Date(tlc.minDate).getTime() - Math.trunc(tlc.scalingFactor * topFraction));
-					tlc.maxDate = new Date(new Date(tlc.maxDate).getTime() + Math.trunc(tlc.scalingFactor * bottomFraction));
+					tlc.minDate = new Date(minDateMilliseconds - topMilliseconds);
+					tlc.maxDate = new Date(maxDateMilliseconds + bottomMilliseconds);
 				}
 
 			    tlc.projectTimeline(mousedownY);
 			    
 				// Update the last coordinate of the mouse
 				pageY = evt.pageY;
-				
 			});
 		}
 	});
@@ -235,7 +259,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	$(".toastContainer").mouseup(function(evt){
 		// Erase the zoompoint(or move out of view)
 		tlc.projectTimeline(-100);
-		// Remove mousemove listener from the 
+		// Remove mousemove listener from the container
 		$(".toastContainer").off("mousemove");
 		evt.stopPropagation();
 	});
@@ -252,14 +276,18 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     
     tlc.repullPromise.then(function(result)
     {
-    	if (result) { tlc.projectTimeline(0); }
+    	if (result){ 
+    		tlc.projectTimeline(-100); 
+    	}
     }, function(error){});
     
     tlc.repull = function()
     {
         tlc.repullPromise.then(function(result)
 	    {
-        	if (result) { tlc.projectTimeline(0); }
+        	if (result){ 
+        		tlc.projectTimeline(-100);
+        	}
 	    }, function(error){});
     }
     
@@ -267,7 +295,6 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	tlc.changeTrainersPerPage = function()
 	{
 		var numTrainers = (tlc.trainers ? tlc.trainers.length : 0);
-		
 		
 		tlc.realTrainersPerPage = Math.floor(tlc.trainersPerPage);
 		
@@ -390,7 +417,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 				return 0;
 			});
 			
-			projectTimeline($window.innerWidth, tlc.minDate, tlc.maxDate, yOffset, tlc.filteredBatches, $scope.$parent, calendarService.countWeeks, tlc.filteredTrainers);
+			projectTimeline(tlc.timelineFormatting, tlc.minDate, tlc.maxDate, yOffset, tlc.filteredBatches, $scope.$parent, calendarService.countWeeks, tlc.filteredTrainers);
 		}
 	}
 });
@@ -402,23 +429,18 @@ function trainerColumnName(trainer)
 }
 
 // Draw timeline
-function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, parentScope, numWeeks, trainerNames){
-	//Timeline variables
-	var margin = {top: 80, right: 16, bottom: 32, left:72},
-	width = windowWidth - margin.left - margin.right,
-	height = 2000 - margin.top - margin.bottom,
-	xPadding = 72;
+function projectTimeline(timelineFormatting, minDate, maxDate, yCoord, timelineData, parentScope, numWeeks, trainerNames){
 	
 	//Define Scales
 	var colorScale = d3.scale.category20();
 	
 	var yScale = d3.time.scale()
 		.domain([minDate, maxDate])
-		.range([0,height]);
+		.range([0,timelineFormatting.height]);
 	
 	var xScale = d3.scale.ordinal()
 		.domain(trainerNames)
-		.rangePoints([xPadding, width - xPadding]);
+		.rangePoints([timelineFormatting.xPadding, timelineFormatting.width - timelineFormatting.xPadding]);
 	
 	//Define axis
 	var yAxis = d3.svg.axis()
@@ -555,10 +577,10 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 	
 	svg = d3.select('#timeline')
 		.append('svg')
-			.attr('width',width + margin.left + margin.right)
-			.attr('height',height + margin.bottom + margin.top)
+			.attr('width',timelineFormatting.width + timelineFormatting.margin_left + timelineFormatting.margin_right)
+			.attr('height',timelineFormatting.height + timelineFormatting.margin_bottom + timelineFormatting.margin_top)
 		.append('g')
-			.attr('transform','translate('+margin.left+','+margin.top+')');
+			.attr('transform','translate('+timelineFormatting.margin_left+','+timelineFormatting.margin_top+')');
 			
 	svg.call(tip);
 	
@@ -590,7 +612,7 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 				
 				return isNaN(x) ? 0 : x;
 			})
-			.attr('y2', height)
+			.attr('y2', timelineFormatting.height)
 			.attr('stroke','lightgray');
 	
 	//Add line for current date on timeline
@@ -600,7 +622,7 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 	d3.select('.currentdate')
 		.append('line')
 			.attr('x1', 0)
-			.attr('x2', width)
+			.attr('x2', timelineFormatting.width)
 			.attr('y1', yScale(new Date()))
 			.attr('y2',yScale(new Date()))
 			.attr('stroke','#f26a25');
@@ -612,7 +634,7 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 	d3.select('.zoompoint')
 		.append('line')
 			.attr('x1', 0)
-			.attr('x2', width)
+			.attr('x2', timelineFormatting.width)
 			.attr('y1', yCoord)
 			.attr('y2', yCoord)
 			.attr('stroke','#000000')
@@ -677,7 +699,7 @@ function projectTimeline(windowWidth, minDate, maxDate, yCoord, timelineData, pa
 				var end = yScale(new Date(d.endDate));
 				
 				if (start < 0){ start = 0; }
-				if(end > height){ end = 1940; }
+				if(end > timelineFormatting.height){ end = timelineFormatting.height; }
 				
 				return end - start;
 			})
