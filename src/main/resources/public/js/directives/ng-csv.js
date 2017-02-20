@@ -1,4 +1,4 @@
-(function(window, document) {
+(function(window) {
 
 // Create all modules and define dependencies to make sure they exist
 // and are loaded in the correct order to satisfy dependency injection
@@ -107,13 +107,12 @@ angular.module('ngCsv.services').
       var csvContent = "";
 
       var dataPromise = $q.when(data).then(function (responseData) {
-        //responseData = angular.copy(responseData);//moved to row creation
         // Check if there's a provided header array
         if (angular.isDefined(options.header) && options.header) {
           var encodingArray, headerString;
 
           encodingArray = [];
-          angular.forEach(options.header, function (title, key) {
+          angular.forEach(options.header, function (title) {
             this.push(that.stringifyField(title, options));
           }, encodingArray);
 
@@ -149,7 +148,7 @@ angular.module('ngCsv.services').
           infoArray = [];
 
           var iterator = !!options.columnOrder ? options.columnOrder : row;
-          angular.forEach(iterator, function (field, key) {
+          angular.forEach(iterator, function (field) {
             var val = !!options.columnOrder ? row[field] : field;
             this.push(that.stringifyField(val, options));
           }, infoArray);
@@ -233,7 +232,7 @@ angular.module('ngCsv.directives').
 
           if (!angular.isDefined($scope.lazyLoad) || $scope.lazyLoad != "true") {
             if (angular.isArray($scope.data)) {
-              $scope.$watch("data", function (newValue) {
+              $scope.$watch("data", function () {
                 $scope.buildCSV();
               }, true);
             }
@@ -250,9 +249,15 @@ angular.module('ngCsv.directives').
               quoteStrings: $scope.quoteStrings,
               addByteOrderMarker: $scope.addByteOrderMarker
             };
-            if (angular.isDefined($attrs.csvHeader)) options.header = $scope.$eval($scope.header);
-            if (angular.isDefined($attrs.csvColumnOrder)) options.columnOrder = $scope.$eval($scope.columnOrder);
-            if (angular.isDefined($attrs.csvLabel)) options.label = $scope.$eval($scope.label);
+            if (angular.isDefined($attrs.csvHeader)){
+            	options.header = $scope.$eval($scope.header);
+            }
+            if (angular.isDefined($attrs.csvColumnOrder)){
+            	options.columnOrder = $scope.$eval($scope.columnOrder);
+            }
+            if (angular.isDefined($attrs.csvLabel)){
+            	options.label = $scope.$eval($scope.label);
+            }
 
             options.fieldSep = $scope.fieldSep ? $scope.fieldSep : ",";
 
@@ -307,8 +312,8 @@ angular.module('ngCsv.directives').
           }
         }
 
-        element.bind('click', function (e) {
-          scope.buildCSV().then(function (csv) {
+        element.bind('click', function () {
+          scope.buildCSV().then(function () {
             doClick();
           });
           scope.$apply();
