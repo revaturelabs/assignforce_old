@@ -1,8 +1,6 @@
 package com.revature.assignforce.domain;
 
-import java.sql.Timestamp;
 import java.util.Calendar;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,7 +33,9 @@ public class Unavailable {
 	private Calendar endDate;
 
 	
-	public Unavailable(){}
+	public Unavailable(){
+		//noarg constructor
+	}
 
 	public Unavailable(int iD, Calendar startDate, Calendar endDate) {
 		super();

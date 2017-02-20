@@ -11,6 +11,7 @@ public class AssignForceV2ApplicationTests {
 
 	@Test
 	public void contextLoads() {
+		//donothing
 	}
 
 }
