@@ -510,7 +510,6 @@ assignforce.controller( "reportCtrl", function( $scope, $mdPanel, settingService
 
     settingService.getById(6, function (response) {
         rc.graduates = response.settingValue;
-        console.log(rc.graduates);
     });
     settingService.getById(7, function (response) {
         rc.batchLength = response.settingValue;
@@ -562,7 +561,7 @@ assignforce.controller( "reportCtrl", function( $scope, $mdPanel, settingService
     // Create second var for graph tat defaults to tables default.
     rc.graphData = function() {
         var series = [];
-        var i=1;
+        // var i=1;
 
         var curricula = rc.curricula;
 
@@ -584,7 +583,6 @@ assignforce.controller( "reportCtrl", function( $scope, $mdPanel, settingService
     };
 
 
-    // var chart = new Highcharts.Chart(chartOptions);
 
     $scope.myGraph = function() {
         Highcharts.chart('container', {
@@ -661,11 +659,6 @@ assignforce.controller( "reportCtrl", function( $scope, $mdPanel, settingService
     $scope.myTest = 'container2';
 
 
-
-    // $scope.$watch("items", function (newValue) {
-    //     chart.series[0].setData(newValue, true);
-    // }, true);
-
 });
 
 
@@ -717,12 +710,10 @@ assignforce.directive('hcPie', function () {
         replace: true,
         scope: true,
         controller: function ($scope, $element, $attrs) {
-            console.log(2);
         },
         template: '<div id="container2" style="margin: 0 auto">not working</div>',
         link: function ($scope, element, attrs) {
-            console.log(3);
-            var chart = new Highcharts.Chart({
+            Highcharts.Chart({
                 chart: {
                     renderTo: $scope.myTest,
                     plotBackgroundColor: null,
