@@ -29,7 +29,7 @@ public class SkillCtrl {
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object createSkill( @RequestBody SkillDTO in ) {
 
-        int ID = in.getSkillID();
+        int ID = in.getSkillId();
         String name = in.getName();
 
         Skill out = new Skill( ID, name );
@@ -60,7 +60,7 @@ public class SkillCtrl {
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object updateSkill( @RequestBody SkillDTO in ) {
 
-        int ID = in.getSkillID();
+        int ID = in.getSkillId();
         String name = in.getName();
 
         Skill out = new Skill( ID, name );
@@ -90,7 +90,7 @@ public class SkillCtrl {
         List<Skill> all = skillService.getAllItems();
         if (all == null) {
             return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Fetching all skills failed."), HttpStatus.NOT_FOUND);
-        } else if (all.isEmpty() == true) {
+        } else if (all.isEmpty()) {
             return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No skills available."), HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity< List<Skill> >(all, HttpStatus.OK);

@@ -32,7 +32,7 @@ assignforce.filter('skillFilter', function(){
                         insertSkill = false;
                     }
                 }
-                if (insertSkill == true){
+                if (insertSkill){
                     out.push(input[i]);
                 }
                 insertSkill = true;
@@ -49,26 +49,6 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     // calls showToast method of aCtrl
     pc.showToast = function( message ) {
         $scope.$parent.aCtrl.showToast( message );
-    };
-
-    //skills dialog controller not using this now
-    pc.addSkills = function () {
-        $mdDialog.show({
-            templateUrl: "html/templates/skillTemplate.html",
-            controller: "skillDialogCtrl",
-            controllerAs: "sdCtrl",
-            locals: {
-                trainer        : pc.trainer,
-                skills         : pc.skills,
-                newSkill       : skillService.getEmptySkill()},
-            bindToController: true,
-            clickOutsideToClose: true
-        }).then(function () {
-            pc.showToast("Skill(s) added.");
-            pc.rePullSkills();
-        }, function () {
-            pc.showToast("Skill(s) not added.")
-        });
     };
 
     pc.uploadResume = function () {
@@ -139,11 +119,71 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         }
     };
 
+    pc.uploadCertification = function () {
+        var path = "Certifications/" + pc.trainer.trainerId + "_" + pc.certFile.name;
+
+        var certification = {
+            file: path,
+            name: pc.certName,
+            trainer: pc.trainer.trainerId
+        };
+
+        pc.trainer.certifications.push(certification);
+        trainerService.update(pc.trainer, function () {
+            pc.showToast("Certification has been saved.");
+        }, function () {
+            pc.showToast("Failed saving Certification.");
+            return;
+        });
+
+        var bucket = new AWS.S3({
+            apiVersion: '2006-03-01',
+            accessKeyId: pc.creds.ID,
+            secretAccessKey: pc.creds.SecretKey,
+            region: 'us-east-1',
+            sslEnabled: false,
+            httpOptions:{
+                proxy: 'http://dev.assignforce.revature.pro/'
+            }
+        });
+
+        //set the parameters needed to put an object in the aws s3 bucket
+        var params = {
+            Bucket: pc.creds.BucketName,
+            Key: path,
+            Body: pc.certFile
+        };
+
+        //putting an object in the s3 bucket
+        bucket.putObject(params, function (err) {
+            if (err) {
+                pc.showToast("File could not be uploaded.");
+                return;
+            }
+        });
+
+        pc.certFile = undefined;
+        pc.certName = undefined;
+    };
+
+    pc.removeCertification = function (cert) {
+        for (var i = 0; i < pc.trainer.certifications.length; i++){
+            if(cert.name == pc.trainer.certifications[i].name){
+                pc.trainer.certifications.splice(i,1);
+            }
+        }
+        trainerService.update(pc.trainer, function () {
+            pc.showToast("Removed Certification Successfully");
+        }, function (err) {
+            pc.showToast(err);
+        });
+    };
+
     //queries the database for skills. to be called after a change to the skills array
     pc.rePullSkills = function(){
-        pc.skills = undefined;
+        pc.skillsList = undefined;
         skillService.getAll( function(response) {
-            pc.skills = response;
+            pc.skillsList = response;
         }, function() {
             pc.showToast("Could not fetch skills.");
         });
@@ -161,7 +201,6 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
 
     // data gathering
 
-
     // id is hard coded for testing. fix this later
     trainerService.getById(3, function (response) {
         pc.trainer = response;
@@ -176,17 +215,17 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     });
 
     skillService.getAll( function(response) {
-        pc.skills = response;
-        pc.skillsList = pc.skills;
+        pc.skillsList = response;
 
     }, function () {
         pc.showToast("Could not fetch skills.");
     });
 
     //Simply hard coded for now. Just for testing view
-    pc.test = [];
     pc.myFile;
     pc.creds;
-    pc.skills;
+    pc.certFile;
+    pc.certName;
     pc.skillsList;
+    pc.trainer;
 });

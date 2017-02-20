@@ -62,8 +62,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 				controllerAs : "bldgCtrl",
 				locals : {
 					location : lc.selectedList[0],
-					building : buildingService.getAlmostEmptyBuilding(lc.selectedList[0].id), //two ways: use a different method than getEmptyBuilding(where the hell is that, btw?, or reference the location on the buildingTemplate form
-					//TODO FIND WAY TO ADD lc.selectedList[0].id TO BUILDING'S LOCATION FIELD
+					building : buildingService.getAlmostEmptyBuilding(lc.selectedList[0].id), 
 					state : "create"
 				},
 				bindToController : true,
@@ -91,7 +90,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 				controller : "roomDialogCtrl", //roomDialogController.js
 				controllerAs : "rdCtrl",
 				locals : {
-					building : lc.selectedList[0], //TODO - scrap getAlmostEmptyRoom and replace with getEmptyRoom when finished with testing.
+					building : lc.selectedList[0], 
 					room : roomService.getAlmostEmptyRoom(lc.selectedList[0].id),
 					state : "create"
 				},
@@ -117,18 +116,9 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			});
 		}
 	};
-
-	// removes rooms from selectedList on location menu close
-	// lc.removeRooms = function(location) {
-	// if (location.rooms.length > 0) {
-	// location.rooms.forEach(function(room) {
-	// var idx = lc.selectedList.indexOf(room);
-	// if (idx > -1) {
-	// lc.selectedList.splice(idx, 1);
-	// }
-	// });
-	// }
-	// };
+	
+	
+	
 
 	// edit location
 	lc.editSelected = function() {
@@ -139,7 +129,8 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			lc.showToast("Please select an item.");
 		} else {
 			// edit location
-			if (Array.isArray(lc.selectedList[0].rooms)) {
+			//if statement checks if the selected has a list of buildings (only locations gots those)
+			if (Array.isArray(lc.selectedList[0].buildings)) {
 				$mdDialog.show({
 					templateUrl : "html/templates/dialogs/locationDialog.html",
 					controller : "locationDialogCtrl",
@@ -157,8 +148,27 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 					lc.showToast("Failed to update location.");
 				});
 			}
-			// edit room
-			else {
+			//Now we check if there's a list of rooms (only buildings got those)
+			else if(Array.isArray(lc.selectedList[0].rooms)){
+				$mdDialog.show({
+					templateUrl : "html/templates/buildingTemplate.html",
+					controller : "bldgDialogCtrl",
+					controllerAs : "bldgCtrl",
+					locals : {
+						building : lc.selectedList[0],
+						state : "edit"
+					},
+					bindToController : true,
+					clickOutsideToClose : true
+				}).then(function() {
+					lc.showToast("Building updated.");
+					lc.repull();
+				}, function() {
+					lc.showToast("Failed to update building.");
+				});
+			}
+			
+			else{
 				$mdDialog.show({
 					templateUrl : "html/templates/dialogs/roomDialog.html",
 					controller : "roomDialogCtrl",
@@ -176,15 +186,17 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 					lc.showToast("Failed to update room.");
 				});
 			}
+			
+			
+			
+			
+		
 		}
 	};
 
 	// delete location
-	// TODO DELETE BUTTON CALLS THIS
 	lc.deleteSelected = function() {
-
 		var summary = lc.categorizeSelected();
-
 		$mdDialog.show({
 			templateUrl : "html/templates/dialogs/deleteDialog.html",
 			controller : "deleteDialogCtrl", //deleteDialogController.js
@@ -195,8 +207,9 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			},
 			bindToController : true,
 			clickOutsideToClose : true
-		}).then(function() {
+	}).then(function() {
 			lc.showToast(lc.formatMessage(summary) + " deleted.");
+			lc.showToast("Item deleted.");
 			lc.repull();
 		}, function() {
 			lc.showToast("Failed to delete rooms/buildings/locations.");

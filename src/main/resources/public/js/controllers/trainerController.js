@@ -43,7 +43,6 @@
             });
         };
 
-
         //connects to aws s3 to grab an object
         tc.grabS3Resume = function (fileName) {
             //if the trainer has a null resume in the database then it will show the toast and stop running the function
@@ -102,6 +101,28 @@
         	return new Date(incoming);
         };
 
+        tc.showCalendar = function(){
+
+            $mdDialog.show({
+                templateUrl: "html/templates/calendarTemplate.html",
+                controller: "trainerCtrl",
+                controllerAs: "tCtrl",
+                bindToController: true,
+                clickOutsideToClose: true
+            });
+        }
+
+        tc.showPTODialog = function(){
+
+            $mdDialog.show({
+                templateUrl: "html/templates/ptoRequest.html",
+                controller: "ptoCtrl",
+                controllerAs: "ptoCtrl",
+                bindToController: true,
+                clickOutsideToClose: true
+            });
+        }
+
         // page initialization
         //get the S3 bucket credentials and store them in creds
         s3Service.getCreds(function (response) {
@@ -116,4 +137,5 @@
         }, function() {
             tc.showToast("Could not fetch trainers.");
         });
+
     });//end trainer controller

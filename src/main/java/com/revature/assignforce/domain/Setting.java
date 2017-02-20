@@ -20,7 +20,9 @@ public class Setting{
     @Column(name = "SETTING_VALUE")
     private Double settingValue;
 
-    public Setting() {}
+    public Setting() {
+    	//noarg constructor
+    }
 
     public Setting(int settingId, String settingName, Double settingValue) {
         super();
@@ -29,11 +31,11 @@ public class Setting{
         this.settingValue = settingValue;
     }
 
-    public int getId() {
+    public int getSettingId() {
         return settingId;
     }
 
-    public void setId(int settingId) {
+    public void setSettingId(int settingId) {
         this.settingId = settingId;
     }
 
