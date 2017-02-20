@@ -14,8 +14,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "CURRICULUM")
@@ -34,7 +32,7 @@ public class Curriculum implements Activatable{
 	@JoinTable(name="CURRICULUM_SKILL_JT", 
 	joinColumns=@JoinColumn(name="CURRICULUM_ID"), 
 	inverseJoinColumns=@JoinColumn(name="SKILL_ID"))
-	@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")					// ADDED this to fix serialization/infinite loop issues
+	//@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")					// ADDED this to fix serialization/infinite loop issues
 	private List<Skill> skills;
 
 	@Column(name="active", insertable = false)
