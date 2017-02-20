@@ -1,55 +1,41 @@
 var assignforce = angular.module( "batchApp" );
 
-assignforce.controller( "reportCtrl", function( $scope, settingService, batchService, curriculumService, monthList ) {
+assignforce.controller( "reportCtrl", function( $scope, $mdPanel, settingService, batchService, curriculumService, monthList ) {
 
     var rc = this;
 
     rc.cardArr = [];
 
 
-
-    $scope.myVar = false;
-    $scope.toggle = function() {
-        $scope.myVar = !$scope.myVar;
-    };
-
-
-
-    $scope.ideas = [
-        ['ideas1', 1],
-        ['ideas2', 8],
-        ['ideas3', 5]
-    ];
-
-
-
-    $scope.options = [{
-        title: 'Graduates summary table for 2017',
-        content: '<div class="get-Data"></div>',
-        template: '<get-Data></get-Data>'
-    }, {
-        title: 'Graduates summary graph for 2017',
-        content: '<get-Data></get-Data>'
-    }, {
-        title: 'Incoming summary table for 2017',
-        content: 'Incoming Table',
-        template: ''
-
-    }, {
-        title: 'Incoming summary graph for 2017',
-        content: 'No'
-    }];
+    // adds a trainer by popping up a dialog box
+    // tc.addTrainer = function () {
+    //     $mdDialog.show({
+    //         templateUrl: "html/dialogs/trainerDialog.html",
+    //         controller: "trainerDialogCtrl",
+    //         controllerAs: "tdCtrl",
+    //         locals: {
+    //             trainer : trainerService.getEmptyTrainer(),
+    //             state   : "create" },
+    //         bindToController: true,
+    //         clickOutsideToClose: true
+    //     }).then(function () {
+    //         tc.showToast("Trainer success.");
+    //         tc.rePullTrainers();
+    //     }, function () {
+    //         tc.showToast("Trainer Fails.")
+    //     });
+    // };
 
 
-    // rc.tryme = $scope.trustAsHtml('<p>Grad - Table</p>');
 
-
-    rc.show = true;
-    rc.showMe = function() {
-        console.log("My Show Function.... show = " + rc.show);
-        rc.show = !rc.show;
-    };
-
+    // rc.getGradTable = function() {
+    //     return({
+    //         templateUrl: "html/templates/gradTableTemplate.html",
+    //         controller: "reportCtrl",
+    //         controllerAs: "rCtrl",
+    //         bindToController: true
+    //     })
+    // };
 
 
     // functions
@@ -117,9 +103,7 @@ assignforce.controller( "reportCtrl", function( $scope, settingService, batchSer
             for(var x = 0; x < rc.batches.length; x++){
                 date = new Date(rc.batches[x]['endDate']);
                 if (rc.batches[x]['curriculum'].name && curriculum && (date.getMonth() == month) && (date.getFullYear() == rc.year) && (rc.batches[x]['curriculum'].id == curriculum.id)) {
-                    // if ((date.getMonth() == month) && (date.getFullYear() == rc.year) && (rc.batches[x]['curriculum'].id == curriculum.id)) {
-                        total += rc.graduates;
-                    // }
+                    total += rc.graduates;
                 }
             }
             summary.push(total);
@@ -476,8 +460,13 @@ assignforce.controller( "reportCtrl", function( $scope, settingService, batchSer
     // Create second var for graph tat defaults to tables default.
     rc.graphData = function() {
         var series = [];
+        var i=1;
 
         var curricula = rc.curricula;
+
+        console.log(rc.batches);
+
+        while(!rc.curricula) {console.log(i++)}
 
         angular.forEach(curricula, function (curr) {
             var empty = {};
@@ -577,6 +566,16 @@ assignforce.controller( "reportCtrl", function( $scope, settingService, batchSer
 });
 
 
+
+assignforce.directive('getSumTable', function() {
+    return {
+        restrict: 'ACE',
+        scope: true,
+        templateUrl: "html/templates/gradTableTemplate.html",
+        // template: '<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>',
+        bindToController: true
+    };
+});
 
 
 assignforce.directive('getData', function() {
