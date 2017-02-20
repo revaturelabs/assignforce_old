@@ -1,64 +1,8 @@
 <div id="accordionDynamic2" class="accordionWrap">
     <md-card class="accordion-block" ng-class="{'active-block':$first}">
-        <md-toolbar accordion-dynamic ng-class="{'active':$first}" >Grad Summary for 2017</md-toolbar>
-        <div class="content" >
-            <md-toolbar layout="columns" class="md-primary md-hue-2">
-                <div class="md-toolbar-tools">
-                    <span> Graduates summary for {{ rCtrl.year }} </span>
-                </div>
-                <span flex> </span>
-                <md-menu md-position-mode="target-right target">
-                    <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button">
-                        <md-tooltip class="md-title"> Settings </md-tooltip>
-                        <md-icon md-menu-origin md-svg-icon="img/ic_settings_white_24px.svg"> </md-icon>
-                    </md-button>
-                    <md-menu-content width="4" class="md-padding">
-                        <md-menu-item>
-                            <md-input-container>
-                                <label> Year </label>
-                                <input ng-model="rCtrl.year" type="number">
-                            </md-input-container>
-                        </md-menu-item>
-                        <md-menu-item>
-                            <md-input-container>
-                                <label> Graduates per batch </label>
-                                <input ng-model="rCtrl.graduates" type="number">
-                            </md-input-container>
-                        </md-menu-item>
-                    </md-menu-content>
-                </md-menu>
-            </md-toolbar>
-            <div ng-if="rCtrl.batches != undefined" class="md-padding">
-                <md-table-container>
-                    <table md-table class="gradTable">
-                        <thead md-head md-order="rCtrl.currOrder">
-                        <tr md-row>
-                            <th md-column flex md-order-by="name"> Curriculum </th>
-                            <th md-column flex ng-repeat="month in rCtrl.monthList"> {{ month }} </th>
-                            <th md-column md-numeric flex> Total </th>
-                        </tr>
-                        </thead>
-                        <tbody md-body>
-                        <tr md-row ng-repeat="curr in (rCtrl.curricula | orderBy:rCtrl.currOrder) track by curr.id">
-                            <td md-cell flex> {{ curr.name }} </td>
-                            <td md-cell flex ng-repeat="month in rCtrl.currSummary(curr) track by $index"> {{ month }} </td>
-                            <td md-cell flex> {{ rCtrl.currSummary(curr).reduce(rCtrl.sumCurrYear) }} </td>
-                        </tr>
-                        <tr md-row>
-                            <td md-cell flex> Total </td>
-                            <td md-cell flex ng-repeat="month in rCtrl.currSummary(curr) track by $index"> {{ rCtrl.sumMonth($index) }} </td>
-                            <td md-cell flex> {{ rCtrl.sumYear() }} </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </md-table-container>
-            </div>
-            <div ng-if="rCtrl.batches == undefined" layout="column" layout-wrap layout-align="center center">
-                <div flex="100"> &nbsp; </div>
-                <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
-                <div flex="100"> &nbsp; </div>
-            </div>
-        </div>
+        <md-content>
+            <get-grad-table></get-grad-table>
+        </md-content>
     </md-card>
 
     <md-card class="accordion-block" ng-class="{'active-block':$first}">
@@ -251,18 +195,18 @@
     .accordionWrap{
         list-style: none;
     }
-    .accordionWrap md-toolbar:after{
-        content: ''    ;
-        display: inline-block;
-        width: 0;
-        height: 0;
-    }
-    .accordionWrap md-toolbar.active:after{
-        content: ''    ;
-        display: inline-block;
-        width: 0;
-        height: 0;
-    }
+    /*.accordionWrap md-toolbar:after{*/
+        /*content: '';*/
+        /*display: inline-block;*/
+        /*width: 0;*/
+        /*height: 0;*/
+    /*}*/
+    /*.accordionWrap md-toolbar.active:after{*/
+        /*content: '';*/
+        /*display: inline-block;*/
+        /*width: 0;*/
+        /*height: 0;*/
+    /*}*/
     .accordionWrap .content{
         list-style: none;
         padding: 10px;
@@ -271,114 +215,27 @@
     .accordionWrap .active-block .content{
         display: block;
     }
-    .accordionWrap .content h2{
-        margin: 10px 0 20px 0;
-        font-size: 18px;
-    }
-    .accordionWrap .content p{
-        margin: 0 0 10px 0;
-    }
+    /*.accordionWrap .content h2{*/
+        /*margin: 10px 0 20px 0;*/
+        /*font-size: 18px;*/
+    /*}*/
+    /*.accordionWrap .content p{*/
+        /*margin: 0 0 10px 0;*/
+    /*}*/
 </style>
 
 
+<br><br><br>
+<!--<md-card>-->
+    <!--<md-toolbar>-->
+        <!--This is a test or something....-->
+    <!--</md-toolbar>-->
+    <!--<md-content>-->
+        <!--<get-sum-table></get-sum-table>-->
+    <!--</md-content>-->
+<!--</md-card>-->
 
-
-<!--<div ng-if="rCtrl.batches != undefined" id="accordionDynamic" class="accordionWrap">-->
-    <!--<md-card class="accordion-block" ng-repeat="option in options" ng-class="{'active-block':$first}" md-whiteframe="8" ng-cloak>-->
-        <!--<md-content>-->
-            <!--<md-toolbar accordion-dynamic class="md-toolbar" ng-class="{active:$first}">{{option.title}}</md-toolbar>-->
-            <!--<div class="content">-->
-                <!--<md-content><md-card md-whiteframe="8" ng-cloak>-->
-                    <!--<md-toolbar layout="columns">-->
-                        <!--<div class="md-toolbar-tools">-->
-                            <!--<span> Reports </span>-->
-                            <!--<span flex> </span>-->
-                            <!--<md-button ng-click="null" ng-csv="rCtrl.export()" filename="{{rCtrl.year}}report.csv" class="md-icon-button">-->
-                                <!--<md-tooltip class="md-title"> Export to CSV </md-tooltip>-->
-                                <!--<md-icon md-menu-origin class="material-icons"> file_download </md-icon>-->
-                            <!--</md-button>-->
-                        <!--</div>-->
-                    <!--</md-toolbar>-->
-                    <!--&lt;!&ndash; Graduates annual report &ndash;&gt;-->
-                    <!--<md-content>-->
-                        <!--<md-toolbar layout="columns" class="md-primary md-hue-2">-->
-                            <!--<div class="md-toolbar-tools">-->
-                                <!--<span> Graduates summary for {{ rCtrl.year }} </span>-->
-                            <!--</div>-->
-                            <!--<span flex> </span>-->
-                            <!--<md-menu md-position-mode="target-right target">-->
-                                <!--<md-button ng-click="$mdOpenMenu($event)" class="md-icon-button">-->
-                                    <!--<md-tooltip class="md-title"> Settings </md-tooltip>-->
-                                    <!--<md-icon md-menu-origin md-svg-icon="img/ic_settings_white_24px.svg"> </md-icon>-->
-                                <!--</md-button>-->
-                                <!--<md-menu-content width="4" class="md-padding">-->
-                                    <!--<md-menu-item>-->
-                                        <!--<md-input-container>-->
-                                            <!--<label> Year </label>-->
-                                            <!--<input ng-model="rCtrl.year" type="number">-->
-                                        <!--</md-input-container>-->
-                                    <!--</md-menu-item>-->
-                                    <!--<md-menu-item>-->
-                                        <!--<md-input-container>-->
-                                            <!--<label> Graduates per batch </label>-->
-                                            <!--<input ng-model="rCtrl.graduates" type="number">-->
-                                        <!--</md-input-container>-->
-                                    <!--</md-menu-item>-->
-                                <!--</md-menu-content>-->
-                            <!--</md-menu>-->
-                        <!--</md-toolbar>-->
-                        <!--<div ng-if="rCtrl.batches != undefined" class="md-padding">-->
-                            <!--<md-table-container>-->
-                                <!--<table md-table class="gradTable" id="">-->
-                                    <!--<thead md-head md-order="rCtrl.currOrder">-->
-                                    <!--<tr md-row>-->
-                                        <!--<th md-column flex md-order-by="name"> Curriculum </th>-->
-                                        <!--<th md-column flex ng-repeat="month in rCtrl.monthList"> {{ month }} </th>-->
-                                        <!--<th md-column md-numeric flex> Total </th>-->
-                                    <!--</tr>-->
-                                    <!--</thead>-->
-                                    <!--<tbody md-body>-->
-                                    <!--<tr md-row ng-repeat="curr in (rCtrl.curricula | orderBy:rCtrl.currOrder) track by curr.id">-->
-                                        <!--<td md-cell flex> {{ curr.name }} </td>-->
-                                        <!--<td md-cell flex ng-repeat="month in rCtrl.currSummary(curr) track by $index"> {{ month }} </td>-->
-                                        <!--<td md-cell flex> {{ rCtrl.currSummary(curr).reduce(rCtrl.sumCurrYear) }} </td>-->
-                                    <!--</tr>-->
-                                    <!--<tr md-row>-->
-                                        <!--<td md-cell flex> Total </td>-->
-                                        <!--<td md-cell flex ng-repeat="month in rCtrl.currSummary(curr) track by $index"> {{ rCtrl.sumMonth($index) }} </td>-->
-                                        <!--<td md-cell flex> {{ rCtrl.sumYear() }} </td>-->
-                                    <!--</tr>-->
-                                    <!--</tbody>-->
-                                <!--</table>-->
-                            <!--</md-table-container>-->
-                        <!--</div>-->
-                        <!--<div ng-if="rCtrl.batches == undefined" layout="column" layout-wrap layout-align="center center">-->
-                            <!--<div flex="100"> &nbsp; </div>-->
-                            <!--<md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>-->
-                            <!--<div flex="100"> &nbsp; </div>-->
-                        <!--</div>-->
-                    <!--</md-content>-->
-                <!--</md-card><br><br><br></md-content>-->
-                <!--<md-content>{{option.content}}</md-content>-->
-                <!--<md-content>{{option.template}}</md-content>-->
-            <!--</div>-->
-            <!--<div ng-if="rCtrl.batches == undefined" layout="column" layout-wrap layout-align="center center">-->
-                <!--<div flex="100"> &nbsp; </div>-->
-                <!--<md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>-->
-                <!--<div flex="100"> &nbsp; </div>-->
-            <!--</div>-->
-        <!--</md-content>-->
-    <!--</md-card>-->
-<!--</div><br><br><br>-->
-
-
-
-
-
-
-
-
-
+<br><br><br>
 
 
 <!--<div class="hc-pie"></div><br><br><br>-->
