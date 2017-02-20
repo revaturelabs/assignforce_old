@@ -328,7 +328,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		
 		if (!angular.isNumber(tlc.realTrainersPerPage) || isNaN(parseInt(tlc.realTrainersPerPage)) || tlc.realTrainersPerPage < 0) {
 			tlc.realTrainersPerPage = 0; 
-			}
+		}
 		
 		tlc.realTrainersPerPage = Math.min(tlc.realTrainersPerPage, numTrainers);
 		
@@ -339,6 +339,11 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		tlc.realTrainerPage = 1;
 		tlc.trainerPage = tlc.realTrainerPage;
 		tlc.maxTrainerPages = Math.ceil(numTrainers / tlc.realTrainersPerPage);
+		
+		if (tlc.realTrainersPerPage > 0)
+		{
+			tlc.hideBatchlessTrainers = 0;
+		}
 		
 		tlc.previousPageButtonStatus();
 		tlc.nextPageButtonStatus();
