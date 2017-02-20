@@ -4,9 +4,6 @@ import java.util.List;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 @Entity
 @Table(name = "TRAINER")
 public class Trainer implements Activatable{
@@ -37,7 +34,7 @@ public class Trainer implements Activatable{
 	@JoinTable(name="TRAINER_SKILL_JT",
     joinColumns=@JoinColumn(name="TRAINER"),
     inverseJoinColumns=@JoinColumn(name="SKILL"))
-	@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")						// ADDED this to fix serialization/infinite loop issues
+	//@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")						// ADDED this to fix serialization/infinite loop issues
 	private List<Skill> skills;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)

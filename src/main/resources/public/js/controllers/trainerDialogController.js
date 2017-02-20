@@ -5,17 +5,15 @@ assignforce.controller("trainerDialogCtrl", function ($scope, $mdDialog, trainer
 
     var tdc = this;
 
-
-    //functions
-        //close dialog
+    //close dialog
     tdc.cancel = function () {
         $mdDialog.cancel();
     };
 
     //save new
     tdc.save = function (isValid) {
-        if (isValid){
-            if (tdc.state == "create"){
+    	
+            if (isValid && tdc.state == "create"){
                 trainerService.create(tdc.trainer, function () {
                     $mdDialog.hide();
                 }, function () {
@@ -23,7 +21,6 @@ assignforce.controller("trainerDialogCtrl", function ($scope, $mdDialog, trainer
                 });
                 $mdDialog.hide();
             }
-        }
     };
 
     //data
