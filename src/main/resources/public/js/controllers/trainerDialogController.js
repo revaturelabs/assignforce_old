@@ -5,9 +5,7 @@ assignforce.controller("trainerDialogCtrl", function ($scope, $mdDialog, trainer
 
     var tdc = this;
 
-
-    //functions
-        //close dialog
+    //close dialog
     tdc.cancel = function () {
         $mdDialog.cancel();
     };
