@@ -447,8 +447,7 @@ assignforce.controller( "reportCtrl", function( $scope, $mdPanel, settingService
     rc.year = new Date().getFullYear();
 
     //The number of graduates.
-
-
+    
 
     //The date Trainee's are needed by.
     rc.reqDate = new Date();
@@ -457,7 +456,6 @@ assignforce.controller( "reportCtrl", function( $scope, $mdPanel, settingService
     rc.startDate = new Date();
 
     //Default batch time-period.
-    // rc.batchLength = 11;
 
     //Number of Required Graduates.
     rc.requiredGrads;
