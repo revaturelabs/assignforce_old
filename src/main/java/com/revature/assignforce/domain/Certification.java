@@ -17,55 +17,65 @@ public class Certification {
     @Column(name = "ID")
     @SequenceGenerator(allocationSize = 1, name = "certSeq", sequenceName = "CERT_ID_SEQ")
     @GeneratedValue(generator = "certSeq", strategy = GenerationType.SEQUENCE)
-    private int ID;
+    private int id;
 
     @Column(name = "Cert_URL")
-    private String url;
+    private String file;
 
-    @ManyToOne
-    @JoinColumn(name = "Trainer")
-    @Fetch(FetchMode.JOIN)
-    private Trainer trainer;
+    @Column(name = "CERT_NAME")
+    private String name;
+
+    @Column(name = "TRAINER")
+    private int trainer;
 
     public Certification() {
     	//noarg constructor
     }
 
-    public Certification(String url, Trainer trainer) {
-        this.url = url;
+    public Certification(int id, String file, String name, int trainer) {
+        this.id = id;
+        this.file = file;
+        this.name = name;
         this.trainer = trainer;
     }
 
-    public int getID() {
-        return ID;
+    public int getId() {
+        return id;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getUrl() {
-        return url;
+    public String getName() {
+        return name;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Trainer getTrainer() {
+    public String getFile() {
+        return file;
+    }
+
+    public void setFile(String file) {
+        this.file = file;
+    }
+
+    public int getTrainer() {
         return trainer;
     }
 
-    public void setTrainer(Trainer trainer) {
+    public void setTrainer(int trainer) {
         this.trainer = trainer;
     }
 
     @Override
     public String toString() {
         return "Certification{" +
-                "ID = " + ID +
-                ", url = '" + url + '\'' +
-                ", trainer = " + trainer +
+                "ID = " + id +
+                ", Name = '" + name + '\'' +
                 '}';
     }
 }

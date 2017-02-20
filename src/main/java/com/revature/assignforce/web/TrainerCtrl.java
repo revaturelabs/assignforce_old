@@ -34,9 +34,9 @@ public class TrainerCtrl {
 		String resume = in.getResume();
 		List<Skill> skills = in.getSkills();
 		List<Certification> certifications = in.getCertifications();
-		List<Unavailable> unavailabilities = in.getUnavailability();
+		List<Unavailable> unavailability = in.getUnavailability();
 
-		Trainer out = new Trainer( ID, firstName, lastName, resume, unavailabilities, skills, certifications );
+		Trainer out = new Trainer( ID, firstName, lastName, resume, unavailability, skills, certifications );
 		out = trainerService.saveItem( out );
 		
 		if (out == null) {
@@ -69,10 +69,10 @@ public class TrainerCtrl {
 		String lastName = in.getLastName();
 		String resume = in.getResume();
 		List<Skill> skills = in.getSkills();
-		List<Unavailable> unavailabilities = in.getUnavailability();
+		List<Unavailable> unavailability = in.getUnavailability();
 		List<Certification> certifications = in.getCertifications();
 
-		Trainer out = new Trainer( ID, firstName, lastName, resume, unavailabilities, skills, certifications);
+		Trainer out = new Trainer( ID, firstName, lastName, resume, unavailability, skills, certifications);
 		out.setActive(in.getActive());
 		out = trainerService.saveItem( out );
 
