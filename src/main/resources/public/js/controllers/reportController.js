@@ -75,8 +75,9 @@ assignforce.controller( "reportCtrl", function( $scope, $mdPanel, settingService
 
             for(var x = 0; x < rc.batches.length; x++){
                 date = new Date(rc.batches[x]['endDate']);
-                if (rc.batches[x]['curriculum'].name && curriculum && (date.getMonth() == month) && (date.getFullYear() == rc.year) && (rc.batches[x]['curriculum'].currId == curriculum.currId)) {
-                    total += rc.graduates;
+                if (rc.batches[x]['curriculum'].name && curriculum && (date.getMonth() == month) && (date.getFullYear() == rc.year)) {
+                    if(rc.batches[x]['curriculum'].currId == curriculum.currId)
+                        total += rc.graduates;
                 }
             }
             summary.push(total);
@@ -447,7 +448,7 @@ assignforce.controller( "reportCtrl", function( $scope, $mdPanel, settingService
     rc.year = new Date().getFullYear();
 
     //The number of graduates.
-    
+
 
     //The date Trainee's are needed by.
     rc.reqDate = new Date();
