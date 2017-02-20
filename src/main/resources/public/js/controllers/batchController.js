@@ -77,11 +77,13 @@
         	{
         		var matches = 0;
         		var total = 0;
+        		var count = 0;
         		
         		for (var i = 0; i < bc.selectedCurriculum.skills.length; i += 1)
         		{
         			for (var j = 0; j < trainer.skills.length; j += 1)
         			{
+        				count++;
         				if (bc.selectedCurriculum.skills[i].id == (trainer.skills[j].id ? trainer.skills[j].id : -1))
         				{
         					matches += 1;
@@ -90,7 +92,7 @@
         			}
         			total += 1;
         		}
-        		
+        		console.log(count);
         		if (total > 0) { return Math.floor((matches / total) * 100); }
         		
         		return 100;

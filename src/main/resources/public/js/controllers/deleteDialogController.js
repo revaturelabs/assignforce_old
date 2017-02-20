@@ -98,7 +98,7 @@
                 //runs the locationService update, concentric with another deleteHelper call upon success.
             	
                 locationService.update( elem, function(){
-                	
+                	//donothing
                 }, function(){
                 	$mdDialog.cancel();
                 });
