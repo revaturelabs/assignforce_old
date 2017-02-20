@@ -66,9 +66,8 @@
                 $mdDialog.hide();
                 return;
             }
-           for(var k = 0; k < delList.length; k++){
             	
-            var elem = delList[k];
+            var elem = delList.shift();
             
             //if a location was selected, recurse building/room inactivation
             if (Array.isArray(elem.buildings)){
@@ -91,6 +90,7 @@
             			building.active = false;
             			buildingService.update( building, function(){   
                         }, function(){
+                        	//TODO HERE
                             $mdDialog.cancel();
                         });
             		});            		
@@ -103,6 +103,9 @@
                 }, function(){
                 	$mdDialog.cancel();
                 });
+                
+            dc.deleteHelper(delList);
+            
             }
 
             //else if a building was selected, recurse room inactivation
@@ -121,6 +124,7 @@
                 }, function(){
                     $mdDialog.cancel();
                 });
+                dc.deleteHelper(delList);
             }
             //else room was called, so simply:
             else {
@@ -130,8 +134,9 @@
 	            }, function(){
 	                $mdDialog.cancel();
 	            });
+            	dc.deleteHelper(delList);
             }
-            }
+            //}
             $mdDialog.hide();
           };
             // cancel deletion
