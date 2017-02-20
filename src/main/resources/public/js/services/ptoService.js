@@ -1,7 +1,7 @@
 
 var app = angular.module("batchApp");
-
-app.service('ptoService', function ($resource) {
+//may need $resource in the parameters
+app.service('ptoService', function () {
     // Have to make calls to the server
 
     var ptos = this;

@@ -133,7 +133,7 @@
             // data gathering
         batchService.getAll( function(response) {
             hc.batches = response;
-        }, function(error) {
+        }, function() {
             hc.showToast("Could not fetch batches.");
         });
 
