@@ -64,14 +64,6 @@ public class TrainerCtrl {
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object updateTrainer( @RequestBody TrainerDTO in ) {
 		int ID = in.getTrainerId();
-//		List<Trainer> trainers = trainerService.getAllItems();
-//
-//		for(int i = 0; i < trainers.size(); i++){
-//			if(in.getFirstName().equals(trainers.get(i).getFirstName()) && in.getLastName().equals(trainers.get(i).getLastName())){//add lookup by last name
-//				ID = trainers.get(i).getTrainerId();
-//				break;
-//			}
-//		}
 
 		String firstName = in.getFirstName();
 		String lastName = in.getLastName();
@@ -107,7 +99,7 @@ public class TrainerCtrl {
 		List<Trainer> all = trainerService.getAllItems();
 		if (all == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Fetching all trainers failed."), HttpStatus.NOT_FOUND);
-		} else if (all.isEmpty() == true) {
+		} else if (all.isEmpty()) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No trainers available."), HttpStatus.NOT_FOUND);
 		} else {
 			return new ResponseEntity< List<Trainer> >(all, HttpStatus.OK);

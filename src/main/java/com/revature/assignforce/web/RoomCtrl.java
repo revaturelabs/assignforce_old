@@ -18,7 +18,6 @@ import com.revature.assignforce.domain.Room;
 import com.revature.assignforce.domain.Unavailable;
 import com.revature.assignforce.domain.dto.ResponseErrorDTO;
 import com.revature.assignforce.domain.dto.RoomDTO;
-import com.revature.assignforce.service.DaoService;
 
 @RestController
 @RequestMapping("/api/v2/room")
@@ -65,13 +64,13 @@ public class RoomCtrl {
 		// updating an existing room object with information passed from room data transfer object
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object updateRoom( @RequestBody RoomDTO in ) {
-	
+		
 		int ID = in.getRoomID();
 		String name = in.getRoomName();
 		int building = in.getBuilding();
 		List<Unavailable> unavailabilities = in.getUnavailabilities();
-		
-		Room out = new Room( ID, name, building, unavailabilities );
+		Boolean active = in.getActive();
+		Room out = new Room( ID, name, building, unavailabilities, active);
 		out = roomService.saveItem( out );
 		
 		if (out == null) {
@@ -86,7 +85,6 @@ public class RoomCtrl {
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object deleteRoom( @PathVariable("id") int ID ) {
 		
-		//Room delete = roomService.getOneItem(ID);
 		roomService.deleteItem(ID);
 		return new ResponseEntity<Object>(null, HttpStatus.OK);
 	}
@@ -99,7 +97,7 @@ public class RoomCtrl {
 		List<Room> all = roomService.getAllItems();
 		if (all == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Fetching all rooms failed."), HttpStatus.NOT_FOUND);
-		} else if (all.isEmpty() == true) {
+		} else if (all.isEmpty()) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No rooms available."), HttpStatus.NOT_FOUND);
 		} else {
 			return new ResponseEntity< List<Room> >(all, HttpStatus.OK);

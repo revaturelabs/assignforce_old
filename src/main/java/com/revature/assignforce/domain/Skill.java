@@ -25,7 +25,9 @@ public class Skill implements Activatable{
 	@Column(name="active", insertable = false)
 	private Boolean active;
 
-	public Skill(){}
+	public Skill(){
+		//noarg constructor
+	}
 	
 	public Skill(int skillId, String name) {
 		super();

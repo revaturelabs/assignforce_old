@@ -10,7 +10,7 @@
 
             var result = [];
             items.forEach( function(item){
-                if (item.active == true) {
+                if (item.active) {
                     result.push(item);
                 }
             });

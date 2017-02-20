@@ -20,7 +20,9 @@ public class Setting{
     @Column(name = "SETTING_VALUE")
     private Double settingValue;
 
-    public Setting() {}
+    public Setting() {
+    	//noarg constructor
+    }
 
     public Setting(int settingId, String settingName, Double settingValue) {
         super();
