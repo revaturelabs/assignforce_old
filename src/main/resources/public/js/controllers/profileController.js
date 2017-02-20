@@ -29,8 +29,6 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         $scope.$parent.aCtrl.showToast( message );
     };
 
-
-
     //skills dialog controller not using this now
     pc.addSkills = function () {
         $mdDialog.show({
@@ -46,8 +44,10 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         }).then(function () {
             pc.showToast("Skill(s) added.");
             pc.rePullSkills();
+            // pc.rePullTrainer();
         }, function () {
-            pc.showToast("Skill(s) not added.")
+            pc.showToast("Skill(s) not added.");
+            // pc.rePullTrainer();
         });
     };
 
