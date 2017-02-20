@@ -28,6 +28,7 @@ public class Certification {
     private Trainer trainer;
 
     public Certification() {
+    	//noarg constructor
     }
 
     public Certification(String url, Trainer trainer) {

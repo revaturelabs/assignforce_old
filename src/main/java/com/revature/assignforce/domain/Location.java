@@ -33,7 +33,7 @@ public class Location implements Activatable {
 	private List<Building> buildings;
 
 	public Location() {
-	
+	//No arg constructor
 	}
 
 	public Location(int iD, String name, String city, String state, List<Building> buildings, Boolean active) {

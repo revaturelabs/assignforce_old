@@ -32,7 +32,7 @@ assignforce.filter('skillFilter', function(){
                         insertSkill = false;
                     }
                 }
-                if (insertSkill == true){
+                if (insertSkill){
                     out.push(input[i]);
                 }
                 insertSkill = true;
