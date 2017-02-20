@@ -81,6 +81,7 @@
             					room.active = false;
             					
             					roomService.update( room, function(){
+            						//donothing
             		            }, function(){
             		                $mdDialog.cancel();
             		            });
@@ -89,6 +90,7 @@
             			}
             			building.active = false;
             			buildingService.update( building, function(){   
+            				//donothing
                         }, function(){
                             $mdDialog.cancel();
                         });
@@ -113,13 +115,15 @@
                     room.active = false;
                     
                     roomService.update( room, function(){
+                    	//donothing
 		            }, function(){
 		                $mdDialog.cancel();
 		            });
                 });
                 elem.active = false;
                 
-                buildingService.update( elem, function(){   
+                buildingService.update( elem, function(){
+                	//donothing
                 }, function(){
                     $mdDialog.cancel();
                 });
@@ -130,6 +134,7 @@
             	elem.active = false;
             	
             	roomService.update( elem, function(){
+            		//donothing
 	            }, function(){
 	                $mdDialog.cancel();
 	            });

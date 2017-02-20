@@ -57,7 +57,7 @@ public class Batch {
 		// noarg constructor
 	}
 
-	public Batch(int iD, String name, Curriculum curriculum, Location location, Room room, Trainer trainer,
+	public Batch(int iD, String name, Curriculum curriculum, Room room, Trainer trainer,
 			Trainer cotrainer, Timestamp startDate, Timestamp endDate, BatchStatusLookup status) {
 		super();
 		ID = iD;
@@ -66,14 +66,13 @@ public class Batch {
 		this.endDate = endDate;
 		this.curriculum = curriculum;
 		this.room = room;
-		// this.location = location;
 		this.batchStatus = status;
 		this.trainer = trainer;
 		this.cotrainer = cotrainer;
 	}
 
 	public Batch(int iD, String name, Timestamp startDate, Timestamp endDate, Curriculum curriculum, Room room,
-			/* Location location, */BatchStatusLookup batchStatus, Trainer trainer, Trainer coTrainer) {
+			BatchStatusLookup batchStatus, Trainer trainer, Trainer coTrainer) {
 		super();
 		ID = iD;
 		this.name = name;
@@ -81,7 +80,6 @@ public class Batch {
 		this.endDate = endDate;
 		this.curriculum = curriculum;
 		this.room = room;
-		// this.location = location;
 		this.batchStatus = batchStatus;
 		this.trainer = trainer;
 		this.cotrainer = coTrainer;
@@ -134,13 +132,6 @@ public class Batch {
 	public void setRoom(Room room) {
 		this.room = room;
 	}
-
-	/*
-	 * public Location getLocation() { return location; }
-	 * 
-	 * 
-	 * public void setLocation(Location location) { this.location = location; }
-	 */
 
 	public BatchStatusLookup getBatchStatus() {
 		return batchStatus;
