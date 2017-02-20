@@ -112,6 +112,11 @@
             });
         }
 
+        tc.hideCalendar = function(){
+            console.log("attempting to close");
+            $mdDialog.cancel();
+        }
+
         tc.showPTODialog = function(){
 
             $mdDialog.show({
