@@ -93,7 +93,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 
             for(var x = 0; x < rc.batches.length; x++){
                 date = new Date(rc.batches[x]['endDate']);
-                if (rc.batches[x]['curriculum'].name && curriculum && (date.getMonth() == month) && (date.getFullYear() == rc.year) && (rc.batches[x]['curriculum'].id == curriculum.id)) {
+                if (rc.batches[x]['curriculum'].name && curriculum && (date.getMonth() == month) && (date.getFullYear() == rc.year) && (rc.batches[x]['curriculum'].currId == curriculum.currId)) {
                     total += rc.graduates;
                
                 }

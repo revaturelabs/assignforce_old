@@ -1,5 +1,6 @@
 package com.revature.assignforce.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class Building implements Activatable {
 	@Column(name = "LOCATION")
 	@JoinColumn(name = "LOCATION") // is it building or location??
 	@Fetch(FetchMode.JOIN)
+	@JsonIgnoreProperties("buildings")
 	private int location;
 
 	@Column(name = "active", insertable = false)
@@ -34,8 +36,8 @@ public class Building implements Activatable {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "BUILDING")
-	// @JsonIgnore
-	// @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+
+	@JsonIgnoreProperties("building")
 	private List<Room> rooms;
 
 	public Building() {
