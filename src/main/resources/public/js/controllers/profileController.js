@@ -34,7 +34,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     //skills dialog controller not using this now
     pc.addSkills = function () {
         $mdDialog.show({
-            templateUrl: "html/templates/skillTemplate.html",
+            templateUrl: "html/templates/dialogs/skillDialog.html",
             controller: "skillDialogCtrl",
             controllerAs: "sdCtrl",
             locals: {

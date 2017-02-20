@@ -29,7 +29,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 	// adds location
 	lc.addLocation = function() {
 		$mdDialog.show({
-			templateUrl : "html/templates/locationTemplate.html",
+			templateUrl : "html/templates/dialogs/locationDialog.html",
 			controller : "locationDialogCtrl", //locationDialogController.js
 			controllerAs : "ldCtrl",
 			locals : {
@@ -57,7 +57,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			lc.showToast("Please select a location.");
 		} else {
 			$mdDialog.show({
-				templateUrl : "html/templates/buildingTemplate.html",
+				templateUrl : "html/templates/dialogs/buildingDialog.html",
 				controller : "bldgDialogCtrl", //bldgDialogController.js
 				controllerAs : "bldgCtrl",
 				locals : {
@@ -87,7 +87,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			lc.showToast("Please select a building.");
 		} else {
 			$mdDialog.show({
-				templateUrl : "html/templates/roomTemplate.html",
+				templateUrl : "html/templates/dialogs/roomDialog.html",
 				controller : "roomDialogCtrl", //roomDialogController.js
 				controllerAs : "rdCtrl",
 				locals : {
@@ -141,7 +141,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			// edit location
 			if (Array.isArray(lc.selectedList[0].rooms)) {
 				$mdDialog.show({
-					templateUrl : "html/templates/locationTemplate.html",
+					templateUrl : "html/templates/dialogs/locationDialog.html",
 					controller : "locationDialogCtrl",
 					controllerAs : "ldCtrl",
 					locals : {
@@ -160,7 +160,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			// edit room
 			else {
 				$mdDialog.show({
-					templateUrl : "html/templates/roomTemplate.html",
+					templateUrl : "html/templates/dialogs/roomDialog.html",
 					controller : "roomDialogCtrl",
 					controllerAs : "rdCtrl",
 					locals : {
@@ -186,7 +186,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 		var summary = lc.categorizeSelected();
 
 		$mdDialog.show({
-			templateUrl : "html/templates/deleteTemplate.html",
+			templateUrl : "html/templates/dialogs/deleteDialog.html",
 			controller : "deleteDialogCtrl", //deleteDialogController.js
 			controllerAs : "dCtrl",
 			locals : {

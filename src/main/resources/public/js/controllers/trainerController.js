@@ -14,7 +14,7 @@
         //adds a trainer by popping up a dialog box
         tc.addTrainer = function () {
             $mdDialog.show({
-                templateUrl: "html/templates/trainerTemplate.html",
+                templateUrl: "html/templates/dialogs/trainerDialog.html",
                 controller: "trainerDialogCtrl",
                 controllerAs: "tdCtrl",
                 locals: {
