@@ -95,7 +95,7 @@ public class CurriculumCtrl {
 		List<Curriculum> all = currService.getAllItems();
 		if (all == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Fetching all curricula failed."), HttpStatus.NOT_FOUND);
-		} else if (all.isEmpty() == true) {
+		} else if (all.isEmpty()) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No curricula available."), HttpStatus.NOT_FOUND);
 		} else {
 			return new ResponseEntity< List<Curriculum> >(all, HttpStatus.OK);

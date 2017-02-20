@@ -40,7 +40,9 @@ public class Curriculum implements Activatable{
 	@Column(name="active", insertable = false)
 	private Boolean active;
 	
-	public Curriculum(){}
+	public Curriculum(){
+		//noarg constructor
+	}
 
 	public Curriculum(int currId, String name, List<Skill> skills) {
 		super();

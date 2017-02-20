@@ -16,7 +16,6 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
                 case 1:
                     sc.settings[i].settingValue = 5;
                     break;
-
                 case 2:
                     sc.settings[i].settingValue = 12;
                     break;

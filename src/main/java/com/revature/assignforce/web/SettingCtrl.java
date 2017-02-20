@@ -49,7 +49,7 @@ public class SettingCtrl {
 
         if(settings == null){
             return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Fetching all Settings failed"), HttpStatus.NOT_FOUND);
-        } else if (settings.isEmpty() == true){
+        } else if (settings.isEmpty()){
             return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No Settings available"), HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity< List<Setting> >(settings, HttpStatus.OK);

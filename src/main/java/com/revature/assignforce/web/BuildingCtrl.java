@@ -41,10 +41,6 @@ public class BuildingCtrl {
 		// int iD, String name, String city, String state, List<Building>
 		// buildings, Boolean active
 		Building out = new Building(ID, name, rooms, true, location);
-		System.out.println("locationid: " + out.getLocation());
-		System.out.println("Building name: " + out.getName());
-		System.out.println("Building active: " + out.getActive());
-		//TODO HERE
 		out = buildingService.saveItem(out);// I need to see this: active is being set to null in the db. Is it because it should be 1 in the db instead of true?  idk
 		if (out == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Building failed to save."),
@@ -79,12 +75,8 @@ public class BuildingCtrl {
 		int location = in.getLocation();
 		List<Room> rooms = in.getRooms();
 		Boolean active = in.getActive();
-System.out.println("After initialization");
-System.out.println(ID + " " + name + " " + location + " " + active);
 		Building out = new Building(ID, name, rooms, active, location);
-		System.out.println("SAVEITEM BEFORE");
 		out = buildingService.saveItem(out);
-		System.out.println("SAVEITEM AFTER");
 		if (out == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Building failed to update."),
 					HttpStatus.NOT_MODIFIED);
@@ -111,7 +103,7 @@ System.out.println(ID + " " + name + " " + location + " " + active);
 		if (all == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Fetching all buildings failed."),
 					HttpStatus.NOT_FOUND);
-		} else if (all.isEmpty() == true) {
+		} else if (all.isEmpty()) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No buildings available."),
 					HttpStatus.NOT_FOUND);
 		} else {
