@@ -59,7 +59,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
             controllerAs: "sdCtrl",
             locals: {
                 trainer        : pc.trainer,
-                skills         : pc.skills,
+                skills         : pc.skillsList,
                 newSkill       : skillService.getEmptySkill()},
             bindToController: true,
             clickOutsideToClose: true
@@ -139,11 +139,22 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         }
     };
 
+    pc.uploadCertification = function () {
+        pc.trainer.certifications.push(pc.certs.name);
+        trainerService.update(pc.trainer, function () {
+            console.log("pass");
+        }, function (err) {
+            console.log(err);
+        })
+
+        pc.certs = undefined;
+    };
+
     //queries the database for skills. to be called after a change to the skills array
     pc.rePullSkills = function(){
-        pc.skills = undefined;
+        pc.skillsList = undefined;
         skillService.getAll( function(response) {
-            pc.skills = response;
+            pc.skillsList = response;
         }, function() {
             pc.showToast("Could not fetch skills.");
         });
@@ -175,18 +186,16 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     });
 
     skillService.getAll( function(response) {
-        pc.skills = response;
-        pc.skillsList = pc.skills;
+        pc.skillsList = response;
 
     }, function () {
         pc.showToast("Could not fetch skills.");
     });
 
     //Simply hard coded for now. Just for testing view
-    pc.test = [];
     pc.myFile;
     pc.creds;
-    pc.skills;
+    pc.certs
     pc.skillsList;
     pc.trainer;
 });
