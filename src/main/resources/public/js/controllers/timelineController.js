@@ -109,7 +109,9 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 					else
 					{
 						startDate = new Date(tlc.batches[b].startDate);
-						if (startDate.getTime() < tlc.minDate.getTime()) {tlc.minDate = startDate;}
+						if (startDate.getTime() < tlc.minDate.getTime()) {
+							tlc.minDate = startDate;
+							}
 					}
 					
 					if (angular.isUndefined(tlc.maxDate))
@@ -119,7 +121,9 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 					else
 					{
 						endDate = new Date(tlc.batches[b].endDate);
-						if (endDate.getTime() > tlc.maxDate.getTime()) {tlc.maxDate = endDate;}
+						if (endDate.getTime() > tlc.maxDate.getTime()) {
+							tlc.maxDate = endDate;
+							}
 					}
 				}
 			}
@@ -127,44 +131,44 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	}
 	
 	//Project timeline when data changes
-	var batches;
-	var trainerNames;
 	
 	$scope.$on("repullTimeline", function(){
 		tlc.repull();
 	});
 
-	tlc.getAllBatches = new Promise(function(resolve, reject)
+	tlc.getAllBatches = new Promise(function(resolve)
 	{
 	    batchService.getAll( function(response) {
 	        tlc.batches = response;
 	        tlc.getDateRange();
 	        resolve(1);
-	    }, function(reject) {
+	    }, function() {
 	    	resolve(0);
 	    });
 	});
 
-	tlc.getAllTrainers = new Promise(function(resolve, reject)
+	tlc.getAllTrainers = new Promise(function(resolve)
 	{
 	    trainerService.getAll( function(response) {
 			tlc.trainers = response.map(function(trainer){return trainerColumnName(trainer)});
 
 			resolve(1);
-	    }, function(reject) {
+	    }, function() {
 	    	resolve(0);
 	    });
 	});
     
     curriculumService.getAll( function(response) {
         tlc.curricula = response;
-    }, function(error) {
+    }, function() {
+    	//error
     });
 
     settingService.getById(5, function (response) {
         tlc.trainersPerPage = response.settingValue;
         tlc.changeTrainersPerPage();
     }, function () {
+    	//error probably
     });
     
 	$scope.$watch(
@@ -264,10 +268,10 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		evt.stopPropagation();
 	});
 	
-    tlc.repullPromise = new Promise(function(resolve, reject){
-    	tlc.getAllBatches.then(function(result)
+    tlc.repullPromise = new Promise(function(resolve){
+    	tlc.getAllBatches.then(function()
     	{
-	    	tlc.getAllTrainers.then(function(result)
+	    	tlc.getAllTrainers.then(function()
 	    	{
 	    		resolve(1);
 	    	});
@@ -279,7 +283,9 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     	if (result){ 
     		tlc.projectTimeline(-100); 
     	}
-    }, function(error){});
+    }, function(){
+    	//error
+    });
     
     tlc.repull = function()
     {
@@ -288,7 +294,9 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
         	if (result){ 
         		tlc.projectTimeline(-100);
         	}
-	    }, function(error){});
+	    }, function(){
+	    	//error
+	    });
     }
     
     //Pagination functions
@@ -298,7 +306,9 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		
 		tlc.realTrainersPerPage = Math.floor(tlc.trainersPerPage);
 		
-		if (!angular.isNumber(tlc.realTrainersPerPage) || isNaN(parseInt(tlc.realTrainersPerPage)) || tlc.realTrainersPerPage < 0) { tlc.realTrainersPerPage = 0; }
+		if (!angular.isNumber(tlc.realTrainersPerPage) || isNaN(parseInt(tlc.realTrainersPerPage)) || tlc.realTrainersPerPage < 0) {
+			tlc.realTrainersPerPage = 0; 
+			}
 		
 		tlc.realTrainersPerPage = Math.min(tlc.realTrainersPerPage, numTrainers);
 		
@@ -366,8 +376,13 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	{
 		tlc.realTrainerPage = Math.floor(tlc.trainerPage);
 		
-		if (tlc.realTrainerPage < 0 || !angular.isNumber(tlc.realTrainerPage) || isNaN(tlc.realTrainerPage)) {tlc.realTrainerPage = 1;}
-		if (tlc.realTrainerPage > tlc.maxTrainerPages) { tlc.realTrainerPage = tlc.maxTrainerPages; }
+		if (tlc.realTrainerPage < 0 || !angular.isNumber(tlc.realTrainerPage) || isNaN(tlc.realTrainerPage)) {
+			tlc.realTrainerPage = 1;
+		}
+		
+		if (tlc.realTrainerPage > tlc.maxTrainerPages) { 
+			tlc.realTrainerPage = tlc.maxTrainerPages; 
+		}
 		
 		tlc.trainerListStartIndex = tlc.realTrainersPerPage * (tlc.realTrainerPage - 1);
 		tlc.trainerListEndIndex = tlc.trainerListStartIndex + tlc.realTrainersPerPage;
@@ -379,8 +394,12 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	tlc.previousPageButtonStatus = function()
 	{
 		//True = disabled, false = enabled.
-		if (tlc.trainerListStartIndex == 0 || tlc.realTrainersPerPage == 0) { tlc.previousPageButtonDisabled = true; }
-		else { tlc.previousPageButtonDisabled = false; }
+		if (tlc.trainerListStartIndex == 0 || tlc.realTrainersPerPage == 0) { 
+			tlc.previousPageButtonDisabled = true; 
+		}
+		else { 
+			tlc.previousPageButtonDisabled = false; 
+		}
 	}
 	
 	tlc.nextPageButtonStatus = function()
@@ -388,7 +407,9 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		var numTrainers = (tlc.trainers ? tlc.trainers.length : 0);
 		
 		//True = disabled, false = enabled.
-		if (tlc.trainerListStartIndex + tlc.realTrainersPerPage >= numTrainers || tlc.realTrainersPerPage == 0) { tlc.nextPageButtonDisabled = true; }
+		if (tlc.trainerListStartIndex + tlc.realTrainersPerPage >= numTrainers || tlc.realTrainersPerPage == 0) { 
+			tlc.nextPageButtonDisabled = true;
+		}
 		else { tlc.nextPageButtonDisabled = false; }
 	}
 	
@@ -412,8 +433,12 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 				var aID = parseInt(a.substring(1, a.indexOf(')')));
 				var bID = parseInt(b.substring(1, b.indexOf(')')));
 				
-				if(aID < bID){ return -1; }
-				else if(aID > bID){ return 1; }
+				if(aID < bID){ 
+					return -1; 
+				}
+				else if(aID > bID){ 
+					return 1; 
+				}
 				return 0;
 			});
 			
@@ -543,6 +568,7 @@ function projectTimeline(timelineFormatting, minDate, maxDate, yCoord, timelineD
 			  	case 4: return "Thu.";
 			  	case 5: return "Fri.";
 			  	case 6: return "Sat.";
+			  	default: return "Mon.";
 			  }
 		  }
 		  
@@ -562,6 +588,7 @@ function projectTimeline(timelineFormatting, minDate, maxDate, yCoord, timelineD
 			  	case 9: return "Oct.";
 			  	case 10: return "Nov.";
 			  	case 11: return "Dec.";
+			  	default: return "Jan.";
 			  }
 		  }
 		  
@@ -687,7 +714,9 @@ function projectTimeline(timelineFormatting, minDate, maxDate, yCoord, timelineD
 			.attr('y', function(d) {
 				var y = yScale(new Date(d.startDate));
 				
-				if (y < 0){ y = 0; }
+				if (y < 0){ 
+					y = 0; 
+				}
 				
 				return y;
 			})
@@ -697,8 +726,12 @@ function projectTimeline(timelineFormatting, minDate, maxDate, yCoord, timelineD
 				var start = yScale(new Date(d.startDate));
 				var end = yScale(new Date(d.endDate));
 				
-				if (start < 0){ start = 0; }
-				if(end > timelineFormatting.height){ end = timelineFormatting.height; }
+				if (start < 0){ 
+					start = 0; 
+				}
+				if(end > timelineFormatting.height){ 
+					end = timelineFormatting.height; 
+				}
 				
 				return end - start;
 			})
