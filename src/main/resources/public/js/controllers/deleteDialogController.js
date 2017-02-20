@@ -90,7 +90,6 @@
             			building.active = false;
             			buildingService.update( building, function(){   
                         }, function(){
-                        	//TODO HERE
                             $mdDialog.cancel();
                         });
             		});            		
@@ -99,7 +98,7 @@
                 //runs the locationService update, concentric with another deleteHelper call upon success.
             	
                 locationService.update( elem, function(){
-                	
+                	//donothing
                 }, function(){
                 	$mdDialog.cancel();
                 });
