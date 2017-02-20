@@ -34,13 +34,15 @@ public class Curriculum implements Activatable{
 	@JoinTable(name="CURRICULUM_SKILL_JT", 
 	joinColumns=@JoinColumn(name="CURRICULUM_ID"), 
 	inverseJoinColumns=@JoinColumn(name="SKILL_ID"))
-	@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")					// ADDED this to fix serialization/infinite loop issues
+	//@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")					// ADDED this to fix serialization/infinite loop issues
 	private List<Skill> skills;
 
 	@Column(name="active", insertable = false)
 	private Boolean active;
 	
-	public Curriculum(){}
+	public Curriculum(){
+		//noarg constructor
+	}
 
 	public Curriculum(int currId, String name, List<Skill> skills) {
 		super();

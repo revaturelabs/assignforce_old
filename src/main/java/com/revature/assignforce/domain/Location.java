@@ -1,5 +1,6 @@
 package com.revature.assignforce.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;
@@ -30,10 +31,11 @@ public class Location implements Activatable {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "LOCATION")
+	@JsonIgnoreProperties("location")
 	private List<Building> buildings;
 
 	public Location() {
-	
+	//No arg constructor
 	}
 
 	public Location(int iD, String name, String city, String state, List<Building> buildings, Boolean active) {

@@ -9,20 +9,32 @@
             // format text
         function formatText() {
             var title = "Delete ";
-
+            var sumActiveRooms = 0;
+            var sumActiveBldgs = 0;
             if (dc.summary.rooms == 1) {
                 title += " 1 room";
             } else if (dc.summary.rooms > 1) {
-                title += dc.summary.rooms + " rooms"; 
+            	
+//            	for(var i = 0; i < dc.list[0].rooms.length; i++){
+//            		if(dc.list[0].rooms[i].active){
+//            			sumActiveRooms++;
+//            		}
+//            	}
+                title += sumActiveRooms + " rooms"; 
             }
             
-            if (dc.summary.buildings ==1){
+            if (dc.summary.buildings == 1){
             	if(dc.summary.rooms > 0){
             		title += " and";
             	}
             	title += " 1 building";
             } else if (dc.summary.buildings > 1){
-            	title += dc.summary.buildings + " buildings";
+            	for(var j = 0; j < dc.list[0].buildings.length; j++){
+        		if(dc.list[0].buildings[j].active){
+        			sumActiveBldgs++;
+        		}
+        	}
+            	title += sumActiveBldgs + " buildings";
             }
 
             if (dc.summary.locations == 1) {
@@ -37,14 +49,13 @@
                 title += " " + dc.summary.locations + " locations";
             }
             title += "?";
-
             dc.desc = title;
         }formatText();
 
           // delete rooms/locations
         dc.delete = function(){
             dc.thinking = true;
-            var delList = dc.list;//wth is list coming from?
+            var delList = dc.list;
             dc.deleteHelper(delList);
         };
 
@@ -55,109 +66,79 @@
                 $mdDialog.hide();
                 return;
             }
-
+            	
             var elem = delList.shift();
+            
             //if a location was selected, recurse building/room inactivation
             if (Array.isArray(elem.buildings)){
             	//if it has buildings
             	if(elem.buildings.length > 0){
-            		elem.buildings.forEach(function(building){
+            		angular.forEach(elem.buildings, function(building){
+            		
         				//if it has rooms
             			if(building.rooms.length > 0){
             				building.rooms.forEach(function(room){
             					room.active = false;
+            					
             					roomService.update( room, function(){
-            		            }, function(error){
+            		            }, function(){
             		                $mdDialog.cancel();
             		            });
+            					
             				});
             			}
             			building.active = false;
-            			buildingService.update( building, function(){                          
-                        }, function(error){
+            			buildingService.update( building, function(){   
+                        }, function(){
+                        	//TODO HERE
                             $mdDialog.cancel();
                         });
             		});            		
             	}
             	elem.active = false;
                 //runs the locationService update, concentric with another deleteHelper call upon success.
+            	
                 locationService.update( elem, function(){
-                    //dc.deleteHelper(delList);
-                }, function(error){
-                    ancel();
+                	
+                }, function(){
+                	$mdDialog.cancel();
                 });
+                
+            dc.deleteHelper(delList);
+            
             }
 
             //else if a building was selected, recurse room inactivation
             else if ( Array.isArray(elem.rooms) ) {   
-                elem.rooms.forEach( function(room){
+               angular.forEach(elem.rooms, function(room){
                     room.active = false;
+                    
                     roomService.update( room, function(){
-		            }, function(error){
+		            }, function(){
 		                $mdDialog.cancel();
 		            });
                 });
                 elem.active = false;
-                buildingService.update( elem, function(){                      
-                }, function(error){
+                
+                buildingService.update( elem, function(){   
+                }, function(){
                     $mdDialog.cancel();
                 });
+                dc.deleteHelper(delList);
             }
             //else room was called, so simply:
             else {
             	elem.active = false;
+            	
             	roomService.update( elem, function(){
-	            }, function(error){
+	            }, function(){
 	                $mdDialog.cancel();
 	            });
+            	dc.deleteHelper(delList);
             }
-        };
-            
-            //leftovers for reference:
-            	
-            	//elem.active = false; // inactivate whatever was selected
-            
-            //else if(Array.isArray(elem.buildings)){
-            	//console.log("isArray(elem.buildings)");
-            	//var roomIn = elem;
-            	//elem.buildings.forEach(function(building){
-            		//if(building.rooms.length > 0){
-            			//building.rooms.forEach(function(room){
-            				//if(room.roomID == roomIn.roomID){
-            					//room.active = false;
-            					//elem = building;
-            				//}
-            			//});
-            		//}
-            	//});
             //}
-            //else {
-            	//console.log("else statement in deletedialog");
-
-                //var buildingIn = elem;
-                //dc.locations.forEach( function(location){		
-                    //if (location.buildings.length > 0) {		
-                        //location.buildings.forEach( function(building){		
-                            //if (building.buildingID == buildingIn.buildingID) {	
-                                //building.active = false;
-                                //elem = location;
-                            //}		
-                        //});		
-                    //}		
-                //});
-            //}
-            //elem.active = false;
-            //runs the locationService update, concentric with another deleteHelper call upon success.
-            //locationService.update( elem, function(){
-            	//console.log("locationService.update call")
-                //dc.deleteHelper(delList);
-            //}, function(error){
-                //console.log(" (LC) Failed to delete location with error:", error.data.message);
-                //$mdDialog.cancel();
-            //});
-            
-        
-
+            $mdDialog.hide();
+          };
             // cancel deletion
         dc.cancel = function(){
             $mdDialog.cancel();
@@ -184,11 +165,8 @@
           // page initialization
             // data gathering
         locationService.getAll( function(response) {
-            // console.log(" (DC) Retrieving all locations.")
             dc.locations = response;
-        }, function(error) {
-            // console.log(" (DC) Failed to retrieve all locations with error:",
-			// error.data.message);
+        }, function() {
             $mdDialog.cancel();
         });
     });

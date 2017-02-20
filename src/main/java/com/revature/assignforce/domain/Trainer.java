@@ -37,7 +37,7 @@ public class Trainer implements Activatable{
 	@JoinTable(name="TRAINER_SKILL_JT",
     joinColumns=@JoinColumn(name="TRAINER"),
     inverseJoinColumns=@JoinColumn(name="SKILL"))
-	@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")						// ADDED this to fix serialization/infinite loop issues
+	//@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")						// ADDED this to fix serialization/infinite loop issues
 	private List<Skill> skills;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
@@ -47,7 +47,9 @@ public class Trainer implements Activatable{
 	@Column(name="active", insertable = false)
 	private Boolean active;
 
-	public Trainer(){}
+	public Trainer(){
+		//noarg constructor
+	}
 
 	public Trainer(int trainerId, String firstName, String lastName, String resume, List<Unavailable> unavailability, List<Skill> skills, List<Certification> certifications) {
 		super();

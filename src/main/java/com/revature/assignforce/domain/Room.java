@@ -8,7 +8,6 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import com.fasterxml.jackson.annotation.*;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 
 @Entity
 @Table(name = "ROOM")
@@ -28,6 +27,7 @@ public class Room implements Activatable {
 	//it is a one to one relationship, but we only need an id here..  Right?
 	@JoinColumn(name = "BUILDING")
 	@Fetch(FetchMode.JOIN)
+	@JsonIgnoreProperties("rooms")
 	private int building;
 
 	@ManyToMany(fetch = FetchType.LAZY)
@@ -36,13 +36,14 @@ public class Room implements Activatable {
 	private List<Unavailable> unavailable;
 
 	@OneToMany(mappedBy = "room")
-	@JsonIgnore
+	@JsonIgnoreProperties("room")
 	private List<Batch> batches;
 
 	@Column(name = "active", insertable = false)
 	private Boolean active;
 
 	public Room() {
+		//No arg constructor
 	}
 
 	public Room(int roomID, String roomName, int building, List<Unavailable> unavailable) {
@@ -51,6 +52,15 @@ public class Room implements Activatable {
 		this.roomName = roomName;
 		this.building = building;
 		this.unavailable = unavailable;
+	}
+	
+	public Room(int roomID, String roomName, int building, List<Unavailable> unavailable, Boolean active) {
+		super();
+		this.roomID = roomID;
+		this.roomName = roomName;
+		this.building = building;
+		this.unavailable = unavailable;
+		this.active = active;
 	}
 	
 	public Room(int buildingID){

@@ -133,32 +133,24 @@
           // page initialization
             // data gathering
         batchService.getAll( function(response) {
-            //console.log("  (HC)  Retrieving all batches.");
             hc.batches = response;
         }, function(error) {
-            //console.log("  (HC)  Failed to retrieve all batches with error", error.data.message);
             hc.showToast("Could not fetch batches.");
         });
 
         trainerService.getAll( function(response) {
-            //console.log("  (HC)  Retrieving all trainers.");
             hc.trainers = response;
         }, function(error) {
-            //console.log("  (HC)  Failed to retrieve all trainers with error", error.data.message);
             hc.showToast("Could not fetch trainers.");
         });
         locationService.getAll( function(response) {
-            //console.log("  (HC)  Retrieving all locations.");
             hc.locations = response;
         }, function(error) {
-            //console.log("  (HC)  Failed to retrieve all location with error", error.data.message);
             hc.showToast("Could not fetch locations.");
         });
         buildingService.getAll( function(response) {
-            //console.log("  (HC)  Retrieving all locations.");
             hc.buildings = response;
         }, function(error) {
-            //console.log("  (HC)  Failed to retrieve all location with error", error.data.message);
             hc.showToast("Could not fetch buildings.");
         });
     });

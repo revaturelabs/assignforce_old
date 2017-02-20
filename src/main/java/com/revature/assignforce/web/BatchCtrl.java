@@ -125,7 +125,7 @@ public class BatchCtrl {
 		List<Batch> all = batchService.getAllItems();
 		if (all == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Fetching all batches failed."), HttpStatus.NOT_FOUND);
-		} else if (all.isEmpty() == true) {
+		} else if (all.isEmpty()) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No batches available."), HttpStatus.NOT_FOUND);
 		} else {
 			return new ResponseEntity< List<Batch> >(all, HttpStatus.OK);

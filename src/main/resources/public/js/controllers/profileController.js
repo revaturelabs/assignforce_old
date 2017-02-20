@@ -32,7 +32,7 @@ assignforce.filter('skillFilter', function(){
                         insertSkill = false;
                     }
                 }
-                if (insertSkill == true){
+                if (insertSkill){
                     out.push(input[i]);
                 }
                 insertSkill = true;
@@ -59,7 +59,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
             controllerAs: "sdCtrl",
             locals: {
                 trainer        : pc.trainer,
-                skills         : pc.skills,
+                skills         : pc.skillsList,
                 newSkill       : skillService.getEmptySkill()},
             bindToController: true,
             clickOutsideToClose: true
@@ -139,11 +139,56 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         }
     };
 
+    pc.uploadCertification = function () {
+        var certification = {
+            file: pc.certFile.name,
+            name: pc.certName,
+            trainer: pc.trainer.trainerId
+        };
+
+        pc.trainer.certifications.push(certification);
+        trainerService.update(pc.trainer, function () {
+            pc.showToast("pass");
+        }, function (err) {
+            pc.showToast(err);
+        });
+
+        var bucket = new AWS.S3({
+            apiVersion: '2006-03-01',
+            accessKeyId: pc.creds.ID,
+            secretAccessKey: pc.creds.SecretKey,
+            region: 'us-east-1',
+            sslEnabled: false,
+            httpOptions:{
+                proxy: 'http://dev.assignforce.revature.pro/'
+            }
+        });
+
+        var path = "Certifications/" + pc.certFile.name;
+        //set the parameters needed to put an object in the aws s3 bucket
+        var params = {
+            Bucket: pc.creds.BucketName,
+            Key: path,
+            Body: pc.certFile
+        };
+
+        //putting an object in the s3 bucket
+        bucket.putObject(params, function (err) {
+            if (err) {
+                pc.showToast("could not upload file.");
+                return;
+            }
+        });
+
+        pc.certFile = undefined;
+        pc.certName = undefined;
+    };
+
     //queries the database for skills. to be called after a change to the skills array
     pc.rePullSkills = function(){
-        pc.skills = undefined;
+        pc.skillsList = undefined;
         skillService.getAll( function(response) {
-            pc.skills = response;
+            pc.skillsList = response;
         }, function() {
             pc.showToast("Could not fetch skills.");
         });
@@ -161,7 +206,6 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
 
     // data gathering
 
-
     // id is hard coded for testing. fix this later
     trainerService.getById(3, function (response) {
         pc.trainer = response;
@@ -176,17 +220,17 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     });
 
     skillService.getAll( function(response) {
-        pc.skills = response;
-        pc.skillsList = pc.skills;
+        pc.skillsList = response;
 
     }, function () {
         pc.showToast("Could not fetch skills.");
     });
 
     //Simply hard coded for now. Just for testing view
-    pc.test = [];
     pc.myFile;
     pc.creds;
-    pc.skills;
+    pc.certFile;
+    pc.certName;
     pc.skillsList;
+    pc.trainer;
 });
