@@ -47,7 +47,9 @@ public class Trainer implements Activatable{
 	@Column(name="active", insertable = false)
 	private Boolean active;
 
-	public Trainer(){}
+	public Trainer(){
+		//noarg constructor
+	}
 
 	public Trainer(int trainerId, String firstName, String lastName, String resume, List<Unavailable> unavailability, List<Skill> skills, List<Certification> certifications) {
 		super();

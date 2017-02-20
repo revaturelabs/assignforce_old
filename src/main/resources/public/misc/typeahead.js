@@ -148,7 +148,9 @@
             stringify: function(val) {
                 return _.isString(val) ? val : JSON.stringify(val);
             },
-            noop: function() {}
+            noop: function() {
+            	//donothing
+            }
         };
     }();
     var VERSION = "0.11.1";
@@ -1063,7 +1065,9 @@
             stringify: function(val) {
                 return _.isString(val) ? val : JSON.stringify(val);
             },
-            noop: function() {}
+            noop: function() {
+            	//donothing
+            }
         };
     }();
     var WWW = function() {
@@ -2415,7 +2419,9 @@
             });
             try {
                 !$input.attr("dir") && $input.attr("dir", "auto");
-            } catch (e) {}
+            } catch (e) {
+            	//donothing
+            }
             return $input;
         }
         function getBackgroundStyles($el) {

@@ -15,11 +15,11 @@
                 title += " 1 room";
             } else if (dc.summary.rooms > 1) {
             	
-            	for(var i = 0; i < dc.list[0].rooms.length; i++){
-            		if(dc.list[0].rooms[i].active){
-            			sumActiveRooms++;
-            		}
-            	}
+//            	for(var i = 0; i < dc.list[0].rooms.length; i++){
+//            		if(dc.list[0].rooms[i].active){
+//            			sumActiveRooms++;
+//            		}
+//            	}
                 title += sumActiveRooms + " rooms"; 
             }
             
@@ -66,22 +66,22 @@
                 $mdDialog.hide();
                 return;
             }
-           // for(var k = 0; k < delList.length; k++){
+           for(var k = 0; k < delList.length; k++){
             	
             var elem = delList[k];
+            
             //if a location was selected, recurse building/room inactivation
             if (Array.isArray(elem.buildings)){
             	//if it has buildings
             	if(elem.buildings.length > 0){
+            		angular.forEach(elem.buildings, function(building){
             		
-            		elem.buildings.forEach(function(building){
         				//if it has rooms
             			if(building.rooms.length > 0){
             				building.rooms.forEach(function(room){
             					room.active = false;
             					
             					roomService.update( room, function(){
-            						//$mdDialog.hide();
             		            }, function(){
             		                $mdDialog.cancel();
             		            });
@@ -90,7 +90,6 @@
             			}
             			building.active = false;
             			buildingService.update( building, function(){   
-            				//$mdDialog.hide();
                         }, function(){
                             $mdDialog.cancel();
                         });
@@ -100,8 +99,6 @@
                 //runs the locationService update, concentric with another deleteHelper call upon success.
             	
                 locationService.update( elem, function(){
-                	//$mdDialog.hide();
-                    //dc.deleteHelper(delList);
                 	
                 }, function(){
                 	$mdDialog.cancel();
@@ -110,12 +107,10 @@
 
             //else if a building was selected, recurse room inactivation
             else if ( Array.isArray(elem.rooms) ) {   
-            	
-                elem.rooms.forEach( function(room){
+               angular.forEach(elem.rooms, function(room){
                     room.active = false;
                     
                     roomService.update( room, function(){
-                    	//$mdDialog.hide();
 		            }, function(){
 		                $mdDialog.cancel();
 		            });
@@ -123,7 +118,6 @@
                 elem.active = false;
                 
                 buildingService.update( elem, function(){   
-                	//$mdDialog.hide();
                 }, function(){
                     $mdDialog.cancel();
                 });
@@ -133,12 +127,11 @@
             	elem.active = false;
             	
             	roomService.update( elem, function(){
-            		//$mdDialog.hide();
 	            }, function(){
 	                $mdDialog.cancel();
 	            });
             }
-          //////////////////////////////////////////////////////////// }
+            }
             $mdDialog.hide();
           };
             // cancel deletion
