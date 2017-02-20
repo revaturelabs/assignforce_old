@@ -99,7 +99,7 @@ public class TrainerCtrl {
 		List<Trainer> all = trainerService.getAllItems();
 		if (all == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Fetching all trainers failed."), HttpStatus.NOT_FOUND);
-		} else if (all.isEmpty() == true) {
+		} else if (all.isEmpty()) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No trainers available."), HttpStatus.NOT_FOUND);
 		} else {
 			return new ResponseEntity< List<Trainer> >(all, HttpStatus.OK);

@@ -29,6 +29,7 @@ public class Certification {
     private int trainer;
 
     public Certification() {
+    	//noarg constructor
     }
 
     public Certification(int id, String file, String name, int trainer) {
