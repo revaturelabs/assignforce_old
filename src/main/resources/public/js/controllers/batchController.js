@@ -30,7 +30,7 @@
                 bc.batch.id         = (bc.state == "edit")       ? incomingBatch.id                  : undefined;
 
                 bc.batch.name       = incomingBatch.name;
-                bc.batch.curriculum = (incomingBatch.curriculum) ? incomingBatch.curriculum.id       : undefined;               
+                bc.batch.curriculum = (incomingBatch.curriculum) ? incomingBatch.curriculum.currId       : undefined;               
                 
                 //bc.batch.location   = (incomingBatch.location)   ? incomingBatch.location.id		 : undefined;
                 bc.batch.room       = (incomingBatch.room)       ? incomingBatch.room.roomID         : undefined;
