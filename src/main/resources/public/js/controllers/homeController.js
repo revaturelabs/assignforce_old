@@ -1,8 +1,7 @@
 
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "homeCtrl", function( $scope, $filter, batchService, trainerService, locationService, buildingService, roomService ) {
-        //console.log("Beginning overview controller.");
+    assignforce.controller( "homeCtrl", function( $scope, $filter, batchService, trainerService, locationService, buildingService ) {
         var hc = this;
 
           // functions
@@ -140,17 +139,17 @@
 
         trainerService.getAll( function(response) {
             hc.trainers = response;
-        }, function(error) {
+        }, function() {
             hc.showToast("Could not fetch trainers.");
         });
         locationService.getAll( function(response) {
             hc.locations = response;
-        }, function(error) {
+        }, function() {
             hc.showToast("Could not fetch locations.");
         });
         buildingService.getAll( function(response) {
             hc.buildings = response;
-        }, function(error) {
+        }, function() {
             hc.showToast("Could not fetch buildings.");
         });
     });
