@@ -27,7 +27,7 @@
                 bc.batch.location = bc.findHQ();                
             } else {
 
-                bc.batch.ID         = (bc.state == "edit")       ? incomingBatch.ID                  : undefined;
+                bc.batch.id         = (bc.state == "edit")       ? incomingBatch.id                  : undefined;
 
                 bc.batch.name       = incomingBatch.name;
                 bc.batch.curriculum = (incomingBatch.curriculum) ? incomingBatch.curriculum.currId       : undefined;               
@@ -71,22 +71,18 @@
         	// to the batch's curriculum.
         bc.calcTrainerCurriculumRatio = function(trainer)
         {
-        	var cur = bc.curricula.find(function(a){
-        		return (a.currId == bc.batch.curriculum);
-        	});
-        	
-    		if (angular.isUndefined(cur) || cur === null) { return 0; }
-    		else if (cur.skills.length == 0) { return 100; }
+    		if (angular.isUndefined(bc.selectedCurriculum) || bc.selectedCurriculum === null) { return 0; }
+    		else if (bc.selectedCurriculum.skills.length == 0) { return 100; }
         	else
         	{
         		var matches = 0;
         		var total = 0;
         		
-        		for (var i = 0; i < cur.skills.length; i += 1)
+        		for (var i = 0; i < bc.selectedCurriculum.skills.length; i += 1)
         		{
         			for (var j = 0; j < trainer.skills.length; j += 1)
         			{
-        				if (cur.skills[i].skillId == (trainer.skills[j] ? trainer.skills[j].skillId : -1))
+        				if (bc.selectedCurriculum.skills[i].id == (trainer.skills[j].id ? trainer.skills[j].id : -1))
         				{
         					matches += 1;
         					break;
@@ -103,6 +99,15 @@
         
         /*******************************************************************/
         
+        bc.getSelectedCurriculum = function()
+        {
+    		curriculumService.getById(bc.batch.curriculum, function(response) {
+                bc.selectedCurriculum = response;
+            }, function(error) {
+                bc.showToast( "Could not fetch curriculum.");
+            });
+        }
+
             // defaults location to Reston branch 
         bc.findHQ = function(){
             return 1;
@@ -216,11 +221,11 @@
             // highlights batches clicked on timeline
         bc.highlightBatch = function(batch){
 			if(bc.selectedBatch !== undefined){
-				d3.select('#id'+bc.selectedBatch.ID)
+				d3.select('#id'+bc.selectedBatch.id)
 					.attr('filter',null);
 			}
 			bc.selectedBatch = batch;
-			d3.select('#id'+batch.ID)
+			d3.select('#id'+batch.id)
 				.attr('filter', 'url(#highlight)');
 		};
 
@@ -229,7 +234,7 @@
             // determines if input table row needs the selectedBatch class
         bc.selectedBatchRow = function(batch){
             if (bc.selectedBatch) {
-                if (batch.ID == bc.selectedBatch.ID) {
+                if (batch.id == bc.selectedBatch.id) {
                     return "selectedBatch";
                 }
             }
@@ -455,6 +460,7 @@
         
         trainerService.getAll( function(response) {
             bc.trainers = response;
+            bc.updateCurriculumRatios();
         }, function(error) {
             bc.showToast( "Could not fetch trainers.");
         });
