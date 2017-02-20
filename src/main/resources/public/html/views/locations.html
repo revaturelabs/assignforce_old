@@ -73,6 +73,7 @@
                         
                         <md-list id="{{ 'bldg'.concat(building.id) }}" class="roomList">
                     		<md-list-item ng-repeat="room in building.rooms" 
+                    			ng-if="room.active == true"
                     			ng-click="lCtrl.toggle(room)" layout-align="center center">
 
 	                        <div flex="5"> </div>
