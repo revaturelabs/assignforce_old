@@ -6,38 +6,6 @@ assignforce.controller( "reportCtrl", function( $scope, $mdPanel, settingService
 
     rc.cardArr = [];
 
-
-    // adds a trainer by popping up a dialog box
-    // tc.addTrainer = function () {
-    //     $mdDialog.show({
-    //         templateUrl: "html/dialogs/trainerDialog.html",
-    //         controller: "trainerDialogCtrl",
-    //         controllerAs: "tdCtrl",
-    //         locals: {
-    //             trainer : trainerService.getEmptyTrainer(),
-    //             state   : "create" },
-    //         bindToController: true,
-    //         clickOutsideToClose: true
-    //     }).then(function () {
-    //         tc.showToast("Trainer success.");
-    //         tc.rePullTrainers();
-    //     }, function () {
-    //         tc.showToast("Trainer Fails.")
-    //     });
-    // };
-
-
-
-    // rc.getGradTable = function() {
-    //     return({
-    //         templateUrl: "html/templates/gradTableTemplate.html",
-    //         controller: "reportCtrl",
-    //         controllerAs: "rCtrl",
-    //         bindToController: true
-    //     })
-    // };
-
-
     // functions
     // calls showToast method of aCtrl
     rc.showToast = function (message) {
