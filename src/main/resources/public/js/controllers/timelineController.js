@@ -21,7 +21,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     
     tlc.removeUnmatchingCurriculum = function(batch)
     {
-    	return (tlc.selectedCurriculum == 0 || (!(angular.isUndefined(batch.curriculum)) && (batch.curriculum.id == tlc.selectedCurriculum)));
+    	return (tlc.selectedCurriculum == 0 || (!(angular.isUndefined(batch.curriculum)) && (batch.curriculum.currId == tlc.selectedCurriculum)));
     }
     
     tlc.removeIrrelevantBatches = function(batch) {
@@ -47,7 +47,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     tlc.removeBatchlessTrainers = function(trainer) {
 		var trainerIndex = tlc.filteredBatches.findIndex(function (d)
 		{
-			return (d.trainer.trainerID == parseInt(trainer.substring(1, trainer.indexOf(')'))));
+			return (d.trainer.trainerId == parseInt(trainer.substring(1, trainer.indexOf(')'))));
 		});
 		
         return (trainerIndex > -1);
@@ -398,7 +398,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 //Generates the string used in the columns
 function trainerColumnName(trainer)
 {
-	return ("(" + trainer.trainerID + ")" + " " + trainer.firstName + " " + trainer.lastName);
+	return ("(" + trainer.trainerId + ")" + " " + trainer.firstName + " " + trainer.lastName);
 }
 
 // Draw timeline

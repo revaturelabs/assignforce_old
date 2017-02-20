@@ -31,8 +31,8 @@ public class SettingCtrl {
     }
 
     //Retrieve
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object retrieveSetting (@PathVariable("id") int ID){
+    @RequestMapping(value = "/{settingId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Object retrieveSetting (@PathVariable("settingId") int ID){
 
         Setting setting = settingService.getOneItem(ID);
         if(setting == null) {
@@ -49,7 +49,7 @@ public class SettingCtrl {
 
         if(settings == null){
             return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Fetching all Settings failed"), HttpStatus.NOT_FOUND);
-        } else if (settings.isEmpty() == true){
+        } else if (settings.isEmpty()){
             return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No Settings available"), HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity< List<Setting> >(settings, HttpStatus.OK);
@@ -60,14 +60,7 @@ public class SettingCtrl {
     @RequestMapping( method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object updateSetting(@RequestBody SettingDTO in ){
 
-        int ID = 0;
-        List<Setting> settings = settingService.getAllItems();
-
-        for (int i = 0; i < settings.size(); i++){
-            if (in.getSettingName().equals(settings.get(i).getSettingName())){
-                ID = settings.get(i).getId();
-            }
-        }
+        int ID = in.getSettingId();
         String name = in.getSettingName();
         double value = in.getSettingValue();
 

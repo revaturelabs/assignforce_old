@@ -18,7 +18,6 @@ import com.revature.assignforce.domain.Curriculum;
 import com.revature.assignforce.domain.Skill;
 import com.revature.assignforce.domain.dto.CurriculumDTO;
 import com.revature.assignforce.domain.dto.ResponseErrorDTO;
-import com.revature.assignforce.service.DaoService;
 
 @RestController
 @RequestMapping("/api/v2/curriculum")
@@ -33,11 +32,11 @@ public class CurriculumCtrl {
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createCurriculum( @RequestBody CurriculumDTO in ) {
 	
-		int ID = in.getCurrID();
+		int id = in.getCurrId();
 		String name = in.getName();
 		List<Skill> skills = in.getSkills();
 		
-		Curriculum out = new Curriculum( ID, name, skills );
+		Curriculum out = new Curriculum( id, name, skills );
 		out = currService.saveItem( out );
 		
 		if (out == null) {
@@ -65,11 +64,11 @@ public class CurriculumCtrl {
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object updateCurriculum( @RequestBody CurriculumDTO in ) {
 	
-		int ID = in.getCurrID();
+		int id = in.getCurrId();
 		String name = in.getName();
 		List<Skill> skills = in.getSkills();
 		
-		Curriculum out = new Curriculum( ID, name, skills );
+		Curriculum out = new Curriculum( id, name, skills );
 		out = currService.saveItem( out );
 		
 		if (out == null) {
@@ -96,7 +95,7 @@ public class CurriculumCtrl {
 		List<Curriculum> all = currService.getAllItems();
 		if (all == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Fetching all curricula failed."), HttpStatus.NOT_FOUND);
-		} else if (all.isEmpty() == true) {
+		} else if (all.isEmpty()) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No curricula available."), HttpStatus.NOT_FOUND);
 		} else {
 			return new ResponseEntity< List<Curriculum> >(all, HttpStatus.OK);

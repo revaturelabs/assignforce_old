@@ -17,36 +17,38 @@ public class Skill implements Activatable{
 	@Column(name = "ID")
 	@SequenceGenerator(allocationSize = 1, name = "skillSeq", sequenceName = "SKILL_SEQ")
 	@GeneratedValue(generator = "skillSeq", strategy = GenerationType.SEQUENCE)
-	private int ID;
+	private int skillId;
 	
 	@Column(name = "NAME", unique=true, nullable=false)
-	private String Name;
+	private String name;
 
 	@Column(name="active", insertable = false)
 	private Boolean active;
 
-	public Skill(){}
+	public Skill(){
+		//noarg constructor
+	}
 	
-	public Skill(int iD, String name) {
+	public Skill(int skillId, String name) {
 		super();
-		ID = iD;
-		Name = name;
+		this.skillId = skillId;
+		this.name = name;
 	}
 
-	public int getID() {
-		return ID;
+	public int getSkillId() {
+		return skillId;
 	}
 
-	public void setID(int iD) {
-		ID = iD;
+	public void setSkillId(int skillId) {
+		this.skillId = skillId;
 	}
 
 	public String getName() {
-		return Name;
+		return name;
 	}
 
 	public void setName(String name) {
-		Name = name;
+		this.name = name;
 	}
 
 	public Boolean getActive() {
@@ -59,6 +61,6 @@ public class Skill implements Activatable{
 
 	@Override
 	public String toString() {
-		return "Skill [ID = " + ID + ", Name = " + Name + "]";
-	}	
+		return "Skill [ID = " + skillId + ", Name = " + name + "]";
+	}
 }

@@ -1,5 +1,6 @@
 package com.revature.assignforce.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import org.hibernate.annotations.FetchMode;
 @Entity
 @Table(name = "BUILDING")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-//@JsonIgnoreProperties(ignoreUnknown = true)
+// @JsonIgnoreProperties(ignoreUnknown = true)
 public class Building implements Activatable {
 
 	@Id
@@ -22,11 +23,12 @@ public class Building implements Activatable {
 	private int ID;
 
 	@Column(name = "NAME", unique = true, nullable = false)
-	private String name;	
-	
+	private String name;
+
 	@Column(name = "LOCATION")
-	@JoinColumn(name="LOCATION")//is it building or location??
+	@JoinColumn(name = "LOCATION") // is it building or location??
 	@Fetch(FetchMode.JOIN)
+	@JsonIgnoreProperties("buildings")
 	private int location;
 
 	@Column(name = "active", insertable = false)
@@ -34,11 +36,12 @@ public class Building implements Activatable {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "BUILDING")
-	//@JsonIgnore
-	// @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+
+	@JsonIgnoreProperties("building")
 	private List<Room> rooms;
-	
+
 	public Building() {
+		//No arg constructor
 	}
 
 	public Building(int ID, String name, List<Room> rooms, boolean active, int location) {
@@ -49,15 +52,15 @@ public class Building implements Activatable {
 		this.location = location;
 		this.active = active;
 	}
-	
-	public Building(int location){
+
+	public Building(int location) {
 		this.location = location;
 	}
 
 	public Boolean getActive() {
 		return active;
 	}
-	
+
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
@@ -92,11 +95,11 @@ public class Building implements Activatable {
 
 	public void setRooms(List<Room> rooms) {
 		this.rooms = rooms;
-	}	
+	}
 
 	@Override
 	public String toString() {
-		return "Building [ID = " + ID + ", name = " + name + ", location = " + location + ", active = " + active + ", rooms = "
-				+ rooms + "]";
+		return "Building [ID = " + ID + ", name = " + name + ", location = " + location + ", active = " + active
+				+ ", rooms = " + rooms + "]";
 	}
 }

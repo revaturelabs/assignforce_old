@@ -21,7 +21,9 @@ public class BatchStatusLookup {
 	@Column(name = "BS_NAME", unique=true, nullable=false)
 	private String batchStatusName;
 
-	public BatchStatusLookup(){}
+	public BatchStatusLookup(){
+		//noarg constructor
+	}
 	public BatchStatusLookup(int batchStatusID, String batchStatusName) {
 		super();
 		this.batchStatusID = batchStatusID;
