@@ -2,7 +2,6 @@ var assignforce = angular.module("batchApp");
 
 assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
 		locationService, buildingService) {
-	// console.log("Beginning building dialog controller.");
 	var bdc = this;
 
 	// functions
@@ -13,26 +12,30 @@ assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
 
 	// save changes/new
 	bdc.save = function(isValid) {
-
 		if (isValid) {
 
 			if (bdc.state == "edit") {
 				bdc.swapBuilding(bdc.building);
+				
+				buildingService.update(bdc.building, function() {
+					$mdDialog.hide();
+				}, function() {
+					$mdDialog.cancel();
+				});
+				
 			} else if (bdc.state == "create") {
 				bdc.building.location = bdc.location.id; //saves the location id reference to building
 				bdc.location.buildings.push(bdc.building);
+				
+				buildingService.create(bdc.building, function() {
+					$mdDialog.hide();
+				}, function() {
+					$mdDialog.cancel();
+				});
+				
 			}
-//TODO may have to adjust this to have building contain location
-//			buildingService.update(bdc.building, function() {
-//				$mdDialog.hide();
-//			}, function() {
-//				$mdDialog.cancel();
-//			});
-			buildingService.create(bdc.building, function() {
-				$mdDialog.hide();
-			}, function() {
-				$mdDialog.cancel();
-			});
+
+			
 
 		}
 	};
@@ -62,7 +65,7 @@ assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
 		} else {
 			bdc.location.buildings.forEach(function(building) {
 				if (building.buildingID == newBuilding.buildingID) {
-					building.name = newbuilding.name;
+					building.name = newBuilding.name;
 				}
 			});
 		}
@@ -70,18 +73,11 @@ assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
 
 	// data
 
-//	if (bdc.building.name.split("-").length > 1) {
-//		bdc.building = bdc.building.name.split("-")[0].trim();
-//		bdc.building.name = bdc.building.name.split("-")[1]
-//				.trim(); 
-//	} else {
-//		bdc.building = "";
-//	}
+
 
 	// page initialization
 	// data gathering
 	locationService.getAll(function(response) {
-		// console.log(" (bdc) Retrieving all locations.")
 		bdc.locations = response;
 		if (bdc.state == "create") {
 			bdc.title = "Add new building to " + bdc.location.name;
@@ -90,9 +86,7 @@ assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
 			bdc.title = "Edit " + bdc.building.name + " at "
 					+ bdc.location.name;
 		}
-	}, function(error) {
-		// console.log(" (bdc) Failed to retrieve all locations with error:",
-		// error.data.message);
+	}, function() {
 		$mdDialog.cancel();
 	});
 });
