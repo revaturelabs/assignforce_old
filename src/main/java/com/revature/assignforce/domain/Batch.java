@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -34,6 +35,7 @@ public class Batch {
 	@OneToOne
 	@JoinColumn(name = "ROOM") //one batch only belongs to one room
 	@Fetch(FetchMode.JOIN)
+	@JsonIgnoreProperties("batches")
 	private Room room;
 	/*
 	@ManyToOne

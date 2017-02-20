@@ -28,6 +28,7 @@ public class Room implements Activatable {
 	//it is a one to one relationship, but we only need an id here..  Right?
 	@JoinColumn(name = "BUILDING")
 	@Fetch(FetchMode.JOIN)
+	@JsonIgnoreProperties("rooms")
 	private int building;
 
 	@ManyToMany(fetch = FetchType.LAZY)
@@ -36,7 +37,7 @@ public class Room implements Activatable {
 	private List<Unavailable> unavailable;
 
 	@OneToMany(mappedBy = "room")
-	@JsonIgnore
+	@JsonIgnoreProperties("room")
 	private List<Batch> batches;
 
 	@Column(name = "active", insertable = false)

@@ -140,14 +140,48 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     };
 
     pc.uploadCertification = function () {
-        pc.trainer.certifications.push(pc.certs.name);
+        var certification = {
+            file: pc.certFile.name,
+            name: pc.certName,
+            trainer: pc.trainer.trainerId
+        };
+
+        pc.trainer.certifications.push(certification);
         trainerService.update(pc.trainer, function () {
             console.log("pass");
         }, function (err) {
             console.log(err);
-        })
+        });
 
-        pc.certs = undefined;
+        var bucket = new AWS.S3({
+            apiVersion: '2006-03-01',
+            accessKeyId: pc.creds.ID,
+            secretAccessKey: pc.creds.SecretKey,
+            region: 'us-east-1',
+            sslEnabled: false,
+            httpOptions:{
+                proxy: 'http://dev.assignforce.revature.pro/'
+            }
+        });
+
+        var path = "Certifications/" + pc.certFile.name;
+        //set the parameters needed to put an object in the aws s3 bucket
+        var params = {
+            Bucket: pc.creds.BucketName,
+            Key: path,
+            Body: pc.certFile
+        };
+
+        //putting an object in the s3 bucket
+        bucket.putObject(params, function (err) {
+            if (err) {
+                pc.showToast("could not upload file.");
+                return;
+            }
+        });
+
+        pc.certFile = undefined;
+        pc.certName = undefined;
     };
 
     //queries the database for skills. to be called after a change to the skills array
@@ -195,7 +229,8 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     //Simply hard coded for now. Just for testing view
     pc.myFile;
     pc.creds;
-    pc.certs
+    pc.certFile;
+    pc.certName;
     pc.skillsList;
     pc.trainer;
 });

@@ -78,39 +78,41 @@
                 <div class="md-toolbar-tools">
                     <span> Certifications </span>
                     <span flex> </span>
-                    <md-button class="md-icon-button" ng-click="pCtrl.addCertifications()">
-                        <md-tooltip class="md-title"> Add Certifications </md-tooltip>
-                        <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
-                    </md-button>
-                </div>
-            </md-toolbar>
-            <div class="md-padding" layout="column"
-            <span >
-                You have no certifications selected. Try adding some.
-            </span>
-                <md-list >
-                    <md-list-item class="md-2-line" md-ink-ripple="#ff0000" ng-repeat="cert in pCtrl.trainer.certifications">
-                        <md-icon md-svg-icon="img/ic_sim_card_black_24px.svg"> </md-icon>
-                        <div class="md-list-item-text" layout="column">
-                            <h3> {{trainer.certifications}} </h3>
-                        </div>
-                    </md-list-item>
-                </md-list>
-                <div layout="row">
-                    <input class="ng-hide" id="input-file-cert"  type="file" file-model="pCtrl.certs">
+
+                    <input class="ng-hide" id="input-file-cert"  type="file" file-model="pCtrl.certFile">
                     <label for="input-file-cert" class="md-button md-icon-button">
-                        <md-icon md-menu-origin class="material-icons" style="color: #FB8C00;"> add_circle </md-icon>
+                        <md-icon md-menu-origin class="material-icons"> add_circle </md-icon>
                         <md-tooltip class="md-title"> Add Certification </md-tooltip>
                     </label>
-                    <div ng-if="pCtrl.certs != undefined">
-                        <label>{{pCtrl.certs.name}}</label>
-                        <md-button ng-click="pCtrl.uploadCertification()">Update</md-button>
+                </div>
+            </md-toolbar>
+            <div class="md-padding" layout="column">
+                <div class="certAddBox" layout="row" ng-if="pCtrl.certFile != undefined">
+                    <div>
+                        <md-input-container flex>
+                            <label> Certification Name </label>
+                            <input ng-model="pCtrl.certName" required>
+                        </md-input-container>
+                        <br>
+                        <label>{{pCtrl.certFile.name}}</label>
+                        <md-button ng-click="pCtrl.uploadCertification()" ng-if="pCtrl.certName != undefined">Update</md-button>
+                        <br>
                     </div>
                 </div>
+                <md-divider ng-if="pCtrl.certFile != undefined"></md-divider>
+                <span ng-if="pCtrl.trainer.certifications == null">
+                    <h6>You have no certifications selected. Try adding some.</h6>
+                </span>
+                <md-list >
+                    <md-list-item md-ink-ripple="#ff0000" ng-repeat="cert in pCtrl.trainer.certifications">
+                        <md-icon md-svg-icon="img/ic_sim_card_black_24px.svg"></md-icon>
+                        <h3> {{cert.name}} </h3>
+                    </md-list-item>
+                </md-list>
             </div>
         </md-content>
 
-        <div ng-if="pCtrl.trainer == undefined || pCtrl.skills == undefined" layout="column" layout-wrap layout-align="center center">
+        <div ng-if="pCtrl.trainer == undefined || pCtrl.skillsList == undefined" layout="column" layout-wrap layout-align="center center">
             <div flex="100"> &nbsp; </div>
             <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
             <div flex="100"> &nbsp; </div>
