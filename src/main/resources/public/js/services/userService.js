@@ -4,8 +4,8 @@
 var app = angular.module("batchApp");
 
 app.constant('authorizeUrl', 'api/v2/authorize');
-
-app.service('userSrv', function($http, authorizeUrl){
+//may need $http, authorizeUrl as parameters
+app.service('userSrv', function(){
 
 	//dostuff
 });

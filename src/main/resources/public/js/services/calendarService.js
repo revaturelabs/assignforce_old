@@ -1,6 +1,6 @@
 var app = angular.module( "batchApp" );
 
-app.service( "calendarService", function(secWeek){
+app.service( "calendarService", function(){
     var cs = this;
 
     cs.countWeeks = function(startDate, endDate){

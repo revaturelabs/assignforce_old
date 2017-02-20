@@ -22,8 +22,6 @@ public class ActivatableObjectDaoService<T extends Activatable, ID extends Seria
     }
 
     @Override
-    //public List<T> getAllItems(){ return repo.findByActiveIsTrue();}
-
     public void deleteItem(ID id){
 
         try{

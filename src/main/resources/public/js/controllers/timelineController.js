@@ -146,7 +146,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 
 
 	//Fetches all the batches for the controller.
-	tlc.getAllBatches = new Promise(function(resolve, reject)
+	tlc.getAllBatches = new Promise(function(resolve)
 	{
 	    batchService.getAll( function(response) {
 	        tlc.batches = response;
@@ -159,7 +159,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 
 
 	//Fetches all the trainers for the controller.
-	tlc.getAllTrainers = new Promise(function(resolve, reject)
+	tlc.getAllTrainers = new Promise(function(resolve)
 	{
 	    trainerService.getAll( function(response) {
 			tlc.trainers = response.map(function(trainer){return trainerColumnName(trainer)});
@@ -286,8 +286,8 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	
 
 	//Promise for the repulling of the timeline.
-    tlc.repullPromise = new Promise(function(resolve, reject){
-    	tlc.getAllBatches.then(function(result)
+    tlc.repullPromise = new Promise(function(resolve){
+    	tlc.getAllBatches.then(function()
     	{
 	    	tlc.getAllTrainers.then(function()
 	    	{
@@ -813,7 +813,9 @@ function projectTimeline(timelineFormatting, minDate, maxDate, yCoord, timelineD
 			.attr('y', function(d) { 
 				var y = yScale(new Date(d.startDate));
 				
-				if (y < 0){ y = 0; }
+				if (y < 0){ 
+					y = 0; 
+				}
 				
 				return (y+25);
 			})
