@@ -464,9 +464,7 @@ assignforce.controller( "reportCtrl", function( $scope, $mdPanel, settingService
 
         var curricula = rc.curricula;
 
-        console.log(rc.batches);
-
-        while(!rc.curricula) {console.log(i++)}
+        // console.log(rc.batches);
 
         angular.forEach(curricula, function (curr) {
             var empty = {};
