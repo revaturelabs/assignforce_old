@@ -34,7 +34,7 @@
 					templateUrl : "html/views/reports.html",
 					controller  : "reportCtrl as rCtrl"
 				})
-				.when("/profile", {
+				.when("/profile?train={param1}", {
 					templateUrl : "html/views/profile.html",
 					controller  : "profileCtrl as pCtrl"
 				})

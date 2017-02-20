@@ -107,6 +107,11 @@
                     <md-list-item md-ink-ripple="#ff0000" ng-repeat="cert in pCtrl.trainer.certifications">
                         <md-icon md-svg-icon="img/ic_sim_card_black_24px.svg"></md-icon>
                         <h3> {{cert.name}} </h3>
+                        <span flex></span>
+                        <md-button class="md-icon-button" ng-click="pCtrl.removeCertification(cert)">
+                            <md-tooltip class="md-title" style="color: #FB8C00;">Remove Certification</md-tooltip>
+                            <i class="material-icons">remove_circle</i>
+                        </md-button>
                     </md-list-item>
                 </md-list>
             </div>

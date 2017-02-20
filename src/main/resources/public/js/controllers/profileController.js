@@ -42,33 +42,15 @@ assignforce.filter('skillFilter', function(){
     }
 });
 
-assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, trainerService, skillService, s3Service) {
+assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, trainerService, skillService, s3Service, $routeParams) {
     var pc = this;
+    pc.tId = $routeParams.train;
+    // console.log($routeParams.train);
 
     // functions
     // calls showToast method of aCtrl
     pc.showToast = function( message ) {
         $scope.$parent.aCtrl.showToast( message );
-    };
-
-    //skills dialog controller not using this now
-    pc.addSkills = function () {
-        $mdDialog.show({
-            templateUrl: "html/templates/skillTemplate.html",
-            controller: "skillDialogCtrl",
-            controllerAs: "sdCtrl",
-            locals: {
-                trainer        : pc.trainer,
-                skills         : pc.skillsList,
-                newSkill       : skillService.getEmptySkill()},
-            bindToController: true,
-            clickOutsideToClose: true
-        }).then(function () {
-            pc.showToast("Skill(s) added.");
-            pc.rePullSkills();
-        }, function () {
-            pc.showToast("Skill(s) not added.")
-        });
     };
 
     pc.uploadResume = function () {
@@ -140,17 +122,20 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     };
 
     pc.uploadCertification = function () {
+        var path = "Certifications/" + pc.trainer.trainerId + "_" + pc.certFile.name;
+
         var certification = {
-            file: pc.certFile.name,
+            file: path,
             name: pc.certName,
             trainer: pc.trainer.trainerId
         };
 
         pc.trainer.certifications.push(certification);
         trainerService.update(pc.trainer, function () {
-            pc.showToast("pass");
-        }, function (err) {
-            pc.showToast(err);
+            pc.showToast("Certification has been saved.");
+        }, function () {
+            pc.showToast("Failed saving Certification.");
+            return;
         });
 
         var bucket = new AWS.S3({
@@ -164,7 +149,6 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
             }
         });
 
-        var path = "Certifications/" + pc.certFile.name;
         //set the parameters needed to put an object in the aws s3 bucket
         var params = {
             Bucket: pc.creds.BucketName,
@@ -175,13 +159,26 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         //putting an object in the s3 bucket
         bucket.putObject(params, function (err) {
             if (err) {
-                pc.showToast("could not upload file.");
+                pc.showToast("File could not be uploaded.");
                 return;
             }
         });
 
         pc.certFile = undefined;
         pc.certName = undefined;
+    };
+
+    pc.removeCertification = function (cert) {
+        for (var i = 0; i < pc.trainer.certifications.length; i++){
+            if(cert.name == pc.trainer.certifications[i].name){
+                pc.trainer.certifications.splice(i,1);
+            }
+        }
+        trainerService.update(pc.trainer, function () {
+            pc.showToast("Removed Certification Successfully");
+        }, function (err) {
+            pc.showToast(err);
+        });
     };
 
     //queries the database for skills. to be called after a change to the skills array
@@ -197,7 +194,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     //queries the database for the trainer. to be called after a change to the trainer's properties
     pc.rePullTrainer = function(){
         pc.trainer = undefined;
-        trainerService.getById(3, function (response) {
+        trainerService.getById(pc.tId, function (response) {
             pc.trainer = response;
         }, function () {
             pc.showToast("Could not fetch trainer.");
@@ -207,11 +204,19 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     // data gathering
 
     // id is hard coded for testing. fix this later
-    trainerService.getById(3, function (response) {
-        pc.trainer = response;
-    }, function () {
-        pc.showToast("Could not fetch trainer.");
-    });
+    if(pc.tId){
+        trainerService.getById(pc.tId, function (response) {
+            pc.trainer = response;
+        }, function () {
+            pc.showToast("Could not fetch trainer.");
+        });
+    } else {
+        trainerService.getById(1, function (response) {
+            pc.trainer = response;
+        }, function () {
+            pc.showToast("Could not fetch trainer.");
+        });
+    }
 
     s3Service.getCreds(function (response) {
         pc.creds = response;
