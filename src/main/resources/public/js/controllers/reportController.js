@@ -227,41 +227,9 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
          * 					This result should be rounded up to accommodate for the remainder.
          */
         
-    	if (( neededBatches > Math.floor(neededBatches)) && (neededBatches < Math.ceil(neededBatches))){
-
-            neededBatches = Math.ceil( neededBatches );
-
-        }
-        
- 	
-        /**      
-        //Step 1:  Get's the settingServices 'minimum batch size' and 'maximum batch size' values.
-        //settingService.getById(10, function (response) {  rc.minBatchSizeVal = response.settingValue;  });
-    	rc.minBatchSizeVal = 15;
-    	
-    	//settingService.getById(11, function (response) {  rc.maxBatchSizeVal = response.settingValue;  });
-    	rc.maxBatchSizeVal = 20;
-    	
-        //Step 2:  Computes the needed batches and truncates any trailing decimal.
-        //var neededBatches = requiredTrainees / minBatchSizeVal;
-        var neededBatches = requiredTrainees / rc.minBatchSizeVal;
-        neededBatches = Math.floor( neededBatches );
-        
-        //Step 3:  Determines how many trainees are remaining that still need a batch.  
-        //var remainingTrainees = requiredTrainees % minBatchSizeVal;
-        var remainingTrainees = requiredTrainees % rc.minBatchSizeVal;
-
-
-        //Step 4:  Calculates how many trainees per batch still need inserted.
-        var traineesPerBatch = remainingTrainees % neededBatches;
-        
-        //Step 5:  
-        //if ( ( traineesPerBatch + minbatchSizeVal ) < maxBatchSizeVal ){
-        if ( ( traineesPerBatch + rc.minBatchSizeVal ) < maxBatchSizeVal ){
-        	neededBatches = neededBatches + 1;
-   			Math.floor(neededBatches);
-        }
-        */
+    	if (( neededBatches > Math.floor(neededBatches)) && (neededBatches < Math.ceil(neededBatches))){  
+    		neededBatches = Math.ceil( neededBatches ); 
+    	}
         
     	
     	/**  Sets the reportsController's 'requiredBatches' data value in each index 
@@ -363,7 +331,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 
         for (var x in rc.cardArr){
             if(rc.cardArr.hasOwnProperty(x)){
-                var batchVal = rc.cardArr[x].batchType.id;
+                var batchVal = rc.cardArr[x].batchType.currId;
 
                 switch(batchVal){
 
@@ -430,7 +398,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 	            
 	            //Assigns the 'id' value of the Curriculum ('batch type' variable) to
 	            //	to the batch object.
-	            rc.newBatch.curriculum = rc.cardArr[index].batchType.id;
+	            rc.newBatch.curriculum = rc.cardArr[index].batchType.currId;
 	            
 	            //Create batch method called here...
 	            batchService.create(rc.newBatch, success, error);
@@ -552,7 +520,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 						            
 						//Assigns the 'id' value of the Curriculum ('batch type' variable) to
 						//	to the batch object.
-						rc.newBatch.curriculum = rc.cardArr[index].batchType.id;
+						rc.newBatch.curriculum = rc.cardArr[index].batchType.currId;
 				            
 				        //Create batch method called here...
 				        batchService.create(rc.newBatch, success, error);
