@@ -90,7 +90,6 @@
             			building.active = false;
             			buildingService.update( building, function(){   
                         }, function(){
-                        	//TODO HERE
                             $mdDialog.cancel();
                         });
             		});            		
