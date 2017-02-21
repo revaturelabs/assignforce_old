@@ -15,7 +15,6 @@ app.service('ptoService', function ($resource, $mdDialog, $http) {
 
     	// enter the scope of current project (this API must be turned on in the Google console)
     	var scopes = 'https://www.googleapis.com/auth/calendar';
-
     	
         gapi.client.setApiKey(apiKey);
         window.setTimeout(checkAuth,1);
@@ -26,17 +25,20 @@ app.service('ptoService', function ($resource, $mdDialog, $http) {
         }
 
         function handleAuthResult(authResult){
-            if (!authResult){
-            	console.log("failed to authorize");
+            if (authResult){
+            	console.log(authResult);
+            } else {
+                console.log("failed");
+            }
         }
     }
 
     ptos.addPto = function(trainer, startDate, endDate){
 
         Date.prototype.addDays = function(days) {
-          var dat = new Date(this.valueOf());
-          dat.setDate(dat.getDate() + days);
-          return dat;
+			var dat = new Date(this.valueOf());
+			dat.setDate(dat.getDate() + days);
+			return dat;
         }
 
         Date.prototype.formatDate = function() {
@@ -65,7 +67,6 @@ app.service('ptoService', function ($resource, $mdDialog, $http) {
             "end": {
                 "date": endDate.toString()
             },
-            // "description": trainer.firstName + " " + trainer.lastName,
         };
 
         gapi.client.load('calendar', 'v3', function(){ // load the calendar api (version 3)
@@ -77,7 +78,7 @@ app.service('ptoService', function ($resource, $mdDialog, $http) {
                       // handle the response from our api call
             request.execute(function(resp){
 
-                // console.log("added event " + resp);
+                console.log("added event " + resp);
                 $mdDialog.cancel();
 
                 $mdDialog.show({
