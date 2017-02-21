@@ -18,25 +18,16 @@ assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationS
                 
                 if (rdc.state == "edit") {
                     rdc.swapRoom( rdc.room );
-                    
-                    roomService.update( rdc.room, function(){
-                        $mdDialog.hide();
-                    }, function(){
-                        $mdDialog.cancel();
-                    });
-                    
                 } else if (rdc.state == "create") {
                 	rdc.room.building = rdc.building.id;
                     rdc.building.rooms.push( rdc.room );
-                    
-                    roomService.create( rdc.room, function(){
-                        $mdDialog.hide();
-                    }, function(){
-                        $mdDialog.cancel();
-                    });
                 }
 
-               
+                roomService.create( rdc.room, function(){
+                    $mdDialog.hide();
+                }, function(){
+                    $mdDialog.cancel();
+                });
             
             }
         };

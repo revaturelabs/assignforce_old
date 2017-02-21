@@ -1,29 +1,11 @@
 var assignforce = angular.module( "batchApp" );
 
-assignforce.controller( "reportCtrl", function( $scope, batchService, curriculumService, monthList ) {
+assignforce.controller( "reportCtrl", function( $scope, $mdPanel, settingService, batchService, curriculumService, monthList ) {
 
     var rc = this;
 
-    /*************************************************************/
-    /*************************************************************/
- 
-   $scope.options = [{
-        title: 'Graduates summary table for 2017',
-        content: 'Grad - Table',
-        template: '<get-Data></get-Data>'
-    }, {
-        title: 'Graduates summary graph for 2017',
-        content: 'Grad - Graph'
-    }, {
-        title: 'Incoming summary table for 2017',
-        content: 'Incoming Table'
-    }, {
-        title: 'Incoming summary graph for 2017',
-        content: 'Incoming Graph'
-    }];
+    rc.cardArr = [];
 
-   /*************************************************************/
-   /*************************************************************/
 
     // functions
     // calls showToast method of aCtrl
@@ -95,7 +77,6 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
                 date = new Date(rc.batches[x]['endDate']);
                 if (rc.batches[x]['curriculum'].name && curriculum && (date.getMonth() == month) && (date.getFullYear() == rc.year) && (rc.batches[x]['curriculum'].currId == curriculum.currId)) {
                     total += rc.graduates;
-               
                 }
             }
             summary.push(total);
@@ -159,7 +140,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
         var sDate = ( requiredDate == undefined ) ? (new Date()) : requiredDate;
        
         //Subtract 10 weeks from the 'requiredDate' to determine the 'startDate'.  **Using 11 week default.
-        sDate.setDate( sDate.getDate() - ( 7 * (rc.defWeeks)));
+        sDate.setDate( sDate.getDate() - ( 7 * (rc.batchLength)));
 
         // This code segment allows for the batch start date to be pushed to the closest Monday.
         switch(sDate.getDay()){
@@ -466,7 +447,8 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     rc.year = new Date().getFullYear();
 
     //The number of graduates.
-    rc.graduates = 15;
+
+
 
     //The date Trainee's are needed by.
     rc.reqDate = new Date();
@@ -475,7 +457,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     rc.startDate = new Date();
 
     //Default batch time-period.
-    rc.defWeeks = 11;
+    // rc.batchLength = 11;
 
     //Number of Required Graduates.
     rc.requiredGrads;
@@ -525,6 +507,43 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     /*************************************************************/
     /*************************************************************/
 
+
+    settingService.getById(6, function (response) {
+        rc.graduates = response.settingValue;
+        console.log(rc.graduates);
+    });
+    settingService.getById(7, function (response) {
+        rc.batchLength = response.settingValue;
+    });
+    settingService.getById(8, function (response) {
+        rc.incoming = response.settingValue;
+    });
+
+
+    // settingService.getAll(function (response) {
+    //     rc.settings = response;
+    //     console.log(response);
+    //     rc.graduates = rc.settings[1].settingValue;
+    //     rc.batchLength = rc.settings[1].settingValue;
+    //     // console.log(rc.testGrads);
+    //     // rc.graduates = (settingService.getById(6)).settingValue;
+    //     // rc.tester = settingService.getById(6);
+    //     // rc.tester2 = settingService.getById(6)[0].settingValue;
+    //
+    //     settingService.getById(1, function (response) {
+    //         rc.test = response;
+    //         console.log(rc.test.settingValue);
+    //     });
+    //
+    //     console.log(rc.test);
+    //     // rc.tester2 = settingService.getById(6).settingValue;
+    //
+    //     // console.log(rc.tester2);
+    //
+    // }, function () {
+    //     rc.showToast("Could not fetch settings.");
+    // });
+
     // data gathering
     batchService.getAll(function (response) {
         rc.batches = response;
@@ -532,17 +551,22 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
         rc.showToast("Could not fetch batches.");
     });
 
+
     curriculumService.getAll(function (response) {
         rc.curricula = response;
     }, function () {
         rc.showToast("Could not fetch curricula.");
     });
 
+
     // Create second var for graph tat defaults to tables default.
     rc.graphData = function() {
         var series = [];
+        var i=1;
 
         var curricula = rc.curricula;
+
+        // console.log(rc.batches);
 
         angular.forEach(curricula, function (curr) {
             var empty = {};
@@ -559,47 +583,70 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
         return series;
     };
 
-    $scope.myGraph = function() {
-        Highcharts.chart('container', {
-            chart: {
-                type: 'column'
-            },
-            title: {
-                text: 'Graduate Summary'
-            },
-            xAxis: {
-                categories: monthList,
-                crosshair: true
-            },
-            yAxis: {
-                min: 0,
-                title: {
-                    text: 'Graduates'
-                }
-            },
-            tooltip: {
-                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0"><b>{point.y}</b></td></tr>',
-                footerFormat: '</table>',
-                shared: true,
-                useHTML: true
-            },
-            plotOptions: {
-                column: {
-                    pointPadding: 0.2,
-                    borderWidth: 0
-                }
-            },
-            series: rc.graphData()
-        })};
 
+    // var chart = new Highcharts.Chart(chartOptions);
+
+    rc.chartOptions = {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Graduate Summary'
+        },
+        xAxis: {
+            categories: monthList,
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Graduates'
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            '<td style="padding:0"><b>{point.y}</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: rc.graphData()
+    };
+
+
+
+    $scope.myTest = 'container2';
+
+
+
+    // $scope.$watch("items", function (newValue) {
+    //     chart.series[0].setData(newValue, true);
+    // }, true);
+
+});
+
+
+assignforce.directive('getSumTable', function() {
+    return {
+        restrict: 'ACE',
+        scope: true,
+        templateUrl: "html/templates/gradTableTemplate.html",
+        // template: '<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>',
+        bindToController: true
+    };
 });
 
 
 assignforce.directive('getData', function() {
     return {
-        restrict: 'E',
+        restrict: 'ACE',
         scope: true,
         template: '<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>',
         bindToController: true,
@@ -618,8 +665,8 @@ assignforce.directive('accordionDynamic', function(){
             ele.bind('click',function(){
                 ele.toggleClass('active');
                 ele.next('.content').stop().slideToggle();
-                ele.parents('li').siblings().find('md-toolbar').removeClass('active');
-                ele.parents('li').siblings().find('.content').slideUp();
+                ele.parents('md-card').siblings().find('md-toolbar').removeClass('active');
+                // ele.parents('md-card').siblings().find('.content').slideUp();
                 return false;
             });
         }
@@ -627,3 +674,72 @@ assignforce.directive('accordionDynamic', function(){
 });
 
 
+
+assignforce.directive('hcPie', function () {
+    return {
+        restrict: 'C',
+        replace: true,
+        scope: true,
+        controller: function ($scope, $element, $attrs) {
+            console.log(2);
+        },
+        template: '<div id="container2" style="margin: 0 auto">not working</div>',
+        link: function ($scope, element, attrs) {
+            console.log(3);
+            var chart = new Highcharts.Chart({
+                chart: {
+                    renderTo: $scope.myTest,
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Browser market shares January, 2015 to May, 2015'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Brands',
+                    colorByPoint: true,
+                    data: [{
+                        name: 'Microsoft Internet Explorer',
+                        y: 56.33
+                    }, {
+                        name: 'Chrome',
+                        y: 24.03,
+                        sliced: true,
+                        selected: true
+                    }, {
+                        name: 'Firefox',
+                        y: 10.38
+                    }, {
+                        name: 'Safari',
+                        y: 4.77
+                    }, {
+                        name: 'Opera',
+                        y: 0.91
+                    }, {
+                        name: 'Proprietary or Undetectable',
+                        y: 0.2
+                    }]
+                }]
+            });
+        }
+
+    }
+});
