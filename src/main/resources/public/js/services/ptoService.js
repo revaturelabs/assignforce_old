@@ -26,9 +26,10 @@ app.service('ptoService', function ($resource, $mdDialog, $http) {
         }
 
         function handleAuthResult(authResult){
-            if (authResult){
+            if (!authResult){
+            	console.log("failed");
             } else {
-                console.log("failed");
+                console.log("succeeded");
             }
         }
     }

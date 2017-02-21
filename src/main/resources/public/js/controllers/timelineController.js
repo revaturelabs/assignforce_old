@@ -8,23 +8,29 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	
     var tlc = this;
 
+    //Filter removes batches that don't have any assigned trainers.
     tlc.removeNoTrainer = function(batch) {
         return (batch.trainer);
     };
     
+    //Filter removes batches whose dates don't exist.
     tlc.removeDateless = function(batch) {
         return (batch.startDate && batch.endDate);
     };
     
+    
+    //Filter removes batches whose date range fall outside the view of the timeline.
     tlc.removeOutOfDateRange = function(batch) {
     	return ((new Date(batch.startDate) <= tlc.maxDate) && (new Date(batch.endDate) >= tlc.minDate));
     }
     
+    //Filter removes batches that don't have a matching curriculum to the selected view by the user.
     tlc.removeUnmatchingCurriculum = function(batch)
     {
     	return (tlc.selectedCurriculum == 0 || (!(angular.isUndefined(batch.curriculum)) && (batch.curriculum.currId == tlc.selectedCurriculum)));
     }
     
+    //Filter removes batches who don't have any matching trainers.
     tlc.removeIrrelevantBatches = function(batch) {
 		var trainerIndex = tlc.filteredTrainers.findIndex(function (d)
 		{
@@ -34,6 +40,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
         return (trainerIndex > -1);
     };
     
+    //Filter removes trainers that are outside the view of the pagination.
     tlc.removeTrainersOutOfPage = function(trainer) {
 		var trainerIndex = tlc.trainers.findIndex(function (d)
 		{
@@ -45,6 +52,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
         return trainerDisplayed;
     };
     
+    //Filter removes trainers that don't have any batches.
     tlc.removeBatchlessTrainers = function(trainer) {
 		var trainerIndex = tlc.filteredBatches.findIndex(function (d)
 		{
@@ -74,7 +82,6 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	tlc.timelineFormatting.height = 2000;
 	tlc.timelineFormatting.xPadding = 72;
 	
-	tlc.maxTrainerNameCharacters = 6;
 	tlc.selectedCurriculum = 0;
 	tlc.trainersPerPage = 0;
 	tlc.realTrainersPerPage = 0;
@@ -93,80 +100,94 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	//Also grabs the length of the longest trainer name.
 	tlc.getDateRange = function()
 	{	
-		if (tlc.batches)
+		if (!tlc.batches)
 		{
-			var startDate;
-			var endDate;
-			
-			for (var b in tlc.batches)
+			return;
+		}
+		
+		var startDate;
+		var endDate;
+		
+		for (var b in tlc.batches)
+		{
+			if (!angular.isUndefined(tlc.batches[b].trainer) && tlc.batches[b].trainer !== null && !angular.isUndefined(tlc.batches[b].startDate) && tlc.batches[b].startDate !== null && !angular.isUndefined(tlc.batches[b].endDate) && tlc.batches[b].endDate !== null)
 			{
-				if (!angular.isUndefined(tlc.batches[b].trainer) && tlc.batches[b].trainer !== null && !angular.isUndefined(tlc.batches[b].startDate) && tlc.batches[b].startDate !== null && !angular.isUndefined(tlc.batches[b].endDate) && tlc.batches[b].endDate !== null)
+				if (angular.isUndefined(tlc.minDate))
 				{
-					if (angular.isUndefined(tlc.minDate))
-					{
-						tlc.minDate = new Date(tlc.batches[b].startDate);
-					}
-					else
-					{
-						startDate = new Date(tlc.batches[b].startDate);
-						if (startDate.getTime() < tlc.minDate.getTime()) {tlc.minDate = startDate;}
-					}
-					
-					if (angular.isUndefined(tlc.maxDate))
-					{
-						tlc.maxDate = new Date(tlc.batches[b].endDate);
-					}
-					else
-					{
-						endDate = new Date(tlc.batches[b].endDate);
-						if (endDate.getTime() > tlc.maxDate.getTime()) {tlc.maxDate = endDate;}
-					}
+					tlc.minDate = new Date(tlc.batches[b].startDate);
+				}
+				else
+				{
+					startDate = new Date(tlc.batches[b].startDate);
+					if (startDate.getTime() < tlc.minDate.getTime()) {
+						tlc.minDate = startDate;
+						}
+				}
+				
+				if (angular.isUndefined(tlc.maxDate))
+				{
+					tlc.maxDate = new Date(tlc.batches[b].endDate);
+				}
+				else
+				{
+					endDate = new Date(tlc.batches[b].endDate);
+					if (endDate.getTime() > tlc.maxDate.getTime()) {
+						tlc.maxDate = endDate;
+						}
 				}
 			}
 		}
 	}
 	
 	//Project timeline when data changes
-	var batches;
-	var trainerNames;
 	
+	//Watches for "repullTimeline" to be broadcast, such that the timeline is repulled.
 	$scope.$on("repullTimeline", function(){
 		tlc.repull();
 	});
 
-	tlc.getAllBatches = new Promise(function(resolve, reject)
+
+	//Fetches all the batches for the controller.
+	tlc.getAllBatches = new Promise(function(resolve)
 	{
 	    batchService.getAll( function(response) {
 	        tlc.batches = response;
 	        tlc.getDateRange();
 	        resolve(1);
-	    }, function(reject) {
+	    }, function() {
 	    	resolve(0);
 	    });
 	});
 
-	tlc.getAllTrainers = new Promise(function(resolve, reject)
+
+	//Fetches all the trainers for the controller.
+	tlc.getAllTrainers = new Promise(function(resolve)
 	{
 	    trainerService.getAll( function(response) {
 			tlc.trainers = response.map(function(trainer){return trainerColumnName(trainer)});
 
 			resolve(1);
-	    }, function(reject) {
+	    }, function() {
 	    	resolve(0);
 	    });
 	});
     
+	//Fetches all the curricula for the controller.
     curriculumService.getAll( function(response) {
         tlc.curricula = response;
-    }, function(error) {
+    }, function() {
+    	//error
     });
 
+    //Fetches the default value for trainers displayed per page.
     settingService.getById(5, function (response) {
         tlc.trainersPerPage = response.settingValue;
         tlc.changeTrainersPerPage();
     }, function () {
+    	//error probably
     });
     
+    //Places a watch on changing the minimum date for the timeline.  Repulls if it changes.
 	$scope.$watch(
 		function(){
 			return tlc.minDate;
@@ -178,6 +199,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		}
 	);
 	
+	//Places a watch on changing the maximum date for the timeline.  Repulls if it changes.
 	$scope.$watch(
 		function(){
 			return tlc.maxDate;
@@ -264,23 +286,29 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		evt.stopPropagation();
 	});
 	
-    tlc.repullPromise = new Promise(function(resolve, reject){
-    	tlc.getAllBatches.then(function(result)
+
+	//Promise for the repulling of the timeline.
+    tlc.repullPromise = new Promise(function(resolve){
+    	tlc.getAllBatches.then(function()
     	{
-	    	tlc.getAllTrainers.then(function(result)
+	    	tlc.getAllTrainers.then(function()
 	    	{
 	    		resolve(1);
 	    	});
     	});
     });
     
+    //Calls the promise immediately upon loading the page.
     tlc.repullPromise.then(function(result)
     {
     	if (result){ 
     		tlc.projectTimeline(-100); 
     	}
-    }, function(error){});
+    }, function(){
+    	//error
+    });
     
+    //Function repulls the timeline.
     tlc.repull = function()
     {
         tlc.repullPromise.then(function(result)
@@ -288,17 +316,21 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
         	if (result){ 
         		tlc.projectTimeline(-100);
         	}
-	    }, function(error){});
+	    }, function(){
+	    	//error
+	    });
     }
     
-    //Pagination functions
+    //Function to change how many trainers are displayed per page.
 	tlc.changeTrainersPerPage = function()
 	{
 		var numTrainers = (tlc.trainers ? tlc.trainers.length : 0);
 		
 		tlc.realTrainersPerPage = Math.floor(tlc.trainersPerPage);
 		
-		if (!angular.isNumber(tlc.realTrainersPerPage) || isNaN(parseInt(tlc.realTrainersPerPage)) || tlc.realTrainersPerPage < 0) { tlc.realTrainersPerPage = 0; }
+		if (!angular.isNumber(tlc.realTrainersPerPage) || isNaN(parseInt(tlc.realTrainersPerPage)) || tlc.realTrainersPerPage < 0) {
+			tlc.realTrainersPerPage = 0; 
+		}
 		
 		tlc.realTrainersPerPage = Math.min(tlc.realTrainersPerPage, numTrainers);
 		
@@ -310,10 +342,16 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		tlc.trainerPage = tlc.realTrainerPage;
 		tlc.maxTrainerPages = Math.ceil(numTrainers / tlc.realTrainersPerPage);
 		
+		if (tlc.realTrainersPerPage > 0)
+		{
+			tlc.hideBatchlessTrainers = 0;
+		}
+		
 		tlc.previousPageButtonStatus();
 		tlc.nextPageButtonStatus();
 	}
 	
+	//Function to go to the previous trainer page.
 	tlc.previousTrainerPage = function()
 	{
 		tlc.trainerListStartIndex -= tlc.realTrainersPerPage;
@@ -326,6 +364,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		tlc.nextPageButtonStatus();
 	}
 	
+	//Function to go to the next trainer page.
 	tlc.nextTrainerPage = function()
 	{
 		tlc.trainerListStartIndex += tlc.realTrainersPerPage;
@@ -338,6 +377,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		tlc.nextPageButtonStatus();
 	}
 	
+	//Function to jump to the first trainer page.
 	tlc.firstTrainerPage = function()
 	{
 		tlc.realTrainerPage = 1;
@@ -350,6 +390,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		tlc.nextPageButtonStatus();
 	}
 	
+	//Function to jump to the last trainer page.
 	tlc.lastTrainerPage = function()
 	{
 		tlc.realTrainerPage = tlc.maxTrainerPages;
@@ -362,12 +403,18 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		tlc.nextPageButtonStatus();
 	}
 	
+	//Function for going to a specific page based on user input.
 	tlc.goToTrainerPage = function()
 	{
 		tlc.realTrainerPage = Math.floor(tlc.trainerPage);
 		
-		if (tlc.realTrainerPage < 0 || !angular.isNumber(tlc.realTrainerPage) || isNaN(tlc.realTrainerPage)) {tlc.realTrainerPage = 1;}
-		if (tlc.realTrainerPage > tlc.maxTrainerPages) { tlc.realTrainerPage = tlc.maxTrainerPages; }
+		if (tlc.realTrainerPage < 0 || !angular.isNumber(tlc.realTrainerPage) || isNaN(tlc.realTrainerPage)) {
+			tlc.realTrainerPage = 1;
+		}
+		
+		if (tlc.realTrainerPage > tlc.maxTrainerPages) { 
+			tlc.realTrainerPage = tlc.maxTrainerPages; 
+		}
 		
 		tlc.trainerListStartIndex = tlc.realTrainersPerPage * (tlc.realTrainerPage - 1);
 		tlc.trainerListEndIndex = tlc.trainerListStartIndex + tlc.realTrainersPerPage;
@@ -376,24 +423,36 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		tlc.nextPageButtonStatus();
 	}
 	
+	//Status of the previous page button.  Enabled/Disabled.
 	tlc.previousPageButtonStatus = function()
 	{
 		//True = disabled, false = enabled.
-		if (tlc.trainerListStartIndex == 0 || tlc.realTrainersPerPage == 0) { tlc.previousPageButtonDisabled = true; }
-		else { tlc.previousPageButtonDisabled = false; }
+		if (tlc.trainerListStartIndex == 0 || tlc.realTrainersPerPage == 0) { 
+			tlc.previousPageButtonDisabled = true; 
+		}
+		else { 
+			tlc.previousPageButtonDisabled = false; 
+		}
 	}
 	
+	
+	//Status of the next page button.  Enabled/Disabled.
 	tlc.nextPageButtonStatus = function()
 	{
 		var numTrainers = (tlc.trainers ? tlc.trainers.length : 0);
 		
 		//True = disabled, false = enabled.
-		if (tlc.trainerListStartIndex + tlc.realTrainersPerPage >= numTrainers || tlc.realTrainersPerPage == 0) { tlc.nextPageButtonDisabled = true; }
+		if (tlc.trainerListStartIndex + tlc.realTrainersPerPage >= numTrainers || tlc.realTrainersPerPage == 0) { 
+			tlc.nextPageButtonDisabled = true;
+		}
 		else { tlc.nextPageButtonDisabled = false; }
 	}
 	
+	
+	//Calls for an update to the trainers per page upon loading the page.
 	tlc.changeTrainersPerPage();
 	
+	//Filters the list of trainers and batches, and calls for the timeline to be re-projected.
 	tlc.projectTimeline = function(yOffset)
 	{
 		if (tlc.trainers && tlc.batches)
@@ -406,14 +465,19 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 			{
 				tlc.filteredTrainers = tlc.trainers.filter(tlc.removeBatchlessTrainers).filter(tlc.removeTrainersOutOfPage);
 			}
-				
+			
+			//Sorts the trainer column names based on id.
 			tlc.filteredTrainers.sort(function(a,b)
 			{
 				var aID = parseInt(a.substring(1, a.indexOf(')')));
 				var bID = parseInt(b.substring(1, b.indexOf(')')));
 				
-				if(aID < bID){ return -1; }
-				else if(aID > bID){ return 1; }
+				if(aID < bID){ 
+					return -1; 
+				}
+				else if(aID > bID){ 
+					return 1; 
+				}
 				return 0;
 			});
 			
@@ -462,7 +526,7 @@ function projectTimeline(timelineFormatting, minDate, maxDate, yCoord, timelineD
 			        line = [],
 			        lineNumber = 0,
 			        lineHeight = 1.1, // ems
-			        x = el.attr("x")
+			        x = el.attr("x"),
 			        y = el.attr("y"),
 			        dy = parseFloat(el.attr("dy")),
 			        tspan = el.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
@@ -525,51 +589,22 @@ function projectTimeline(timelineFormatting, minDate, maxDate, yCoord, timelineD
     var svg = d3.select("#timeline");
     svg.selectAll("*").remove();
     
+    //Tooltip setup.
 	var tip = d3.tip()
 	  .attr('class', 'd3-tip')
 	  .html(function(d) {
 		  var msg = "";
 		  var startDate = new Date(d.startDate);
 		  var endDate = new Date(d.endDate);
-		  
-		  var parseDay = function(day)
-		  {
-			  switch (day)
-			  {
-			  	case 0: return "Sun.";
-			  	case 1: return "Mon.";
-			  	case 2: return "Tue.";
-			  	case 3: return "Wed.";
-			  	case 4: return "Thu.";
-			  	case 5: return "Fri.";
-			  	case 6: return "Sat.";
-			  }
-		  }
-		  
-		  var parseMonth = function(month)
-		  {
-			  switch (month)
-			  {
-			  	case 0: return "Jan.";
-			  	case 1: return "Feb.";
-			  	case 2: return "Mar.";
-			  	case 3: return "Apr.";
-			  	case 4: return "May";
-			  	case 5: return "Jun.";
-			  	case 6: return "Jul.";
-			  	case 7: return "Aug.";
-			  	case 8: return "Sep.";
-			  	case 9: return "Oct.";
-			  	case 10: return "Nov.";
-			  	case 11: return "Dec.";
-			  }
-		  }
+		  var days = ["Sun.", "Mon.", "Tue.", "Wed.", "Thu.", "Fri.", "Sat."];
+		  var months = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec."];
 		  
 		  msg += d.curriculum ? ("<span style='color:orange'>" + d.curriculum.name + "</span> Batch <br/>") : "<span style='color:red'>No curriculum</span> for this batch. <br/>";
-		  msg += d.trainer ? ("Trainer:  <span style='color:gold'>" + d.trainer.firstName + " " + d.trainer.lastName + "</span> <br/>") : "<span style='color:gold'>No trainer</span> for this batch. <br/>";
-		  msg += d.cotrainer ? ("Cotrainer:  <span style='color:gold'>" + d.cotrainer.firstName + " " + d.cotrainer.lastName + "</span> <br/>") : "<span style='color:gold'>No cotrainer</span> for this batch. <br/>";
-		  msg += d.startDate ? ("Start Date:  <span style='color:gold'>" + parseDay(startDate.getDay()) + ", " + parseMonth(startDate.getMonth()) + " " + startDate.getDate() + ", " + startDate.getFullYear() + "</span> <br/>") : "<span style='color:gold'>No start date</span> for this batch. <br/>";
-		  msg += d.endDate ? ("End Date:  <span style='color:gold'>" + parseDay(endDate.getDay()) + ", " + parseMonth(endDate.getMonth()) + " " + endDate.getDate() + ", " + endDate.getFullYear() + "</span> <br/>") : "<span style='color:gold'>No end date</span> for this batch. <br/>";
+		  msg += "__________<br/>";
+		  msg += d.trainer ? ("Trainer:  <span style='color:gold'>" + d.trainer.firstName + " " + d.trainer.lastName + "</span> <br/>") : "<span style='color:red'>No trainer</span> for this batch. <br/>";
+		  msg += d.cotrainer ? ("Cotrainer:  <span style='color:gold'>" + d.cotrainer.firstName + " " + d.cotrainer.lastName + "</span> <br/>") : "<span style='color:red'>No cotrainer</span> for this batch. <br/>";
+		  msg += d.startDate ? ("Start Date:  <span style='color:gold'>" + days[startDate.getDay()] + ", " + months[startDate.getMonth()] + " " + startDate.getDate() + ", " + startDate.getFullYear() + "</span> <br/>") : "<span style='color:red'>No start date</span> for this batch. <br/>";
+		  msg += d.endDate ? ("End Date:  <span style='color:gold'>" + days[endDate.getDay()] + ", " + months[endDate.getMonth()] + " " + endDate.getDate() + ", " + endDate.getFullYear() + "</span> <br/>") : "<span style='color:red'>No end date</span> for this batch. <br/>";
 		  
 		  return msg;
 	  });
@@ -687,7 +722,9 @@ function projectTimeline(timelineFormatting, minDate, maxDate, yCoord, timelineD
 			.attr('y', function(d) {
 				var y = yScale(new Date(d.startDate));
 				
-				if (y < 0){ y = 0; }
+				if (y < 0){ 
+					y = 0; 
+				}
 				
 				return y;
 			})
@@ -697,8 +734,12 @@ function projectTimeline(timelineFormatting, minDate, maxDate, yCoord, timelineD
 				var start = yScale(new Date(d.startDate));
 				var end = yScale(new Date(d.endDate));
 				
-				if (start < 0){ start = 0; }
-				if(end > timelineFormatting.height){ end = timelineFormatting.height; }
+				if (start < 0){ 
+					start = 0; 
+				}
+				if(end > timelineFormatting.height){ 
+					end = timelineFormatting.height; 
+				}
 				
 				return end - start;
 			})
@@ -746,7 +787,9 @@ function projectTimeline(timelineFormatting, minDate, maxDate, yCoord, timelineD
 			.attr('y', function(d) { 
 				var y = yScale(new Date(d.startDate));
 				
-				if (y < 0){ y = 0; }
+				if (y < 0){ 
+					y = 0; 
+				}
 				
 				return (y+25);
 			})

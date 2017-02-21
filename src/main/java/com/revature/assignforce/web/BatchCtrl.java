@@ -52,7 +52,6 @@ public class BatchCtrl {
 		int ID = in.getID();
 		String name = in.getName();
 		Curriculum curriculum = currService.getOneItem(in.getCurriculum());
-		Location location = locationService.getOneItem(in.getLocation());
 		Room room = roomService.getOneItem(in.getRoom());
 		Trainer trainer = trainerService.getOneItem(in.getTrainer());
 		Trainer cotrainer = trainerService.getOneItem(in.getCotrainer());
@@ -60,7 +59,7 @@ public class BatchCtrl {
 		Timestamp endDate = in.getEndDate();
 		BatchStatusLookup status = new BatchStatusLookup(1, "Scheduled");
 		
-		Batch out = new Batch( ID, name, curriculum, location, room, trainer, cotrainer, startDate, endDate, status );
+		Batch out = new Batch( ID, name, curriculum, room, trainer, cotrainer, startDate, endDate, status );
 		out = batchService.saveItem( out );
 
 		if (out == null) {
@@ -82,31 +81,6 @@ public class BatchCtrl {
 			return new ResponseEntity<Batch>(out, HttpStatus.OK);
 		}
 	}
-	
-	  // UPDATE
-		// updating an existing batch object with information passed from batch data transfer object
-/*	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object updateBatch( @RequestBody BatchDTO in ) {
-	
-		int ID = in.getBatchId();
-		String name = in.getName();
-		Curriculum curriculum = skillService.getOneItem(in.getCurriculum());
-		Location location = locationService.getOneItem(in.getLocation());
-		Room room = roomService.getOneItem(in.getRoom());
-		Trainer trainer = trainerService.getOneItem(in.getTrainer());
-		Trainer cotrainer = trainerService.getOneItem(in.getCotrainer());
-		Timestamp startDate = in.getStartDate();
-		Timestamp endDate = in.getEndDate();
-		BatchStatusLookup status = new BatchStatusLookup(1, "Scheduled");
-		
-		Batch out = new Batch( ID, name, curriculum, location, room, trainer, cotrainer, startDate, endDate, status );
-		out = batchService.saveItem( out );
-		if (out == null) {
-			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Batch failed to update."), HttpStatus.NOT_MODIFIED);
-		} else {
-			return new ResponseEntity<Batch>(out, HttpStatus.OK);
-		}
-	}*/
 	
 	  // DELETE
 		// delete batch with given ID

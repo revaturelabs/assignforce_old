@@ -257,6 +257,13 @@
                         </md-input-container>
                         
                         <div flex> </div>
+
+                        <md-input-container flex="none">
+                            <label> End Date </label>
+                            <md-datepicker ng-model="tlCtrl.maxDate" md-current-view="year" md-open-on-focus md-hide-icons="calendar"> </md-datepicker>
+                        </md-input-container>
+                        
+                        <div flex> </div>
                         
                         <md-input-container flex="none">
                         	<label> Batches to View </label>
@@ -265,13 +272,19 @@
                                 <md-option ng-value="curriculum.currId" ng-repeat="curriculum in tlCtrl.curricula"> {{ curriculum.name }} </md-option>
                             </md-select>
                         </md-input-container>
-                        
+                  
                         <div flex> </div>
-
-                        <md-input-container flex="none">
-                            <label> End Date </label>
-                            <md-datepicker ng-model="tlCtrl.maxDate" md-current-view="year" md-open-on-focus md-hide-icons="calendar"> </md-datepicker>
-                        </md-input-container>
+                        
+                        <div ng-if="tlCtrl.realTrainersPerPage <= 0">
+	                        <md-checkbox aria-label="Hide Batchless Trainers?" ng-model="tlCtrl.hideBatchlessTrainers" ng-change="tlCtrl.repull()">
+	                        	Hide Batchless Trainers?
+	                        </md-checkbox>
+                        </div>
+                        <div ng-if="tlCtrl.realTrainersPerPage > 0">
+	                        <md-checkbox aria-label="Hide Batchless Trainers?" ng-model="tlCtrl.hideBatchlessTrainers" ng-checked="false" disabled>
+	                        	Hide Batchless Trainers?
+	                        </md-checkbox>
+                        </div>
                     </div>
 	                <div class="md-padding" layout="columns">
                         <md-input-container flex="none">
@@ -324,12 +337,6 @@
 	                            <md-tooltip class="md-title"> Jump to Last Page </md-tooltip>
 	                            <md-icon md-svg-src="img/ic_skip_next_white_24px.svg"></md-icon>
 	                        </md-button>
-	                        
-	                        <div flex> </div>
-	                        
-	                        <md-checkbox aria-label="Hide Batchless Trainers?" ng-model="tlCtrl.hideBatchlessTrainers" ng-change="tlCtrl.repull()">
-	                        	Hide Batchless Trainers?
-	                        </md-checkbox>
                         </div>
 	                </div>
                 </div>
