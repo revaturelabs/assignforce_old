@@ -45,7 +45,6 @@ assignforce.filter('skillFilter', function(){
 assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, trainerService, skillService, s3Service, $routeParams) {
     var pc = this;
     pc.tId = $routeParams.id;
-    console.log($routeParams);
 
     // functions
     // calls showToast method of aCtrl

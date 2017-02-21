@@ -80,8 +80,6 @@
 
             //activates a trainer
         tc.activateTrainer = function (trainer) {
-            console.log(trainer);
-
             trainer.active = true;
             trainerService.update(trainer, function () {
                 tc.showToast(trainer.firstName +" "+ trainer.lastName + " Activated")
@@ -98,7 +96,6 @@
 
             // holdover until more trainer functionality is created
         tc.goToTrainer = function(event) {
-            console.log(event.trainerId);
             var id = event.trainerId;
             $location.path('/profile/' + id);
         };
