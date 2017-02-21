@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.revature.assignforce.domain.dao.BaseRepository;
 
-
 public abstract class DaoService<T, ID extends Serializable>{
 
 	@Autowired
@@ -28,5 +27,4 @@ public abstract class DaoService<T, ID extends Serializable>{
 	public List<T> getAllItems() {
 		return (List<T>) repo.findAll();
 	}
-
 }
