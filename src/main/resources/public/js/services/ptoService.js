@@ -1,11 +1,9 @@
 
 var app = angular.module("batchApp");
 
-app.service('ptoService', function ($resource, $mdDialog, $http) {
-    // Have to make calls to the server
+app.service('ptoService', function ($resource, $mdDialog) {
 
     var ptos = this;
-    // var token = $resource();
 
     ptos.authorize = function(){
 
@@ -25,10 +23,8 @@ app.service('ptoService', function ($resource, $mdDialog, $http) {
         }
 
         function handleAuthResult(authResult){
-            if (authResult){
-            	console.log(authResult);
-            } else {
-                console.log("failed");
+            if (!authResult){
+            	throw "Failed to authorize";
             }
         }
     }
@@ -47,8 +43,12 @@ app.service('ptoService', function ($resource, $mdDialog, $http) {
 		        day = '' + (d.getDate()),
 		        year = d.getFullYear();
 
-		    if (month.length < 2) month = '0' + month;
-		    if (day.length < 2) day = '0' + day;
+		    if (month.length < 2){
+		    	month = '0' + month;
+		    }
+		    if (day.length < 2){
+		    	day = '0' + day;
+		    }
 
 		    return [year, month, day].join('-');
 		}
@@ -77,8 +77,6 @@ app.service('ptoService', function ($resource, $mdDialog, $http) {
             });
                       // handle the response from our api call
             request.execute(function(resp){
-
-                console.log("added event " + resp);
                 $mdDialog.cancel();
 
                 $mdDialog.show({
