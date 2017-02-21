@@ -1,19 +1,11 @@
 
 var app = angular.module("batchApp");
 
-app.service('ptoService', function ($resource, $http) {
+app.service('ptoService', function ($resource, $mdDialog, $http) {
     // Have to make calls to the server
 
     var ptos = this;
     // var token = $resource();
-
-    ptos.sendRequest = function(){
-    	ptos.getToken();
-    };
-
-    ptos.getToken = function(){
-    	// console.log("sss");
-    };
 
     ptos.authorize = function(){
 
@@ -35,7 +27,6 @@ app.service('ptoService', function ($resource, $http) {
 
         function handleAuthResult(authResult){
             if (authResult){
-                console.log(authResult);
             } else {
                 console.log("failed");
             }
@@ -44,32 +35,40 @@ app.service('ptoService', function ($resource, $http) {
 
     ptos.addPto = function(trainer, startDate, endDate){
 
-        Date.prototype.addHours= function(h){
-            this.setHours(this.getHours()+h);
-            return this;
+        Date.prototype.addDays = function(days) {
+          var dat = new Date(this.valueOf());
+          dat.setDate(dat.getDate() + days);
+          return dat;
         }
 
-        Date.prototype.addMinutes= function(m){
-            this.setMinutes(this.getMinutes()+m);
-            return this;
-        }
+        Date.prototype.formatDate = function() {
+		    var d = new Date(this),
+		        month = '' + (d.getMonth() + 1),
+		        day = '' + (d.getDate()),
+		        year = d.getFullYear();
+
+		    if (month.length < 2) month = '0' + month;
+		    if (day.length < 2) day = '0' + day;
+
+		    return [year, month, day].join('-');
+		}
+
+		startDate = startDate.formatDate(0);
+		endDate = endDate.addDays(1).formatDate();
 
         var calendarId = 'taj5130@gmail.com';
 
         // This is the resource we will pass while calling api function
         var resource = {
-            "summary": trainer.firstName + " " + trainer.lastName,
+            "summary": trainer.firstName + " " + trainer.lastName + ": Out Of Office",
             "start": {
-                "dateTime": (new Date(startDate)).toISOString()
+                "date": startDate.toString()
             },
             "end": {
-                "dateTime": (new Date(endDate)).addHours(23).addMinutes(59).toISOString()
+                "date": endDate.toString()
             },
+            // "description": trainer.firstName + " " + trainer.lastName,
         };
-
-        
-    	console.log("making api call");
-    	console.log("endDate: " + resource.end.dateTime);
 
         gapi.client.load('calendar', 'v3', function(){ // load the calendar api (version 3)
             var request = gapi.client.calendar.events.insert({
@@ -80,9 +79,17 @@ app.service('ptoService', function ($resource, $http) {
                       // handle the response from our api call
             request.execute(function(resp){
 
-                console.log(resp);
-                //document.getElementById('calendar').contentWindow.location.reload();
-            });    
+                // console.log("added event " + resp);
+                $mdDialog.cancel();
+
+                $mdDialog.show({
+                    templateUrl: "html/templates/calendarTemplate.html",
+                    controller: "trainerCtrl",
+                    controllerAs: "tCtrl",
+                    bindToController: true,
+                    clickOutsideToClose: true
+                });
+            });
         });
     }
 });

@@ -35,9 +35,6 @@ assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationS
                         $mdDialog.cancel();
                     });
                 }
-
-               
-            
             }
         };
 
