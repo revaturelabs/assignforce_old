@@ -80,30 +80,28 @@
     		{
     			return 100;
     		}
-        	else
-        	{
-        		var matches = 0;
-        		var total = 0;
-        		
-        		for (var i = 0; i < cur.skills.length; i += 1)
-        		{
-        			for (var j = 0; j < trainer.skills.length; j += 1)
-        			{
-        				if (cur.skills[i].skillId == (trainer.skills[j] ? trainer.skills[j].skillId : -1))
-        				{
-        					matches++;
-        					break;
-        				}
-        			}
-        			total++;
-        		}
-        		
-        		if (total > 0) { 
-        			return Math.floor((matches / total) * 100); 
-        		}
-        		
-        		return 100;
-        	}
+
+    		var matches = 0;
+    		var total = 0;
+    		
+    		for (var i = 0; i < cur.skills.length; i += 1)
+    		{
+    			for (var j = 0; j < trainer.skills.length; j += 1)
+    			{
+    				if (cur.skills[i].skillId == (trainer.skills[j] ? trainer.skills[j].skillId : -1))
+    				{
+    					matches++;
+    					break;
+    				}
+    			}
+    			total++;
+    		}
+    		
+    		if (total > 0) { 
+    			return Math.floor((matches / total) * 100); 
+    		}
+    		
+    		return 100;
         }
         
         /*******************************************************************/
