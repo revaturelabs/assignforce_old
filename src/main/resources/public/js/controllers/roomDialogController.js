@@ -37,8 +37,6 @@ assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationS
                     rdc.building.rooms.push( rdc.room );
                     rdc.room.building.rooms = [];//This is necessary to prevent JSON circular referencing
                 	rdc.room.building.location = undefined;
-                    console.log("room's create");
-                	console.log(rdc.room);
                         
                     roomService.create( rdc.room, function(){
                     	rdc.room.building = rdc.building;
