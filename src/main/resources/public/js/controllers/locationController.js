@@ -150,8 +150,6 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			}
 			//Now we check if there's a list of rooms (only buildings got those)
 			else if(Array.isArray(lc.selectedList[0].rooms)){
-				console.log("edit building was selected");
-				console.log(lc.selectedList[0]);
 				$mdDialog.show({
 					templateUrl : "html/templates/buildingTemplate.html",
 					controller : "bldgDialogCtrl",
@@ -171,8 +169,6 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			}
 			
 			else{
-				console.log("HERE WE ARE AT EDIT SELECTED");
-				console.log(lc.selectedList[0]);
 				$mdDialog.show({
 					templateUrl : "html/templates/roomTemplate.html",
 					controller : "roomDialogCtrl",

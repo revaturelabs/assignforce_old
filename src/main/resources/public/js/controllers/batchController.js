@@ -36,7 +36,7 @@
                 //bc.batch.location   = (incomingBatch.location)   ? incomingBatch.location.id		 : undefined;
                 bc.batch.room       = (incomingBatch.room)       ? incomingBatch.room.roomID         : undefined;
                 //if (bc.batch.room) {bc.batch.building	= (incomingBatch.room.building)	 ? incomingBatch.room.buildingID		 : undefined;}
-                console.log(incomingBatch);
+                
                 if(bc.batch.room){
                 	bc.batch.building = incomingBatch.room.building.id;
                     bc.batch.location = incomingBatch.room.building.location;
