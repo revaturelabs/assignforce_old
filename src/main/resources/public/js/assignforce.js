@@ -34,9 +34,13 @@
 					templateUrl : "html/views/reports.html",
 					controller  : "reportCtrl as rCtrl"
 				})
-				.when("/profile?train={param1}", {
+				.when("/profile", {
 					templateUrl : "html/views/profile.html",
 					controller  : "profileCtrl as pCtrl"
+				})
+				.when("/profile/:id", {
+					templateUrl	: "html/views/profile.html",
+					controller	: "profileCtrl as pCtrl"
 				})
 				.when("/settings", {
 					templateUrl : "html/views/settings.html",

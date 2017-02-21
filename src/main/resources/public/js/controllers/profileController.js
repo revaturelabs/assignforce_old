@@ -44,8 +44,8 @@ assignforce.filter('skillFilter', function(){
 
 assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, trainerService, skillService, s3Service, $routeParams) {
     var pc = this;
-    pc.tId = $routeParams.train;
-    // console.log($routeParams.train);
+    pc.tId = $routeParams.id;
+    console.log($routeParams);
 
     // functions
     // calls showToast method of aCtrl
@@ -69,7 +69,6 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         var params = {
             Bucket: pc.creds.BucketName,
             Key: pc.myFile.name,
-            // ACL: 'public-read-write',
             Body: pc.myFile
         };
 
@@ -83,6 +82,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
 
         //set the trainer to the file name which is the s3 file key in order to grab that object
         pc.trainer.resume = pc.myFile.name;
+
         //save the modified trainer resume field
         trainerService.update(pc.trainer, function () {
             pc.showToast("Resume upload finished");
@@ -168,6 +168,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         pc.certName = undefined;
     };
 
+    //remove a certification from a trainer(need to remove the certification from the certification Table)
     pc.removeCertification = function (cert) {
         for (var i = 0; i < pc.trainer.certifications.length; i++){
             if(cert.name == pc.trainer.certifications[i].name){

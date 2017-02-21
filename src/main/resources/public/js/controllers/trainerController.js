@@ -1,7 +1,7 @@
 
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "trainerCtrl", function( $scope, $mdDialog, $mdToast, trainerService, s3Service, $window ) {
+    assignforce.controller( "trainerCtrl", function( $scope, $mdDialog, $mdToast, trainerService, s3Service, $location ) {
         var tc = this;
         // console.log("start trainers")
 
@@ -37,9 +37,9 @@
 
             //calls the update method to set active to false in the database.
             trainerService.update(trainerRM, function () {
-                tc.showToast(trainerRM.firstName + trainerRM.lastName + " was removed successfully.");
+                tc.showToast(trainerRM.firstName +" "+ trainerRM.lastName + " was removed successfully.");
             }, function () {
-                tc.showToast("Failed to remove " + trainerRM.firstName + trainerRM.lastName);
+                tc.showToast("Failed to remove " + trainerRM.firstName +" "+ trainerRM.lastName);
             });
         };
 
@@ -48,7 +48,7 @@
             var fileName = trainer.resume;
             //if the trainer has a null resume in the database then it will show the toast and stop running the function
             if(fileName == null){
-                tc.showToast(trainer.firstName + trainer.lastName + " does not have any resume uploaded.")
+                tc.showToast(trainer.firstName +" "+ trainer.lastName + " does not have any resume uploaded.")
                 return
             }
 
@@ -84,9 +84,9 @@
 
             trainer.active = true;
             trainerService.update(trainer, function () {
-                tc.showToast(trainer.firstName + trainer.lastName + " Activated")
+                tc.showToast(trainer.firstName +" "+ trainer.lastName + " Activated")
             }, function () {
-                tc.showToast("Unable to activate " + trainer.firstName + trainer.lastName);
+                tc.showToast("Unable to activate " + trainer.firstName +" "+ trainer.lastName);
             })
 
         }
@@ -100,7 +100,7 @@
         tc.goToTrainer = function(event) {
             console.log(event.trainerId);
             var id = event.trainerId;
-            $window.location.href = 'profile?train=' + id;
+            $location.path('/profile/' + id);
         };
 
             //queries the database for trainers. to be called after a change to the trainers array
