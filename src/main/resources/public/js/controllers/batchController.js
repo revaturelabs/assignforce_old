@@ -2,7 +2,6 @@
 
     assignforce.controller( "batchCtrl", function($scope, batchService, curriculumService, trainerService, locationService, buildingService, roomService, calendarService, $filter, $window) {
         var bc = this;
-        var availableTrainers;
         bc.trainerSkillRatios = [];
         
         bc.convertUnavailability = function(incoming){
@@ -31,6 +30,7 @@
 
                 bc.batch.name       = incomingBatch.name;
                 bc.batch.curriculum = (incomingBatch.curriculum) ? incomingBatch.curriculum.currId       : undefined;               
+
                 bc.batch.startDate = (incomingBatch.startDate) ? new Date(incomingBatch.startDate) : undefined;
                 bc.batch.endDate = (incomingBatch.endDate) ? new Date(incomingBatch.endDate) : undefined;
                 //bc.batch.location   = (incomingBatch.location)   ? incomingBatch.location.id		 : undefined;
@@ -77,34 +77,39 @@
         		return ((a.currId ? a.currId : -1) == bc.batch.curriculum);
         	});
         	
-    		if (angular.isUndefined(cur) || cur === null) { return 0; }
-    		else if (cur.skills.length == 0) { return 100; }
-        	else
-        	{
-        		var matches = 0;
-        		var total = 0;
-        		
-        		for (var i = 0; i < cur.skills.length; i += 1)
-        		{
-        			for (var j = 0; j < trainer.skills.length; j += 1)
-        			{
-        				if (cur.skills[i].skillId == (trainer.skills[j] ? trainer.skills[j].skillId : -1))
-        				{
-        					matches += 1;
-        					break;
-        				}
-        			}
-        			total += 1;
-        		}
-        		
-        		if (total > 0) { return Math.floor((matches / total) * 100); }
-        		
-        		return 100;
-        	}
+    		if (angular.isUndefined(cur) || cur === null)
+    		{
+    			return 0;
+    		}
+    		else if (cur.skills.length == 0)
+    		{
+    			return 100;
+    		}
+
+    		var matches = 0;
+    		var total = 0;
+    		
+    		for (var i = 0; i < cur.skills.length; i += 1)
+    		{
+    			for (var j = 0; j < trainer.skills.length; j += 1)
+    			{
+    				if (cur.skills[i].skillId == (trainer.skills[j] ? trainer.skills[j].skillId : -1))
+    				{
+    					matches++;
+    					break;
+    				}
+    			}
+    			total++;
+    		}
+    		
+    		if (total > 0) { 
+    			return Math.floor((matches / total) * 100); 
+    		}
+    		
+    		return 100;
         }
         
         /*******************************************************************/
-
             // defaults location to Reston branch 
         bc.findHQ = function(){
             return 1;
@@ -128,22 +133,14 @@
         
             // disables all but Mondays in start datepickers
         bc.enableMondays = function( date ){
-            if (date.getDay() == 1) {
-                return true;
-            } else {
-                return false;
-            }
+            return date.getDay() == 1;
         };
 
         /*******************************************************************/
         
             // disables all but Fridays in start datepickers
         bc.enableFridays = function( date ){
-            if (date.getDay() == 5) {
-                return true;
-            } else {
-                return false;
-            }
+            return date.getDay() == 5;
         };
 
         /*******************************************************************/
@@ -230,10 +227,8 @@
 		
             // determines if input table row needs the selectedBatch class
         bc.selectedBatchRow = function(batch){
-            if (bc.selectedBatch) {
-                if (batch.id == bc.selectedBatch.id) {
+            if (bc.selectedBatch && batch.id == bc.selectedBatch.id) {
                     return "selectedBatch";
-                }
             }
         };
 
@@ -241,7 +236,6 @@
         
             // resets form
         bc.resetForm = function(){
-            //console.log("  (BC)  Restting form.");
             bc.batchesSelected = [];
             bc.changeState( "create", null );
         };
@@ -295,7 +289,7 @@
             batchService.getAll( function(response) {
                 bc.batches = response;
                 $scope.$broadcast("repullTimeline");
-            }, function(error) {
+            }, function() {
                 bc.showToast( "Could not fetch batches.");
             });
         };
@@ -323,7 +317,7 @@
             batchService.delete( batch, function(){
                 bc.showToast("Batch deleted.");
                 bc.repull();
-            }, function(error){
+            }, function(){
                 bc.showToast("Failed to delete batch.");
             });
         };
@@ -352,7 +346,7 @@
             var first = delList.shift();
             batchService.delete( first, function(){
                 return bc.deleteMultipleHelper(delList);
-            }, function(error){
+            }, function(){
                 bc.showToast("Failed to delete batches.");
                 return false;
             });
@@ -366,29 +360,29 @@
             if (isValid) {
                 switch(bc.state) {
                     case "create":
-                        batchService.create( bc.batch, function(response){
+                        batchService.create( bc.batch, function(){
                             bc.showToast("Batch saved.");
                             bc.repull();
-                        }, function(error){
+                        }, function(){
                             bc.showToast("Failed to save batch.");
                         });
                         break;
                     
                     case "edit":
-                        batchService.update( bc.batch, function(response){
+                        batchService.update( bc.batch, function(){
                             bc.showToast("Batch updated.");
                             bc.repull();
-                        }, function(error){
+                        }, function(){
                             bc.showToast("Failed to update batch.");
                         });
                         break;
                     
                     case "clone":
                         bc.batch.id = undefined;
-                        batchService.create( bc.batch, function(response){
+                        batchService.create( bc.batch, function(){
                             bc.showToast("Batch cloned.");
                             bc.repull();
-                        }, function(error){
+                        }, function(){
                             bc.showToast("Failed to clone batch.");
                         });
                         break;
@@ -429,7 +423,7 @@
             // data gathering
         batchService.getAll( function(response) {
             bc.batches = response;
-        }, function(error) {
+        }, function() {
             bc.showToast( "Could not fetch batches.");
         });
 
@@ -437,26 +431,17 @@
         
         curriculumService.getAll( function(response) {
             bc.curricula = response;
-        }, function(error) {
+        }, function() {
             bc.showToast( "Could not fetch curricula.");
         });
 
         /*******************************************************************/
         
-        // skillService.getAll( function(response) {
-        //     //console.log("  (BC)  Retrieving all skills.");
-        //     bc.skills = response;
-        // }, function(error) {
-        //     //console.log("  (BC)  Failed to retrieve all skills with error:", error.data.message);
-            // bc.showToast( "Could not fetch skills.");
-        // });
-
-        /*******************************************************************/
         
         trainerService.getAll( function(response) {
             bc.trainers = response;
             bc.updateCurriculumRatios();
-        }, function(error) {
+        }, function() {
             bc.showToast( "Could not fetch trainers.");
         });
 
@@ -465,25 +450,21 @@
         locationService.getAll( function(response) {
             bc.locations = response;
             bc.batch.location = bc.findHQ();
-        }, function(error) {
+        }, function() {
             bc.showToast( "Could not fetch locations.");
         });
         
         /*******************************************************************/
         
         buildingService.getAll( function(response) {
-            //console.log("  (HC)  Retrieving all locations.");
             bc.buildings = response;
             bc.batch.building = 1;
-        }, function(error) {
-            //console.log("  (HC)  Failed to retrieve all location with error", error.data.message);
+        }, function() {
             bc.showToast("Could not fetch buildings.");
         });
         roomService.getAll( function(response) {
-            //console.log("  (HC)  Retrieving all rooms.");
             bc.rooms = response;
-        }, function(error) {
-            //console.log("  (HC)  Failed to retrieve all rooms with error", error.data.message);
+        }, function() {
             bc.showToast("Could not fetch rooms.");
         });
         

@@ -261,13 +261,13 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 		if (lc.selectedList.length > 0) {			
 			lc.selectedList.forEach(function(item) {
 				if (Array.isArray(item.rooms)) {
-					item.rooms.forEach(function(room){
+					item.rooms.forEach(function(){
 						summary.rooms++;
 					});
 					summary.buildings++;
 				}
 				else if (Array.isArray(item.buildings)){
-					item.buildings.forEach(function(building){
+					item.buildings.forEach(function(){
 						summary.buildings++;
 					});
 					summary.locations++;
@@ -304,11 +304,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			return false;
 		} else {
 			var style = window.getComputedStyle(element);
-			if (style.display == "none") {
-				return false;
-			} else {
-				return true;
-			}
+			return style.display == "none";
 		}
 	};
 
@@ -326,8 +322,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 					});
 				}); 
 			});
-		}, function(error) {
-			// error.data.message);
+		}, function() {
 			lc.showToast("Could not fetch locations.");
 		});
 	};
@@ -348,7 +343,6 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			}); 
 		});
 	}, function(error) {
-		// error.data.message);
 		lc.showToast("Could not fetch locations.");
 	});
 

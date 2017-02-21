@@ -15,11 +15,7 @@
                 title += " 1 room";
             } else if (dc.summary.rooms > 1) {
             	
-//            	for(var i = 0; i < dc.list[0].rooms.length; i++){
-//            		if(dc.list[0].rooms[i].active){
-//            			sumActiveRooms++;
-//            		}
-//            	}
+            	 // increment active rooms here for full functionality
                 title += sumActiveRooms + " rooms"; 
             }
             
@@ -59,7 +55,8 @@
             dc.deleteHelper(delList);
         };
 
-            // recursively inactivates the first entry in bc.batchesSelected until
+            // recursively inactivates the first entry in bc.batchesSelected
+			// until
 			// it is empty
         dc.deleteHelper = function( delList ){
             if (delList.length == 0) {
@@ -69,13 +66,13 @@
             	
             var elem = delList.shift();
             
-            //if a location was selected, recurse building/room inactivation
+            // if a location was selected, recurse building/room inactivation
             if (Array.isArray(elem.buildings)){
-            	//if it has buildings
+            	// if it has buildings
             	if(elem.buildings.length > 0){
             		angular.forEach(elem.buildings, function(building){
             		
-        				//if it has rooms
+        				// if it has rooms
             			if(building.rooms.length > 0){
             				building.rooms.forEach(function(room){
             					room.active = false;
@@ -83,6 +80,7 @@
             					room.building.rooms = [];
             					room.building.location = undefined;
             					roomService.update( room, function(){
+            						// donothing
             		            }, function(){
             		                $mdDialog.cancel();
             		            });            					
@@ -92,8 +90,8 @@
             			building.location.buildings = [];
             			building.rooms = [];
             			buildingService.update( building, function(){   
+            				// donothing
                         }, function(){
-                        	//TODO HERE
                             $mdDialog.cancel();
                         });
             		});            		
@@ -103,7 +101,7 @@
                 //runs the locationService update, concentric with another deleteHelper call upon success.
             	//Need the empty array [] here too?
                 locationService.update( elem, function(){
-                	
+                	// donothing
                 }, function(){
                 	$mdDialog.cancel();
                 });
@@ -132,6 +130,7 @@
 		            });
                 });
                 elem.active = false;
+
                 /* elem needs location before I can set buildings.
                  * Setting elem.location = temp here not only
                  * doesn't work, but it breaks the successful
@@ -154,12 +153,13 @@
             	elem.building.rooms = [];
             	elem.building.location = undefined;
             	roomService.update( elem, function(){
+            		// donothing
 	            }, function(){
 	                $mdDialog.cancel();
 	            });
             	dc.deleteHelper(delList);
             }
-            //}
+            // }
             $mdDialog.hide();
           };
             // cancel deletion
