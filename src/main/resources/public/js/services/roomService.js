@@ -18,6 +18,7 @@ app.service( "roomService", function($resource) {
     };
 
     rs.create = function(room, success, error){
+    	console.log(room);
         room.$save(success, error);
     };
 

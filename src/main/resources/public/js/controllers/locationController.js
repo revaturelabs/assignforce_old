@@ -90,8 +90,8 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 				controller : "roomDialogCtrl", //roomDialogController.js
 				controllerAs : "rdCtrl",
 				locals : {
-					building : lc.selectedList[0], 
-					room : roomService.getAlmostEmptyRoom(lc.selectedList[0].id),
+					building : lc.selectedList[0],//just a building object 
+					room : roomService.getAlmostEmptyRoom(lc.selectedList[0].id), //referencing building object
 					state : "create"
 				},
 				bindToController : true,
@@ -150,6 +150,8 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			}
 			//Now we check if there's a list of rooms (only buildings got those)
 			else if(Array.isArray(lc.selectedList[0].rooms)){
+				console.log("edit building was selected");
+				console.log(lc.selectedList[0]);
 				$mdDialog.show({
 					templateUrl : "html/templates/buildingTemplate.html",
 					controller : "bldgDialogCtrl",
@@ -169,6 +171,8 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			}
 			
 			else{
+				console.log("HERE WE ARE AT EDIT SELECTED");
+				console.log(lc.selectedList[0]);
 				$mdDialog.show({
 					templateUrl : "html/templates/roomTemplate.html",
 					controller : "roomDialogCtrl",
@@ -314,6 +318,14 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 		lc.selectedList = [];
 		locationService.getAll(function(response) {
 			lc.locations = response;
+			lc.locations.forEach(function(location){
+				location.buildings.forEach(function(building){
+					building.location = location;
+					building.rooms.forEach(function(room){
+						room.building = building;
+					});
+				}); 
+			});
 		}, function(error) {
 			// error.data.message);
 			lc.showToast("Could not fetch locations.");
@@ -327,6 +339,14 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 	// data gathering
 	locationService.getAll(function(response) {
 		lc.locations = response;
+		lc.locations.forEach(function(location){
+			location.buildings.forEach(function(building){
+				building.location = location;
+				building.rooms.forEach(function(room){
+					room.building = building;
+				});
+			}); 
+		});
 	}, function(error) {
 		// error.data.message);
 		lc.showToast("Could not fetch locations.");

@@ -17,11 +17,12 @@ assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
 			if (bdc.state == "edit") {
 				bdc.swapBuilding(bdc.building);
 				
-				buildingService.update(bdc.building, function() {
-					$mdDialog.hide();
-				}, function() {
-					$mdDialog.cancel();
-				});
+					bdc.building.location = bdc.location.id;
+					buildingService.update(bdc.building, function() {
+						$mdDialog.hide();
+					}, function() {
+						$mdDialog.cancel();
+					});
 				
 			} else if (bdc.state == "create") {
 				bdc.building.location = bdc.location.id; //saves the location id reference to building
