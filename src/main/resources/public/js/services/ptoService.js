@@ -27,10 +27,7 @@ app.service('ptoService', function ($resource, $mdDialog, $http) {
 
         function handleAuthResult(authResult){
             if (!authResult){
-            	console.log("failed");
-            } else {
-                console.log("succeeded");
-            }
+            	console.log("failed to authorize");
         }
     }
 
