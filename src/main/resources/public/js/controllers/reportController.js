@@ -15,8 +15,6 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
     var rc = this;
     $scope.data = [];
     $scope.newTable = [];
-    var chart;
-    var chart2;
     $scope.tempTtl = 10;
     rc.tempp = 10;
 
@@ -195,11 +193,7 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
                 date = new Date(batch.endDate);
                 if ((date.getMonth() == month) && (date.getFullYear() == rc.year) && (batch.curriculum)) {
                     total2 += rc.incoming;
-                    // total += tempTtl;
-                    // total += $scope.tempTtl;
-                    // total += $scope.myNumber;
                 }
-
             });
             return total2;
         }
@@ -494,7 +488,7 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
             !( rc.cardArr[index].requiredBatches == undefined ) && !( rc.cardArr[index].startDate == undefined ) &&
             !( rc.cardArr[index].formattedStartDate == undefined ) && !( rc.cardArr[index].batchType == undefined ) ) {
 
-            canSubmit = 0;
+            var canSubmit = 0;
             rc.errMsg = "";
         }else{
 
@@ -522,7 +516,7 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
             }
             //Checks if multiple inputs are missing or invalid.
             //Sets the error message to the appropriate phrase, if multiple inputs are missing.
-            for ( x in flagArr ){
+            for (var x in flagArr ){
                 if( flagArr.hasOwnProperty(index) ){
                     if( flagArr[x] == 1 ){
                         count = count + 1;
@@ -603,20 +597,11 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
     // Reports Controller Data members
     rc.year = new Date().getFullYear();
 
-
     //The date Trainee's are needed by.
     rc.reqDate = new Date();
 
     //Batch(s) StartDate variable.
     rc.startDate = new Date();
-
-    //Default batch time-period.
-
-    //Number of Required Graduates.
-    // rc.requiredGrads;
-
-    //The number of Batches needed to be created.
-    // rc.requiredBatches;
 
     //The type of a 'batch' (ie. Java, SDET, .Net, ... )
     rc.batchType;
@@ -672,15 +657,12 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
         rc.incoming = response.settingValue;
     });
 
-    // var minBatchSize;
     settingService.getById(10, function(response){
         rc.minBatchSize = response.settingValue;
     }, function(){
         rc.showToast("failure")
     });
 
-    //var maxBatchSize = 16;
-    // var maxBatchSize;
     settingService.getById(11, function(response){
         rc.maxBatchSize = response.settingValue;
     }, function(){
@@ -689,9 +671,8 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
 
     batchService.getAll(function(response) {
         rc.batches = response;
-        data = rc.graphData();
-        newTable = rc.graphData2();
-        // data.push(tData);
+        var data = rc.graphData();
+        var newTable = rc.graphData2();
     }, function() {
         rc.showToast("Could not fetch batches.");
     });
@@ -763,7 +744,7 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
      *
      */
     $scope.myGraph = function() {
-        chart = new Highcharts.chart('container', {
+        Highcharts.chart('container', {
             chart: {
                 type: 'column'
             },
@@ -800,7 +781,7 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
 
 
     $scope.myGraph2 = function() {
-        chart2 = new Highcharts.chart('container2', {
+        Highcharts.chart('container2', {
             chart: {
                 type: 'column'
             },
@@ -873,7 +854,6 @@ assignforce.directive('getTrainData', function() {
 
 
 assignforce.directive('getGradTableTemplate', function() {
-    // assignforce.tempTtl = 30;
     return {
         restrict: 'ACE',
         scope: true,
@@ -883,7 +863,6 @@ assignforce.directive('getGradTableTemplate', function() {
 });
 
 assignforce.directive('getGradGraphTemplate', function() {
-    // assignforce.tempTtl = 30;
     return {
         restrict: 'ACE',
         scope: true,
@@ -893,7 +872,6 @@ assignforce.directive('getGradGraphTemplate', function() {
 });
 
 assignforce.directive('getIncomingTableTemplate', function() {
-    // tempTtl = rc.incoming;
     return {
         restrict: 'ACE',
         scope: true,
