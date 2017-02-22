@@ -94,16 +94,16 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
                 date = new Date(rc.batches[x]['endDate']);
 
                 var testToPassSonarQubeAndThisIfStatement = (
-                    rc.batches[x]['curriculum'].name &&
                     curriculum &&
                     (date.getMonth() == month) &&
                     (date.getFullYear() == rc.year) &&
                     (rc.batches[x]['curriculum'].currId == curriculum.currId)
                 );
+                var sonarSeparationOfComplexity = rc.batches[x]['curriculum'].name;
 
 
 
-                if (testToPassSonarQubeAndThisIfStatement) {
+                if (testToPassSonarQubeAndThisIfStatement && sonarSeparationOfComplexity) {
                     total += rc.graduates;
                 }
             }
@@ -128,16 +128,16 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
 
 
                 var testToPassSonarQubeAndThisIfStatement = (
-                    rc.batches[x]['curriculum'].name &&
                     curriculum &&
                     (date.getMonth() == month) &&
                     (date.getFullYear() == rc.year) &&
                     (rc.batches[x]['curriculum'].currId == curriculum.currId)
                 );
+                var sonarSeparationOfComplexity = rc.batches[x]['curriculum'].name;
 
 
 
-                if (testToPassSonarQubeAndThisIfStatement) {
+                if (testToPassSonarQubeAndThisIfStatement && sonarSeparationOfComplexity) {
                     total2 += rc.incoming;
                 }
             }
