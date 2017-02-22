@@ -471,7 +471,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     			}
     		}
      	
-     		canSubmit = 1;
+     		//canSubmit = 1;
      	} 
      	
      	return canSubmit;
