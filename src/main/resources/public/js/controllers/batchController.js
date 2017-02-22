@@ -426,7 +426,6 @@
             // data gathering
         batchService.getAll( function(response) {
             bc.batches = response;
-            console.log(bc.batches);
         }, function() {
             bc.showToast( "Could not fetch batches.");
         });
