@@ -615,7 +615,6 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
                         batchService.create(rc.newBatch, success, error);
                     }
                 }
-                canSubmit = 1;
             }
         }
         function success (){
