@@ -513,24 +513,20 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
             if( rc.cardArr[index].requiredGrads == undefined ){
                 rc.errMsg = "Requires Trainee's.";
                 flagArr[0] = 1;
-                canSubmit = 1;
             }
             if( rc.cardArr[index].reqDate == undefined ) {
                 rc.errMsg = "Requires Hire Date.";
                 flagArr[1] = 1;
-                canSubmit = 1;
             }
             //Ensures that the start date can't occur before the current date.
             if( rc.cardArr[index].startDate <= rc.today ){
                 rc.errMsg = "Invalid Hire Date.";
                 flagArr[1] = 1;
-                canSubmit = 1;
             }
             //Ensures the batch type is selected.
             if( rc.cardArr[index].batchType == undefined ) {
                 rc.errMsg = "Invalid Batch Type.";
                 flagArr[2] = 1;
-                canSubmit = 1;
             }
             //Checks if multiple inputs are missing or invalid.
             //Sets the error message to the appropriate phrase, if multiple inputs are missing.
@@ -541,7 +537,6 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
                         if ( count > 1 ){
                             rc.errMsg = "Multiple Inputs Required.";
                         }
-                        canSubmit = 1;
                     }
                 }
             }
