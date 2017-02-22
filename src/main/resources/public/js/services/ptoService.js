@@ -15,7 +15,6 @@ app.service('ptoService', function ($resource, $mdDialog) {
     var calendarId = 'taj5130@gmail.com';
 
     ptos.authorize = function handleClientLoad(){
-        console.log("handleClientLoad");
         gapi.load('client:auth2', initClient);
     }
 
@@ -44,51 +43,20 @@ app.service('ptoService', function ($resource, $mdDialog) {
 
             setSigninStatus();
 
-            // console.log("Sign In");
         });
     }
-    // ptos.authorize = function(){
-
-    // 	// Google api console clientID and apiKey
-    // 	var clientId = '886656742164-p6bfqnbtv8d1k1q3kisf6ossh9jkurdj.apps.googleusercontent.com';
-    // 	var apiKey = 'AIzaSyB2-e0FnmwRReoduEdI0bBv5fGG2TgrIZQ';
-
-    // 	// enter the scope of current project (this API must be turned on in the Google console)
-    // 	var scopes = 'https://www.googleapis.com/auth/calendar';
-
-    //     gapi.client.setApiKey(apiKey);
-    //     window.setTimeout(checkAuth,1);
-
-    //     function checkAuth(){
-    //         gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: true},
-    //         handleAuthResult);
-    //     }
-
-    //     function handleAuthResult(authResult){
-
-    //     }
-    // }
 
     var trainer;
     var startDate;
     var endDate;
 
     ptos.handleAuthClick = function(t, s, e){
-        // if (GoogleAuth.isSignedIn.get()) {
-        //   // User is authorized and has clicked 'Sign out' button.
-        //   console.log("signing out");
-        //   GoogleAuth.signOut();
-        // } else {
         // User is not signed in. Start Google auth flow.
         trainer = t;
         startDate = s;
         endDate = e;
-        console.log("signing in");
         GoogleAuth.signIn();
         var user = GoogleAuth.currentUser.get();
-        console.log(user);
-
-        // }
     }
 
     function setSigninStatus(isSignedIn) {
@@ -97,17 +65,16 @@ app.service('ptoService', function ($resource, $mdDialog) {
     }
 
     function updateSigninStatus(isSignedIn) {
-        console.log("Sign In update");
         setSigninStatus();
         ptos.addPto(trainer, startDate, endDate);
     }
 
     function handleAuthResult(authResult){
         if (authResult){
-            console.log(authResult);
+            // do something
         }
         else {
-            console.log("failed");
+            // do something
         }
     }
 
