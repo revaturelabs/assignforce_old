@@ -42,8 +42,9 @@ assignforce.filter('skillFilter', function(){
     }
 });
 
-assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, trainerService, skillService, s3Service) {
+assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, trainerService, skillService, s3Service, $routeParams) {
     var pc = this;
+    pc.tId = $routeParams.id;
 
     // functions
     // calls showToast method of aCtrl
@@ -67,7 +68,6 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         var params = {
             Bucket: pc.creds.BucketName,
             Key: pc.myFile.name,
-            // ACL: 'public-read-write',
             Body: pc.myFile
         };
 
@@ -81,6 +81,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
 
         //set the trainer to the file name which is the s3 file key in order to grab that object
         pc.trainer.resume = pc.myFile.name;
+
         //save the modified trainer resume field
         trainerService.update(pc.trainer, function () {
             pc.showToast("Resume upload finished");
@@ -166,6 +167,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         pc.certName = undefined;
     };
 
+    //remove a certification from a trainer(need to remove the certification from the certification Table)
     pc.removeCertification = function (cert) {
         for (var i = 0; i < pc.trainer.certifications.length; i++){
             if(cert.name == pc.trainer.certifications[i].name){
@@ -192,7 +194,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     //queries the database for the trainer. to be called after a change to the trainer's properties
     pc.rePullTrainer = function(){
         pc.trainer = undefined;
-        trainerService.getById(3, function (response) {
+        trainerService.getById(pc.tId, function (response) {
             pc.trainer = response;
         }, function () {
             pc.showToast("Could not fetch trainer.");
@@ -202,11 +204,19 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     // data gathering
 
     // id is hard coded for testing. fix this later
-    trainerService.getById(3, function (response) {
-        pc.trainer = response;
-    }, function () {
-        pc.showToast("Could not fetch trainer.");
-    });
+    if(pc.tId){
+        trainerService.getById(pc.tId, function (response) {
+            pc.trainer = response;
+        }, function () {
+            pc.showToast("Could not fetch trainer.");
+        });
+    } else {
+        trainerService.getById(1, function (response) {
+            pc.trainer = response;
+        }, function () {
+            pc.showToast("Could not fetch trainer.");
+        });
+    }
 
     s3Service.getCreds(function (response) {
         pc.creds = response;
