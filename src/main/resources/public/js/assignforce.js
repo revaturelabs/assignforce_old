@@ -60,7 +60,7 @@
             });
 
             var revBlueMap = $mdThemingProvider.extendPalette("blue-grey", {
-                "A200": "#72A4C2",
+                "A200": "#374C61",
                 "100" : "#C9DCE8"
             });
 
