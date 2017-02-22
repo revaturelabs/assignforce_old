@@ -80,15 +80,16 @@
             		
         				// if it has rooms
             			if(building.rooms.length > 0){
+            				var buildTemp = building;
             				building.rooms.forEach(function(room){
             					
             					//Inactivate room - inactive, location doesn't matter as room does not need location id, room's buildings cannot recurse
             					room.active = false;
-            					room.building.location = undefined;
+            					room.building = buildTemp;
+            /***Breaks here*/	room.building.location = undefined;
             					room.building.rooms = [];
             					
             					roomService.update( room, function(){
-            						// donothing
             		            }, function(){
             		                $mdDialog.cancel();
             		            });            					
@@ -110,8 +111,8 @@
             	
             	//Inactivate location - not active, starting location, buildings array cannot recurse
             	elem.active = false;
-            	elem = tempLoc;            	
             	elem.buildings = [];
+            	console.log(elem);
             	
                 locationService.update( elem, function(){
                 }, function(){
@@ -128,10 +129,9 @@
             	angular.forEach(elem.rooms, function(room){
             	    
             		room.active = false;
-            		room.building = tempBuild;
+    /**Works Here*/	room.building = tempBuild;
 					room.building.location = undefined;
 					room.building.rooms = [];
-					console.log(room);
                     
                     roomService.update( room, function(){
 		            }, function(){
