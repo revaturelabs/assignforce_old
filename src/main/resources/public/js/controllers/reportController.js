@@ -431,7 +431,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
      		  !( rc.cardArr[index].requiredBatches == undefined ) && !( rc.cardArr[index].startDate == undefined ) &&
      		  !( rc.cardArr[index].formattedStartDate == undefined ) && !( rc.cardArr[index].batchType == undefined ) ) {
      	
-     		canSubmit = 0;
+     		var canSubmit = 0;
      		rc.errMsg = "";
      	}else{	
      		
@@ -459,7 +459,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     		} 
     		//Checks if multiple inputs are missing or invalid.
     		//Sets the error message to the appropriate phrase, if multiple inputs are missing.
-    		for ( x in flagArr ){
+    		for ( var x in flagArr ){
     			if( flagArr.hasOwnProperty(index) ){
     				if( flagArr[x] == 1 ){
     					count = count + 1;
@@ -490,7 +490,6 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     rc.createAllBatchClick = function(){
          
     	// Create 'can submit' flag here.  '0' implies successful submit, '1' implies submission failure. Default to 1 value.
-     	//var canSubmit = 1;
 
      	for ( var index in rc.cardArr ) {
      			
