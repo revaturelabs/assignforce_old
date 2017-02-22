@@ -5,7 +5,7 @@ app.service('ptoService', function ($resource, $mdDialog) {
     var ptos = this;
 
     var GoogleAuth;
-    // Google api console clientID and apiKey
+    // Google api console clientID and apiKey 
     var clientId = '886656742164-p6bfqnbtv8d1k1q3kisf6ossh9jkurdj.apps.googleusercontent.com';
     var apiKey = 'AIzaSyB2-e0FnmwRReoduEdI0bBv5fGG2TgrIZQ';
 
@@ -19,14 +19,14 @@ app.service('ptoService', function ($resource, $mdDialog) {
     }
 
     function initClient() {
-        // Retrieve the discovery document for version 3 of Google Drive API.
-        // In practice, your app can retrieve one or more discovery documents.
-        // var discoveryUrl = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
+      // Retrieve the discovery document for version 3 of Google Drive API.
+      // In practice, your app can retrieve one or more discovery documents.
+      // var discoveryUrl = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
 
-        // Initialize the gapi.client object, which app uses to make API requests.
-        // Get API key and client ID from API Console.
-        // 'scope' field specifies space-delimited list of access scopes.
-        gapi.client.init({
+      // Initialize the gapi.client object, which app uses to make API requests.
+      // Get API key and client ID from API Console.
+      // 'scope' field specifies space-delimited list of access scopes.
+      gapi.client.init({
             'apiKey': 'AIzaSyB2-e0FnmwRReoduEdI0bBv5fGG2TgrIZQ',
             // 'discoveryDocs': [discoveryUrl],
             'clientId': '886656742164-p6bfqnbtv8d1k1q3kisf6ossh9jkurdj.apps.googleusercontent.com',
@@ -39,8 +39,7 @@ app.service('ptoService', function ($resource, $mdDialog) {
 
             // Handle initial sign-in state. (Determine if user is already signed in.)
             var user = GoogleAuth.currentUser.get();
-
-
+            
             setSigninStatus();
 
         });
@@ -51,17 +50,25 @@ app.service('ptoService', function ($resource, $mdDialog) {
     var endDate;
 
     ptos.handleAuthClick = function(t, s, e){
-        // User is not signed in. Start Google auth flow.
+
         trainer = t;
         startDate = s;
         endDate = e;
-        GoogleAuth.signIn();
-        var user = GoogleAuth.currentUser.get();
+
+        if (GoogleAuth.isSignedIn.get()) {
+          // User is authorized and has clicked 'Sign out' button.
+          var user = GoogleAuth.currentUser.get();
+          ptos.addPto(trainer, startDate, endDate);
+        } else {
+          // User is not signed in. Start Google auth flow.
+          GoogleAuth.signIn();
+          var user = GoogleAuth.currentUser.get();
+        }
     }
 
     function setSigninStatus(isSignedIn) {
-        var user = GoogleAuth.currentUser.get();
-        var isAuthorized = user.hasGrantedScopes(scopes);
+      var user = GoogleAuth.currentUser.get();
+      var isAuthorized = user.hasGrantedScopes(scopes);
     }
 
     function updateSigninStatus(isSignedIn) {
@@ -74,13 +81,12 @@ app.service('ptoService', function ($resource, $mdDialog) {
             // do something
         }
         else {
-            // do something
+            // do something more
         }
     }
 
     ptos.addPto = function(trainer, startDate, endDate){
 
-        // handleAuthClick();
 
         Date.prototype.addDays = function(days) {
             var dat = new Date(this.valueOf());
@@ -122,11 +128,11 @@ app.service('ptoService', function ($resource, $mdDialog) {
 
         gapi.client.load('calendar', 'v3', function(){ // load the calendar api (version 3)
             var request = gapi.client.calendar.events.insert({
-                'calendarId': calendarId,
+                'calendarId': calendarId, 
                 // calendar ID which id of Google Calendar where you are creating events. this can be copied from your Google Calendar user view.
                 'resource': resource    // above resource will be passed here
             });
-            // handle the response from our api call
+                      // handle the response from our api call
             request.execute(function(resp){
                 $mdDialog.cancel();
 
