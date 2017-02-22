@@ -104,16 +104,26 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
 
     //add a skill to the current trainer
     pc.addSkill = function (skill) {
-        for(var i = 0; i < pc.skillsList.length; i++){
-            if(pc.skillsList[i].name == skill.name){
-                pc.trainer.skills.push(skill);
+        for(var i = 0; i < pc.skills.length; i++){
+            if(pc.skills[i].name == skill){
+                pc.trainer.skills.push(pc.skills[i]);
+                break;
+            }
+        }
+
+        for(var index = 0; index < pc.skillsList.length; index++){
+            if(pc.skillsList[index] == skill){
+                pc.skillsList.splice(index, 1);
+                break;
             }
         }
     };
 
+    //remove a trainer skill on the bottom
     pc.removeSkill = function (skill) {
-        for(var i = 0; i < pc.skillsList.length; i++){
-            if(pc.trainer.skills[i].name == skill.name){
+        for(var i = 0; i < pc.trainer.skills.length; i++){
+            if(pc.trainer.skills[i] == skill){
+                pc.skillsList.push(skill.name);
                 pc.trainer.skills.splice(i, 1);
                 break;
             }
@@ -207,12 +217,14 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     if(pc.tId){
         trainerService.getById(pc.tId, function (response) {
             pc.trainer = response;
+            pc.getAllSkills();
         }, function () {
             pc.showToast("Could not fetch trainer.");
         });
     } else {
         trainerService.getById(1, function (response) {
             pc.trainer = response;
+            pc.getAllSkills();
         }, function () {
             pc.showToast("Could not fetch trainer.");
         });
@@ -224,18 +236,33 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         pc.showToast("Failed to fetch Credentials")
     });
 
-    skillService.getAll( function(response) {
-        pc.skillsList = response;
+    pc.getAllSkills = function(){
+        skillService.getAll( function(response) {
+            pc.skills = response;
+            var status = true;
+            for(var i = 0; i < pc.skills.length; i++) {
+                for(var j = 0; j < pc.trainer.skills.length; j++) {
+                    if (pc.trainer.skills[j].skillId == pc.skills[i].skillId){
+                        status = false;
+                        break;
+                    }
+                }
+                if(status){
+                    pc.skillsList.push(pc.skills[i].name);
+                }
+                status = true;
+            }
+        }, function () {
+            pc.showToast("Could not fetch skills.");
+        });
+    };
 
-    }, function () {
-        pc.showToast("Could not fetch skills.");
-    });
-
-    //Simply hard coded for now. Just for testing view
+    //data
+    pc.skills;
     pc.myFile;
     pc.creds;
     pc.certFile;
     pc.certName;
-    pc.skillsList;
+    pc.skillsList = [];
     pc.trainer;
 });
