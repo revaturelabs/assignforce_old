@@ -1,6 +1,6 @@
 var assignforce = angular.module( "batchApp" );
 
-assignforce.controller( "reportCtrl", function( $scope, batchService, curriculumService, monthList ) {
+assignforce.controller( "reportCtrl", function( $scope, batchService, curriculumService, settingService, monthList ) {
 
     var rc = this;
 
@@ -216,7 +216,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
      */
 
     rc.calcReqBatch = function(requiredTrainees, index){
-
+    	
         //Compute the total number of Batches estimated.
         var neededBatches = requiredTrainees/15;
 
@@ -226,13 +226,12 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
          * 					size is 15, the resulting number of batches is '2.666666'.
          * 					This result should be rounded up to accommodate for the remainder.
          */
-        if (( neededBatches > Math.floor(neededBatches)) && (neededBatches < Math.ceil(neededBatches))){
-
-            neededBatches = Math.ceil( neededBatches );
-
-        }
-
-        /**  Sets the reportsController's 'requiredBatches' data value in each index 
+        
+    	if ( ( neededBatches > Math.floor( neededBatches ) ) && ( neededBatches < Math.ceil(neededBatches ) ) ) {
+    		neededBatches = Math.ceil( neededBatches ); 
+    	}
+    	
+    	/**  Sets the reportsController's 'requiredBatches' data value in each index 
          * 		of the 'cardArr' to the computed 'neededBatches' values.
          */
         rc.cardArr[index].requiredBatches = neededBatches;
@@ -331,7 +330,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 
         for (var x in rc.cardArr){
             if(rc.cardArr.hasOwnProperty(x)){
-                var batchVal = rc.cardArr[x].batchType.id;
+                var batchVal = rc.cardArr[x].batchType.currId;
 
                 switch(batchVal){
 
@@ -369,43 +368,111 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
      * @return
      */
     
-    rc.createBatchClick = function(index){
+    rc.createBatchClick = function( index ) {
  
-    	//Create a batch object in the Reports Controller, using the batchService.
-        rc.newBatch = batchService.getEmptyBatch();
+    	// Create 'can submit' flag here.  '0' implies successful submit, '1' implies submission failure. Default to 1 value.
+     	
+     	// Determines whether or not the user is allowed to create batches.
+     	var canSubmit = rc.submittionValidityAssertion( index );
+
+     	if ( canSubmit == 0 ) {
+	    	
+	    	//Create a batch object in the Reports Controller, using the batchService.
+	        rc.newBatch = batchService.getEmptyBatch();
+	        
+	        //Declare a generic name for batch objects being created.
+	        var dName = " - ";
+	        
+	        for (var i = 0; i < rc.cardArr[index].requiredBatches; i++){
+	
+	        	//Assigns the 'generic name' the batch object.
+	            rc.newBatch.name = dName;
+	            
+	            //Assigns the 'start date' to the batch object. 
+	            rc.newBatch.startDate = rc.cardArr[index].startDate;
+	            
+	            //Assigns the 'end date' to the batch object.
+	            rc.newBatch.endDate = rc.cardArr[index].reqDate;
+	            
+	            //Assigns the 'id' value of the Curriculum ('batch type' variable) to
+	            //	to the batch object.
+	            rc.newBatch.curriculum = rc.cardArr[index].batchType.currId;
+	            
+	            //Create batch method called here...
+	            batchService.create(rc.newBatch, success, error);
+	        }
+	
         
-        //Declare a generic name for batch objects being created.
-        var dName = " - ";
-        
-        for (var i = 0; i < rc.cardArr[index].requiredBatches; i++){
+    	}
+    	function success (){
+ 			rc.showToast("Successfully created Batch.");
+ 		}
 
-        	//Assigns the 'generic name' the batch object.
-            rc.newBatch.name = dName;
-            
-            //Assigns the 'start date' to the batch object. 
-            rc.newBatch.startDate = rc.cardArr[index].startDate;
-            
-            //Assigns the 'end date' to the batch object.
-            rc.newBatch.endDate = rc.cardArr[index].reqDate;
-            
-            //Assigns the 'id' value of the Curriculum ('batch type' variable) to
-            //	to the batch object.
-            rc.newBatch.curriculum = rc.cardArr[index].batchType.id;
-            
-            //Create batch method called here...
-            batchService.create(rc.newBatch, success, error);
-        }
-
-        function success (){
-        	$scope.$parent.aCtrl.showToast("Successfully created Batch.");
-        }
-
-        function error(){
-    	   $scope.$parent.aCtrl.showToast("Failed to created Batch.");
-        }
-       
+ 		function error(){
+ 			rc.showToast("Failed to created Batch.");
+ 		}
     };
 
+    /************************************************************/
+    /**
+     * @Author:  Jaina L. Brehm
+     * Description:  This method will assert that batches have valid credentials
+     * 					for submission. 
+     *
+     * @param index
+     * @return canSubmit
+     */
+    
+    rc.submittionValidityAssertion = function( index ){
+    	var flagArr = [ 0, 0, 0 ]; 	
+    	var count = 0;
+
+     	if	( !( rc.cardArr[index].requiredGrads == undefined ) && !( rc.cardArr[index].reqDate == undefined ) && !( rc.cardArr[index].batchType == undefined ) ) {
+     	
+     		var canSubmit = 0;
+     		rc.errMsg = "";
+     	}else{	
+     		
+     		if( rc.cardArr[index].requiredGrads == undefined ){
+     			rc.errMsg = "Requires Trainee's.";
+    			flagArr[0] = 1;
+     		}
+     		if( rc.cardArr[index].reqDate == undefined ) { 
+    			rc.errMsg = "Requires Hire Date.";
+    			flagArr[1] = 1;
+    		}
+     		//Ensures that the start date can't occur before the current date.
+     		if( rc.cardArr[index].startDate <= rc.today ){
+     			rc.errMsg = "Invalid Hire Date.";
+     			flagArr[1] = 1;
+     		}
+     		//Ensures the batch type is selected.
+    		if( rc.cardArr[index].batchType == undefined ) {
+    			rc.errMsg = "Invalid Batch Type.";
+    			flagArr[2] = 1;
+    		
+    		} 
+    	    	
+     		canSubmit = 1;
+     	} 
+     	
+     	//Checks if multiple inputs are missing or invalid.
+		//Sets the error message to the appropriate phrase, if multiple inputs are missing.
+		for ( var x in flagArr ){
+			
+				if( flagArr[x] == 1 ){
+					count = count + 1;
+					if ( count > 1 ){
+						rc.errMsg = "Multiple Inputs Required.";
+					}
+					
+				}
+		
+		}
+		
+     	return canSubmit;
+    };
+    
     /************************************************************/
     /**
      * @Author:  Jaina L. Brehm
@@ -418,45 +485,48 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     
     rc.createAllBatchClick = function(){
          
-        for ( var index in rc.cardArr ) {
-        
-        	if(rc.cardArr.hasOwnProperty(index)){
-        		
-	        	//Create a batch object in the Reports Controller, using the batchService.
-	            rc.newBatch = batchService.getEmptyBatch();
-	            
-	            //Declare a generic name for batch objects being created.
-	            var dName = " - ";
-	        
-		        for ( var i = 0; i < rc.cardArr[index].requiredBatches; i++ ) {
-		
-		        	//Assigns the 'generic name' the batch object.
-		            rc.newBatch.name = dName;
-		            
-		            //Assigns the 'start date' to the batch object. 
-		            rc.newBatch.startDate = rc.cardArr[index].startDate;
-		            
-		            //Assigns the 'end date' to the batch object.
-		            rc.newBatch.endDate = rc.cardArr[index].reqDate;
-		            
-		            //Assigns the 'id' value of the Curriculum ('batch type' variable) to
-		            //	to the batch object.
-		            rc.newBatch.curriculum = rc.cardArr[index].batchType.id;
-		            
-		            //Create batch method called here...
-		            batchService.create(rc.newBatch, success, error);
-		        }	        
-        	} 
-       }
-        
-       function success (){
-       	 rc.showToast("Successfully created Batch.");
-       }
+    	// Create 'can submit' flag here.  '0' implies successful submit, '1' implies submission failure. Default to 1 value.
 
-       function error(){
-       	 rc.showToast("Failed to created Batch.");
-       }
-    }
+     	for ( var index in rc.cardArr ) {
+     			
+     		if( rc.cardArr.hasOwnProperty(index) ) {
+     		// Determines whether or not the user is allowed to create batches.
+     	     	var canSubmit = rc.submittionValidityAssertion( index );
+     	     	if ( canSubmit == 0 ) {		
+					//Create a batch object in the Reports Controller, using the batchService.
+					rc.newBatch = batchService.getEmptyBatch();
+						           
+					//Declare a generic name for batch objects being created.
+					var dName = " - ";
+					        
+					for ( var i = 0; i < rc.cardArr[index].requiredBatches; i++ ) {
+							
+						//Assigns the 'generic name' the batch object.
+						rc.newBatch.name = dName;
+						
+						//Assigns the 'start date' to the batch object. 
+						rc.newBatch.startDate = rc.cardArr[index].startDate;
+						            
+						//Assigns the 'end date' to the batch object.
+						rc.newBatch.endDate = rc.cardArr[index].reqDate;
+						            
+						//Assigns the 'id' value of the Curriculum ('batch type' variable) to
+						//	to the batch object.
+						rc.newBatch.curriculum = rc.cardArr[index].batchType.currId;
+				            
+				        //Create batch method called here...
+				        batchService.create(rc.newBatch, success, error);
+					}	        
+     		    
+     	     	}
+     	     	
+     		}
+     		
+     	}
+     	function success (){ /* success toast here eventually...*/ }
+
+	 	function error(){ /*failure toast here eventually...*/ }
+    };
     
     /************************************************************/
     /************************************************************/
@@ -464,10 +534,13 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     // Reports Controller Data members
     
     rc.year = new Date().getFullYear();
-
+    
     //The number of graduates.
     rc.graduates = 15;
 
+    //The current date.
+    rc.today = new Date();
+    
     //The date Trainee's are needed by.
     rc.reqDate = new Date();
     
@@ -477,6 +550,9 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     //Default batch time-period.
     rc.defWeeks = 11;
 
+    //Error Message
+	rc.errMsg = "";
+    
     //Number of Required Graduates.
     rc.requiredGrads;
 
@@ -524,7 +600,9 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 
     /*************************************************************/
     /*************************************************************/
-
+	
+	/*************************************************************/
+	
     // data gathering
     batchService.getAll(function (response) {
         rc.batches = response;
