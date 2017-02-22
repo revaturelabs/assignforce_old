@@ -57,13 +57,11 @@ app.service('ptoService', function ($resource, $mdDialog) {
         } else {
           // User is not signed in. Start Google auth flow.
           GoogleAuth.signIn();
-          var user = GoogleAuth.currentUser.get();
         }
     }
 
     function setSigninStatus(isSignedIn) {
       var user = GoogleAuth.currentUser.get();
-      var isAuthorized = user.hasGrantedScopes(scopes);
     }
 
     function updateSigninStatus(isSignedIn) {
