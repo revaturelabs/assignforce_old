@@ -517,14 +517,15 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 				        //Create batch method called here...
 				        batchService.create(rc.newBatch, success, error);
 					}	        
-     		    }
+     		    
+     	     	}
      	     	
      		}
      		
      	}
-     	function success (){  }
+     	function success (){ //success toast here eventually... }
 
-	 	function error(){  }
+	 	function error(){ //failure toast here eventually... }
     };
     
     /************************************************************/
