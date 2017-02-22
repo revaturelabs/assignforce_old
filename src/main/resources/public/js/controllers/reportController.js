@@ -452,23 +452,24 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     			flagArr[2] = 1;
     		
     		} 
-    		//Checks if multiple inputs are missing or invalid.
-    		//Sets the error message to the appropriate phrase, if multiple inputs are missing.
-    		for ( var x in flagArr ){
-    			
-    				if( flagArr[x] == 1 ){
-    					count = count + 1;
-    					if ( count > 1 ){
-    						rc.errMsg = "Multiple Inputs Required.";
-    					}
-    					
-    				}
-    		
-    		}
-     	
+    	    	
      		canSubmit = 1;
      	} 
      	
+     	//Checks if multiple inputs are missing or invalid.
+		//Sets the error message to the appropriate phrase, if multiple inputs are missing.
+		for ( var x in flagArr ){
+			
+				if( flagArr[x] == 1 ){
+					count = count + 1;
+					if ( count > 1 ){
+						rc.errMsg = "Multiple Inputs Required.";
+					}
+					
+				}
+		
+		}
+		
      	return canSubmit;
     };
     
