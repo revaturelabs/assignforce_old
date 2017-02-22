@@ -1,225 +1,179 @@
-<!-- Reports.html  -->
 <md-card md-whiteframe="8" ng-cloak>
-    <md-toolbar layout="columns">
+    <md-toolbar layout="columns" class="md-primary md-hue-2">
         <div class="md-toolbar-tools">
             <span> Reports </span>
             <span flex> </span>
-            <md-button ng-click="null" ng-csv="rCtrl.export()" filename="{{rCtrl.year}}report.csv" class="md-icon-button">
-                <md-tooltip class="md-title"> Export to CSV </md-tooltip>
-                <md-icon md-menu-origin class="material-icons"> file_download </md-icon>
-            </md-button>
-        </div>
-    </md-toolbar>
-    <!-- Graduates annual report -->
-    <md-content>
-        <md-toolbar layout="columns" class="md-primary md-hue-2">
-            <div class="md-toolbar-tools">
-                <span> Graduates summary for {{ rCtrl.year }} </span>
-            </div>
-            <span flex> </span>
-            <md-menu md-position-mode="target-right target">
-                <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button">
-                    <md-tooltip class="md-title"> Settings </md-tooltip>
-                    <md-icon md-menu-origin md-svg-icon="img/ic_settings_white_24px.svg"> </md-icon>
-                </md-button>
-                <md-menu-content width="4" class="md-padding">
-                    <md-menu-item>
-                        <md-input-container>
-                            <label> Year </label>
-                            <input ng-model="rCtrl.year" type="number">
-                        </md-input-container>
-                    </md-menu-item>
-                    <md-menu-item>
-                        <md-input-container>
-                            <label> Graduates per batch </label>
-                            <input ng-model="rCtrl.graduates" type="number">
-                        </md-input-container>
-                    </md-menu-item>
-                </md-menu-content>
-            </md-menu>
-        </md-toolbar>
-        <div ng-if="rCtrl.batches != undefined" class="md-padding">
-            <md-table-container>
-                <table md-table class="gradTable" id="datatable">
-                    <thead md-head md-order="rCtrl.currOrder">
-                    <tr md-row>
-                        <th md-column flex md-order-by="name"> Curriculum </th>
-                        <th md-column flex ng-repeat="month in rCtrl.monthList"> {{ month }} </th>
-                        <th md-column md-numeric flex> Total </th>
-                    </tr>
-                    </thead>
-                    <tbody md-body>
-                    <tr md-row ng-repeat="curr in (rCtrl.curricula | orderBy:rCtrl.currOrder) track by curr.currId">
-                        <td md-cell flex> {{ curr.name }} </td>
-                        <td md-cell flex ng-repeat="month in rCtrl.currSummary(curr) track by $index"> {{ month }} </td>
-                        <td md-cell flex> {{ rCtrl.currSummary(curr).reduce(rCtrl.sumCurrYear) }} </td>
-                    </tr>
-                    <tr md-row>
-                        <td md-cell flex> Total </td>
-                        <td md-cell flex ng-repeat="month in rCtrl.currSummary(curr) track by $index"> {{ rCtrl.sumMonth($index) }} </td>
-                        <td md-cell flex> {{ rCtrl.sumYear() }} </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </md-table-container>
-        </div>
-        <div ng-if="rCtrl.batches == undefined" layout="column" layout-wrap layout-align="center center">
-            <div flex="100"> &nbsp; </div>
-            <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
-            <div flex="100"> &nbsp; </div>
-        </div>
-    </md-content>
-</md-card><br><br><br>
-
-<!--Graduates Summary Graph -->
-<md-card>
-    <md-toolbar layout="columns" class="md-primary md-hue-2">
-        <div class="md-toolbar-tools">
-            <span> Graduates summary for {{ rCtrl.year }} </span>
         </div>
     </md-toolbar>
     <md-content>
-        <div ng-if="rCtrl.batches != undefined">
-            <get-Data></get-Data>
-        </div>
-        <div ng-if="rCtrl.batches == undefined" layout="column" layout-wrap layout-align="center center">
-            <div flex="100"> &nbsp; </div>
-            <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
-            <div flex="100"> &nbsp; </div>
-        </div>
-    </md-content>
-</md-card><br><br><br>
-
-<!--  Required Trainee's Tab  -->
-<md-card md-whiteframe="8" ng-cloak>
-    <!-- Graduates annual report -->
-    <md-content>
-        <md-toolbar layout="columns" class="md-primary md-hue-2">
-            <div class="md-toolbar-tools">
-                <span>Batch Projection</span>
-                <span flex> </span>
-                
-                <!--  Generate a New Card Object Button -->
-                <md-button class="md-icon-button" ng-click="rCtrl.genCard()">
-                    <md-tooltip class="md-title"> Add New Card </md-tooltip>
-                    <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
-                </md-button>
-                             
-            </div>
-        </md-toolbar>
-        <div ng-if="rCtrl.batches != undefined" class="md-padding" layout="row">
-            <md-content flex="80" class="md-padding" layout-xs="column" layout="row">
-                <div flex-xs="" flex-gt-xs="20" layout="column" ng-repeat="n in rCtrl.cardArr track by $index">
-                    <md-card md-theme="{{ showDarkTheme ? 'dark-purple' : 'default' }}" md-theme-watch="">
-                        <md-card-content class="md-padding" layout="column">
-                        
-                        <md-card-title>
-                            <md-card-title-text>
-                                <span class="md-headline"></span>
-                            </md-card-title-text>
-                        	
-                        	<span flex> </span>
-                        	
-                        	<!--  Delete Card Button  -->
-                			<md-button class="md-icon-button" ng-click="rCtrl.removeCardClick($index)">
-                        		<md-tooltip class="md-title"> Remove Card </md-tooltip>
-                        		<i class="material-icons" style="color: #FB8C00;">remove_circle</i>
-                   			</md-button>
-                        
-                        </md-card-title>
-                        
-                        <!--  Needed Trainee's Field  -->
-                        <md-input-container>
-                            <label>Trainee's Needed:</label>
-                            <input ng-model="rCtrl.cardArr[$index].requiredGrads" ng-change="rCtrl.calcReqBatch(rCtrl.cardArr[$index].requiredGrads, $index)" type="number">
-                        </md-input-container>
-                        
-                        <!--  'Needed-by' Date  -->
-                        <md-input-container>
-                            <label>Hire Date:</label>
-                            <input ng-model="rCtrl.cardArr[$index].reqDate" ng-change="rCtrl.calcStartDate(rCtrl.cardArr[$index].reqDate, $index)" type="date">
-                        </md-input-container>
-                        
-                        <!--  Batch Curriculum  -->
-                        <md-input-container flex>
-                            <label>Curriculum:</label>
-                            <md-select ng-model="rCtrl.cardArr[$index].batchType" ng-change="rCtrl.assignCurr( rCtrl.cardArr[$index].batchType, $index)">
-                                <md-option ng-value="curriculum" ng-repeat="curriculum in rCtrl.curricula"> {{ curriculum.name }} </md-option>
-                            </md-select>
-                        </md-input-container>
-                        <!--  Start Date  -->
-                        <div ng-model="rCtrl.cardArr[$index].startDate">
-                            <p> Start Date: {{ rCtrl.cardArr[$index].formattedStartDate }}</p>
+        <!--  Required Trainee's Tab  -->
+        <md-card md-whiteframe="8" ng-cloak>
+            <!-- Graduates annual report -->
+            <md-content>
+                <md-toolbar layout="columns" class="md-primary md-hue-2">
+                    <div class="md-toolbar-tools">
+                        <span>Batch Projection</span>
+                        <span flex> </span>
+                        <!--  Generate a New Card Object Button -->
+                        <md-button class="md-icon-button" ng-click="rCtrl.genCard()">
+                            <md-tooltip class="md-title"> Add New Card </md-tooltip>
+                            <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
+                        </md-button>
+                    </div>
+                </md-toolbar>
+                <div ng-if="rCtrl.batches != undefined" class="md-padding" layout="row">
+                    <md-content flex="80" class="md-padding" layout-xs="column" layout="row">
+                        <div flex-xs="" flex-gt-xs="20" layout="column" ng-repeat="n in rCtrl.cardArr track by $index">
+                            <md-card md-theme="{{ showDarkTheme ? 'dark-purple' : 'default' }}" md-theme-watch="">
+                                <md-card-content class="md-padding" layout="column">
+                                    <md-card-title>
+                                        <md-card-title-text>
+                                            <span class="md-headline"></span>
+                                        </md-card-title-text>
+                                        <span flex> </span>
+                                        <!--  Delete Card Button  -->
+                                        <md-button class="md-icon-button" ng-click="rCtrl.removeCardClick($index)">
+                                            <md-tooltip class="md-title"> Remove Card </md-tooltip>
+                                            <i class="material-icons" style="color: #FB8C00;">remove_circle</i>
+                                        </md-button>
+                                    </md-card-title>
+                                    <!--  Needed Trainee's Field  -->
+                                    <md-input-container>
+                                        <label>Trainee's Needed:</label>
+                                        <input ng-model="rCtrl.cardArr[$index].requiredGrads" ng-change="rCtrl.calcReqBatch(rCtrl.cardArr[$index].requiredGrads, $index)" type="number">
+                                    </md-input-container>
+                                    <!--  'Needed-by' Date  -->
+                                    <md-input-container>
+                                        <label>Hire Date:</label>
+                                        <input ng-model="rCtrl.cardArr[$index].reqDate" ng-change="rCtrl.calcStartDate(rCtrl.cardArr[$index].reqDate, $index)" type="date">
+                                    </md-input-container>
+                                    <!--  Batch Curriculum  -->
+                                    <md-input-container flex>
+                                        <label>Curriculum:</label>
+                                        <md-select ng-model="rCtrl.cardArr[$index].batchType" ng-change="rCtrl.assignCurr( rCtrl.cardArr[$index].batchType, $index)">
+                                            <md-option ng-value="curriculum" ng-repeat="curriculum in rCtrl.curricula"> {{ curriculum.name }} </md-option>
+                                        </md-select>
+                                    </md-input-container>
+                                    <!--  Start Date  -->
+                                    <div ng-model="rCtrl.cardArr[$index].startDate">
+                                        <p> Start Date: {{ rCtrl.cardArr[$index].formattedStartDate }}</p>
+                                    </div>
+                                    <!--  Required Batches  -->
+                                    <div ng-model="rCtrl.cardArr[$index].requiredBatches">
+                                        <p> Required Batches: {{ rCtrl.cardArr[$index].requiredBatches }}</p>
+                                    </div>
+                                    <md-card-actions layout="row" layout-align="end center" ng-click="rCtrl.createBatchClick($index)">
+                                        <md-button class="md-raised md-warn">Create Batch</md-button>
+                                    </md-card-actions>
+                                </md-card-content>
+                            </md-card>
                         </div>
-                        <!--  Required Batches  -->
-                        <div ng-model="rCtrl.cardArr[$index].requiredBatches">
-                            <p> Required Batches: {{ rCtrl.cardArr[$index].requiredBatches }}</p>
+                    </md-content>
+                    <!--  Master Angular Card Object  -->
+                    <md-content flex="20" class="md-padding" layout-xs="column" layout="column" layout-align="center center">
+                        <div flex-xs="" flex-gt-xs="100" layout="column">
+                            <md-card>
+                                <md-card-content class="md-padding" layout="column">
+                                    <md-card-title-text>
+                                        <span class="md-headline">  Batch Totals  </span>
+                                    </md-card-title-text>
+                                    <!--  Number ofJava Batches  -->
+                                    <div ng-model="rCtrl.cardArr[$index].requiredBatches">
+                                        <p> Total Java Batches: {{ rCtrl.totalJavaBatch }} </p>
+                                    </div>
+                                    <!--  Number of .Net Batches  -->
+                                    <div ng-model="rCtrl.cardArr[$index].requiredBatches">
+                                        <p> Total .Net Batches: {{ rCtrl.totalNetBatch }} </p>
+                                    </div>
+                                    <!--  Number of SDET Batches -->
+                                    <div ng-model="rCtrl.cardArr[$index].requiredBatches">
+                                        <p> Total SDET Batches: {{ rCtrl.totalSDETBatch }} </p>
+                                    </div>
+                                    <!--  Total Number of Batches -->
+                                    <div ng-model="rCtrl.cardArr[$index].requiredBatches">
+                                        <p> Cumulative Number of Batches: {{rCtrl.totalCumulativeBatches}}</p>
+                                    </div>
+                                    <md-card-actions layout="row" layout-align="end center" ng-click="rCtrl.createAllBatchClick()">
+                                        <md-button class="md-raised md-warn">Create All Batches</md-button>
+                                    </md-card-actions>
+                                </md-card-content>
+                            </md-card>
                         </div>
-                        <md-card-actions layout="row" layout-align="end center" ng-click="rCtrl.createBatchClick($index)">
-                            <md-button class="md-raised md-warn">Create Batch</md-button>
-                        </md-card-actions>
-                        </md-card-content>
-                    </md-card>
+                    </md-content>
+                    <div ng-if="rCtrl.batches == undefined" layout="column" layout-wrap layout-align="center center">
+                        <div flex="100"> &nbsp; </div>
+                        <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
+                        <div flex="100"> &nbsp; </div>
+                    </div>
                 </div>
             </md-content>
-            <!--  Master Angular Card Object  -->
-            <md-content flex="20" class="md-padding" layout-xs="column" layout="column" layout-align="center center">
-                <div flex-xs="" flex-gt-xs="100" layout="column">
-                    <md-card>
-                        <md-card-content class="md-padding" layout="column">
-                        <md-card-title-text>
-                            <span class="md-headline">  Batch Totals  </span>
-                        </md-card-title-text>
-                        <!--  Number ofJava Batches  -->
-                        <div ng-model="rCtrl.cardArr[$index].requiredBatches">
-                            <p> Total Java Batches: {{ rCtrl.totalJavaBatch }} </p>
-                        </div>
-                        <!--  Number of .Net Batches  -->
-                        <div ng-model="rCtrl.cardArr[$index].requiredBatches">
-                            <p> Total .Net Batches: {{ rCtrl.totalNetBatch }} </p>
-                        </div>
-                        <!--  Number of SDET Batches -->
-                        <div ng-model="rCtrl.cardArr[$index].requiredBatches">
-                            <p> Total SDET Batches: {{ rCtrl.totalSDETBatch }} </p>
-                        </div>
-                        <!--  Total Number of Batches -->
-                        <div ng-model="rCtrl.cardArr[$index].requiredBatches">
-                            <p> Cumulative Number of Batches: {{rCtrl.totalCumulativeBatches}}</p>
-                        </div>
-                       
-                        <md-card-actions layout="row" layout-align="end center" ng-click="rCtrl.createAllBatchClick()">
-                            <md-button class="md-raised md-warn">Create All Batches</md-button>
-                        </md-card-actions>
-                        
-                        </md-card-content>
-                    </md-card>
-                </div>
-            </md-content>
-            <div ng-if="rCtrl.batches == undefined" layout="column" layout-wrap layout-align="center center">
-                <div flex="100"> &nbsp; </div>
-                <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
-                <div flex="100"> &nbsp; </div>
-            </div>
-        </div>
-    </md-content>
-</md-card><br><br><br>
-
-
-
-<div ng-if="rCtrl.batches != undefined">
-    <md-content class="accordion-block" data-ng-repeat="option in options">
-        <md-toolbar accordion-dynamic id="myAcc" class="md-toolbar-tools" md-ink-ripple="#D9510D">{{option.title}}</md-toolbar>
-        <md-card class="content" id="tester2">
-            <md-content>{{option.title}}</md-content>
-            <md-content>{{option.content}}</md-content>
         </md-card>
+        <br>
+        <br>
+        <br>
+        <div ng-if="rCtrl.batches != undefined" id="accordionDynamic" class="accordionWrap">
+            <md-card class="accordion-block">
+                <md-content>
+                    <get-grad-table-template></get-grad-table-template>
+                </md-content>
+            </md-card>
+            <md-card class="accordion-block">
+                <md-content>
+                    <div>
+                        <get-Data></get-Data>
+                    </div>
+                </md-content>
+            </md-card>
+            <md-card class="accordion-block">
+                <md-content>
+                    <get-incoming-table-template></get-incoming-table-template>
+                </md-content>
+            </md-card>
+            <md-card class="accordion-block">
+                <md-content>
+                    <div>
+                        <get-Train-Data></get-Train-Data>
+                    </div>
+                </md-content>
+            </md-card>
+        </div>
         <div ng-if="rCtrl.batches == undefined" layout="column" layout-wrap layout-align="center center">
             <div flex="100"> &nbsp; </div>
             <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
             <div flex="100"> &nbsp; </div>
         </div>
-        <br>
-        <br>
     </md-content>
+</md-card>
+<br>
+<br>
+<br>
+<style>
+    .accordionWrap {
+        list-style: none;
+    }
 
-</div><br><br><br>
+    .accordionWrap .content {
+        /*list-style: none;*/
+        /*padding: 10px;*/
+        display: none;
+    }
+
+    .accordionWrap .active-block .content {
+        display: block;
+    }
+
+    md-toolbar._md._md-toolbar-transitions {
+        font-weight: bold;
+    }
+</style>
+<!--<button ng-click="rCtrl.tester()"> Test Me....</button>-->
+<!--<br><br><br>-->
+<!--&lt;!&ndash;<p ng-init="summer(5)"><div>Test.... 5*11 = {{myNumber}}</div></p>&ndash;&gt;-->
+<!--&lt;!&ndash;<div class="accordionWrap">&ndash;&gt;-->
+<!--&lt;!&ndash;<md-card class="accordion-block" ng-class="{'active-block':$first}">&ndash;&gt;-->
+<!--&lt;!&ndash;<md-content ng-change="rCtrl.tempp = 30">&ndash;&gt;-->
+<!--&lt;!&ndash;<get-grad-table></get-grad-table>&ndash;&gt;-->
+<!--&lt;!&ndash;</md-content>&ndash;&gt;-->
+<!--&lt;!&ndash;</md-card>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--<br><br><br>-->
