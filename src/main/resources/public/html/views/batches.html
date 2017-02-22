@@ -30,7 +30,7 @@
                     <md-input-container>                       
                     	<label> Room </label>
                             <md-select ng-model="bCtrl.batch.room">
-                                <md-option ng-value="room" ng-repeat="room in bCtrl.filterRooms(bCtrl.batch.building) | activeItem | orderBy:roomName"> {{ room.roomName }} </md-option>
+                                <md-option ng-value="room.roomID" ng-repeat="room in bCtrl.filterRooms(bCtrl.batch.building) | activeItem | orderBy:roomName"> {{ room.roomName }} </md-option>
                             </md-select>
                         </md-input-container>
                         

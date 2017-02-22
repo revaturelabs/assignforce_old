@@ -1,7 +1,6 @@
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "batchCtrl", function($scope, batchService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, $filter, $window, $rootScope) {
-
+    assignforce.controller( "batchCtrl", function($scope, batchService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, $filter, $window) {
         var bc = this;
         bc.trainerSkillRatios = [];
         
@@ -115,6 +114,7 @@
      // defaults location to Reston branch 
         settingService.getById(3, function(response){
         	bc.findHQ = response.settingValue;
+        	console.log(bc.findHQ);
         }, function(){
         	bc.showToast("Setting not found");
         });
@@ -294,7 +294,7 @@
             bc.changeState( "create", null );
             batchService.getAll( function(response) {
                 bc.batches = response;
-                $rootScope.$broadcast("repullTimeline");
+                $scope.$broadcast("repullTimeline");
             }, function() {
                 bc.showToast( "Could not fetch batches.");
             });
@@ -369,9 +369,6 @@
             if (isValid) {
                 switch(bc.state) {
                     case "create":
-                    	roomService.room( bc.batch.room, function(){
-                    	}, function(){
-                    	});
                         batchService.create( bc.batch, function(){
                             bc.showToast("Batch saved.");
                             bc.repull();

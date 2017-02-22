@@ -451,9 +451,12 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	
 	//Filters the list of trainers and batches, and calls for the timeline to be re-projected.
 	tlc.projectTimeline = function(yOffset)
-	{
+	{console.log("before if:");
+console.log("Trainers: ");
+console.log(tlc.trainers);
+console.log(tlc.batches);
 		if (tlc.trainers && tlc.batches)
-		{
+		{console.log("inside the if");
 			tlc.filteredTrainers = tlc.trainers.filter(tlc.removeTrainersOutOfPage);
 			
 			tlc.filteredBatches = tlc.batches.filter(tlc.removeNoTrainer).filter(tlc.removeIrrelevantBatches).filter(tlc.removeDateless).filter(tlc.removeOutOfDateRange).filter(tlc.removeUnmatchingCurriculum);
@@ -465,7 +468,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 			
 			//Sorts the trainer column names based on id.
 			tlc.filteredTrainers.sort(function(a,b)
-			{
+			{console.log("inside sort");
 				var aID = parseInt(a.substring(1, a.indexOf(')')));
 				var bID = parseInt(b.substring(1, b.indexOf(')')));
 				
@@ -477,8 +480,9 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 				}
 				return 0;
 			});
-			
+			console.log("before projectTimeline");
 			projectTimeline(tlc.timelineFormatting, tlc.minDate, tlc.maxDate, yOffset, tlc.filteredBatches, $scope.$parent, calendarService.countWeeks, tlc.filteredTrainers);
+			console.log("after projectTimeline");
 		}
 	}
 });
