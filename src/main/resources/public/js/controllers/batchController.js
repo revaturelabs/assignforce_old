@@ -114,7 +114,6 @@
      // defaults location to Reston branch 
         settingService.getById(3, function(response){
         	bc.findHQ = response.settingValue;
-        	console.log(bc.findHQ);
         }, function(){
         	bc.showToast("Setting not found");
         });
