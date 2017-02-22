@@ -130,6 +130,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         }
     };
 
+    //func to upload a resume to the s3 bucket
     pc.uploadCertification = function () {
         var path = "Certifications/" + pc.trainer.trainerId + "_" + pc.certFile.name;
 
