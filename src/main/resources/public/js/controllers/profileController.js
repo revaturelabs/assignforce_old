@@ -217,20 +217,14 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     if(pc.tId){
         trainerService.getById(pc.tId, function (response) {
             pc.trainer = response;
-<<<<<<< HEAD
-=======
             pc.getAllSkills();
->>>>>>> b36f03e844903aea1f38d46640e09671d54636ca
         }, function () {
             pc.showToast("Could not fetch trainer.");
         });
     } else {
         trainerService.getById(1, function (response) {
             pc.trainer = response;
-<<<<<<< HEAD
-=======
             pc.getAllSkills();
->>>>>>> b36f03e844903aea1f38d46640e09671d54636ca
         }, function () {
             pc.showToast("Could not fetch trainer.");
         });
