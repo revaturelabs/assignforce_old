@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.revature.assignforce.domain.Building;
 import com.revature.assignforce.domain.Room;
 import com.revature.assignforce.domain.Unavailable;
 import com.revature.assignforce.domain.dto.ResponseErrorDTO;
@@ -34,7 +35,7 @@ public class RoomCtrl {
 	
 		int ID = in.getRoomID();
 		String name = in.getRoomName();
-		int building = in.getBuilding();
+		Building building = in.getBuilding();
 		List<Unavailable> unavailabilities = in.getUnavailabilities();
 		
 		Room out = new Room( ID, name, building, unavailabilities );
@@ -67,7 +68,7 @@ public class RoomCtrl {
 		
 		int ID = in.getRoomID();
 		String name = in.getRoomName();
-		int building = in.getBuilding();
+		Building building = in.getBuilding();
 		List<Unavailable> unavailabilities = in.getUnavailabilities();
 		Boolean active = in.getActive();
 		Room out = new Room( ID, name, building, unavailabilities, active);

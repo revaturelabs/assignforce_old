@@ -30,15 +30,20 @@
 
                 bc.batch.name       = incomingBatch.name;
                 bc.batch.curriculum = (incomingBatch.curriculum) ? incomingBatch.curriculum.currId       : undefined;               
-                
-                bc.batch.room       = (incomingBatch.room)       ? incomingBatch.room.roomID         : undefined;
-                
-                bc.batch.building = 1;
-                bc.batch.location = 1;
 
-                if (bc.batch.room.unavailability){
-                    bc.batch.room.unavailability.startDate = (incomingBatch.startDate) ? incomingBatch.room.unavailability.startDate : undefined;
-                    bc.batch.room.unavailability.endDate = (incomingBatch.endDate) ? incomingBatch.room.unavailability.endDate : undefined;
+                bc.batch.startDate = (incomingBatch.startDate) ? new Date(incomingBatch.startDate) : undefined;
+                bc.batch.endDate = (incomingBatch.endDate) ? new Date(incomingBatch.endDate) : undefined;
+                //bc.batch.location   = (incomingBatch.location)   ? incomingBatch.location.id		 : undefined;
+                bc.batch.room       = (incomingBatch.room)       ? incomingBatch.room.roomID         : undefined;
+                //if (bc.batch.room) {bc.batch.building	= (incomingBatch.room.building)	 ? incomingBatch.room.buildingID		 : undefined;}
+                
+                if(bc.batch.room){
+                	bc.batch.building = incomingBatch.room.building.id;
+                    bc.batch.location = incomingBatch.room.building.location;
+                		if (bc.batch.room.unavailability){
+                			bc.batch.room.unavailability.startDate = (incomingBatch.startDate) ? incomingBatch.room.unavailability.startDate : undefined;
+                			bc.batch.room.unavailability.endDate = (incomingBatch.endDate) ? incomingBatch.room.unavailability.endDate : undefined;
+                		}
                 }
 
                 bc.batch.trainer    = (incomingBatch.trainer)    ? incomingBatch.trainer.trainerId   : undefined;
