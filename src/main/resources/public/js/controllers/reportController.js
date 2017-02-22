@@ -399,13 +399,14 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 	            rc.newBatch.curriculum = rc.cardArr[index].batchType.currId;
 	            
 	            //Create batch method called here...
-	            batchService.create(rc.newBatch, function success ( ) {
+	            batchService.create(rc.newBatch, function ( ) {
 		        	$scope.$parent.aCtrl.showToast("Successfully created Batch.");
-		        }, function error ( ) {
+		        }, function ( ) {
 		        	$scope.$parent.aCtrl.showToast("Failed to created Batch.");
 		        });
 	        }
-	        
+	
+        
     	}
        
     };
