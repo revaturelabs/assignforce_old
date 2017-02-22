@@ -34,7 +34,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     tlc.removeIrrelevantBatches = function(batch) {
 		var trainerIndex = tlc.filteredTrainers.findIndex(function (d)
 		{
-			return (d == trainerColumnName(batch.trainer));
+			return (d == $scope.trainerColumnName(batch.trainer));
 		});
 		
         return (trainerIndex > -1);
@@ -156,7 +156,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	tlc.getAllTrainers = new Promise(function(resolve)
 	{
 	    trainerService.getAll( function(response) {
-			tlc.trainers = response.map(function(trainer){return trainerColumnName(trainer)});
+			tlc.trainers = response.map(function(trainer){return $scope.trainerColumnName(trainer)});
 
 			resolve(1);
 	    }, function() {
@@ -478,388 +478,388 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 				return 0;
 			});
 			
-			projectTimeline(tlc.timelineFormatting, tlc.minDate, tlc.maxDate, yOffset, tlc.filteredBatches, $scope.$parent, calendarService.countWeeks, tlc.filteredTrainers);
+			$scope.projectTimeline(tlc.timelineFormatting, tlc.minDate, tlc.maxDate, yOffset, tlc.filteredBatches, $scope.$parent, calendarService.countWeeks, tlc.filteredTrainers);
 		}
+	}
+	
+	//Generates the string used in the columns
+	$scope.trainerColumnName = function(trainer)
+	{
+		return ("(" + trainer.trainerId + ")" + " " + trainer.firstName + " " + trainer.lastName);
+	}
+
+	// Draw timeline
+	$scope.projectTimeline = function(timelineFormatting, minDate, maxDate, yCoord, timelineData, parentScope, numWeeks, trainerNames){
+		
+		//Define Scales
+		var colorScale = d3.scale.category20();
+		
+		var yScale = d3.time.scale()
+			.domain([minDate, maxDate])
+			.range([0,timelineFormatting.height]);
+		
+		var xScale = d3.scale.ordinal()
+			.domain(trainerNames)
+			.rangePoints([timelineFormatting.xPadding, timelineFormatting.width - timelineFormatting.xPadding]);
+		
+		//Define axis
+		var yAxis = d3.svg.axis()
+			.scale(yScale)
+			.orient('left')
+			.tickSize(2);
+		
+		var xAxis = d3.svg.axis()
+			.scale(xScale)
+			.orient('top')
+			.tickSize(6,0)
+		
+		//Used to create line breaks in table word data.
+		var wrap = function (text, width) {
+			  text.each(function() {
+				    var el = d3.select(this),
+				        words = el.text().split(/\s+/).reverse(),
+				        word,
+				        line = [],
+				        lineNumber = 0,
+				        lineHeight = 1.1, // ems
+				        x = el.attr("x"),
+				        y = el.attr("y"),
+				        dy = parseFloat(el.attr("dy")),
+				        tspan = el.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
+				    
+				    while (word = words.pop()) {
+				      line.push(word);
+				      tspan.text(line.join(" "));
+				      if (tspan.node().getComputedTextLength() > width) {
+				        line.pop();
+				        tspan.text(line.join(" "));
+				        line = [word];
+				        tspan = el.append("tspan").attr("x", x).attr("y", y).attr("dy", lineNumber++ * lineHeight + dy + "em").text(word);
+				      }
+				    }
+				  });
+				}
+		
+		//Sort data for Timeline
+		
+		timelineData.sort(function(a,b){
+			if(new Date(a.startDate) < new Date(b.startDate)){
+				return -1;
+			}
+			else if(new Date(a.startDate) > new Date(b.startDate)){
+				return 1;
+			}
+			else{
+				return 0;
+			}
+		});
+		
+		//Create lines for between batches
+		var batchCount = {};
+		for(var x = 0; x < timelineData.length; x++){
+			
+			if(batchCount[timelineData[x].trainer ? $scope.trainerColumnName(timelineData[x].trainer) : 'No trainer'] === undefined){
+				batchCount[timelineData[x].trainer ? $scope.trainerColumnName(timelineData[x].trainer) : 'No trainer'] = [];
+			}
+			
+			batchCount[timelineData[x].trainer ? $scope.trainerColumnName(timelineData[x].trainer) : 'No trainer'].push(timelineData[x]);
+		}
+		
+		var betweenBatches = [];
+		
+		for(var trainer in batchCount){
+			if (batchCount.hasOwnProperty(trainer)){
+				for(x = 0; x < batchCount[trainer].length-1; x++){
+					var between = {x: xScale(batchCount[trainer][x].trainer ? $scope.trainerColumnName(batchCount[trainer][x].trainer) : 'No trainer'),
+							y1: yScale(new Date(batchCount[trainer][x].endDate)),
+							y2: yScale(new Date(batchCount[trainer][x+1].startDate)),
+							length:numWeeks(batchCount[trainer][x].endDate,batchCount[trainer][x+1].startDate)};
+					betweenBatches.push(between);
+				}
+			}
+		}
+		
+		var lanePadding = (xScale.range()[1]-xScale.range()[0])/2;
+		
+		//Create timeline
+	    var svg = d3.select("#timeline");
+	    svg.selectAll("*").remove();
+	    
+	    //Tooltip setup.
+		var tip = d3.tip()
+		  .attr('class', 'd3-tip')
+		  .html(function(d) {
+			  var msg = "";
+			  var startDate = new Date(d.startDate);
+			  var endDate = new Date(d.endDate);
+			  var days = ["Sun.", "Mon.", "Tue.", "Wed.", "Thu.", "Fri.", "Sat."];
+			  var months = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec."];
+			  
+			  msg += d.curriculum ? ("<span style='color:orange'>" + d.curriculum.name + "</span> Batch <br/>") : "<span style='color:red'>No curriculum</span> for this batch. <br/>";
+			  msg += "__________<br/>";
+			  msg += d.trainer ? ("Trainer:  <span style='color:gold'>" + d.trainer.firstName + " " + d.trainer.lastName + "</span> <br/>") : "<span style='color:red'>No trainer</span> for this batch. <br/>";
+			  msg += d.cotrainer ? ("Cotrainer:  <span style='color:gold'>" + d.cotrainer.firstName + " " + d.cotrainer.lastName + "</span> <br/>") : "<span style='color:red'>No cotrainer</span> for this batch. <br/>";
+			  msg += d.startDate ? ("Start Date:  <span style='color:gold'>" + days[startDate.getDay()] + ", " + months[startDate.getMonth()] + " " + startDate.getDate() + ", " + startDate.getFullYear() + "</span> <br/>") : "<span style='color:red'>No start date</span> for this batch. <br/>";
+			  msg += d.endDate ? ("End Date:  <span style='color:gold'>" + days[endDate.getDay()] + ", " + months[endDate.getMonth()] + " " + endDate.getDate() + ", " + endDate.getFullYear() + "</span> <br/>") : "<span style='color:red'>No end date</span> for this batch. <br/>";
+			  
+			  return msg;
+		  });
+		
+		svg = d3.select('#timeline')
+			.append('svg')
+				.attr('width',timelineFormatting.width + timelineFormatting.margin_left + timelineFormatting.margin_right)
+				.attr('height',timelineFormatting.height + timelineFormatting.margin_bottom + timelineFormatting.margin_top)
+			.append('g')
+				.attr('transform','translate('+timelineFormatting.margin_left+','+timelineFormatting.margin_top+')');
+				
+		svg.call(tip);
+		
+		svg.append('g')
+			.attr('class','x axis')
+			.call(xAxis);
+		
+		svg.append('g')
+			.attr('class','y axis')
+			.call(yAxis);
+		
+		//Add swimlanes to timeline
+		svg.append('g')
+			.attr('class','swimlanes')
+			
+		d3.select('.swimlanes')
+			.selectAll('line')
+			.data(trainerNames)
+			.enter()
+			.append('line')
+				.attr('x1', function(d){
+					var x = xScale(d)+lanePadding;
+					
+					return isNaN(x) ? 0 : x;
+				})
+				.attr('y1', 0)
+				.attr('x2', function(d){
+					var x = xScale(d)+lanePadding;
+					
+					return isNaN(x) ? 0 : x;
+				})
+				.attr('y2', timelineFormatting.height)
+				.attr('stroke','lightgray');
+		
+		//Add line for current date on timeline
+		svg.append('g')
+			.attr('class','currentdate')
+			
+		d3.select('.currentdate')
+			.append('line')
+				.attr('x1', 0)
+				.attr('x2', timelineFormatting.width)
+				.attr('y1', yScale(new Date()))
+				.attr('y2',yScale(new Date()))
+				.attr('stroke','#f26a25');
+
+		// Create line for zoompoint
+		svg.append('g')
+			.attr('class','zoompoint')
+			
+		d3.select('.zoompoint')
+			.append('line')
+				.attr('x1', 0)
+				.attr('x2', timelineFormatting.width)
+				.attr('y1', yCoord)
+				.attr('y2', yCoord)
+				.attr('stroke','#000000')
+				.attr('stroke-width', 1);
+		
+		//Add batches to timeline
+		var defs = svg.append("defs");
+
+		var filter = defs.append("filter")
+			.attr("id", "highlight")
+
+		filter.append("feGaussianBlur")
+			.attr("in", "SourceAlpha")
+			.attr("stdDeviation", 5)
+			.attr("result", "blur");
+		filter.append("feComponentTransfer")
+			.attr("in", "blur")
+			.attr("result","betterBlur")
+			.append("feFuncA")
+			.attr("type","linear")
+			.attr("slope","1.5")
+		filter.append("feFlood")
+			.attr("in", "betterBlur")
+			.attr("flood-color", "#f26a25")
+			.attr("result", "color");
+		filter.append("feComposite")
+			.attr("in", "color")
+			.attr("in2", "betterBlur")
+			.attr("operator", "in")
+			.attr("result", "colorBlur");
+		
+		var feMerge = filter.append("feMerge");
+		
+		feMerge.append("feMergeNode")
+			.attr("in", "colorBlur")
+		feMerge.append("feMergeNode")
+			.attr("in", "SourceGraphic");
+		  
+		//Normal stuff
+		svg.append('g')
+			.attr('class','rectangles');
+
+		d3.select('.rectangles')
+			.selectAll('g')
+			.data(timelineData)
+			.enter()
+			.append('g')
+				.attr('class','rect')
+			.append('rect')
+				.attr('id',function(d){return 'id'+d.id;})
+				.attr('y', function(d) {
+					var y = yScale(new Date(d.startDate));
+					
+					if (y < 0){ 
+						y = 0; 
+					}
+					
+					return y;
+				})
+				.attr('width', 32)
+				.attr('x', function(d) {return xScale(d.trainer ? $scope.trainerColumnName(d.trainer) : 'No trainer') - (d3.select(this).attr("width") / 2);})
+				.attr('height', function(d) {
+					var start = yScale(new Date(d.startDate));
+					var end = yScale(new Date(d.endDate));
+					
+					if (start < 0){ 
+						start = 0; 
+					}
+					if(end > timelineFormatting.height){ 
+						end = timelineFormatting.height; 
+					}
+					
+					return end - start;
+				})
+				.on('mouseover', function(d)
+				{
+				    var mouse_coordinates;
+				    
+				    mouse_coordinates = d3.mouse(this);
+					tip.offset([mouse_coordinates[1] - d3.select(this).attr("y") - 8, mouse_coordinates[0] - d3.select(this).attr("x") - (d3.select(this).attr("width") / 2)]).show(d);
+					d3.event.stopPropagation();
+				})
+				.on('mouseout', function(d)
+				{
+					tip.hide(d);
+					d3.event.stopPropagation();
+				})
+				.on('click', function(d){
+					tip.hide(d);
+					parentScope.bCtrl.highlightBatch(d);
+					parentScope.$apply();
+					d3.event.stopPropagation();
+				})
+				.on('mousedown', function(d)
+				{
+					tip.hide(d);
+					d3.event.stopPropagation();
+				})
+				.on('mouseup', function(d)
+				{
+				    tip.show(d);
+					d3.event.stopPropagation();
+				})
+				.on('mousemove', function(d)
+				{
+				    var mouse_coordinates;
+				    
+				    mouse_coordinates = d3.mouse(this);
+				    tip.hide(d);
+					tip.offset([mouse_coordinates[1] - d3.select(this).attr("y") - 8, mouse_coordinates[0] - d3.select(this).attr("x") - (d3.select(this).attr("width") / 2)]).show(d);
+					d3.event.stopPropagation();
+				})
+				.style('fill', function(d) {return colorScale(d.curriculum ? d.curriculum.name : 'No curriculum');});
+		d3.selectAll('.rect')
+			.append('text')
+				.attr('y', function(d) { 
+					var y = yScale(new Date(d.startDate));
+					
+					if (y < 0){ 
+						y = 0; 
+					}
+					
+					return (y+25);
+				})
+				.attr('x', function(d) {return xScale(d.trainer ?  $scope.trainerColumnName(d.trainer) : 'No trainer')-7;})
+				.on('mouseover', function(d)
+				{
+				    var mouse_coordinates;
+				    
+				    mouse_coordinates = d3.mouse(this);
+					tip.offset([mouse_coordinates[1] - d3.select(this).attr("y"), mouse_coordinates[0] - d3.select(this).attr("x") - 8]).show(d);
+					d3.event.stopPropagation();
+				})
+				.on('mouseout', function(d)
+				{
+					tip.hide(d);
+					d3.event.stopPropagation();
+				})
+				.on('click', function(d){
+					tip.hide(d);
+					parentScope.bCtrl.highlightBatch(d);
+					parentScope.$apply();
+					d3.event.stopPropagation();
+				})
+				.on('mousedown', function(d)
+				{
+					tip.hide(d);
+					d3.event.stopPropagation();
+				})
+				.on('mouseup', function(d)
+				{
+				    tip.show(d);
+					d3.event.stopPropagation();
+				})
+				.on('mousemove', function(d)
+				{
+				    var mouse_coordinates;
+				    
+				    mouse_coordinates = d3.mouse(this);
+				    tip.hide(d);
+					tip.offset([mouse_coordinates[1] - d3.select(this).attr("y"), mouse_coordinates[0] - d3.select(this).attr("x") - 8]).show(d);
+					d3.event.stopPropagation();
+				})
+				.text(function(d) {return numWeeks(d.startDate,d.endDate) + " W E E K S";})
+					.attr("dy", 0)
+		
+		d3.selectAll('.rect')
+			.selectAll("text")
+				.call(wrap, 0.1);
+		
+		//Linewrap column names.
+		svg.selectAll('g.x.axis g text')
+			.attr('y', '-3.0em')
+			.call(wrap, 0.1);
+				
+		//Add between batch length to timeline
+		svg.append('g')
+			.attr('class','betweenbatches');
+
+		d3.select('.betweenbatches')
+			.selectAll('g')
+			.data(betweenBatches)
+			.enter()
+			.append('g')
+				.attr('class','between')
+			.append('line')
+				.attr('x1', function(d){return d.x;})
+				.attr('y1', function(d){return d.y1;})
+				.attr('x2', function(d){return d.x;})
+				.attr('y2', function(d){return d.y2;})
+				.style('stroke', 'black');
+		d3.selectAll('.between')
+			.append('text')
+				.attr('y', function(d) {return ((d.y1+d.y2)/2)+5;})
+				.attr('x', function(d) {return d.x+5;})
+				.text(function(d) {return d.length;});
 	}
 });
-
-//Generates the string used in the columns
-function trainerColumnName(trainer)
-{
-	return ("(" + trainer.trainerId + ")" + " " + trainer.firstName + " " + trainer.lastName);
-}
-
-// Draw timeline
-function projectTimeline(timelineFormatting, minDate, maxDate, yCoord, timelineData, parentScope, numWeeks, trainerNames){
-	
-	//Define Scales
-	var colorScale = d3.scale.category20();
-	
-	var yScale = d3.time.scale()
-		.domain([minDate, maxDate])
-		.range([0,timelineFormatting.height]);
-	
-	var xScale = d3.scale.ordinal()
-		.domain(trainerNames)
-		.rangePoints([timelineFormatting.xPadding, timelineFormatting.width - timelineFormatting.xPadding]);
-	
-	//Define axis
-	var yAxis = d3.svg.axis()
-		.scale(yScale)
-		.orient('left')
-		.tickSize(2);
-	
-	var xAxis = d3.svg.axis()
-		.scale(xScale)
-		.orient('top')
-		.tickSize(6,0)
-	
-	//Used to create line breaks in table word data.
-	var wrap = function (text, width) {
-		  text.each(function() {
-			    var el = d3.select(this),
-			        words = el.text().split(/\s+/).reverse(),
-			        word,
-			        line = [],
-			        lineNumber = 0,
-			        lineHeight = 1.1, // ems
-			        x = el.attr("x"),
-			        y = el.attr("y"),
-			        dy = parseFloat(el.attr("dy")),
-			        tspan = el.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
-			    
-			    while (word = words.pop()) {
-			      line.push(word);
-			      tspan.text(line.join(" "));
-			      if (tspan.node().getComputedTextLength() > width) {
-			        line.pop();
-			        tspan.text(line.join(" "));
-			        line = [word];
-			        tspan = el.append("tspan").attr("x", x).attr("y", y).attr("dy", lineNumber++ * lineHeight + dy + "em").text(word);
-			      }
-			    }
-			  });
-			}
-	
-	//Sort data for Timeline
-	
-	timelineData.sort(function(a,b){
-		if(new Date(a.startDate) < new Date(b.startDate)){
-			return -1;
-		}
-		else if(new Date(a.startDate) > new Date(b.startDate)){
-			return 1;
-		}
-		else{
-			return 0;
-		}
-	});
-	
-	//Create lines for between batches
-	var batchCount = {};
-	for(var x = 0; x < timelineData.length; x++){
-		
-		if(batchCount[timelineData[x].trainer ? trainerColumnName(timelineData[x].trainer) : 'No trainer'] === undefined){
-			batchCount[timelineData[x].trainer ? trainerColumnName(timelineData[x].trainer) : 'No trainer'] = [];
-		}
-		
-		batchCount[timelineData[x].trainer ? trainerColumnName(timelineData[x].trainer) : 'No trainer'].push(timelineData[x]);
-	}
-	
-	var betweenBatches = [];
-	
-	for(var trainer in batchCount){
-		if (batchCount.hasOwnProperty(trainer)){
-			for(x = 0; x < batchCount[trainer].length-1; x++){
-				var between = {x: xScale(batchCount[trainer][x].trainer ? trainerColumnName(batchCount[trainer][x].trainer) : 'No trainer'),
-						y1: yScale(new Date(batchCount[trainer][x].endDate)),
-						y2: yScale(new Date(batchCount[trainer][x+1].startDate)),
-						length:numWeeks(batchCount[trainer][x].endDate,batchCount[trainer][x+1].startDate)};
-				betweenBatches.push(between);
-			}
-		}
-	}
-	
-	var lanePadding = (xScale.range()[1]-xScale.range()[0])/2;
-	
-	//Create timeline
-    var svg = d3.select("#timeline");
-    svg.selectAll("*").remove();
-    
-    //Tooltip setup.
-	var tip = d3.tip()
-	  .attr('class', 'd3-tip')
-	  .html(function(d) {
-		  var msg = "";
-		  var startDate = new Date(d.startDate);
-		  var endDate = new Date(d.endDate);
-		  var days = ["Sun.", "Mon.", "Tue.", "Wed.", "Thu.", "Fri.", "Sat."];
-		  var months = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec."];
-		  
-		  msg += d.curriculum ? ("<span style='color:orange'>" + d.curriculum.name + "</span> Batch <br/>") : "<span style='color:red'>No curriculum</span> for this batch. <br/>";
-		  msg += "__________<br/>";
-		  msg += d.trainer ? ("Trainer:  <span style='color:gold'>" + d.trainer.firstName + " " + d.trainer.lastName + "</span> <br/>") : "<span style='color:red'>No trainer</span> for this batch. <br/>";
-		  msg += d.cotrainer ? ("Cotrainer:  <span style='color:gold'>" + d.cotrainer.firstName + " " + d.cotrainer.lastName + "</span> <br/>") : "<span style='color:red'>No cotrainer</span> for this batch. <br/>";
-		  msg += d.startDate ? ("Start Date:  <span style='color:gold'>" + days[startDate.getDay()] + ", " + months[startDate.getMonth()] + " " + startDate.getDate() + ", " + startDate.getFullYear() + "</span> <br/>") : "<span style='color:red'>No start date</span> for this batch. <br/>";
-		  msg += d.endDate ? ("End Date:  <span style='color:gold'>" + days[endDate.getDay()] + ", " + months[endDate.getMonth()] + " " + endDate.getDate() + ", " + endDate.getFullYear() + "</span> <br/>") : "<span style='color:red'>No end date</span> for this batch. <br/>";
-		  
-		  return msg;
-	  });
-	
-	svg = d3.select('#timeline')
-		.append('svg')
-			.attr('width',timelineFormatting.width + timelineFormatting.margin_left + timelineFormatting.margin_right)
-			.attr('height',timelineFormatting.height + timelineFormatting.margin_bottom + timelineFormatting.margin_top)
-		.append('g')
-			.attr('transform','translate('+timelineFormatting.margin_left+','+timelineFormatting.margin_top+')');
-			
-	svg.call(tip);
-	
-	svg.append('g')
-		.attr('class','x axis')
-		.call(xAxis);
-	
-	svg.append('g')
-		.attr('class','y axis')
-		.call(yAxis);
-	
-	//Add swimlanes to timeline
-	svg.append('g')
-		.attr('class','swimlanes')
-		
-	d3.select('.swimlanes')
-		.selectAll('line')
-		.data(trainerNames)
-		.enter()
-		.append('line')
-			.attr('x1', function(d){
-				var x = xScale(d)+lanePadding;
-				
-				return isNaN(x) ? 0 : x;
-			})
-			.attr('y1', 0)
-			.attr('x2', function(d){
-				var x = xScale(d)+lanePadding;
-				
-				return isNaN(x) ? 0 : x;
-			})
-			.attr('y2', timelineFormatting.height)
-			.attr('stroke','lightgray');
-	
-	//Add line for current date on timeline
-	svg.append('g')
-		.attr('class','currentdate')
-		
-	d3.select('.currentdate')
-		.append('line')
-			.attr('x1', 0)
-			.attr('x2', timelineFormatting.width)
-			.attr('y1', yScale(new Date()))
-			.attr('y2',yScale(new Date()))
-			.attr('stroke','#f26a25');
-
-	// Create line for zoompoint
-	svg.append('g')
-		.attr('class','zoompoint')
-		
-	d3.select('.zoompoint')
-		.append('line')
-			.attr('x1', 0)
-			.attr('x2', timelineFormatting.width)
-			.attr('y1', yCoord)
-			.attr('y2', yCoord)
-			.attr('stroke','#000000')
-			.attr('stroke-width', 1);
-	
-	//Add batches to timeline
-	var defs = svg.append("defs");
-
-	var filter = defs.append("filter")
-		.attr("id", "highlight")
-
-	filter.append("feGaussianBlur")
-		.attr("in", "SourceAlpha")
-		.attr("stdDeviation", 5)
-		.attr("result", "blur");
-	filter.append("feComponentTransfer")
-		.attr("in", "blur")
-		.attr("result","betterBlur")
-		.append("feFuncA")
-		.attr("type","linear")
-		.attr("slope","1.5")
-	filter.append("feFlood")
-		.attr("in", "betterBlur")
-		.attr("flood-color", "#f26a25")
-		.attr("result", "color");
-	filter.append("feComposite")
-		.attr("in", "color")
-		.attr("in2", "betterBlur")
-		.attr("operator", "in")
-		.attr("result", "colorBlur");
-	
-	var feMerge = filter.append("feMerge");
-	
-	feMerge.append("feMergeNode")
-		.attr("in", "colorBlur")
-	feMerge.append("feMergeNode")
-		.attr("in", "SourceGraphic");
-	  
-	//Normal stuff
-	svg.append('g')
-		.attr('class','rectangles');
-
-	d3.select('.rectangles')
-		.selectAll('g')
-		.data(timelineData)
-		.enter()
-		.append('g')
-			.attr('class','rect')
-		.append('rect')
-			.attr('id',function(d){return 'id'+d.id;})
-			.attr('y', function(d) {
-				var y = yScale(new Date(d.startDate));
-				
-				if (y < 0){ 
-					y = 0; 
-				}
-				
-				return y;
-			})
-			.attr('width', 32)
-			.attr('x', function(d) {return xScale(d.trainer ? trainerColumnName(d.trainer) : 'No trainer') - (d3.select(this).attr("width") / 2);})
-			.attr('height', function(d) {
-				var start = yScale(new Date(d.startDate));
-				var end = yScale(new Date(d.endDate));
-				
-				if (start < 0){ 
-					start = 0; 
-				}
-				if(end > timelineFormatting.height){ 
-					end = timelineFormatting.height; 
-				}
-				
-				return end - start;
-			})
-			.on('mouseover', function(d)
-			{
-			    var mouse_coordinates;
-			    
-			    mouse_coordinates = d3.mouse(this);
-				tip.offset([mouse_coordinates[1] - d3.select(this).attr("y") - 8, mouse_coordinates[0] - d3.select(this).attr("x") - (d3.select(this).attr("width") / 2)]).show(d);
-				d3.event.stopPropagation();
-			})
-			.on('mouseout', function(d)
-			{
-				tip.hide(d);
-				d3.event.stopPropagation();
-			})
-			.on('click', function(d){
-				tip.hide(d);
-				parentScope.bCtrl.highlightBatch(d);
-				parentScope.$apply();
-				d3.event.stopPropagation();
-			})
-			.on('mousedown', function(d)
-			{
-				tip.hide(d);
-				d3.event.stopPropagation();
-			})
-			.on('mouseup', function(d)
-			{
-			    tip.show(d);
-				d3.event.stopPropagation();
-			})
-			.on('mousemove', function(d)
-			{
-			    var mouse_coordinates;
-			    
-			    mouse_coordinates = d3.mouse(this);
-			    tip.hide(d);
-				tip.offset([mouse_coordinates[1] - d3.select(this).attr("y") - 8, mouse_coordinates[0] - d3.select(this).attr("x") - (d3.select(this).attr("width") / 2)]).show(d);
-				d3.event.stopPropagation();
-			})
-			.style('fill', function(d) {return colorScale(d.curriculum ? d.curriculum.name : 'No curriculum');});
-	d3.selectAll('.rect')
-		.append('text')
-			.attr('y', function(d) { 
-				var y = yScale(new Date(d.startDate));
-				
-				if (y < 0){ 
-					y = 0; 
-				}
-				
-				return (y+25);
-			})
-			.attr('x', function(d) {return xScale(d.trainer ?  trainerColumnName(d.trainer) : 'No trainer')-7;})
-			.on('mouseover', function(d)
-			{
-			    var mouse_coordinates;
-			    
-			    mouse_coordinates = d3.mouse(this);
-				tip.offset([mouse_coordinates[1] - d3.select(this).attr("y"), mouse_coordinates[0] - d3.select(this).attr("x") - 8]).show(d);
-				d3.event.stopPropagation();
-			})
-			.on('mouseout', function(d)
-			{
-				tip.hide(d);
-				d3.event.stopPropagation();
-			})
-			.on('click', function(d){
-				tip.hide(d);
-				parentScope.bCtrl.highlightBatch(d);
-				parentScope.$apply();
-				d3.event.stopPropagation();
-			})
-			.on('mousedown', function(d)
-			{
-				tip.hide(d);
-				d3.event.stopPropagation();
-			})
-			.on('mouseup', function(d)
-			{
-			    tip.show(d);
-				d3.event.stopPropagation();
-			})
-			.on('mousemove', function(d)
-			{
-			    var mouse_coordinates;
-			    
-			    mouse_coordinates = d3.mouse(this);
-			    tip.hide(d);
-				tip.offset([mouse_coordinates[1] - d3.select(this).attr("y"), mouse_coordinates[0] - d3.select(this).attr("x") - 8]).show(d);
-				d3.event.stopPropagation();
-			})
-			.text(function(d) {return numWeeks(d.startDate,d.endDate) + " W E E K S";})
-				.attr("dy", 0)
-	
-	d3.selectAll('.rect')
-		.selectAll("text")
-			.call(wrap, 0.1);
-	
-	//Linewrap column names.
-	svg.selectAll('g.x.axis g text')
-		.attr('y', '-3.0em')
-		.call(wrap, 0.1);
-			
-	//Add between batch length to timeline
-	svg.append('g')
-		.attr('class','betweenbatches');
-
-	d3.select('.betweenbatches')
-		.selectAll('g')
-		.data(betweenBatches)
-		.enter()
-		.append('g')
-			.attr('class','between')
-		.append('line')
-			.attr('x1', function(d){return d.x;})
-			.attr('y1', function(d){return d.y1;})
-			.attr('x2', function(d){return d.x;})
-			.attr('y2', function(d){return d.y2;})
-			.style('stroke', 'black');
-	d3.selectAll('.between')
-		.append('text')
-			.attr('y', function(d) {return ((d.y1+d.y2)/2)+5;})
-			.attr('x', function(d) {return d.x+5;})
-			.text(function(d) {return d.length;});
-}
