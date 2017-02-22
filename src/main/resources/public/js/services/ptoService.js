@@ -61,7 +61,7 @@ app.service('ptoService', function ($resource, $mdDialog) {
     }
 
     function setSigninStatus(isSignedIn) {
-      var user = GoogleAuth.currentUser.get();
+        // Do something
     }
 
     function updateSigninStatus(isSignedIn) {
