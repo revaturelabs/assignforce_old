@@ -523,9 +523,9 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
      		}
      		
      	}
-     	function success (){ //success toast here eventually... }
+     	function success (){ /* success toast here eventually...*/ }
 
-	 	function error(){ //failure toast here eventually... }
+	 	function error(){ /*failure toast here eventually...*/ }
     };
     
     /************************************************************/
