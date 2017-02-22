@@ -1,25 +1,11 @@
 
-    <md-toolbar accordion-dynamic layout="columns" md-ink-ripple="#ff0000" ng-class="{'active':$first}" style="padding: 20px">
-        Grad Summary for {{ rCtrl.year }}
-
-
-        <!--<md-menu md-position-mode="target-right target">-->
-            <!--&lt;!&ndash;<md-button class="md-icon-button">&ndash;&gt;-->
-                <!--&lt;!&ndash;<md-tooltip> Expand </md-tooltip>&ndash;&gt;-->
-                <!--&lt;!&ndash;<md-icon md-menu-origin class="material-icons"> file_download </md-icon>&ndash;&gt;-->
-            <!--&lt;!&ndash;</md-button>&ndash;&gt;-->
-            <!--<md-button ng-click="$mdMenu.open($event)" class="md-icon-button" aria-label="Open sample menu">-->
-                <!--<md-icon md-svg-icon="call:phone"></md-icon>-->
-            <!--</md-button>-->
-            <!--<md-menu-content>-->
-                <!--<md-menu-item><md-button ng-click="doSomething()">Do Something</md-button></md-menu-item>-->
-            <!--</md-menu-content>-->
-        <!--</md-menu>-->
-    </md-toolbar>
+<md-toolbar accordion-dynamic md-ink-ripple="#ff0000" ng-class="{'active':$first}" style="padding: 20px ">
+    Graduate Summary for {{ rCtrl.year }}
+</md-toolbar>
     <div class="content" >
-        <md-toolbar layout="columns" class="md-primary md-hue-2" style="padding: 20px">
-            <div>
-                <span style="padding: 20px"> Graduates summary for {{ rCtrl.year }} </span>
+        <md-toolbar layout="columns" class="md-primary md-hue-2">
+            <div class="md-toolbar-tools">
+                <span> Graduate Summary for {{ rCtrl.year }} </span>
             </div>
             <span flex> </span>
             <md-menu md-position-mode="target-right target">
@@ -27,7 +13,7 @@
                     <md-tooltip class="md-title"> Settings </md-tooltip>
                     <md-icon md-menu-origin md-svg-icon="img/ic_settings_white_24px.svg"> </md-icon>
                 </md-button>
-                <md-menu-content class="md-padding">
+                <md-menu-content width="4" class="md-padding">
                     <md-menu-item>
                         <md-input-container>
                             <label> Year </label>
@@ -37,20 +23,14 @@
                     <md-menu-item>
                         <md-input-container>
                             <label> Graduates per batch </label>
-                            <input ng-model="rCtrl.graduates" type="number">
+                            <input ng-model="rCtrl.incoming" type="number">
                         </md-input-container>
                     </md-menu-item>
                 </md-menu-content>
-                <!--<md-button ng-click="null" ng-csv="rCtrl.export()" filename="{{rCtrl.year}}report.csv" class="md-icon-button">-->
-                    <!--<md-tooltip> Export to CSV </md-tooltip>-->
-                    <!--<md-icon md-menu-origin class="material-icons"> file_download </md-icon>-->
-                <!--</md-button>-->
             </md-menu>
         </md-toolbar>
         <div ng-if="rCtrl.batches != undefined" class="md-padding">
-
             <md-table-container>
-                <get-Data></get-Data>
                 <table md-table class="gradTable">
                     <thead md-head md-order="rCtrl.currOrder">
                     <tr md-row>
@@ -73,8 +53,6 @@
                     </tbody>
                 </table>
             </md-table-container>
-
-
         </div>
 
         <div ng-if="rCtrl.batches == undefined" layout="column" layout-wrap layout-align="center center">

@@ -19,7 +19,9 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
 
     var rc = this;
     $scope.data = [];
+    $scope.newTable = [];
     var chart;
+    var chart2;
     // $scope.tempTtl = 10;
     // rc.tempp = 10;
     $scope.tempTtl = 10;
@@ -128,7 +130,7 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
     };
     rc.currSummary2 = function(curriculum) {
 
-        var summary = [];
+        var summary2 = [];
         var total2;
         var date;
 
@@ -153,10 +155,10 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
 
 
             }
-            summary.push(total2);
+            summary2.push(total2);
         }
 
-        return summary;
+        return summary2;
     };
 
 
@@ -719,6 +721,7 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
     batchService.getAll(function(response) {
         rc.batches = response;
         data = rc.graphData();
+        newTable = rc.graphData2();
         // data.push(tData);
     }, function() {
         rc.showToast("Could not fetch batches.");
@@ -763,6 +766,28 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
     };
 
 
+    rc.graphData2 = function() {
+        var series2 = [];
+
+        var curricula2 = rc.curricula;
+
+        angular.forEach(curricula2, function(curr) {
+            var empty2 = {};
+            var data = [];
+            empty2.name = curr.name;
+            rc.currSummary2(curr).forEach(function(month) {
+                data.push(month);
+            });
+
+            empty2.data = data;
+            series2.push(empty2);
+        });
+
+        return series2;
+    };
+
+
+
 
 
     /**************************************************************************
@@ -805,88 +830,75 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
     };
 
 
-
-
-    rc.tester = function(){
-        chart.addSeries(tData);
-    };
-
-
-    $scope.summer = function (count) {
-        $scope.myNumber = count;
-    };
-    $scope.summer2 = function (count) {
-        $scope.myNumber = count;
-    };
-
-
-
-});
-
-assignforce.directive('hcNew', function() {
-    return {
-        restrict: 'C',
-        replace: true,
-        scope: {
-            items: '='
-        },
-        controller: function($scope, $element, $attrs) {
-           // do something
-
-        },
-        template: '<div id="container" style="margin: 0 auto">not working</div>',
-        link: function(scope, element, attrs) {
-            var chart = new Highcharts.Chart({
-                chart: {
-                    renderTo: 'container',
-                    plotBackgroundColor: null,
-                    plotBorderWidth: null,
-                    plotShadow: false
-                },
+    $scope.myGraph2 = function() {
+        chart2 = new Highcharts.chart('container2', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Trainee Summary'
+            },
+            xAxis: {
+                categories: monthList,
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
                 title: {
-                    text: 'Browser market shares at a specific website, 2010'
-                },
-                tooltip: {
-                    pointFormat: '{series.name}: <b>{point.percentage}%</b>',
-                    percentageDecimals: 1
-                },
-                plotOptions: {
-                    pie: {
-                        animation: true,
-                        allowPointSelect: true,
-                        cursor: 'pointer',
-                        dataLabels: {
-                            enabled: true,
-                            color: '#000000',
-                            connectorColor: '#000000',
-                            formatter: function() {
-                                return '<b>' + this.point.name + '</b>: ' + this.percentage + ' %';
-                            }
-                        }
-                    }
-                },
-                series: [{
-                    type: 'pie',
-                    name: 'Browser share',
-                    data: scope.items
-                }]
-            }, function(chart) {
-                $('#addPoint').click(function() {
-                    chart.series[0].addPoint(1);
-                });
-            });
+                    text: 'Trainees'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:15px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: newTable
+        });
+    };
 
-            scope.$watch("items", function(newValue) {
-                chart.series[0].setData(newValue, true);
-            }, true);
 
-        }
-    }
+
 });
 
 
 
 
+assignforce.directive('getData', function() {
+    return {
+        restrict: 'ACE',
+        scope: true,
+        template: '<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>',
+        bindToController: true,
+        controller: function($scope) {
+            $scope.myGraph();
+        }
+    };
+});
+
+
+
+
+assignforce.directive('getTrainData', function() {
+    return {
+        restrict: 'ACE',
+        scope: true,
+        template: '<div id="container2" style="min-width: 310px; height: 400px; margin: 0 auto"></div>',
+        bindToController: true,
+        controller: function($scope) {
+            $scope.myGraph2();
+        }
+    };
+});
 
 
 
@@ -942,18 +954,6 @@ assignforce.directive('getBatchGenTemplate', function() {
     };
 });
 
-
-assignforce.directive('getData', function() {
-    return {
-        restrict: 'ACE',
-        scope: true,
-        template: '<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>',
-        bindToController: true,
-        controller: function($scope) {
-            $scope.myGraph();
-        }
-    };
-});
 
 
 assignforce.directive('accordionDynamic', function() {

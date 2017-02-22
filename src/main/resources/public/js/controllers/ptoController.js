@@ -4,11 +4,7 @@ assignforce.controller("ptoCtrl", function ($scope, $mdDialog, ptoService) {
 
     var ptoc = this;
 
-    try{
-        ptoService.authorize();
-    } catch(error){
-
-    }
+    ptoService.authorize();
 
     ptoc.cancel = function () {
         $mdDialog.cancel();
@@ -24,7 +20,7 @@ assignforce.controller("ptoCtrl", function ($scope, $mdDialog, ptoService) {
 
     ptoc.send = function (isValid) {
         if(isValid){
-            ptoService.addPto(ptoc.trainer, ptoc.startDate, ptoc.endDate);
+            ptoService.handleAuthClick(ptoc.trainer, ptoc.startDate, ptoc.endDate);
         }
     };
 });
