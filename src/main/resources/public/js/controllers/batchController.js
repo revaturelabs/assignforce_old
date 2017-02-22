@@ -174,7 +174,7 @@
         
             // defaults name to _curriculum_ (_start date_) if both are chosen and name is not
         bc.defaultName = function(){
-            if ( (bc.batch.curriculum != undefined) && (bc.batch.startDate != undefined) && (bc.batch.name == undefined) ) {
+            if ( (bc.batch.curriculum != undefined) && (bc.batch.startDate != undefined) ) {
                 var start = new Date(bc.batch.startDate);
                 var currName;
                 bc.curricula.forEach( function(curr){
@@ -183,7 +183,7 @@
                     }
                 });
                 bc.batch.name = currName + " (" + (start.getMonth() + 1) + "/" + start.getDate() + ")";
-            } 
+        	}
         };
 
         /*******************************************************************/
@@ -300,6 +300,7 @@
         // edit batch
         bc.edit = function( batch ){
             bc.changeState( "edit", batch );
+            bc.updateTrainers(bc.trainers,bc.batch.startDate,bc.batch.endDate);
             $window.scrollTo(0, 0);
         };
 
@@ -308,6 +309,8 @@
               // clone batch
         bc.clone = function( batch ){
             bc.changeState( "clone", batch );
+            bc.updateTrainers(bc.trainers,bc.batch.startDate,bc.batch.endDate);
+            $window.scrollTo(0, 0);
         };
 
         /*******************************************************************/
