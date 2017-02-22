@@ -91,7 +91,8 @@
                 "Curriculum",
                 "Trainer",
                 "Cotrainer",
-                "Location",
+                //"Location",
+                "Building",
                 "Room",
                 "Start date",
                 "End date"
@@ -101,11 +102,13 @@
                 var curriculum = ( batch.curriculum ) ? batch.curriculum.name                                      : "";
                 var trainer    = ( batch.trainer    ) ? batch.trainer.firstName + " " + batch.trainer.lastName     : "";
                 var cotrainer  = ( batch.cotrainer  ) ? batch.cotrainer.firstName + " " + batch.cotrainer.lastName : "";
-                var location   = ( batch.location   ) ? batch.location.name                                        : "";
+                //var location   = ( batch.room       ) ? batch.room.building.location.name				           : "";
+                //This will only work if location is an object and not an int (unless you want to see an int)
+                var building   = ( batch.room       ) ? batch.room.building.name								   : "";
                 var room       = ( batch.room       ) ? batch.room.roomName                                        : "";
                 var startDate  = ( batch.startDate  ) ? $filter( "date" )( batch.startDate, "MM/dd/yyyy" )         : "";
                 var endDate    = ( batch.endDate    ) ? $filter( "date" )( batch.endDate, "MM/dd/yyyy" )           : "";
-                formatted.push( [ name, curriculum, trainer, cotrainer, location, room, startDate, endDate ] );
+                formatted.push( [ name, curriculum, trainer, cotrainer, /*location, */building, room, startDate, endDate ] );
             });
             
             return formatted;

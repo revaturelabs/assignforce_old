@@ -90,8 +90,8 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 				controller : "roomDialogCtrl", //roomDialogController.js
 				controllerAs : "rdCtrl",
 				locals : {
-					building : lc.selectedList[0], 
-					room : roomService.getAlmostEmptyRoom(lc.selectedList[0].id),
+					building : lc.selectedList[0],//just a building object 
+					room : roomService.getAlmostEmptyRoom(lc.selectedList[0].id), //referencing building object
 					state : "create"
 				},
 				bindToController : true,
@@ -310,6 +310,14 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 		lc.selectedList = [];
 		locationService.getAll(function(response) {
 			lc.locations = response;
+			lc.locations.forEach(function(location){
+				location.buildings.forEach(function(building){
+					building.location = location;
+					building.rooms.forEach(function(room){
+						room.building = building;
+					});
+				}); 
+			});
 		}, function() {
 			lc.showToast("Could not fetch locations.");
 		});
@@ -322,7 +330,15 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 	// data gathering
 	locationService.getAll(function(response) {
 		lc.locations = response;
-	}, function() {
+		lc.locations.forEach(function(location){
+			location.buildings.forEach(function(building){
+				building.location = location;
+				building.rooms.forEach(function(room){
+					room.building = building;
+				});
+			}); 
+		});
+	}, function(error) {
 		lc.showToast("Could not fetch locations.");
 	});
 
