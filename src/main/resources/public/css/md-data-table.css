@@ -14,6 +14,10 @@ md-edit-dialog {
   border-radius: 2px;
   cursor: default;
 }
+.nonwhite{
+	background-color: #c1d6e6!important;
+}
+
 md-edit-dialog > .md-content {
   padding: 16px 24px 0;
 }

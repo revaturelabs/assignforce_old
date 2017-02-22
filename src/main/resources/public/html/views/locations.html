@@ -30,7 +30,7 @@
             </md-button>
 
             <md-button class="md-icon-button" ng-click="lCtrl.deleteSelected()">
-                <md-tooltip class="md-title"> Delete selected </md-tooltip>
+                <md-tooltip class="md-title"> Inactivate selected </md-tooltip>
                 <md-icon md-svg-icon="img/ic_delete_white_24px.svg"> </md-icon>
             </md-button>
 
@@ -91,7 +91,7 @@
 
                         <span flex> </span>
 
-                        <md-checkbox md-no-ink ng-checked="lCtrl.exists(building)" 
+                        <md-checkbox aria-label="Building check" md-no-ink ng-checked="lCtrl.exists(building)" 
                         	ng-click="lCtrl.toggle(building)" ng-hide="lCtrl.selectedBuilding == building"> </md-checkbox>
                         
                  
