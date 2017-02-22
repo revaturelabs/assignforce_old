@@ -347,9 +347,6 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
     rc.assignCurr = function(bType, index){
 
         rc.cardArr[index].batchType = bType;
-        console.log("B Type = " + rc.cardArr[index].batchType);
-        console.log("B Type = " + bType.text);
-        console.log("B Type = " + bType.value);
 
         if(rc.cardArr[index].requiredGrads > 0) {
 
@@ -712,7 +709,6 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
     // var minBatchSize;
     settingService.getById(10, function(response){
         rc.minBatchSize = response.settingValue;
-        console.log("Min Batch Size = " + rc.minBatchSize)
     }, function(){
         console.log("failure")
     });
@@ -721,7 +717,6 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
     // var maxBatchSize;
     settingService.getById(11, function(response){
         rc.maxBatchSize = response.settingValue;
-        console.log("Max Batch Size = " + rc.maxBatchSize)
     }, function(){
         console.log("failure")
     });
@@ -745,9 +740,7 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
     // gets all trainers and stores them in variable trainers
     trainerService.getAll(function(response) {
         rc.trainers = response;
-        // console.log(rc.trainers);
         var jString = JSON.stringify(rc.trainers);
-        // console.log(jString);
     }, function() {
         rc.showToast("Could not fetch trainers.");
     });
@@ -821,33 +814,15 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
             },
             series: data
         });
-        // $scope.$watch("data", function(newValue) {
-        //     chart.series[0].setData(newValue, true);
-        // }, true);
     };
 
-
-    // $scope.$watch(data, function(){
-    //
-    //     }
-    // );
 
 
 
     rc.tester = function(){
-        console.log(data);
-        // chart.redraw();
         chart.addSeries(tData);
-        // chart.series[0].setData(data,true);
-        // $scope.data.push(tData);
-        // chart.redraw();
-        // console.log("Test = " + chart.series.length);
-        // chart.series.push(tData, true);
-        // data.push(tData);
-        console.log(data);
     };
 
-    // $scope.myNumber = 10;
 
     $scope.summer = function (count) {
         $scope.myNumber = count;
@@ -856,47 +831,6 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
         $scope.myNumber = count;
     };
 
-
-    /**************************************************************************
-     *
-     */
-    // rc.chartOptions = {
-    //     chart: {
-    //         type: 'column'
-    //     },
-    //     title: {
-    //         text: 'Graduate Summary'
-    //     },
-    //     xAxis: {
-    //         categories: monthList,
-    //         crosshair: true
-    //     },
-    //     yAxis: {
-    //         min: 0,
-    //         title: {
-    //             text: 'Graduates'
-    //         }
-    //     },
-    //     tooltip: {
-    //         headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-    //         pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-    //         '<td style="padding:0"><b>{point.y}</b></td></tr>',
-    //         footerFormat: '</table>',
-    //         shared: true,
-    //         useHTML: true
-    //     },
-    //     plotOptions: {
-    //         column: {
-    //             pointPadding: 0.2,
-    //             borderWidth: 0
-    //         }
-    //     },
-    //     series: rc.graphData()
-    // };
-    //
-    //
-    //
-    // $scope.myTest = 'container2';
 
 
 });
@@ -909,12 +843,11 @@ assignforce.directive('hcNew', function() {
             items: '='
         },
         controller: function($scope, $element, $attrs) {
-            console.log(2);
+           // do something
 
         },
         template: '<div id="container" style="margin: 0 auto">not working</div>',
         link: function(scope, element, attrs) {
-            console.log(3);
             var chart = new Highcharts.Chart({
                 chart: {
                     renderTo: 'container',
