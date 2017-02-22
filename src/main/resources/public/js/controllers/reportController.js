@@ -12,26 +12,13 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
 
     $scope.limitedIdeas = limitToFilter($scope.ideas, 2);
 
-
-
-
-
-
     var rc = this;
     $scope.data = [];
     $scope.newTable = [];
     var chart;
     var chart2;
-    // $scope.tempTtl = 10;
-    // rc.tempp = 10;
     $scope.tempTtl = 10;
-    // var tempTtl = 2;
     rc.tempp = 10;
-
-    var tData = {"name":".Nate","data":[45,18,32,0,16,0,0,15,0,42,15,0]};
-
-
-
 
     // functions
     // calls showToast method of aCtrl
@@ -114,14 +101,7 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
                     (date.getFullYear() == rc.year) &&
                     (rc.batches[x]['curriculum'].currId == curriculum.currId)) {
                     total += rc.graduates;
-                    // total += rc.tempp;
-                    // total += tempTtl;
-                    // total += $scope.tempTtl;
-                    // total += $scope.myNumber;
                 }
-
-
-
             }
             summary.push(total);
         }
@@ -146,18 +126,10 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
                     (date.getFullYear() == rc.year) &&
                     (rc.batches[x]['curriculum'].currId == curriculum.currId)) {
                     total2 += rc.incoming;
-                    // total += rc.tempp;
-                    // total += tempTtl;
-                    // total += $scope.tempTtl;
-                    // total += $scope.myNumber;
                 }
-
-
-
             }
             summary2.push(total2);
         }
-
         return summary2;
     };
 
@@ -208,9 +180,6 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
                 date = new Date(batch.endDate);
                 if ((date.getMonth() == month) && (date.getFullYear() == rc.year) && (batch.curriculum)) {
                     total += rc.graduates;
-                    // total += tempTtl;
-                    // total += $scope.tempTtl;
-                    // total += $scope.myNumber;
                 }
 
             });
@@ -908,11 +877,6 @@ assignforce.directive('getGradTableTemplate', function() {
     return {
         restrict: 'ACE',
         scope: true,
-        // link: function($scope) {
-        //     // $scope.title = 'Space Widgets';
-        //     $scope.tempTtl = 50;
-        //     // $scope.visible = false;
-        // },
         templateUrl: "html/templates/gradTableTemplate.html",
         bindToController: true
     };
@@ -923,11 +887,6 @@ assignforce.directive('getGradGraphTemplate', function() {
     return {
         restrict: 'ACE',
         scope: true,
-        // link: function($scope) {
-        //     // $scope.title = 'Space Widgets';
-        //     $scope.tempTtl = 50;
-        //     // $scope.visible = false;
-        // },
         templateUrl: "html/templates/gradGraphTemplate.html",
         bindToController: true
     };
@@ -965,77 +924,8 @@ assignforce.directive('accordionDynamic', function() {
                 ele.toggleClass('active');
                 ele.next('.content').stop().slideToggle();
                 ele.parents('md-card').siblings().find('md-toolbar').removeClass('active');
-                // ele.parents('md-card').siblings().find('.content').slideUp();
                 return false;
             });
         }
     }
 });
-
-
-
-// assignforce.directive('hcPie', function() {
-//     return {
-//         restrict: 'C',
-//         replace: true,
-//         scope: true,
-//         controller: function($scope, $element, $attrs) {},
-//         template: '<div id="container2" style="margin: 0 auto">not working</div>',
-//         link: function($scope, element, attrs) {
-//             Highcharts.Chart({
-//                 chart: {
-//                     renderTo: $scope.myTest,
-//                     plotBackgroundColor: null,
-//                     plotBorderWidth: null,
-//                     plotShadow: false,
-//                     type: 'pie'
-//                 },
-//                 title: {
-//                     text: 'Browser market shares January, 2015 to May, 2015'
-//                 },
-//                 tooltip: {
-//                     pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-//                 },
-//                 plotOptions: {
-//                     pie: {
-//                         allowPointSelect: true,
-//                         cursor: 'pointer',
-//                         dataLabels: {
-//                             enabled: true,
-//                             format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-//                             style: {
-//                                 color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-//                             }
-//                         }
-//                     }
-//                 },
-//                 series: [{
-//                     name: 'Brands',
-//                     colorByPoint: true,
-//                     data: [{
-//                         name: 'Microsoft Internet Explorer',
-//                         y: 56.33
-//                     }, {
-//                         name: 'Chrome',
-//                         y: 24.03,
-//                         sliced: true,
-//                         selected: true
-//                     }, {
-//                         name: 'Firefox',
-//                         y: 10.38
-//                     }, {
-//                         name: 'Safari',
-//                         y: 4.77
-//                     }, {
-//                         name: 'Opera',
-//                         y: 0.91
-//                     }, {
-//                         name: 'Proprietary or Undetectable',
-//                         y: 0.2
-//                     }]
-//                 }]
-//             });
-//         }
-//
-//     }
-// });
