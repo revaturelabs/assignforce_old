@@ -55,10 +55,6 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 		else if (!(Array.isArray(lc.selectedList[0].buildings))) {
 			lc.showToast("Please select a location.");
 		} else {
-			console.log("Location");
-			console.log(lc.selectedList[0]);
-			console.log("Building");
-			console.log(buildingService.getAlmostEmptyBuilding(lc.selectedList[0].id));
 			$mdDialog.show({
 				templateUrl : "html/templates/buildingTemplate.html",
 				controller : "bldgDialogCtrl", //bldgDialogController.js

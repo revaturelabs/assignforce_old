@@ -122,13 +122,9 @@
                     room.building.rooms = [];                    
                     room.building.location = temp;
                     room.building.location.buildings = [];
-                    console.log("temp");
-                    console.log(temp);
                     
                     roomService.update( room, function(){
-                    	//console.log("Room SUCCESS");
 		            }, function(){
-		            	//console.log("Room FAILURE");
 		                $mdDialog.cancel();
 		            });
                 });
@@ -140,14 +136,10 @@
                  * inactivation of the rooms
                  */
                 //elem.location = temp;
-                console.log("BUILDING");
-                console.log(elem);
                 //elem.location.buildings = [];
                 elem.rooms = [];
-                buildingService.update( elem, function(){ 
-                	//console.log("Building SUCCESS");
+                buildingService.update( elem, function(){
                 }, function(){
-                	//console.log("Building FAILURE");
                     $mdDialog.cancel();
                 });
                 dc.deleteHelper(delList);
