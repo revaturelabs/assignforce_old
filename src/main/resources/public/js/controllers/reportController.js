@@ -464,7 +464,7 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
     rc.createBatchClick = function( index ) {
 
         // Create 'can submit' flag here.  '0' implies successful submit, '1' implies submission failure. Default to 1 value.
-        var canSubmit = 1;
+        var canSubmit;
 
         // Determines whether or not the user is allowed to create batches.
         canSubmit = rc.submittionValidityAssertion( index );
@@ -495,17 +495,14 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
                 //Create batch method called here...
                 batchService.create(rc.newBatch, success, error);
             }
-
-            function success ( ) {
+        }
+        function success ( ) {
                 $scope.$parent.aCtrl.showToast("Successfully created Batch.");
             }
 
             function error ( ) {
                 $scope.$parent.aCtrl.showToast("Failed to created Batch.");
             }
-
-        }
-
     };
 
     /************************************************************/
@@ -585,7 +582,7 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
     rc.createAllBatchClick = function(){
 
         // Create 'can submit' flag here.  '0' implies successful submit, '1' implies submission failure. Default to 1 value.
-        var canSubmit = 1;
+        var canSubmit;
 
         for ( var index in rc.cardArr ) {
 
@@ -620,15 +617,14 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
                 }
                 canSubmit = 1;
             }
-
-            function success (){
+        }
+        function success (){
                 rc.showToast("Successfully created Batch.");
             }
 
             function error(){
                 rc.showToast("Failed to created Batch.");
             }
-        }
     };
 
 
@@ -740,7 +736,6 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
     // gets all trainers and stores them in variable trainers
     trainerService.getAll(function(response) {
         rc.trainers = response;
-        var jString = JSON.stringify(rc.trainers);
     }, function() {
         rc.showToast("Could not fetch trainers.");
     });
@@ -774,7 +769,7 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
     /**************************************************************************
      *
      */
-    $scope.myGraph = function() {;
+    $scope.myGraph = function() {
         chart = new Highcharts.chart('container', {
             chart: {
                 type: 'column'
