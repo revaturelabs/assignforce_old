@@ -104,18 +104,16 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
 
     //add a skill to the current trainer
     pc.addSkill = function (skill) {
-        console.log(skill);
         for(var i = 0; i < pc.skills.length; i++){
             if(pc.skills[i].name == skill){
                 pc.trainer.skills.push(pc.skills[i]);
-                console.log(pc.trainer.skills);
                 break;
             }
         }
 
-        for(var i = 0; i < pc.skillsList.length; i++){
-            if(pc.skillsList[i] == skill){
-                pc.skillsList.splice(i, 1);
+        for(var index = 0; index < pc.skillsList.length; index++){
+            if(pc.skillsList[index] == skill){
+                pc.skillsList.splice(index, 1);
                 break;
             }
         }
@@ -254,7 +252,6 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
                 }
                 status = true;
             }
-            console.log(pc.skillsList);
         }, function () {
             pc.showToast("Could not fetch skills.");
         });
