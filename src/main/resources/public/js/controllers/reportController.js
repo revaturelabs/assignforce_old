@@ -227,10 +227,9 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
          * 					This result should be rounded up to accommodate for the remainder.
          */
         
-    	if (( neededBatches > Math.floor(neededBatches)) && (neededBatches < Math.ceil(neededBatches))){  
+    	if ( ( neededBatches > Math.floor( neededBatches ) ) && ( neededBatches < Math.ceil(neededBatches ) ) ) {
     		neededBatches = Math.ceil( neededBatches ); 
     	}
-        
     	
     	/**  Sets the reportsController's 'requiredBatches' data value in each index 
          * 		of the 'cardArr' to the computed 'neededBatches' values.
@@ -545,7 +544,7 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     // Reports Controller Data members
     
     rc.year = new Date().getFullYear();
-
+    
     //The number of graduates.
     rc.graduates = 15;
 
@@ -612,6 +611,21 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     /*************************************************************/
     /*************************************************************/
 
+    settingService.getById(10, function(response){
+		rc.minBatchSize = response.settingValue;
+	}, function(){
+		console.log("failure")
+	});
+
+
+	settingService.getById(11, function(response){
+		rc.maxBatchSize = response.settingValue;
+	}, function(){
+		console.log("failure")
+	});
+	
+	/*************************************************************/
+	
     // data gathering
     batchService.getAll(function (response) {
         rc.batches = response;
