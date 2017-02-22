@@ -600,18 +600,6 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 
     /*************************************************************/
     /*************************************************************/
-
-    settingService.getById(10, function(response){
-		rc.minBatchSize = response.settingValue;
-	}, function(){
-	});
-
-
-	settingService.getById(11, function(response){
-		rc.maxBatchSize = response.settingValue;
-	}, function(){
-
-	});
 	
 	/*************************************************************/
 	
