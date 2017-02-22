@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 @ComponentScan(basePackages="com.revature.assignforce.service")
 public class S3CredentialsCtrl {
 
-	
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveCredentials() {
 		String s3ID = System.getenv("L_ID");

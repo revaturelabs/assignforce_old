@@ -3,7 +3,6 @@
 
     assignforce.controller( "trainerCtrl", function( $scope, $mdDialog, $mdToast, trainerService, s3Service, $location ) {
         var tc = this;
-        // console.log("start trainers")
 
           // functions
             // calls showToast method of aCtrl
@@ -123,6 +122,10 @@
                 bindToController: true,
                 clickOutsideToClose: true
             });
+        }
+
+        tc.hideCalendar = function(){
+            $mdDialog.cancel();
         }
 
         tc.showPTODialog = function(){

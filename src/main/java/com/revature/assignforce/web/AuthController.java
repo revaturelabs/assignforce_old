@@ -13,9 +13,6 @@ import java.io.IOException;
 @RequestMapping(value = "/api/v2")
 public class AuthController {
 
-
-
-
 	@RequestMapping(value="/authorize",method=RequestMethod.GET)
 	public void initSetup(@RequestParam String redirect_url, HttpSession session, HttpServletResponse response) throws IOException{
 		String sToken = (String) session.getAttribute("token");
@@ -35,7 +32,6 @@ public class AuthController {
 	
 	@RequestMapping(value="/token")
 	public void getToken(@RequestParam(required = false) String token, HttpSession session, HttpServletResponse response) throws IOException {
-
 
 		session.setAttribute("token", token);
 		String redirect = (String) session.getAttribute("redirect");
