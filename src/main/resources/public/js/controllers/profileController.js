@@ -123,8 +123,8 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
 
     //remove a trainer skill on the bottom
     pc.removeSkill = function (skill) {
-        for(var i = 0; i < pc.skillsList.length; i++){
-            if(pc.trainer.skills[i].name == skill.name){
+        for(var i = 0; i < pc.trainer.skills.length; i++){
+            if(pc.trainer.skills[i] == skill){
                 pc.skillsList.push(skill.name);
                 pc.trainer.skills.splice(i, 1);
                 break;
