@@ -15,8 +15,9 @@
 
             </div>
         </md-toolbar>
-        <div ng-if="rCtrl.batches != undefined" class="md-padding" layout="row">
-            <md-content flex="80" class="md-padding" layout-xs="column" layout="row">
+<!--<div class="content" >-->
+        <div ng-if="rCtrl.batches != undefined" class="md-padding" layout="row" >
+            <md-content flex="80" class="md-padding content" layout-xs="column" layout="row">
                 <div flex-xs="" flex-gt-xs="20" layout="column" ng-repeat="n in rCtrl.cardArr track by $index">
                     <md-card md-theme="{{ showDarkTheme ? 'dark-purple' : 'default' }}" md-theme-watch="">
                         <md-card-content class="md-padding" layout="column">
@@ -102,12 +103,15 @@
                         </md-card-content>
                     </md-card>
                 </div>
+
+<div ng-if="rCtrl.batches == undefined" layout="column" layout-wrap layout-align="center center">
+    <div flex="100"> &nbsp; </div>
+    <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
+    <div flex="100"> &nbsp; </div>
+</div>
             </md-content>
-            <div ng-if="rCtrl.batches == undefined" layout="column" layout-wrap layout-align="center center">
-                <div flex="100"> &nbsp; </div>
-                <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
-                <div flex="100"> &nbsp; </div>
-            </div>
         </div>
+<!--</div>-->
+
     <!--</md-content>-->
 <!--</md-card>-->

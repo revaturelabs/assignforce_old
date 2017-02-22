@@ -1,13 +1,12 @@
-<md-panel>
-    <md-content>
+
         <md-toolbar layout="columns" class="md-primary md-hue-2">
             <div class="md-toolbar-tools">
-                <span> Graduates summary for {{ rCtrl.year }} </span>
+                <span> Graduate Summary for {{ rCtrl.year }} </span>
             </div>
         </md-toolbar>
         <md-content>
             <div ng-if="rCtrl.batches != undefined">
-                <!--<get-Data></get-Data>-->
+                <get-Data></get-Data>
             </div>
             <div ng-if="rCtrl.batches == undefined" layout="column" layout-wrap layout-align="center center">
                 <div flex="100"> &nbsp; </div>
@@ -15,5 +14,3 @@
                 <div flex="100"> &nbsp; </div>
             </div>
         </md-content>
-    </md-content>
-</md-panel>
