@@ -147,7 +147,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 					lc.showToast("Failed to update location.");
 				});
 			}
-			//Now we check if there's a list of rooms (only buildings got those)
+			//Edit Building
 			else if(Array.isArray(lc.selectedList[0].rooms)){
 				$mdDialog.show({
 					templateUrl : "html/templates/buildingTemplate.html",
@@ -166,7 +166,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 					lc.showToast("Failed to update building.");
 				});
 			}
-			
+			//Edit Room
 			else{
 				$mdDialog.show({
 					templateUrl : "html/templates/roomTemplate.html",
@@ -193,7 +193,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 		}
 	};
 
-	// delete location
+	// delete Room/Building/Location
 	lc.deleteSelected = function() {
 		var summary = lc.categorizeSelected();
 		$mdDialog.show({
@@ -208,11 +208,11 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 			bindToController : true,
 			clickOutsideToClose : true
 	}).then(function() {
-			lc.showToast(lc.formatMessage(summary) + " deleted.");
-			lc.showToast("Item deleted.");
+			lc.showToast(lc.formatMessage(summary) + " inactivated.");
+			lc.showToast("Item inactivated.");
 			lc.repull();
 		}, function() {
-			lc.showToast("Failed to delete rooms/buildings/locations.");
+			lc.showToast("Failed to inactivate rooms/buildings/locations.");
 		});
 	};
 
