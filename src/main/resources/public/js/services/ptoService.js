@@ -22,11 +22,7 @@ app.service('ptoService', function ($resource, $mdDialog) {
         }
 
         function handleAuthResult(authResult){
-            // if (authResult){
-
-            // 	throw "Failed to authorize";
-            // }
-            console.log(authResult);
+            // do something
         }
     }
 
