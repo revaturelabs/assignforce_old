@@ -1,43 +1,61 @@
-<div id="accordionDynamic2" class="accordionWrap" ng-if="rCtrl.batches != undefined">
-    <md-card class="accordion-block" ng-class="{'active-block':$first}">
-        <md-content >
-            <!--<input type="text" ng-model="rCtrl.tempp = 50">-->
-            <get-grad-table-template></get-grad-table-template>
-        </md-content>
-    </md-card>
-
-    <md-card class="accordion-block" ng-class="{'active-block':$first}">
-        <md-content>
-            <get-incoming-table-template></get-incoming-table-template>
-        </md-content>
-    </md-card>
-
-    <md-card class="accordion-block" ng-class="{'active-block':$first}">
-        <md-content>
-            <get-batch-gen-template></get-batch-gen-template>
-        </md-content>
-    </md-card>
-
-</div><br><br><br>
-
-
-<!--Graduates Summary Graph -->
-<md-card>
-    <md-toolbar layout="columns" class="md-primary md-hue-2">
+<md-card md-whiteframe="8" ng-cloak>
+    <md-toolbar layout="columns">
         <div class="md-toolbar-tools">
-            <span> Graduates summary for {{ rCtrl.year }} </span>
+            <span> Reports </span>
+            <span flex> </span>
+            <md-button ng-click="null" ng-csv="rCtrl.export()" filename="{{rCtrl.year}}report.csv" class="md-icon-button">
+                <md-tooltip> Export to CSV </md-tooltip>
+                <md-icon md-menu-origin class="material-icons"> file_download </md-icon>
+            </md-button>
         </div>
     </md-toolbar>
     <md-content>
-        <div ng-if="rCtrl.batches != undefined">
-            <get-Data></get-Data>
+
+
+        <div ng-if="rCtrl.batches != undefined" id="accordionDynamic" class="accordionWrap">
+            <md-card class="accordion-block" ng-class="{'active-block':$first}">
+                <md-content>
+                    <!--<input type="text" ng-model="rCtrl.tempp = 50">-->
+                    <get-grad-table-template></get-grad-table-template>
+                </md-content>
+            </md-card>
+            <md-card class="accordion-block" ng-class="{'active-block':$first}">
+                <md-content>
+                    <get-incoming-table-template></get-incoming-table-template>
+                </md-content>
+            </md-card>
+            <md-card class="accordion-block" ng-class="{'active-block':$first}">
+                <md-content>
+                    <get-batch-gen-template></get-batch-gen-template>
+                </md-content>
+            </md-card>
+            <md-card class="accordion-block" ng-class="{'active-block':$first}">
+                <md-content>
+                    <get-grad-graph-template></get-grad-graph-template>
+                </md-content>
+            </md-card>
         </div>
+
+
         <div ng-if="rCtrl.batches == undefined" layout="column" layout-wrap layout-align="center center">
             <div flex="100"> &nbsp; </div>
             <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
             <div flex="100"> &nbsp; </div>
         </div>
     </md-content>
+</md-card>
+
+
+
+
+
+
+<br><br><br>
+
+
+<!--Graduates Summary Graph -->
+<md-card>
+
 </md-card><br><br><br>
 
 
@@ -63,6 +81,8 @@
 <br><br><br>
 
 <button ng-click="rCtrl.tester()"> Test Me....</button>
+<br><br><br>
+<!--<p ng-init="summer(5)"><div>Test.... 5*11 = {{myNumber}}</div></p>-->
 <!--<div class="accordionWrap">-->
     <!--<md-card class="accordion-block" ng-class="{'active-block':$first}">-->
         <!--<md-content ng-change="rCtrl.tempp = 30">-->

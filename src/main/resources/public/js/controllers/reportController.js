@@ -11,7 +11,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     // var tempTtl = 2;
     rc.tempp = 10;
 
-    var tData = [{"name":[".Nate"],"data":[45,18,32,0,16,0,0,15,0,42,15,0]}];
+    var tData = {"name":".Nate","data":[45,18,32,0,16,0,0,15,0,42,15,0]};
 
 
 
@@ -96,15 +96,49 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
                     (date.getMonth() == month) &&
                     (date.getFullYear() == rc.year) &&
                     (rc.batches[x]['curriculum'].currId == curriculum.currId)) {
-                    // total += rc.graduates;
+                    total += rc.graduates;
                     // total += rc.tempp;
                     // total += tempTtl;
-                    total += $scope.tempTtl;
+                    // total += $scope.tempTtl;
+                    // total += $scope.myNumber;
                 }
+
 
 
             }
             summary.push(total);
+        }
+
+        return summary;
+    };
+    rc.currSummary2 = function(curriculum) {
+
+        var summary = [];
+        var total2;
+        var date;
+
+        for (var month = 0; month < 12; month++) {
+
+            total2 = 0;
+
+            for (var x = 0; x < rc.batches.length; x++) {
+                date = new Date(rc.batches[x]['endDate']);
+                if (rc.batches[x]['curriculum'].name &&
+                    curriculum &&
+                    (date.getMonth() == month) &&
+                    (date.getFullYear() == rc.year) &&
+                    (rc.batches[x]['curriculum'].currId == curriculum.currId)) {
+                    total2 += rc.incoming;
+                    // total += rc.tempp;
+                    // total += tempTtl;
+                    // total += $scope.tempTtl;
+                    // total += $scope.myNumber;
+                }
+
+
+
+            }
+            summary.push(total2);
         }
 
         return summary;
@@ -133,6 +167,17 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         return total;
     };
 
+    rc.sumYear2 = function() {
+
+        var total2 = 0;
+        var summary;
+        angular.forEach(rc.curricula, function(curr) {
+            summary = rc.currSummary2(curr);
+            total2 += summary.reduce(rc.sumCurrYear);
+        });
+        return total2;
+    };
+
     /*************************************************************/
     // sums monthly total over all curricula
     /**************************************************************************
@@ -146,13 +191,32 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
             angular.forEach(rc.batches, function (batch) {
                 date = new Date(batch.endDate);
                 if ((date.getMonth() == month) && (date.getFullYear() == rc.year) && (batch.curriculum)) {
-                    // total += rc.tempp;
+                    total += rc.graduates;
                     // total += tempTtl;
-                    total += $scope.tempTtl;
+                    // total += $scope.tempTtl;
+                    // total += $scope.myNumber;
                 }
 
             });
             return total;
+        }
+    };
+    rc.sumMonth2 = function (month) {
+
+        if (rc.batches) {
+            var total2 = 0;
+            var date;
+            angular.forEach(rc.batches, function (batch) {
+                date = new Date(batch.endDate);
+                if ((date.getMonth() == month) && (date.getFullYear() == rc.year) && (batch.curriculum)) {
+                    total2 += rc.incoming;
+                    // total += tempTtl;
+                    // total += $scope.tempTtl;
+                    // total += $scope.myNumber;
+                }
+
+            });
+            return total2;
         }
     };
 
@@ -566,6 +630,8 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
     batchService.getAll(function(response) {
         rc.batches = response;
+        data = rc.graphData();
+        data.push(tData);
     }, function() {
         rc.showToast("Could not fetch batches.");
     });
@@ -579,12 +645,14 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
 
     // gets all trainers and stores them in variable trainers
-    // trainerService.getAll(function(response) {
-    //     rc.trainers = response;
-    //     console.log(rc.trainers);
-    // }, function() {
-    //     rc.showToast("Could not fetch trainers.");
-    // });
+    trainerService.getAll(function(response) {
+        rc.trainers = response;
+        console.log(rc.trainers);
+        var jString = JSON.stringify(rc.trainers);
+        console.log(jString);
+    }, function() {
+        rc.showToast("Could not fetch trainers.");
+    });
     //
     // skillService.getAll(function(response) {
     //     rc.skills = response;
@@ -621,8 +689,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     /**************************************************************************
      *
      */
-    $scope.myGraph = function() {
-        data = rc.graphData();
+    $scope.myGraph = function() {;
         chart = new Highcharts.chart('container', {
             chart: {
                 type: 'column'
@@ -671,16 +738,25 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
     rc.tester = function(){
         console.log(data);
+        // chart.redraw();
+        chart.addSeries(tData.series[0]);
         // chart.series[0].setData(data,true);
         // $scope.data.push(tData);
         // chart.redraw();
         // console.log("Test = " + chart.series.length);
-        // chart.series[0].setData(tData, true);
-        data.push(tData);
+        // chart.series.push(tData, true);
+        // data.push(tData);
         console.log(data);
     };
 
+    // $scope.myNumber = 10;
 
+    $scope.summer = function (count) {
+        $scope.myNumber = count;
+    };
+    $scope.summer2 = function (count) {
+        $scope.myNumber = count;
+    };
 
 
     /**************************************************************************
@@ -739,6 +815,21 @@ assignforce.directive('getGradTableTemplate', function() {
         //     // $scope.visible = false;
         // },
         templateUrl: "html/templates/gradTableTemplate.html",
+        bindToController: true
+    };
+});
+
+assignforce.directive('getGradGraphTemplate', function() {
+    // assignforce.tempTtl = 30;
+    return {
+        restrict: 'ACE',
+        scope: true,
+        // link: function($scope) {
+        //     // $scope.title = 'Space Widgets';
+        //     $scope.tempTtl = 50;
+        //     // $scope.visible = false;
+        // },
+        templateUrl: "html/templates/gradGraphTemplate.html",
         bindToController: true
     };
 });
