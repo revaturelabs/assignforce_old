@@ -2,13 +2,14 @@ package com.revature.assignforce.domain.dto;
 
 import java.util.List;
 
+import com.revature.assignforce.domain.Location;
 import com.revature.assignforce.domain.Room;
 
 public class BuildingDTO {
 
 	private int ID;
 	private String name;
-	private int location;
+	private Location location;
 	private List<Room> rooms;
 	private Boolean active;
 
@@ -28,11 +29,11 @@ public class BuildingDTO {
 		this.name = name;
 	}
 
-	public int getLocation() {
+	public Location getLocation() {
 		return location;
 	}
 
-	public void setLocation(int location) {
+	public void setLocation(Location location) {
 		this.location = location;
 	}
 

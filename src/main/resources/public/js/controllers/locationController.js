@@ -1,8 +1,7 @@
 
 var assignforce = angular.module("batchApp");
 
-assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
-		locationService, buildingService, roomService) {
+assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, locationService, buildingService, roomService) {
 	var lc = this;
 
 	// functions
@@ -202,6 +201,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			controller : "deleteDialogCtrl", //deleteDialogController.js
 			controllerAs : "dCtrl",
 			locals : {
+				location : lc.selectedList[0].location,
 				list : lc.selectedList,
 				summary : summary
 			},

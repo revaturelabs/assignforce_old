@@ -50,13 +50,15 @@
                     <span> Skills </span>
                     <span flex> </span>
                     <md-button class="md-icon-button" ng-click="pCtrl.saveTSkills()">
-                        <md-tooltip> Save Skills </md-tooltip>
+
+                        <md-tooltip class="md-title"> Save Skills </md-tooltip>
                         <i class="material-icons">save</i>
                     </md-button>
                 </div>
             </md-toolbar>
             <div class="md-padding" layout="column">
                 <md-subheader class="md-no-sticky"><h2>Select a skill:</h2></md-subheader>
+
                 <md-chips ng-model="pCtrl.skillsList" md-removable="false" md-on-select="pCtrl.addSkill($chip)">
                 </md-chips>
                 <md-list class="fixedRows">
