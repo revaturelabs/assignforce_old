@@ -523,17 +523,16 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 				        batchService.create(rc.newBatch, success, error);
 					}	        
      		    }
-     		    	
+     	    	function success (){
+     	 			rc.showToast("Successfully created Batch.");
+     	 		}
+
+     	 		function error(){
+     	 			rc.showToast("Failed to created Batch.");
+     	 		}
      		}
      	   	
      	}
-    	function success (){
- 			rc.showToast("Successfully created Batch.");
- 		}
-
- 		function error(){
- 			rc.showToast("Failed to created Batch.");
- 		}
  		
     }
     
@@ -613,14 +612,13 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     settingService.getById(10, function(response){
 		rc.minBatchSize = response.settingValue;
 	}, function(){
-		console.log("failure")
 	});
 
 
 	settingService.getById(11, function(response){
 		rc.maxBatchSize = response.settingValue;
 	}, function(){
-		console.log("failure")
+
 	});
 	
 	/*************************************************************/
