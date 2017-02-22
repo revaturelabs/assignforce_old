@@ -17,7 +17,8 @@ assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
 			if (bdc.state == "edit") {
 				bdc.swapBuilding(bdc.building);
 				
-					bdc.building.location = bdc.location.id;
+					bdc.building.location = bdc.location;
+					bdc.building.location.buildings = [];
 					buildingService.update(bdc.building, function() {
 						$mdDialog.hide();
 					}, function() {
@@ -25,9 +26,9 @@ assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
 					});
 				
 			} else if (bdc.state == "create") {
-				bdc.building.location = bdc.location.id; //saves the location id reference to building
+				bdc.building.location = bdc.location; //saves the location id reference to building
 				bdc.location.buildings.push(bdc.building);
-				
+				bdc.building.location.buildings = [];
 				buildingService.create(bdc.building, function() {
 					$mdDialog.hide();
 				}, function() {

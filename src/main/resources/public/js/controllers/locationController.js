@@ -1,8 +1,7 @@
 
 var assignforce = angular.module("batchApp");
 
-assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
-		locationService, buildingService, roomService) {
+assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, locationService, buildingService, roomService) {
 	var lc = this;
 
 	// functions
@@ -56,6 +55,10 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 		else if (!(Array.isArray(lc.selectedList[0].buildings))) {
 			lc.showToast("Please select a location.");
 		} else {
+			console.log("Location");
+			console.log(lc.selectedList[0]);
+			console.log("Building");
+			console.log(buildingService.getAlmostEmptyBuilding(lc.selectedList[0].id));
 			$mdDialog.show({
 				templateUrl : "html/templates/buildingTemplate.html",
 				controller : "bldgDialogCtrl", //bldgDialogController.js
@@ -202,6 +205,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			controller : "deleteDialogCtrl", //deleteDialogController.js
 			controllerAs : "dCtrl",
 			locals : {
+				location : lc.selectedList[0].location,
 				list : lc.selectedList,
 				summary : summary
 			},

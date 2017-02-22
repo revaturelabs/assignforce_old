@@ -111,17 +111,19 @@
 
             //else if a building was selected, recurse room inactivation
             else if ( Array.isArray(elem.rooms) ) {
-            	var temp;
+            	var temp = elem.location;
             	angular.forEach(elem.rooms, function(room){
-                   /*
-                    * temp is used to store location, but not currently working.
-                    if(room.building.location != undefined){
-                	   temp = room.building.location.id;
-                   }*/ 
+                   //temp is used to store location, but not currently working.
+                    //if(room.building.location != undefined){
+                	   //temp = room.building.location.id;
+                   //}
             	   room.active = false;            	   
             	   
                     room.building.rooms = [];                    
-                    room.building.location = undefined;
+                    room.building.location = temp;
+                    room.building.location.buildings = [];
+                    console.log("temp");
+                    console.log(temp);
                     
                     roomService.update( room, function(){
                     	//console.log("Room SUCCESS");
@@ -137,7 +139,10 @@
                  * doesn't work, but it breaks the successful
                  * inactivation of the rooms
                  */
-                elem.location.buildings = [];
+                //elem.location = temp;
+                console.log("BUILDING");
+                console.log(elem);
+                //elem.location.buildings = [];
                 elem.rooms = [];
                 buildingService.update( elem, function(){ 
                 	//console.log("Building SUCCESS");
