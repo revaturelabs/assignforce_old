@@ -1,9 +1,24 @@
 var assignforce = angular.module("batchApp");
 
-assignforce.controller("reportCtrl", function($scope, skillService, trainerService, settingService, batchService, curriculumService, monthList) {
+assignforce.controller("reportCtrl", function($scope, limitToFilter, skillService, trainerService, settingService, batchService, curriculumService, monthList) {
+
+
+
+    $scope.ideas = [
+        ['ideas1', 1],
+        ['ideas2', 8],
+        ['ideas3', 5]
+    ];
+
+    $scope.limitedIdeas = limitToFilter($scope.ideas, 2);
+
+
+
+
+
 
     var rc = this;
-    var data = [];
+    $scope.data = [];
     var chart;
     // $scope.tempTtl = 10;
     // rc.tempp = 10;
@@ -166,7 +181,6 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         });
         return total;
     };
-
     rc.sumYear2 = function() {
 
         var total2 = 0;
@@ -220,70 +234,63 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         }
     };
 
-    /**************************************************************************
+    /*************************************************************/
+    /**
      * @Author:  Jaina L. Brehm
      * This method will compute the required batch start date,
-     *      given a required hire date.
+     * 		given a required hire date.
      *
      * @param requiredDate
      * @return nothing
      */
 
-    rc.calcStartDate = function(requiredDate, index) {
+    rc.calcStartDate = function(requiredDate, index){
 
         var tempDate = new Date(requiredDate);
 
         //Initializes a start date variable and assigns it the value in 'requiredDate'.
-        var sDate = (requiredDate == undefined) ? (new Date()) : requiredDate;
+        var sDate = ( requiredDate == undefined ) ? (new Date()) : requiredDate;
 
         //Subtract 10 weeks from the 'requiredDate' to determine the 'startDate'.  **Using 11 week default.
-        sDate.setDate(sDate.getDate() - (7 * (rc.batchLength)));
+        sDate.setDate( sDate.getDate() - ( 7 * (rc.defWeeks)));
 
         // This code segment allows for the batch start date to be pushed to the closest Monday.
-        switch (sDate.getDay()) {
+        switch(sDate.getDay()){
 
-            case 0:
-                sDate.setDate(sDate.getDate() + 1);
+            case 0 :	sDate.setDate( sDate.getDate() + 1 );
                 break;
 
-            case 1:
-                sDate.setDate(sDate.getDate());
+            case 1 :	sDate.setDate( sDate.getDate() );
                 break;
 
-            case 2:
-                sDate.setDate(sDate.getDate() - 1);
+            case 2 : 	sDate.setDate( sDate.getDate() - 1 );
                 break;
 
-            case 3:
-                sDate.setDate(sDate.getDate() - 2);
+            case 3 :	sDate.setDate( sDate.getDate() - 2 );
                 break;
 
-            case 4:
-                sDate.setDate(sDate.getDate() - 3);
+            case 4 : 	sDate.setDate( sDate.getDate() - 3 );
                 break;
 
-            case 5:
-                sDate.setDate(sDate.getDate() - 4);
+            case 5 :	sDate.setDate( sDate.getDate() - 4 );
                 break;
 
-            case 6:
-                sDate.setDate(sDate.getDate() - 5);
+            case 6 : 	sDate.setDate( sDate.getDate() - 5 );
                 break;
 
-            default:
-                break;
+            default:	break;
         }
 
         var wkDayArr = ['Sun', 'Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun'];
 
         //Formats the date to 'mm-dd-yyyy' and assigns the output for easier user visibility and comprehension.
-        var formattedDate = monthList[sDate.getMonth()] + "-" + sDate.getDate() + "-" + sDate.getFullYear() + " (" + wkDayArr[sDate.getDay()] + ")";
+        var formattedDate = monthList[sDate.getMonth()] + "-" + sDate.getDate() + "-" + sDate.getFullYear() + " (" + wkDayArr[sDate.getDay()] +")";
 
         //Assigns tempDate to the objects 'reqDate'
         rc.cardArr[index].reqDate = tempDate;
 
         //Sets the 'startDate' within 'cardArr', @ the index value, equal to the un-formatted start date.
-        //This value is used when creating specific batches from the card panel.
+        //This value is used when creating specific batches from the card pannel.
         rc.cardArr[index].startDate = sDate;
 
         //Sets the 'startdate' within 'cardArr', @ the 'index' value, equal to the formatted Date.
@@ -291,34 +298,34 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
     };
 
-
-    /**************************************************************************
+    /*************************************************************/
+    /**
      * @Author: Jaina L. Brehm
      * This method will compute the number of batches needed to be made,
-     *      given the number of required Trainee's.
+     * 		given the number of required Trainee's.
      *
      * @param requiredTrainees
      * @return neededBatches
      */
-    rc.calcReqBatch = function(requiredTrainees, index) {
+
+    rc.calcReqBatch = function(requiredTrainees, index){
 
         //Compute the total number of Batches estimated.
-        var neededBatches = requiredTrainees / 15;
+        var neededBatches = requiredTrainees/15;
 
         /**
-         *  Ensures the correct number of batches are created, regardless of any remainder of trainee's required.
-         *      Example:  If the total number of required trainee's is 40 and the average batch
-         *                  size is 15, the resulting number of batches is '2.666666'.
-         *                  This result should be rounded up to accommodate for the remainder.
+         * 	Ensures the correct number of batches are created, regardless of any remainder of trainee's required.
+         * 		Example:  If the total number of required trainee's is 40 and the average batch
+         * 					size is 15, the resulting number of batches is '2.666666'.
+         * 					This result should be rounded up to accommodate for the remainder.
          */
-        if ((neededBatches > Math.floor(neededBatches)) && (neededBatches < Math.ceil(neededBatches))) {
 
-            neededBatches = Math.ceil(neededBatches);
-
+        if ( ( neededBatches > Math.floor( neededBatches ) ) && ( neededBatches < Math.ceil(neededBatches ) ) ) {
+            neededBatches = Math.ceil( neededBatches );
         }
 
         /**  Sets the reportsController's 'requiredBatches' data value in each index
-         *      of the 'cardArr' to the computed 'neededBatches' values.
+         * 		of the 'cardArr' to the computed 'neededBatches' values.
          */
         rc.cardArr[index].requiredBatches = neededBatches;
 
@@ -327,36 +334,42 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
     };
 
-
-    /**************************************************************************
+    /*************************************************************/
+    /**
      * @Author: Jaina L. Brehm
      * This method will assign the particular card objects 'btchType' variable
-     *      to the selected value.
+     * 		to the selected value.
      *
      * @param
      * @return
      */
-    rc.assignCurr = function(bType, index) {
+
+    rc.assignCurr = function(bType, index){
 
         rc.cardArr[index].batchType = bType;
+        console.log("B Type = " + rc.cardArr[index].batchType);
+        console.log("B Type = " + bType.text);
+        console.log("B Type = " + bType.value);
 
-        if (rc.cardArr[index].requiredGrads > 0) {
+        if(rc.cardArr[index].requiredGrads > 0) {
 
             rc.cumulativeBatches();
 
         }
     };
 
-
-    /**************************************************************************
+    /*************************************************************/
+    /**
      * @Author: Jaina L. Brehm
      * Description:  This method will add another card to the cardArr object,
-     *                  ultimately generating another card in the 'required Trainee's' tab
-     *                  in the Reports tab.
+     * 					ultimately generating another card in the 'required Trainee's' tab
+     * 					in the Reports tab.
+     *
      * @param
      * @return
      */
-    rc.genCard = function() {
+
+    rc.genCard = function(){
 
         var temp = {};
 
@@ -372,16 +385,18 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
     };
 
-
-    /**************************************************************************
+    /*************************************************************/
+    /**
      * @Author:  Jaina L. Brehm
      * Description:  This method will delete/remove a 'card' in the cardArr object,
-     *                  at a given index.  The deleted 'card' will no longer
-     *                  be displayed on the reports tab.
+     * 					at a given index.  The deleted 'card' will no longer
+     * 					be displayed on the reports tab.
+     *
      * @param index
      * @return
      */
-    rc.removeCardClick = function(index) {
+
+    rc.removeCardClick = function(index){
 
         //Removes a card object from the array at a specifically designated index.
         rc.cardArr.splice(index, 1);
@@ -391,48 +406,46 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
     };
 
-
-    /**************************************************************************
+    /************************************************************/
+    /**
      * @Author:  Jaina L. Brehm
      * Description:  This method will generate the sum of all batch types held
-     *                  within the 'cardArr' variable, ultimately displaying them
-     *                  in the 'master card' on the reports tab.
+     * 					within the 'cardArr' variable, ultimately displaying them
+     * 					in the 'master card' on the reports tab.
+     *
      * @param
      * @return
      */
-    rc.cumulativeBatches = function() {
+
+    rc.cumulativeBatches = function(){
 
         rc.totalJavaBatch = 0;
         rc.totalNetBatch = 0;
         rc.totalSDETBatch = 0;
         rc.totalCumulativeBatches = 0;
 
-        for (var x in rc.cardArr) {
-            if (rc.cardArr.hasOwnProperty(x)) {
-                var batchVal = rc.cardArr[x].batchType.id;
+        for (var x in rc.cardArr){
+            if(rc.cardArr.hasOwnProperty(x)){
+                var batchVal = rc.cardArr[x].batchType.currId;
 
-                switch (batchVal) {
+                switch(batchVal){
 
                     //Switch case for Java Batches
-                    case 1:
-                        rc.totalJavaBatch += rc.cardArr[x].requiredBatches;
+                    case 1 : 	rc.totalJavaBatch += rc.cardArr[x].requiredBatches;
                         rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
                         break;
 
                     //Switch case for .Net Batches
-                    case 2:
-                        rc.totalNetBatch += rc.cardArr[x].requiredBatches;
+                    case 2 : 	rc.totalNetBatch += rc.cardArr[x].requiredBatches;
                         rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
                         break;
 
                     //Switch case for SDET Batches
-                    case 3:
-                        rc.totalSDETBatch += rc.cardArr[x].requiredBatches;
+                    case 3 : 	rc.totalSDETBatch += rc.cardArr[x].requiredBatches;
                         rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
                         break;
 
-                    default:
-                        break;
+                    default: 	break;
                 }
 
             }
@@ -441,98 +454,183 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
     };
 
-
-    /**************************************************************************
+    /************************************************************/
+    /**
      * @Author:  Jaina L. Brehm
      * Description:  This method will generate a new 'card' in the cardArr object,
-     *                  which will be displayed to the user on the reports tab.
+     * 					which will be displayed to the user on the reports tab.
+     *
      * @param index
      * @return
      */
-    rc.createBatchClick = function(index) {
 
-        //Create a batch object in the Reports Controller, using the batchService.
-        rc.newBatch = batchService.getEmptyBatch();
+    rc.createBatchClick = function( index ) {
 
-        //Declare a generic name for batch objects being created.
-        var dName = " - ";
+        // Create 'can submit' flag here.  '0' implies successful submit, '1' implies submission failure. Default to 1 value.
+        var canSubmit = 1;
 
-        for (var i = 0; i < rc.cardArr[index].requiredBatches; i++) {
+        // Determines whether or not the user is allowed to create batches.
+        canSubmit = rc.submittionValidityAssertion( index );
 
-            //Assigns the 'generic name' the batch object.
-            rc.newBatch.name = dName;
+        if ( canSubmit == 0 ) {
 
-            //Assigns the 'start date' to the batch object.
-            rc.newBatch.startDate = rc.cardArr[index].startDate;
+            //Create a batch object in the Reports Controller, using the batchService.
+            rc.newBatch = batchService.getEmptyBatch();
 
-            //Assigns the 'end date' to the batch object.
-            rc.newBatch.endDate = rc.cardArr[index].reqDate;
+            //Declare a generic name for batch objects being created.
+            var dName = " - ";
 
-            //Assigns the 'id' value of the Curriculum ('batch type' variable) to
-            //  to the batch object.
-            rc.newBatch.curriculum = rc.cardArr[index].batchType.id;
+            for (var i = 0; i < rc.cardArr[index].requiredBatches; i++){
 
-            //Create batch method called here...
-            batchService.create(rc.newBatch, success, error);
-        }
+                //Assigns the 'generic name' the batch object.
+                rc.newBatch.name = dName;
 
-        function success() {
-            $scope.$parent.aCtrl.showToast("Successfully created Batch.");
-        }
+                //Assigns the 'start date' to the batch object.
+                rc.newBatch.startDate = rc.cardArr[index].startDate;
 
-        function error() {
-            $scope.$parent.aCtrl.showToast("Failed to created Batch.");
+                //Assigns the 'end date' to the batch object.
+                rc.newBatch.endDate = rc.cardArr[index].reqDate;
+
+                //Assigns the 'id' value of the Curriculum ('batch type' variable) to
+                //	to the batch object.
+                rc.newBatch.curriculum = rc.cardArr[index].batchType.currId;
+
+                //Create batch method called here...
+                batchService.create(rc.newBatch, success, error);
+            }
+
+            function success ( ) {
+                $scope.$parent.aCtrl.showToast("Successfully created Batch.");
+            }
+
+            function error ( ) {
+                $scope.$parent.aCtrl.showToast("Failed to created Batch.");
+            }
+
         }
 
     };
 
+    /************************************************************/
+    /**
+     * @Author:  Jaina L. Brehm
+     * Description:  This method will assert that batches have valid credentials
+     * 					for submission.
+     *
+     * @param index
+     * @return canSubmit
+     */
 
-    /**************************************************************************
+    rc.submittionValidityAssertion = function( index ){
+        var flagArr = [ 0, 0, 0 ];
+        var count = 0;
+
+        if	( !( rc.cardArr[index].requiredGrads == undefined ) && !( rc.cardArr[index].reqDate == undefined ) &&
+            !( rc.cardArr[index].requiredBatches == undefined ) && !( rc.cardArr[index].startDate == undefined ) &&
+            !( rc.cardArr[index].formattedStartDate == undefined ) && !( rc.cardArr[index].batchType == undefined ) ) {
+
+            canSubmit = 0;
+            rc.errMsg = "";
+        }else{
+
+            if( rc.cardArr[index].requiredGrads == undefined ){
+                rc.errMsg = "Requires Trainee's.";
+                flagArr[0] = 1;
+                canSubmit = 1;
+            }
+            if( rc.cardArr[index].reqDate == undefined ) {
+                rc.errMsg = "Requires Hire Date.";
+                flagArr[1] = 1;
+                canSubmit = 1;
+            }
+            //Ensures that the start date can't occur before the current date.
+            if( rc.cardArr[index].startDate <= rc.today ){
+                rc.errMsg = "Invalid Hire Date.";
+                flagArr[1] = 1;
+                canSubmit = 1;
+            }
+            //Ensures the batch type is selected.
+            if( rc.cardArr[index].batchType == undefined ) {
+                rc.errMsg = "Invalid Batch Type.";
+                flagArr[2] = 1;
+                canSubmit = 1;
+            }
+            //Checks if multiple inputs are missing or invalid.
+            //Sets the error message to the appropriate phrase, if multiple inputs are missing.
+            for ( x in flagArr ){
+                if( flagArr.hasOwnProperty(index) ){
+                    if( flagArr[x] == 1 ){
+                        count = count + 1;
+                        if ( count > 1 ){
+                            rc.errMsg = "Multiple Inputs Required.";
+                        }
+                        canSubmit = 1;
+                    }
+                }
+            }
+
+            canSubmit = 1;
+        }
+
+        return canSubmit;
+    };
+
+    /************************************************************/
+    /**
      * @Author:  Jaina L. Brehm
      * Description:  This method will generate all batches contained within all cards,
-     *                  in the 'cardArr' array object.  All
+     * 					in the 'cardArr' array object.  All
+     *
      * @param
      * @return
      */
-    rc.createAllBatchClick = function() {
 
-        for (var index in rc.cardArr) {
+    rc.createAllBatchClick = function(){
 
-            if (rc.cardArr.hasOwnProperty(index)) {
+        // Create 'can submit' flag here.  '0' implies successful submit, '1' implies submission failure. Default to 1 value.
+        var canSubmit = 1;
 
-                //Create a batch object in the Reports Controller, using the batchService.
-                rc.newBatch = batchService.getEmptyBatch();
+        for ( var index in rc.cardArr ) {
 
-                //Declare a generic name for batch objects being created.
-                var dName = " - ";
+            if( rc.cardArr.hasOwnProperty(index) ) {
+                // Determines whether or not the user is allowed to create batches.
+                canSubmit = rc.submittionValidityAssertion( index );
+                if ( canSubmit == 0 ) {
+                    //Create a batch object in the Reports Controller, using the batchService.
+                    rc.newBatch = batchService.getEmptyBatch();
 
-                for (var i = 0; i < rc.cardArr[index].requiredBatches; i++) {
+                    //Declare a generic name for batch objects being created.
+                    var dName = " - ";
 
-                    //Assigns the 'generic name' the batch object.
-                    rc.newBatch.name = dName;
+                    for ( var i = 0; i < rc.cardArr[index].requiredBatches; i++ ) {
 
-                    //Assigns the 'start date' to the batch object.
-                    rc.newBatch.startDate = rc.cardArr[index].startDate;
+                        //Assigns the 'generic name' the batch object.
+                        rc.newBatch.name = dName;
 
-                    //Assigns the 'end date' to the batch object.
-                    rc.newBatch.endDate = rc.cardArr[index].reqDate;
+                        //Assigns the 'start date' to the batch object.
+                        rc.newBatch.startDate = rc.cardArr[index].startDate;
 
-                    //Assigns the 'id' value of the Curriculum ('batch type' variable) to
-                    //  to the batch object.
-                    rc.newBatch.curriculum = rc.cardArr[index].batchType.id;
+                        //Assigns the 'end date' to the batch object.
+                        rc.newBatch.endDate = rc.cardArr[index].reqDate;
 
-                    //Create batch method called here...
-                    batchService.create(rc.newBatch, success, error);
+                        //Assigns the 'id' value of the Curriculum ('batch type' variable) to
+                        //	to the batch object.
+                        rc.newBatch.curriculum = rc.cardArr[index].batchType.currId;
+
+                        //Create batch method called here...
+                        batchService.create(rc.newBatch, success, error);
+                    }
                 }
+                canSubmit = 1;
             }
-        }
 
-        function success() {
-            rc.showToast("Successfully created Batch.");
-        }
+            function success (){
+                rc.showToast("Successfully created Batch.");
+            }
 
-        function error() {
-            rc.showToast("Failed to created Batch.");
+            function error(){
+                rc.showToast("Failed to created Batch.");
+            }
         }
     };
 
@@ -558,7 +656,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     // rc.requiredBatches;
 
     //The type of a 'batch' (ie. Java, SDET, .Net, ... )
-    // rc.batchType;
+    rc.batchType;
 
     //Total number of .NET batches within 'cardArr'.
     rc.totalNetBatch = 0;
@@ -631,7 +729,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     batchService.getAll(function(response) {
         rc.batches = response;
         data = rc.graphData();
-        data.push(tData);
+        // data.push(tData);
     }, function() {
         rc.showToast("Could not fetch batches.");
     });
@@ -647,9 +745,9 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     // gets all trainers and stores them in variable trainers
     trainerService.getAll(function(response) {
         rc.trainers = response;
-        console.log(rc.trainers);
+        // console.log(rc.trainers);
         var jString = JSON.stringify(rc.trainers);
-        console.log(jString);
+        // console.log(jString);
     }, function() {
         rc.showToast("Could not fetch trainers.");
     });
@@ -739,7 +837,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     rc.tester = function(){
         console.log(data);
         // chart.redraw();
-        chart.addSeries(tData.series[0]);
+        chart.addSeries(tData);
         // chart.series[0].setData(data,true);
         // $scope.data.push(tData);
         // chart.redraw();
@@ -802,6 +900,74 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
 
 });
+
+assignforce.directive('hcNew', function() {
+    return {
+        restrict: 'C',
+        replace: true,
+        scope: {
+            items: '='
+        },
+        controller: function($scope, $element, $attrs) {
+            console.log(2);
+
+        },
+        template: '<div id="container" style="margin: 0 auto">not working</div>',
+        link: function(scope, element, attrs) {
+            console.log(3);
+            var chart = new Highcharts.Chart({
+                chart: {
+                    renderTo: 'container',
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false
+                },
+                title: {
+                    text: 'Browser market shares at a specific website, 2010'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage}%</b>',
+                    percentageDecimals: 1
+                },
+                plotOptions: {
+                    pie: {
+                        animation: true,
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            color: '#000000',
+                            connectorColor: '#000000',
+                            formatter: function() {
+                                return '<b>' + this.point.name + '</b>: ' + this.percentage + ' %';
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    name: 'Browser share',
+                    data: scope.items
+                }]
+            }, function(chart) {
+                $('#addPoint').click(function() {
+                    chart.series[0].addPoint(1);
+                });
+            });
+
+            scope.$watch("items", function(newValue) {
+                chart.series[0].setData(newValue, true);
+            }, true);
+
+        }
+    }
+});
+
+
+
+
+
+
 
 
 assignforce.directive('getGradTableTemplate', function() {
