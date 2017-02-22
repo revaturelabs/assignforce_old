@@ -15,9 +15,6 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
     var rc = this;
     rc.data = [];
     rc.newTable = [];
-    var chart;
-    var chart2;
-
 
     // functions
     // calls showToast method of aCtrl
@@ -762,7 +759,7 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
      *
      */
     $scope.myGraph = function() {
-        chart = new Highcharts.chart('container', {
+        Highcharts.chart('container', {
             chart: {
                 type: 'column'
             },
@@ -800,7 +797,7 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
 
     $scope.myGraph2 = function() {
         $scope.newTable = rc.graphData2();
-        chart2 = new Highcharts.chart('container2', {
+        Highcharts.chart('container2', {
             chart: {
                 type: 'column'
             },
