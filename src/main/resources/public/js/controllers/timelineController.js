@@ -100,38 +100,40 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	//Also grabs the length of the longest trainer name.
 	tlc.getDateRange = function()
 	{	
-		if (tlc.batches)
+		if (!tlc.batches)
 		{
-			var startDate;
-			var endDate;
-			
-			for (var b in tlc.batches)
+			return;
+		}
+		
+		var startDate;
+		var endDate;
+		
+		for (var b in tlc.batches)
+		{
+			if (!angular.isUndefined(tlc.batches[b].trainer) && tlc.batches[b].trainer !== null && !angular.isUndefined(tlc.batches[b].startDate) && tlc.batches[b].startDate !== null && !angular.isUndefined(tlc.batches[b].endDate) && tlc.batches[b].endDate !== null)
 			{
-				if (!angular.isUndefined(tlc.batches[b].trainer) && tlc.batches[b].trainer !== null && !angular.isUndefined(tlc.batches[b].startDate) && tlc.batches[b].startDate !== null && !angular.isUndefined(tlc.batches[b].endDate) && tlc.batches[b].endDate !== null)
+				if (angular.isUndefined(tlc.minDate))
 				{
-					if (angular.isUndefined(tlc.minDate))
-					{
-						tlc.minDate = new Date(tlc.batches[b].startDate);
-					}
-					else
-					{
-						startDate = new Date(tlc.batches[b].startDate);
-						if (startDate.getTime() < tlc.minDate.getTime()) {
-							tlc.minDate = startDate;
-							}
-					}
-					
-					if (angular.isUndefined(tlc.maxDate))
-					{
-						tlc.maxDate = new Date(tlc.batches[b].endDate);
-					}
-					else
-					{
-						endDate = new Date(tlc.batches[b].endDate);
-						if (endDate.getTime() > tlc.maxDate.getTime()) {
-							tlc.maxDate = endDate;
-							}
-					}
+					tlc.minDate = new Date(tlc.batches[b].startDate);
+				}
+				else
+				{
+					startDate = new Date(tlc.batches[b].startDate);
+					if (startDate.getTime() < tlc.minDate.getTime()) {
+						tlc.minDate = startDate;
+						}
+				}
+				
+				if (angular.isUndefined(tlc.maxDate))
+				{
+					tlc.maxDate = new Date(tlc.batches[b].endDate);
+				}
+				else
+				{
+					endDate = new Date(tlc.batches[b].endDate);
+					if (endDate.getTime() > tlc.maxDate.getTime()) {
+						tlc.maxDate = endDate;
+						}
 				}
 			}
 		}
@@ -524,7 +526,7 @@ function projectTimeline(timelineFormatting, minDate, maxDate, yCoord, timelineD
 			        line = [],
 			        lineNumber = 0,
 			        lineHeight = 1.1, // ems
-			        x = el.attr("x")
+			        x = el.attr("x"),
 			        y = el.attr("y"),
 			        dy = parseFloat(el.attr("dy")),
 			        tspan = el.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
@@ -594,48 +596,15 @@ function projectTimeline(timelineFormatting, minDate, maxDate, yCoord, timelineD
 		  var msg = "";
 		  var startDate = new Date(d.startDate);
 		  var endDate = new Date(d.endDate);
-		  
-		  var parseDay = function(day)
-		  {
-			  switch (day)
-			  {
-			  	case 0: return "Sun.";
-			  	case 1: return "Mon.";
-			  	case 2: return "Tue.";
-			  	case 3: return "Wed.";
-			  	case 4: return "Thu.";
-			  	case 5: return "Fri.";
-			  	case 6: return "Sat.";
-			  	default: return "Mon.";
-			  }
-		  }
-		  
-		  var parseMonth = function(month)
-		  {
-			  switch (month)
-			  {
-			  	case 0: return "Jan.";
-			  	case 1: return "Feb.";
-			  	case 2: return "Mar.";
-			  	case 3: return "Apr.";
-			  	case 4: return "May";
-			  	case 5: return "Jun.";
-			  	case 6: return "Jul.";
-			  	case 7: return "Aug.";
-			  	case 8: return "Sep.";
-			  	case 9: return "Oct.";
-			  	case 10: return "Nov.";
-			  	case 11: return "Dec.";
-			  	default: return "Jan.";
-			  }
-		  }
+		  var days = ["Sun.", "Mon.", "Tue.", "Wed.", "Thu.", "Fri.", "Sat."];
+		  var months = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec."];
 		  
 		  msg += d.curriculum ? ("<span style='color:orange'>" + d.curriculum.name + "</span> Batch <br/>") : "<span style='color:red'>No curriculum</span> for this batch. <br/>";
 		  msg += "__________<br/>";
 		  msg += d.trainer ? ("Trainer:  <span style='color:gold'>" + d.trainer.firstName + " " + d.trainer.lastName + "</span> <br/>") : "<span style='color:red'>No trainer</span> for this batch. <br/>";
 		  msg += d.cotrainer ? ("Cotrainer:  <span style='color:gold'>" + d.cotrainer.firstName + " " + d.cotrainer.lastName + "</span> <br/>") : "<span style='color:red'>No cotrainer</span> for this batch. <br/>";
-		  msg += d.startDate ? ("Start Date:  <span style='color:gold'>" + parseDay(startDate.getDay()) + ", " + parseMonth(startDate.getMonth()) + " " + startDate.getDate() + ", " + startDate.getFullYear() + "</span> <br/>") : "<span style='color:red'>No start date</span> for this batch. <br/>";
-		  msg += d.endDate ? ("End Date:  <span style='color:gold'>" + parseDay(endDate.getDay()) + ", " + parseMonth(endDate.getMonth()) + " " + endDate.getDate() + ", " + endDate.getFullYear() + "</span> <br/>") : "<span style='color:red'>No end date</span> for this batch. <br/>";
+		  msg += d.startDate ? ("Start Date:  <span style='color:gold'>" + days[startDate.getDay()] + ", " + months[startDate.getMonth()] + " " + startDate.getDate() + ", " + startDate.getFullYear() + "</span> <br/>") : "<span style='color:red'>No start date</span> for this batch. <br/>";
+		  msg += d.endDate ? ("End Date:  <span style='color:gold'>" + days[endDate.getDay()] + ", " + months[endDate.getMonth()] + " " + endDate.getDate() + ", " + endDate.getFullYear() + "</span> <br/>") : "<span style='color:red'>No end date</span> for this batch. <br/>";
 		  
 		  return msg;
 	  });

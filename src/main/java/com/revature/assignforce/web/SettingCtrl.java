@@ -32,11 +32,11 @@ public class SettingCtrl {
 
     //Retrieve
     @RequestMapping(value = "/{settingId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object retrieveSetting (@PathVariable("settingId") int ID){
+    public Object retrieveSetting (@PathVariable("settingId") int settingId){
 
-        Setting setting = settingService.getOneItem(ID);
+        Setting setting = settingService.getOneItem(settingId);
         if(setting == null) {
-            return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No Setting found of ID " + ID +"."), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No Setting found of ID " + settingId +"."), HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity< Setting >(setting, HttpStatus.OK);
         }
@@ -60,11 +60,11 @@ public class SettingCtrl {
     @RequestMapping( method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object updateSetting(@RequestBody SettingDTO in ){
 
-        int ID = in.getSettingId();
+        int settingId = in.getSettingId();
         String name = in.getSettingName();
         double value = in.getSettingValue();
 
-        Setting setting = new Setting(ID, name, value);
+        Setting setting = new Setting(settingId, name, value);
         setting = settingService.saveItem(setting);
 
         if (setting == null) {

@@ -19,27 +19,34 @@ assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationS
                 if (rdc.state == "edit") {
                     rdc.swapRoom( rdc.room );
                     
-                    roomService.update( rdc.room, function(){
-                        $mdDialog.hide();
-                    }, function(){
-                        $mdDialog.cancel();
-                    });
-                    
-                } else if (rdc.state == "create") {
-                	rdc.room.building = rdc.building.id;
-                    rdc.building.rooms.push( rdc.room );
-                    
-                    roomService.create( rdc.room, function(){
-                        $mdDialog.hide();
-                    }, function(){
-                        $mdDialog.cancel();
-                    });
+                    rdc.room.building = rdc.building;
+                    rdc.room.building.rooms = []; //This is necessary to prevent JSON circular referencing
+                    rdc.room.building.location = undefined;
+                    	roomService.update( rdc.room, function(){
+                            $mdDialog.hide();
+                        }, function(){
+                            $mdDialog.cancel();
+                        });
                 }
-
-               
-            
+                    
+                    /*try to set room.building.rooms to [] right before passing it*/
+                    
+                else if (rdc.state == "create") {
+                	rdc.room.building = rdc.building;
+                	
+                    rdc.building.rooms.push( rdc.room );
+                    rdc.room.building.rooms = [];//This is necessary to prevent JSON circular referencing
+                	rdc.room.building.location = undefined;
+                        
+                    roomService.create( rdc.room, function(){
+                    	rdc.room.building = rdc.building;
+                        $mdDialog.hide();
+                    }, function(){
+                        $mdDialog.cancel();
+                    });                	
+                }
             }
-        };
+        }
 
             // returns building that contains given room
         rdc.findBuildingFromRoom = function() {
