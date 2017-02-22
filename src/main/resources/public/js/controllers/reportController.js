@@ -371,10 +371,9 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
     rc.createBatchClick = function( index ) {
  
     	// Create 'can submit' flag here.  '0' implies successful submit, '1' implies submission failure. Default to 1 value.
-     	var canSubmit = 1;
-
+     	
      	// Determines whether or not the user is allowed to create batches.
-     	canSubmit = rc.submittionValidityAssertion( index );
+     	var canSubmit = rc.submittionValidityAssertion( index );
 
      	if ( canSubmit == 0 ) {
 	    	
@@ -400,17 +399,13 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 	            rc.newBatch.curriculum = rc.cardArr[index].batchType.currId;
 	            
 	            //Create batch method called here...
-	            batchService.create(rc.newBatch, success, error);
+	            batchService.create(rc.newBatch, function success ( ) {
+		        	$scope.$parent.aCtrl.showToast("Successfully created Batch.");
+		        }, function error ( ) {
+		        	$scope.$parent.aCtrl.showToast("Failed to created Batch.");
+		        });
 	        }
-	
-	        function success ( ) {
-	        	$scope.$parent.aCtrl.showToast("Successfully created Batch.");
-	        }
-	
-	        function error ( ) {
-	    	   $scope.$parent.aCtrl.showToast("Failed to created Batch.");
-	        }
-        
+	        
     	}
        
     };
