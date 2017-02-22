@@ -6,13 +6,10 @@ app.service('ptoService', function ($resource, $mdDialog) {
 
     var GoogleAuth;
     // Google api console clientID and apiKey 
-    var clientId = '886656742164-p6bfqnbtv8d1k1q3kisf6ossh9jkurdj.apps.googleusercontent.com';
-    var apiKey = 'AIzaSyB2-e0FnmwRReoduEdI0bBv5fGG2TgrIZQ';
 
     // enter the scope of current project (this API must be turned on in the Google console)
     var scopes = 'https://www.googleapis.com/auth/calendar';
 
-    var calendarId = 'taj5130@gmail.com';
 
     ptos.authorize = function handleClientLoad(){
         gapi.load('client:auth2', initClient);
@@ -38,7 +35,6 @@ app.service('ptoService', function ($resource, $mdDialog) {
             GoogleAuth.isSignedIn.listen(updateSigninStatus);
 
             // Handle initial sign-in state. (Determine if user is already signed in.)
-            var user = GoogleAuth.currentUser.get();
             
             setSigninStatus();
 
@@ -57,7 +53,6 @@ app.service('ptoService', function ($resource, $mdDialog) {
 
         if (GoogleAuth.isSignedIn.get()) {
           // User is authorized and has clicked 'Sign out' button.
-          var user = GoogleAuth.currentUser.get();
           ptos.addPto(trainer, startDate, endDate);
         } else {
           // User is not signed in. Start Google auth flow.
@@ -74,15 +69,6 @@ app.service('ptoService', function ($resource, $mdDialog) {
     function updateSigninStatus(isSignedIn) {
         setSigninStatus();
         ptos.addPto(trainer, startDate, endDate);
-    }
-
-    function handleAuthResult(authResult){
-        if (authResult){
-            // do something
-        }
-        else {
-            // do something more
-        }
     }
 
     ptos.addPto = function(trainer, startDate, endDate){

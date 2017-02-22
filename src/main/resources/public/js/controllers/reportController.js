@@ -15,6 +15,8 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
     var rc = this;
     $scope.data = [];
     $scope.newTable = [];
+    var chart;
+    var chart2;
     $scope.tempTtl = 10;
     rc.tempp = 10;
 
@@ -495,20 +497,24 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
             if( rc.cardArr[index].requiredGrads == undefined ){
                 rc.errMsg = "Requires Trainee's.";
                 flagArr[0] = 1;
+                canSubmit = 1;
             }
             if( rc.cardArr[index].reqDate == undefined ) {
                 rc.errMsg = "Requires Hire Date.";
                 flagArr[1] = 1;
+                canSubmit = 1;
             }
             //Ensures that the start date can't occur before the current date.
             if( rc.cardArr[index].startDate <= rc.today ){
                 rc.errMsg = "Invalid Hire Date.";
                 flagArr[1] = 1;
+                canSubmit = 1;
             }
             //Ensures the batch type is selected.
             if( rc.cardArr[index].batchType == undefined ) {
                 rc.errMsg = "Invalid Batch Type.";
                 flagArr[2] = 1;
+                canSubmit = 1;
             }
             //Checks if multiple inputs are missing or invalid.
             //Sets the error message to the appropriate phrase, if multiple inputs are missing.
@@ -593,6 +599,7 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
     // Reports Controller Data members
     rc.year = new Date().getFullYear();
 
+
     //The date Trainee's are needed by.
     rc.reqDate = new Date();
 
@@ -653,12 +660,15 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
         rc.incoming = response.settingValue;
     });
 
+    // var minBatchSize;
     settingService.getById(10, function(response){
         rc.minBatchSize = response.settingValue;
     }, function(){
         rc.showToast("failure")
     });
 
+    //var maxBatchSize = 16;
+    // var maxBatchSize;
     settingService.getById(11, function(response){
         rc.maxBatchSize = response.settingValue;
     }, function(){
@@ -667,6 +677,9 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
 
     batchService.getAll(function(response) {
         rc.batches = response;
+        data = rc.graphData();
+        newTable = rc.graphData2();
+        // data.push(tData);
     }, function() {
         rc.showToast("Could not fetch batches.");
     });
@@ -738,7 +751,7 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
      *
      */
     $scope.myGraph = function() {
-        Highcharts.chart('container', {
+        chart = new Highcharts.chart('container', {
             chart: {
                 type: 'column'
             },
@@ -775,7 +788,7 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
 
 
     $scope.myGraph2 = function() {
-        Highcharts.chart('container2', {
+        chart2 = new Highcharts.chart('container2', {
             chart: {
                 type: 'column'
             },
@@ -848,6 +861,7 @@ assignforce.directive('getTrainData', function() {
 
 
 assignforce.directive('getGradTableTemplate', function() {
+    // assignforce.tempTtl = 30;
     return {
         restrict: 'ACE',
         scope: true,
@@ -857,6 +871,7 @@ assignforce.directive('getGradTableTemplate', function() {
 });
 
 assignforce.directive('getGradGraphTemplate', function() {
+    // assignforce.tempTtl = 30;
     return {
         restrict: 'ACE',
         scope: true,
@@ -866,6 +881,7 @@ assignforce.directive('getGradGraphTemplate', function() {
 });
 
 assignforce.directive('getIncomingTableTemplate', function() {
+    // tempTtl = rc.incoming;
     return {
         restrict: 'ACE',
         scope: true,
@@ -876,6 +892,7 @@ assignforce.directive('getIncomingTableTemplate', function() {
 
 
 assignforce.directive('getBatchGenTemplate', function() {
+    // tempTtl = rc.incoming;
     return {
         restrict: 'ACE',
         scope: true,
@@ -883,6 +900,7 @@ assignforce.directive('getBatchGenTemplate', function() {
         bindToController: true
     };
 });
+
 
 
 assignforce.directive('accordionDynamic', function() {
