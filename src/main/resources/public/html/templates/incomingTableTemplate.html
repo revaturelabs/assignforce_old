@@ -1,4 +1,9 @@
-<md-toolbar accordion-dynamic md-ink-ripple="#ff0000" ng-class="{'active':$first}" style="padding: 20px ">Incoming Trainee Summary for {{ rCtrl.year }}</md-toolbar>
+<!-- Arrow up = \f0aa  -->
+<!-- Arrow down = \f0ab -->
+
+<md-toolbar accordion-dynamic md-ink-ripple="#ff0000" ng-class="{'active':$first}" style="padding: 20px ">
+    Incoming Trainee Summary for {{ rCtrl.year }}
+</md-toolbar>
 <div class="content" >
     <md-toolbar layout="columns" class="md-primary md-hue-2">
         <div class="md-toolbar-tools">
@@ -39,17 +44,21 @@
                 <tbody md-body>
                 <tr md-row ng-repeat="curr in (rCtrl.curricula | orderBy:rCtrl.currOrder) track by curr.currId">
                     <td md-cell flex> {{ curr.name }} </td>
-                    <td md-cell flex ng-repeat="month in rCtrl.currSummary(curr) track by $index"> {{ month }} </td>
-                    <td md-cell flex> {{ rCtrl.currSummary(curr).reduce(rCtrl.sumCurrYear) }} </td>
+                    <td md-cell flex ng-repeat="month in rCtrl.currSummary2(curr) track by $index"> {{ month }} </td>
+                    <td md-cell flex> {{ rCtrl.currSummary2(curr).reduce(rCtrl.sumCurrYear) }} </td>
                 </tr>
                 <tr md-row>
                     <td md-cell flex> Total </td>
-                    <td md-cell flex ng-repeat="month in rCtrl.currSummary(curr) track by $index"> {{ rCtrl.sumMonth($index) }} </td>
-                    <td md-cell flex> {{ rCtrl.sumYear() }} </td>
+                    <td md-cell flex ng-repeat="month in rCtrl.currSummary2(curr) track by $index"> {{ rCtrl.sumMonth2($index) }} </td>
+                    <td md-cell flex> {{ rCtrl.sumYear2() }} </td>
                 </tr>
                 </tbody>
             </table>
         </md-table-container>
+        <md-panel>
+            This is my test panel to see what magic looks like....
+            <get-Data></get-Data>
+        </md-panel>
     </div>
     <div ng-if="rCtrl.batches == undefined" layout="column" layout-wrap layout-align="center center">
         <div flex="100"> &nbsp; </div>

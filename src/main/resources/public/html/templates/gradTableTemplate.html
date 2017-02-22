@@ -1,6 +1,14 @@
 
 <md-panel>
-    <md-toolbar accordion-dynamic md-ink-ripple="#ff0000" ng-class="{'active':$first}" style="padding: 20px">Grad Summary for {{ rCtrl.year }}</md-toolbar>
+    <md-toolbar accordion-dynamic md-ink-ripple="#ff0000" ng-class="{'active':$first}" style="padding: 20px">
+        Grad Summary for {{ rCtrl.year }}
+        <md-menu md-position-mode="target-right target">
+            <md-button class="md-icon-button">
+                <md-tooltip> Expand </md-tooltip>
+                <md-icon md-menu-origin class="material-icons"> file_download </md-icon>
+            </md-button>
+        </md-menu>
+    </md-toolbar>
     <div class="content" >
         <md-toolbar layout="columns" class="md-primary md-hue-2" >
             <div class="md-toolbar-tools">
@@ -53,10 +61,12 @@
                 </table>
             </md-table-container>
         </div>
+
         <div ng-if="rCtrl.batches == undefined" layout="column" layout-wrap layout-align="center center">
             <div flex="100"> &nbsp; </div>
             <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
             <div flex="100"> &nbsp; </div>
         </div>
+
     </div>
 </md-panel>
