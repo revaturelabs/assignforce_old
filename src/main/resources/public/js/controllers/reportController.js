@@ -523,17 +523,17 @@ assignforce.controller( "reportCtrl", function( $scope, batchService, curriculum
 				        batchService.create(rc.newBatch, success, error);
 					}	        
      		    }
-     	    	function success (){
-     	 			rc.showToast("Successfully created Batch.");
-     	 		}
+     	     	function success (){  }
 
-     	 		function error(){
-     	 			rc.showToast("Failed to created Batch.");
-     	 		}
+     	 		function error(){  }
      		}
-     	   	
+     		function success (){  }
+
+ 	 		function error(){  }
      	}
- 		
+     	function success (){  }
+
+	 	function error(){  }
     }
     
     /************************************************************/
