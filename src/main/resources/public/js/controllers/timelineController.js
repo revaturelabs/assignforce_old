@@ -138,14 +138,6 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 			}
 		}
 	}
-	
-	//Project timeline when data changes
-	
-	//Watches for "repullTimeline" to be broadcast, such that the timeline is repulled.
-	$scope.$on("repullTimeline", function(){
-		tlc.repull();
-	});
-
 
 	//Fetches all the batches for the controller.
 	tlc.getAllBatches = new Promise(function(resolve)
@@ -211,6 +203,11 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
             }
 		}
 	);
+
+	//Watches for "repullTimeline" to be broadcast, such that the timeline is repulled.
+	$scope.$on("repullTimeline", function(){
+		tlc.repull();
+	});
 
 	// Range values for timeline in milliseconds
 	var MAX_RANGE = 126140000000000; // 4000 years
@@ -313,7 +310,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     {
         tlc.repullPromise.then(function(result)
 	    {
-        	if (result){ 
+        	if (result){
         		tlc.projectTimeline(-100);
         	}
 	    }, function(){
