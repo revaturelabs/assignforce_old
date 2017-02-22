@@ -710,7 +710,7 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
     settingService.getById(10, function(response){
         rc.minBatchSize = response.settingValue;
     }, function(){
-        console.log("failure")
+        rc.showToast("failure")
     });
 
     //var maxBatchSize = 16;
@@ -718,7 +718,7 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
     settingService.getById(11, function(response){
         rc.maxBatchSize = response.settingValue;
     }, function(){
-        console.log("failure")
+        rc.showToast("failure")
     });
 
     batchService.getAll(function(response) {
@@ -744,13 +744,7 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
     }, function() {
         rc.showToast("Could not fetch trainers.");
     });
-    //
-    // skillService.getAll(function(response) {
-    //     rc.skills = response;
-    //     console.log(rc.skills);
-    // }, function() {
-    //     rc.showToast("Could not fetch skills.");
-    // });
+
 
 
     // Create second var for graph tat defaults to tables default.
