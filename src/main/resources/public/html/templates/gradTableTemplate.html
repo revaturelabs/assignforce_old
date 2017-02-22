@@ -1,8 +1,8 @@
 
 <md-panel>
-    <md-toolbar accordion-dynamic ng-class="{'active':$first}" >Grad Summary for 2017</md-toolbar>
+    <md-toolbar accordion-dynamic md-ink-ripple="#ff0000" ng-class="{'active':$first}" style="padding: 20px">Grad Summary for {{ rCtrl.year }}</md-toolbar>
     <div class="content" >
-        <md-toolbar layout="columns" class="md-primary md-hue-2" md-ink-ripple="#ff0000">
+        <md-toolbar layout="columns" class="md-primary md-hue-2" >
             <div class="md-toolbar-tools">
                 <span> Graduates summary for {{ rCtrl.year }} </span>
             </div>
