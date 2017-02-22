@@ -13,12 +13,11 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
     $scope.limitedIdeas = limitToFilter($scope.ideas, 2);
 
     var rc = this;
-    $scope.data = [];
-    $scope.newTable = [];
+    rc.data = [];
+    rc.newTable = [];
     var chart;
     var chart2;
-    $scope.tempTtl = 10;
-    rc.tempp = 10;
+
 
     // functions
     // calls showToast method of aCtrl
@@ -94,12 +93,20 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
             total = 0;
 
             for (var x = 0; x < rc.batches.length; x++) {
+
                 date = new Date(rc.batches[x]['endDate']);
-                if (rc.batches[x]['curriculum'].name &&
+
+                var testToPassSonarQubeAndThisIfStatement = (
+                    rc.batches[x]['curriculum'].name &&
                     curriculum &&
                     (date.getMonth() == month) &&
                     (date.getFullYear() == rc.year) &&
-                    (rc.batches[x]['curriculum'].currId == curriculum.currId)) {
+                    (rc.batches[x]['curriculum'].currId == curriculum.currId)
+                );
+
+
+
+                if (testToPassSonarQubeAndThisIfStatement) {
                     total += rc.graduates;
                 }
             }
@@ -114,17 +121,26 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
         var total2;
         var date;
 
+
         for (var month = 0; month < 12; month++) {
 
             total2 = 0;
 
             for (var x = 0; x < rc.batches.length; x++) {
                 date = new Date(rc.batches[x]['endDate']);
-                if (rc.batches[x]['curriculum'].name &&
+
+
+                var testToPassSonarQubeAndThisIfStatement = (
+                    rc.batches[x]['curriculum'].name &&
                     curriculum &&
                     (date.getMonth() == month) &&
                     (date.getFullYear() == rc.year) &&
-                    (rc.batches[x]['curriculum'].currId == curriculum.currId)) {
+                    (rc.batches[x]['curriculum'].currId == curriculum.currId)
+                );
+
+
+
+                if (testToPassSonarQubeAndThisIfStatement) {
                     total2 += rc.incoming;
                 }
             }
@@ -400,7 +416,7 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
                         break;
 
                     //Switch case for .Net Batches
-                    case 2 : 	rc.totalNetBatch += rc.cardArr[x].requiredBatches;
+                    case 2 : 	 rc.totalNetBatch += rc.cardArr[x].requiredBatches;
                         rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
                         break;
 
@@ -677,8 +693,8 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
 
     batchService.getAll(function(response) {
         rc.batches = response;
-        data = rc.graphData();
-        newTable = rc.graphData2();
+        // $scope.data = rc.graphData();
+        // $scope.newTable = rc.graphData2();
         // data.push(tData);
     }, function() {
         rc.showToast("Could not fetch batches.");
@@ -707,11 +723,11 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
 
         var curricula = rc.curricula;
 
-        angular.forEach(curricula, function(curr) {
+        angular.forEach(curricula, function (curr) {
             var empty = {};
             var data = [];
             empty.name = curr.name;
-            rc.currSummary(curr).forEach(function(month) {
+            rc.currSummary(curr).forEach(function (month) {
                 data.push(month);
             });
 
@@ -724,23 +740,23 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
 
 
     rc.graphData2 = function() {
-        var series2 = [];
+        var series = [];
 
-        var curricula2 = rc.curricula;
+        var curricula = rc.curricula;
 
-        angular.forEach(curricula2, function(curr) {
-            var empty2 = {};
+        angular.forEach(curricula, function(curr) {
+            var empty = {};
             var data = [];
-            empty2.name = curr.name;
+            empty.name = curr.name;
             rc.currSummary2(curr).forEach(function(month) {
                 data.push(month);
             });
 
-            empty2.data = data;
-            series2.push(empty2);
+            empty.data = data;
+            series.push(empty);
         });
 
-        return series2;
+        return series;
     };
 
 
@@ -782,12 +798,13 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
                     borderWidth: 0
                 }
             },
-            series: data
+            series: rc.graphData()
         });
     };
 
 
     $scope.myGraph2 = function() {
+        $scope.newTable = rc.graphData2();
         chart2 = new Highcharts.chart('container2', {
             chart: {
                 type: 'column'
@@ -819,7 +836,7 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
                     borderWidth: 0
                 }
             },
-            series: newTable
+            series: rc.graphData2()
         });
     };
 
@@ -852,6 +869,9 @@ assignforce.directive('getTrainData', function() {
         template: '<div id="container2" style="min-width: 310px; height: 400px; margin: 0 auto"></div>',
         bindToController: true,
         controller: function($scope) {
+            // $scope.data = rc.graphData();
+            // console.log("New Data In Directive: ");
+            // console.log($scope.data);
             $scope.myGraph2();
         }
     };
