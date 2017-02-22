@@ -112,7 +112,6 @@
             	//Inactivate location - not active, starting location, buildings array cannot recurse
             	elem.active = false;
             	elem.buildings = [];
-            	console.log(elem);
             	
                 locationService.update( elem, function(){
                 }, function(){
