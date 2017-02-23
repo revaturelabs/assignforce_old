@@ -17,9 +17,9 @@ public class S3CredentialsCtrl {
 
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveCredentials() {
-		String s3ID = System.getenv("L_ID");
-		String s3SecretKey = System.getenv("L_SECRET");
-		String s3Name = System.getenv("L_NAME");
+		String s3ID = System.getenv("S3_ID");
+		String s3SecretKey = System.getenv("S3_SECRET");
+		String s3Name = System.getenv("S3_NAME");
 		HashMap<String,String> out = new HashMap<>();
 		out.put("ID",s3ID);
 		out.put("SecretKey",s3SecretKey);
