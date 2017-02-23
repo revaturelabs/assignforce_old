@@ -1,7 +1,6 @@
 var assignforce = angular.module("batchApp");
 
 assignforce.controller("reportCtrl", function($scope, skillService, trainerService, settingService, batchService, curriculumService, monthList) {
-    
 
     var rc = this;
     rc.data = [];
@@ -594,6 +593,35 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
             }
     };
 
+    //toggle the Grads table and graph on and off
+    rc.toggleGradToolbar = function () {
+        rc.initGrad = true;
+
+        if(rc.toggleGrad){
+            rc.toggleGrad = false;
+            $("#gradArrow").text("keyboard_arrow_down");
+        } else {
+            rc.toggleGrad = true;
+            $("#gradArrow").text("keyboard_arrow_up");
+        }
+
+        $('#gradTable').slideToggle();
+    };
+
+    rc.toggleIncomingToolbar = function () {
+        rc.initIncoming = true;
+
+        if(rc.toggleIncoming){
+            rc.toggleIncoming = false;
+            $("#incArrow").text("keyboard_arrow_down");
+        } else {
+            rc.toggleIncoming = true;
+            $("#incArrow").text("keyboard_arrow_up");
+        }
+
+        $('#incomingTable').slideToggle();
+    };
+
 
     /*************************************************************************/
     /*************************************************************************/
@@ -646,6 +674,10 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
     rc.monthList = monthList;
 
+    rc.toggleIncoming = false; //used to hide and show incoming card
+    rc.toggleGrad = false; //used to hide and show graduates card
+    rc.initIncoming = false;
+    rc.initGrad = false;
 
     /*************************************************************************/
     /*************************************************************************/
@@ -808,9 +840,9 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
                 }
             },
             tooltip: {
-                headerFormat: '<span style="font-size:15px">{point.key}</span><table>',
-                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                headerFormat: "<span style='font-size:15px'>{point.key}</span><table>",
+                pointFormat: "<tr><td style='color:{series.color};padding:0'>{series.name}: </td>" +
+                "<td style='padding:0'><b>{point.y}</b></td></tr>",
                 footerFormat: '</table>',
                 shared: true,
                 useHTML: true
@@ -854,9 +886,6 @@ assignforce.directive('getTrainData', function() {
         template: '<div id="container2" style="min-width: 310px; height: 400px; margin: 0 auto"></div>',
         bindToController: true,
         controller: function($scope) {
-            // $scope.data = rc.graphData();
-            // console.log("New Data In Directive: ");
-            // console.log($scope.data);
             $scope.myGraph2();
         }
     };

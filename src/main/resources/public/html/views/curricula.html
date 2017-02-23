@@ -19,8 +19,11 @@
         </md-toolbar>
         <md-card-content id="core">
             <md-list>
-                <md-list-item class="md-2-line" md-ink-ripple ng-repeat="curr in cCtrl.curricula" ng-if="curr.core == true">
-                    <h3 >{{curr.name}}</h3>
+                <md-list-item class="md-2-line" md-ink-ripple ng-repeat="curr in cCtrl.curricula | activeItem" ng-if="curr.core == true">
+                    <div class="md-list-item-text" layout="column">
+                        <h3>{{curr.name}}</h3>
+                        <p>Skills: {{ curr.skills.map(cCtrl.joinObjArrayByName).join(", ");}}</p>
+                    </div>
                 </md-list-item>
             </md-list>
         </md-card-content>
@@ -64,8 +67,16 @@
                 </form>
             </md-card>
             <md-list>
-                <md-list-item ng-repeat="curr in cCtrl.curricula" ng-if="curr.core == false" class="md-2-line" md-ink-ripple="#ff0000" >
-                    <h3 >{{curr.name}}</h3>
+                <md-list-item ng-repeat="curr in cCtrl.curricula | activeItem" ng-if="curr.core == false" class="md-2-line" md-ink-ripple="#ff0000" >
+                    <div class="md-list-item-text" layout="column">
+                        <h3 >{{curr.name}}</h3>
+                        <p>Skills: {{ curr.skills.map(cCtrl.joinObjArrayByName).join(", ");}}</p>
+                    </div>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cCtrl.removeFocus(curr)">
+                        <md-tooltip class="md-title"> Remove Focus </md-tooltip>
+                        <i class="material-icons">remove_circle</i>
+                    </md-button>
                 </md-list-item>
             </md-list>
         </md-card-content>
@@ -78,7 +89,7 @@
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cCtrl.toggleSkillToolbar()">
                     <md-tooltip class="md-title"> Toggle Content </md-tooltip>
-                    <i id="skillArrow" class="material-icons">keyboard_arrow_up</i>
+                    <i id="skillArrow" class="material-icons" style="color: #FB8C00;">keyboard_arrow_up</i>
                 </md-button>
             </div>
         </md-toolbar>

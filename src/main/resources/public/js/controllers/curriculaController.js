@@ -47,6 +47,7 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
         cc.focusName = undefined;
     };
 
+    //create a skill and add it to the database
     cc.createSkill = function (skillForm) {
         if(skillForm.$valid) {
             var skill = skillService.getEmptySkill();
@@ -66,6 +67,7 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
         cc.skillName = undefined;
     };
 
+    //Used to show the create focus card
     cc.toggleFocusStatus = function () {
         if(cc.focusStatus){
             cc.focusStatus = false;
@@ -74,6 +76,7 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
         }
     };
 
+    //hides and shows the skill card's content when called
     cc.toggleSkillToolbar = function () {
         if(cc.skillToggle){
             cc.skillToggle = false;
@@ -86,6 +89,7 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
         $("#skill").slideToggle();
     };
 
+    //hides and shows the focus card's content when called
     cc.toggleFocusToolbar = function () {
         if(cc.focusToggle){
             cc.focusToggle = false;
@@ -98,6 +102,7 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
         $('#focus').slideToggle();
     };
 
+    //hides and shows the core card's content when called
     cc.toggleCoreToolbar = function () {
         if(cc.coreToggle){
             cc.coreToggle = false;
@@ -108,6 +113,21 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
         }
 
         $('#core').slideToggle();
+    };
+
+    //removes a focus
+    cc.removeFocus = function (curr) {
+        curr.active = false;
+        curriculumService.update(curr, function () {
+            cc.showToast("Removed focus successfully")
+        }, function () {
+            cc.showToast("Unable to remove focus")
+        })
+    };
+
+    //used to join the skills together
+    cc.joinObjArrayByName = function(elem) {
+        return elem.name;
     };
 
     //retrieving data
@@ -122,7 +142,6 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
     }, function () {
         cc.showToast("Could not fetch skills.")
     });
-
 
     //variables
     cc.curricula;
