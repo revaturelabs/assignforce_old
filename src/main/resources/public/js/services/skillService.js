@@ -10,8 +10,9 @@
         };
 
         ss.create = function (skill, success, error) {
-            skill.$save(success, error);
-        }
+            var newSkill = new Skill(skill);
+            newSkill.$save(success, error);
+        };
 
         ss.getAll = function(success, error) {
             Skill.query(success, error);
