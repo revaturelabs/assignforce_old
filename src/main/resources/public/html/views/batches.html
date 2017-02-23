@@ -65,6 +65,13 @@
                             </md-select>
                         </md-input-container>
                         
+                     	<md-input-container flex>                       
+                            <label> Focus </label>
+                            <md-select ng-model="bCtrl.batch.focus" ng-change="bCtrl.updateCurriculumRatios()">
+                                <md-option ng-value="focus.currId" ng-repeat="focus in bCtrl.foci"> {{ focus.name }} </md-option>
+                            </md-select>
+                        </md-input-container>
+                        
                         <md-input-container flex>
                             <label> Start Date </label>
                             <md-datepicker ng-value="batch.startDate" ng-model="bCtrl.batch.startDate" md-date-filter="bCtrl.enableMondays" md-open-on-focus md-hide-icons="calendar" ng-change="bCtrl.selectEndDate(); bCtrl.updateWeeks(); bCtrl.defaultName(); bCtrl.updateTrainers(bCtrl.trainers,bCtrl.batch.startDate,bCtrl.batch.endDate)"> </md-datepicker>
@@ -93,6 +100,9 @@
                             <input ng-model="bCtrl.batch.name" required>
                         </md-input-container>
                     </div>
+                </div>
+                
+                <div layout="columns" layout-xl="rows"  class="md-title">
                 </div>
 
                 <div layout="columns" layout-xl="rows"  class="md-title">

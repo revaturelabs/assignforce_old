@@ -166,7 +166,11 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     
 	//Fetches all the curricula for the controller.
     curriculumService.getAll( function(response) {
-        tlc.curricula = response;
+    	var temp = response;
+    	
+        tlc.curricula = temp.filter(function(t){
+        	return (t.core);
+        });
     }, function() {
     	//error
     });
@@ -596,6 +600,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 			  var months = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec."];
 			  
 			  msg += d.curriculum ? ("<span style='color:orange'>" + d.curriculum.name + "</span> Batch <br/>") : "<span style='color:red'>No curriculum</span> for this batch. <br/>";
+			  msg += d.focus ? ("w/ focus on <span style='color:orange'>" + d.focus.name + "</span><br/>") : "w/ <span style='color:red'>no focus</span>. <br/>";
 			  msg += "__________<br/>";
 			  msg += d.trainer ? ("Trainer:  <span style='color:gold'>" + d.trainer.firstName + " " + d.trainer.lastName + "</span> <br/>") : "<span style='color:red'>No trainer</span> for this batch. <br/>";
 			  msg += d.cotrainer ? ("Cotrainer:  <span style='color:gold'>" + d.cotrainer.firstName + " " + d.cotrainer.lastName + "</span> <br/>") : "<span style='color:red'>No cotrainer</span> for this batch. <br/>";
