@@ -37,6 +37,9 @@ public class Curriculum implements Activatable{
 
 	@Column(name="active", insertable = false)
 	private Boolean active;
+
+	@Column(name="CORE")
+	private Boolean core;
 	
 	public Curriculum(){
 		//noarg constructor
@@ -52,7 +55,6 @@ public class Curriculum implements Activatable{
 	public int getCurrId() {
 		return currId;
 	}
-
 	public void setCurrId(int currId) {
 		this.currId = currId;
 	}
@@ -60,7 +62,6 @@ public class Curriculum implements Activatable{
 	public String getName() {
 		return name;
 	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -68,7 +69,6 @@ public class Curriculum implements Activatable{
 	public List<Skill> getSkills() {
 		return skills;
 	}
-
 	public void setSkills(List<Skill> skills) {
 		this.skills = skills;
 	}
@@ -76,9 +76,15 @@ public class Curriculum implements Activatable{
 	public Boolean getActive() {
 		return active;
 	}
-
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	public Boolean getCore() {
+		return core;
+	}
+	public void setCore(Boolean core) {
+		this.core = core;
 	}
 
 	@Override

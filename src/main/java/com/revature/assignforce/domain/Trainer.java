@@ -45,7 +45,7 @@ public class Trainer implements Activatable{
 	private Boolean active;
 
 	public Trainer(){
-		//noarg constructor
+		//no-arg constructor
 	}
 
 	public Trainer(int trainerId, String firstName, String lastName, String resume, List<Unavailable> unavailability, List<Skill> skills, List<Certification> certifications) {
