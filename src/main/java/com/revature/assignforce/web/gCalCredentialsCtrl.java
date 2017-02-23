@@ -17,9 +17,7 @@ public class gCalCredentialsCtrl {
 
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveCredentials() {
-		System.out.println("getting creds");
 		String clientID = System.getenv("CLIENT_ID");
-		System.out.println(clientID);
 		String apiKey = System.getenv("API_KEY");
 		String calendarID = System.getenv("CALENDAR_ID");
 		HashMap<String,String> out = new HashMap<>();
