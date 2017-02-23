@@ -34,10 +34,8 @@
 
                 bc.batch.startDate = (incomingBatch.startDate) ? new Date(incomingBatch.startDate) : undefined;
                 bc.batch.endDate = (incomingBatch.endDate) ? new Date(incomingBatch.endDate) : undefined;
-                //bc.batch.location   = (incomingBatch.location)   ? incomingBatch.location.id		 : undefined;
                 bc.batch.room       = (incomingBatch.room)       ? incomingBatch.room.roomID         : undefined;
-                //if (bc.batch.room) {bc.batch.building	= (incomingBatch.room.building)	 ? incomingBatch.room.buildingID		 : undefined;}
-                
+
                 if(bc.batch.room){
                 	bc.batch.building = incomingBatch.room.building.id;
                     bc.batch.location = incomingBatch.room.building.location;
@@ -76,6 +74,7 @@
         bc.updateSelectedSkills = function()
         {
         	bc.selectedSkills = [];
+        	var i = 0;
         	
         	var cur = bc.curricula.find(function(a){
         		return ((a.currId ? a.currId : -1) == bc.batch.curriculum);
@@ -87,7 +86,7 @@
         	
         	if (cur)
         	{
-        		for (var i = 0; i < cur.skills.length; i += 1)
+        		for (i = 0; i < cur.skills.length; i += 1)
         		{
         			bc.selectedSkills.push(cur.skills[i].skillId);
         		}
@@ -95,7 +94,7 @@
         	
         	if (foc)
         	{
-        		for (var i = 0; i < foc.skills.length; i += 1)
+        		for (i = 0; i < foc.skills.length; i += 1)
         		{
         			bc.selectedSkills.push(foc.skills[i].skillId);
         		}
@@ -107,15 +106,15 @@
         //Updates the batch's skills to reflect the skills list, but with the actual objects.
         bc.updateBatchSkills = function()
         {
-        	var skill;
+        	var findFunction = function(a){
+    			return ((a.skillId ? a.skillId : -1) == bc.selectedSkills[i]);
+    		}
+        	
         	bc.batch.skills = [];
         	
         	for (var i = 0; i < bc.selectedSkills.length; i += 1)
         	{
-        		skill = bc.skills.find(function(a){
-        			return ((a.skillId ? a.skillId : -1) == bc.selectedSkills[i]);
-        		});
-        		bc.batch.skills.push(skill)
+        		bc.batch.skills.push(bc.skills.find(findFunction))
         	}
         }
         
