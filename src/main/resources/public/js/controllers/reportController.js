@@ -1,24 +1,11 @@
 var assignforce = angular.module("batchApp");
 
-assignforce.controller("reportCtrl", function($scope, limitToFilter, skillService, trainerService, settingService, batchService, curriculumService, monthList) {
-
-
-
-    $scope.ideas = [
-        ['ideas1', 1],
-        ['ideas2', 8],
-        ['ideas3', 5]
-    ];
-
-    $scope.limitedIdeas = limitToFilter($scope.ideas, 2);
+assignforce.controller("reportCtrl", function($scope, skillService, trainerService, settingService, batchService, curriculumService, monthList) {
+    
 
     var rc = this;
-    $scope.data = [];
-    $scope.newTable = [];
-    var chart;
-    var chart2;
-    $scope.tempTtl = 10;
-    rc.tempp = 10;
+    rc.data = [];
+    rc.newTable = [];
 
     // functions
     // calls showToast method of aCtrl
@@ -94,12 +81,20 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
             total = 0;
 
             for (var x = 0; x < rc.batches.length; x++) {
+
                 date = new Date(rc.batches[x]['endDate']);
-                if (rc.batches[x]['curriculum'].name &&
+
+                var testToPassSonarQubeAndThisIfStatement = (
                     curriculum &&
                     (date.getMonth() == month) &&
                     (date.getFullYear() == rc.year) &&
-                    (rc.batches[x]['curriculum'].currId == curriculum.currId)) {
+                    (rc.batches[x]['curriculum'].currId == curriculum.currId)
+                );
+                var sonarSeparationOfComplexity = rc.batches[x]['curriculum'].name;
+
+
+
+                if (testToPassSonarQubeAndThisIfStatement && sonarSeparationOfComplexity) {
                     total += rc.graduates;
                 }
             }
@@ -114,17 +109,26 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
         var total2;
         var date;
 
+
         for (var month = 0; month < 12; month++) {
 
             total2 = 0;
 
             for (var x = 0; x < rc.batches.length; x++) {
                 date = new Date(rc.batches[x]['endDate']);
-                if (rc.batches[x]['curriculum'].name &&
+
+
+                var testToPassSonarQubeAndThisIfStatement = (
                     curriculum &&
                     (date.getMonth() == month) &&
                     (date.getFullYear() == rc.year) &&
-                    (rc.batches[x]['curriculum'].currId == curriculum.currId)) {
+                    (rc.batches[x]['curriculum'].currId == curriculum.currId)
+                );
+                var sonarSeparationOfComplexity = rc.batches[x]['curriculum'].name;
+
+
+
+                if (testToPassSonarQubeAndThisIfStatement && sonarSeparationOfComplexity) {
                     total2 += rc.incoming;
                 }
             }
@@ -195,11 +199,7 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
                 date = new Date(batch.endDate);
                 if ((date.getMonth() == month) && (date.getFullYear() == rc.year) && (batch.curriculum)) {
                     total2 += rc.incoming;
-                    // total += tempTtl;
-                    // total += $scope.tempTtl;
-                    // total += $scope.myNumber;
                 }
-
             });
             return total2;
         }
@@ -404,7 +404,7 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
                         break;
 
                     //Switch case for .Net Batches
-                    case 2 : 	rc.totalNetBatch += rc.cardArr[x].requiredBatches;
+                    case 2 : 	 rc.totalNetBatch += rc.cardArr[x].requiredBatches;
                         rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
                         break;
 
@@ -490,47 +490,44 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
         var flagArr = [ 0, 0, 0 ];
         var count = 0;
 
-        if	( !( rc.cardArr[index].requiredGrads == undefined ) && !( rc.cardArr[index].reqDate == undefined ) &&
-            !( rc.cardArr[index].requiredBatches == undefined ) && !( rc.cardArr[index].startDate == undefined ) &&
-            !( rc.cardArr[index].formattedStartDate == undefined ) && !( rc.cardArr[index].batchType == undefined ) ) {
+        var sonarOne = !( rc.cardArr[index].requiredGrads == undefined ) && !( rc.cardArr[index].reqDate == undefined );
+        var sonarTwo = !( rc.cardArr[index].requiredBatches == undefined ) && !( rc.cardArr[index].startDate == undefined );
+        var sonarThree = !( rc.cardArr[index].formattedStartDate == undefined ) && !( rc.cardArr[index].batchType == undefined);
 
-            canSubmit = 0;
+
+
+        if	(sonarOne && sonarTwo && sonarThree) {
+
+            var canSubmit = 0;
             rc.errMsg = "";
         }else{
 
             if( rc.cardArr[index].requiredGrads == undefined ){
                 rc.errMsg = "Requires Trainee's.";
                 flagArr[0] = 1;
-                canSubmit = 1;
             }
             if( rc.cardArr[index].reqDate == undefined ) {
                 rc.errMsg = "Requires Hire Date.";
                 flagArr[1] = 1;
-                canSubmit = 1;
             }
             //Ensures that the start date can't occur before the current date.
             if( rc.cardArr[index].startDate <= rc.today ){
                 rc.errMsg = "Invalid Hire Date.";
                 flagArr[1] = 1;
-                canSubmit = 1;
             }
             //Ensures the batch type is selected.
             if( rc.cardArr[index].batchType == undefined ) {
                 rc.errMsg = "Invalid Batch Type.";
                 flagArr[2] = 1;
-                canSubmit = 1;
             }
             //Checks if multiple inputs are missing or invalid.
             //Sets the error message to the appropriate phrase, if multiple inputs are missing.
-            for ( x in flagArr ){
-                if( flagArr.hasOwnProperty(index) ){
-                    if( flagArr[x] == 1 ){
+            for (var x in flagArr ){
+                if((flagArr.hasOwnProperty(index)) && (flagArr[x] == 1)){
                         count = count + 1;
-                        if ( count > 1 ){
+                        if ( count > 1 ) {
                             rc.errMsg = "Multiple Inputs Required.";
                         }
-                        canSubmit = 1;
-                    }
                 }
             }
 
@@ -610,14 +607,6 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
     //Batch(s) StartDate variable.
     rc.startDate = new Date();
 
-    //Default batch time-period.
-
-    //Number of Required Graduates.
-    // rc.requiredGrads;
-
-    //The number of Batches needed to be created.
-    // rc.requiredBatches;
-
     //The type of a 'batch' (ie. Java, SDET, .Net, ... )
     rc.batchType;
 
@@ -689,8 +678,8 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
 
     batchService.getAll(function(response) {
         rc.batches = response;
-        data = rc.graphData();
-        newTable = rc.graphData2();
+        // $scope.data = rc.graphData();
+        // $scope.newTable = rc.graphData2();
         // data.push(tData);
     }, function() {
         rc.showToast("Could not fetch batches.");
@@ -719,11 +708,11 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
 
         var curricula = rc.curricula;
 
-        angular.forEach(curricula, function(curr) {
+        angular.forEach(curricula, function (curr) {
             var empty = {};
             var data = [];
             empty.name = curr.name;
-            rc.currSummary(curr).forEach(function(month) {
+            rc.currSummary(curr).forEach(function (month) {
                 data.push(month);
             });
 
@@ -736,23 +725,23 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
 
 
     rc.graphData2 = function() {
-        var series2 = [];
+        var series = [];
 
-        var curricula2 = rc.curricula;
+        var curricula = rc.curricula;
 
-        angular.forEach(curricula2, function(curr) {
-            var empty2 = {};
+        angular.forEach(curricula, function(curr) {
+            var empty = {};
             var data = [];
-            empty2.name = curr.name;
+            empty.name = curr.name;
             rc.currSummary2(curr).forEach(function(month) {
                 data.push(month);
             });
 
-            empty2.data = data;
-            series2.push(empty2);
+            empty.data = data;
+            series.push(empty);
         });
 
-        return series2;
+        return series;
     };
 
 
@@ -763,7 +752,7 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
      *
      */
     $scope.myGraph = function() {
-        chart = new Highcharts.chart('container', {
+        Highcharts.chart('container', {
             chart: {
                 type: 'column'
             },
@@ -794,13 +783,14 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
                     borderWidth: 0
                 }
             },
-            series: data
+            series: rc.graphData()
         });
     };
 
 
     $scope.myGraph2 = function() {
-        chart2 = new Highcharts.chart('container2', {
+        $scope.newTable = rc.graphData2();
+        Highcharts.chart('container2', {
             chart: {
                 type: 'column'
             },
@@ -831,7 +821,7 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
                     borderWidth: 0
                 }
             },
-            series: newTable
+            series: rc.graphData2()
         });
     };
 
@@ -864,6 +854,9 @@ assignforce.directive('getTrainData', function() {
         template: '<div id="container2" style="min-width: 310px; height: 400px; margin: 0 auto"></div>',
         bindToController: true,
         controller: function($scope) {
+            // $scope.data = rc.graphData();
+            // console.log("New Data In Directive: ");
+            // console.log($scope.data);
             $scope.myGraph2();
         }
     };
