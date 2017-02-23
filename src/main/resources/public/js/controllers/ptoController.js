@@ -5,11 +5,7 @@ assignforce.controller("ptoCtrl", function ($scope, $mdDialog, ptoService) {
 
     var ptoc = this;
 
-    try{
-        ptoService.authorize();
-    } catch(error){
-        
-    }
+    // ptoService.authorize();
 
     ptoc.cancel = function () {
         $mdDialog.cancel();

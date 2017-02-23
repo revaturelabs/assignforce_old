@@ -5,27 +5,90 @@ app.service('ptoService', function ($resource, $mdDialog) {
 
     var ptos = this;
 
+    var GoogleAuth;
+    // Google api console clientID and apiKey 
+    var clientId = '886656742164-p6bfqnbtv8d1k1q3kisf6ossh9jkurdj.apps.googleusercontent.com';
+    var apiKey = 'AIzaSyB2-e0FnmwRReoduEdI0bBv5fGG2TgrIZQ';
+    // enter the scope of current project (this API must be turned on in the Google console)
+    var scopes = 'https://www.googleapis.com/auth/calendar';
+    var calendarId = 'taj5130@gmail.com';
+
     ptos.authorize = function(){
+        console.log("handleClientLoad");
+        gapi.load('client:auth2', initClient);
+    }
 
-    	// Google api console clientID and apiKey 
-    	var clientId = '886656742164-p6bfqnbtv8d1k1q3kisf6ossh9jkurdj.apps.googleusercontent.com';
-    	var apiKey = 'AIzaSyB2-e0FnmwRReoduEdI0bBv5fGG2TgrIZQ';
+    function initClient() {
+        // Initialize the gapi.client object, which app uses to make API requests.
+        // Get API key and client ID from API Console.
+        // 'scope' field specifies space-delimited list of access scopes.
+        gapi.client.init({
+            'apiKey': apiKey,
+            'clientId': clientId,
+            'scope': scopes
+        }).then(function(){
 
-    	// enter the scope of current project (this API must be turned on in the Google console)
-    	var scopes = 'https://www.googleapis.com/auth/calendar';
-    	
-        gapi.client.setApiKey(apiKey);
-        window.setTimeout(checkAuth,1);
+            GoogleAuth = gapi.auth2.getAuthInstance();
+            // Listen for sign-in state changes.
+            GoogleAuth.isSignedIn.listen(updateSigninStatus);
+            // Handle initial sign-in state. (Determine if user is already signed in.)
+            var user = GoogleAuth.currentUser.get();
+            console.log("init user: " + user)
 
-        function checkAuth(){
-            gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: true},
-            handleAuthResult);
-        }
+            setSigninStatus();
 
-        function handleAuthResult(authResult){
-            if (!authResult){
-            	throw "Failed to authorize";
+        }).then(function(){
+
+            if (GoogleAuth.isSignedIn.get()) {
+                // User is authorized and has clicked 'Sign out' button.
+                console.log("already signed in");
+                var user = GoogleAuth.currentUser.get();
+                console.log(user);
+
+                $mdDialog.show({
+                    templateUrl: "html/templates/calendarTemplate.html",
+                    controller: "trainerCtrl",
+                    controllerAs: "tCtrl",
+                    bindToController: true,
+                    clickOutsideToClose: true
+                })
+
+                // ptos.addPto(trainer, startDate, endDate);
+            } else {
+                // User is not signed in. Start Google auth flow.
+                console.log("signing in");
+                GoogleAuth.signIn().then(function(){
+                    $mdDialog.show({
+                        templateUrl: "html/templates/calendarTemplate.html",
+                        controller: "trainerCtrl",
+                        controllerAs: "tCtrl",
+                        bindToController: true,
+                        clickOutsideToClose: true
+                    })
+                });
+                // var user = GoogleAuth.currentUser.get();
+                // console.log(user);
             }
+        });
+    }
+
+    function setSigninStatus(isSignedIn){
+        var user = GoogleAuth.currentUser.get();
+        console.log("set signin status user: " + user);
+        var isAuthorized = user.hasGrantedScopes(scopes);
+        console.log("isAuthorized: " + isAuthorized);
+    }
+
+    function updateSigninStatus(isSignedIn){
+        console.log("Sign In update");
+        setSigninStatus();
+    }
+
+    function handleAuthResult(authResult){
+        if (authResult){
+            console.log(authResult);
+        } else {
+            console.log("failed");
         }
     }
 
@@ -53,10 +116,10 @@ app.service('ptoService', function ($resource, $mdDialog) {
 		    return [year, month, day].join('-');
 		}
 
-		startDate = startDate.formatDate(0);
+		startDate = startDate.formatDate();
 		endDate = endDate.addDays(1).formatDate();
 
-        var calendarId = 'taj5130@gmail.com';
+        // var calendarId = 'taj5130@gmail.com';
 
         // This is the resource we will pass while calling api function
         var resource = {
