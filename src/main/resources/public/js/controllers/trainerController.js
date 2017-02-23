@@ -1,7 +1,8 @@
 
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "trainerCtrl", function( $scope, $mdDialog, $mdToast, trainerService, s3Service, $location ) {
+    assignforce.controller( "trainerCtrl", function( $scope, $mdDialog, $mdToast, $location, trainerService, s3Service, ptoService ) {
+
         var tc = this;
 
           // functions
@@ -13,7 +14,7 @@
         //adds a trainer by popping up a dialog box
         tc.addTrainer = function () {
             $mdDialog.show({
-                templateUrl: "html/templates/trainerTemplate.html",
+                templateUrl: "html/templates/dialogs/trainerDialog.html",
                 controller: "trainerDialogCtrl",
                 controllerAs: "tdCtrl",
                 locals: {
@@ -115,13 +116,7 @@
 
         tc.showCalendar = function(){
 
-            $mdDialog.show({
-                templateUrl: "html/templates/calendarTemplate.html",
-                controller: "trainerCtrl",
-                controllerAs: "tCtrl",
-                bindToController: true,
-                clickOutsideToClose: true
-            });
+            ptoService.authorize();
         }
 
         tc.hideCalendar = function(){

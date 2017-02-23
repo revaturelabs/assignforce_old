@@ -2,6 +2,7 @@
     var assignforce = angular.module( "batchApp" );
 
     assignforce.controller( "locationDialogCtrl", function ( $scope, $mdDialog, USstates, locationService ){
+        //console.log("Beginning location dialog controller.");
         var ldc = this;
 
           // functions

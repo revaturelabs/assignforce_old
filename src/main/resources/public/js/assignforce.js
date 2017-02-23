@@ -22,13 +22,17 @@
 					templateUrl : "html/views/batches.html",
 					controller  : "batchCtrl as bCtrl"
 				})
+				.when("/curriculum", {
+					templateUrl	: "html/views/curricula.html",
+					controller	: "curriculaCtrl as cCtrl"
+				})
 				.when("/trainers", {
 					templateUrl : "html/views/trainers.html",
 					controller  : "trainerCtrl as tCtrl"
 				})
 				.when("/locations", {
 					templateUrl : "html/views/locations.html",
-					controller  : "locationCtrl as lCtrl" //locationController.js
+					controller  : "locationCtrl as lCtrl"
 				})
                 .when("/reports", {
 					templateUrl : "html/views/reports.html",
@@ -60,7 +64,7 @@
             });
 
             var revBlueMap = $mdThemingProvider.extendPalette("blue-grey", {
-                "A200": "#72A4C2",
+                "A200": "#374C61",
                 "100" : "#C9DCE8"
             });
 
