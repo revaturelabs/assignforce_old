@@ -38,6 +38,10 @@
 					templateUrl : "html/views/profile.html",
 					controller  : "profileCtrl as pCtrl"
 				})
+				.when("/profile/:id", {
+					templateUrl	: "html/views/profile.html",
+					controller	: "profileCtrl as pCtrl"
+				})
 				.when("/settings", {
 					templateUrl : "html/views/settings.html",
 					controller  : "settingsCtrl as sCtrl"
@@ -56,7 +60,7 @@
             });
 
             var revBlueMap = $mdThemingProvider.extendPalette("blue-grey", {
-                "A200": "#72A4C2",
+                "A200": "#374C61",
                 "100" : "#C9DCE8"
             });
 

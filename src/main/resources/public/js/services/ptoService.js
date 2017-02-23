@@ -1,4 +1,3 @@
-
 var app = angular.module("batchApp");
 
 app.service('ptoService', function ($resource, $mdDialog) {
@@ -66,8 +65,6 @@ app.service('ptoService', function ($resource, $mdDialog) {
                         clickOutsideToClose: true
                     })
                 });
-                // var user = GoogleAuth.currentUser.get();
-                // console.log(user);
             }
         });
     }
@@ -95,12 +92,13 @@ app.service('ptoService', function ($resource, $mdDialog) {
     ptos.addPto = function(trainer, startDate, endDate){
 
         Date.prototype.addDays = function(days) {
-			var dat = new Date(this.valueOf());
-			dat.setDate(dat.getDate() + days);
-			return dat;
+            var dat = new Date(this.valueOf());
+            dat.setDate(dat.getDate() + days);
+            return dat;
         }
 
         Date.prototype.formatDate = function() {
+
 		    var d = new Date(this),
 		        month = '' + (d.getMonth() + 1),
 		        day = '' + (d.getDate()),

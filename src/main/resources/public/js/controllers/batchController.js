@@ -1,6 +1,6 @@
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "batchCtrl", function($scope, batchService, curriculumService, trainerService, locationService, buildingService, roomService, calendarService, $filter, $window) {
+    assignforce.controller( "batchCtrl", function($scope, batchService, curriculumService, trainerService, locationService, buildingService, roomService, calendarService, $filter, $window, $rootScope) {
         var bc = this;
         bc.trainerSkillRatios = [];
         
@@ -30,15 +30,20 @@
 
                 bc.batch.name       = incomingBatch.name;
                 bc.batch.curriculum = (incomingBatch.curriculum) ? incomingBatch.curriculum.currId       : undefined;               
-                
-                bc.batch.room       = (incomingBatch.room)       ? incomingBatch.room.roomID         : undefined;
-                
-                bc.batch.building = 1;
-                bc.batch.location = 1;
 
-                if (bc.batch.room.unavailability){
-                    bc.batch.room.unavailability.startDate = (incomingBatch.startDate) ? incomingBatch.room.unavailability.startDate : undefined;
-                    bc.batch.room.unavailability.endDate = (incomingBatch.endDate) ? incomingBatch.room.unavailability.endDate : undefined;
+                bc.batch.startDate = (incomingBatch.startDate) ? new Date(incomingBatch.startDate) : undefined;
+                bc.batch.endDate = (incomingBatch.endDate) ? new Date(incomingBatch.endDate) : undefined;
+                //bc.batch.location   = (incomingBatch.location)   ? incomingBatch.location.id		 : undefined;
+                bc.batch.room       = (incomingBatch.room)       ? incomingBatch.room.roomID         : undefined;
+                //if (bc.batch.room) {bc.batch.building	= (incomingBatch.room.building)	 ? incomingBatch.room.buildingID		 : undefined;}
+                
+                if(bc.batch.room){
+                	bc.batch.building = incomingBatch.room.building.id;
+                    bc.batch.location = incomingBatch.room.building.location;
+                		if (bc.batch.room.unavailability){
+                			bc.batch.room.unavailability.startDate = (incomingBatch.startDate) ? incomingBatch.room.unavailability.startDate : undefined;
+                			bc.batch.room.unavailability.endDate = (incomingBatch.endDate) ? incomingBatch.room.unavailability.endDate : undefined;
+                		}
                 }
 
                 bc.batch.trainer    = (incomingBatch.trainer)    ? incomingBatch.trainer.trainerId   : undefined;
@@ -169,7 +174,7 @@
         
             // defaults name to _curriculum_ (_start date_) if both are chosen and name is not
         bc.defaultName = function(){
-            if ( (bc.batch.curriculum != undefined) && (bc.batch.startDate != undefined) && (bc.batch.name == undefined) ) {
+            if ( (bc.batch.curriculum != undefined) && (bc.batch.startDate != undefined) ) {
                 var start = new Date(bc.batch.startDate);
                 var currName;
                 bc.curricula.forEach( function(curr){
@@ -178,7 +183,7 @@
                     }
                 });
                 bc.batch.name = currName + " (" + (start.getMonth() + 1) + "/" + start.getDate() + ")";
-            } 
+        	}
         };
 
         /*******************************************************************/
@@ -283,7 +288,7 @@
             bc.changeState( "create", null );
             batchService.getAll( function(response) {
                 bc.batches = response;
-                $scope.$broadcast("repullTimeline");
+                $rootScope.$broadcast("repullTimeline");
             }, function() {
                 bc.showToast( "Could not fetch batches.");
             });
@@ -295,6 +300,7 @@
         // edit batch
         bc.edit = function( batch ){
             bc.changeState( "edit", batch );
+            bc.updateTrainers(bc.trainers,bc.batch.startDate,bc.batch.endDate);
             $window.scrollTo(0, 0);
         };
 
@@ -303,6 +309,8 @@
               // clone batch
         bc.clone = function( batch ){
             bc.changeState( "clone", batch );
+            bc.updateTrainers(bc.trainers,bc.batch.startDate,bc.batch.endDate);
+            $window.scrollTo(0, 0);
         };
 
         /*******************************************************************/

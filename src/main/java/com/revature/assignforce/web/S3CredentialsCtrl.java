@@ -20,7 +20,7 @@ public class S3CredentialsCtrl {
 		String s3ID = System.getenv("L_ID");
 		String s3SecretKey = System.getenv("L_SECRET");
 		String s3Name = System.getenv("L_NAME");
-		HashMap<String,String> out = new HashMap<String,String>();
+		HashMap<String,String> out = new HashMap<>();
 		out.put("ID",s3ID);
 		out.put("SecretKey",s3SecretKey);
 		out.put("BucketName",s3Name);

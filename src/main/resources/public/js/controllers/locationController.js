@@ -1,8 +1,7 @@
 
 var assignforce = angular.module("batchApp");
 
-assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
-		locationService, buildingService, roomService) {
+assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, locationService, buildingService, roomService) {
 	var lc = this;
 
 	// functions
@@ -29,7 +28,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 	// adds location
 	lc.addLocation = function() {
 		$mdDialog.show({
-			templateUrl : "html/templates/locationTemplate.html",
+			templateUrl : "html/templates/dialogs/locationDialog.html",
 			controller : "locationDialogCtrl", //locationDialogController.js
 			controllerAs : "ldCtrl",
 			locals : {
@@ -57,7 +56,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			lc.showToast("Please select a location.");
 		} else {
 			$mdDialog.show({
-				templateUrl : "html/templates/buildingTemplate.html",
+				templateUrl : "html/templates/dialogs/buildingDialog.html",
 				controller : "bldgDialogCtrl", //bldgDialogController.js
 				controllerAs : "bldgCtrl",
 				locals : {
@@ -86,12 +85,12 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			lc.showToast("Please select a building.");
 		} else {
 			$mdDialog.show({
-				templateUrl : "html/templates/roomTemplate.html",
+				templateUrl : "html/templates/dialogs/roomDialog.html",
 				controller : "roomDialogCtrl", //roomDialogController.js
 				controllerAs : "rdCtrl",
 				locals : {
-					building : lc.selectedList[0], 
-					room : roomService.getAlmostEmptyRoom(lc.selectedList[0].id),
+					building : lc.selectedList[0],//just a building object 
+					room : roomService.getAlmostEmptyRoom(lc.selectedList[0].id), //referencing building object
 					state : "create"
 				},
 				bindToController : true,
@@ -132,7 +131,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			//if statement checks if the selected has a list of buildings (only locations gots those)
 			if (Array.isArray(lc.selectedList[0].buildings)) {
 				$mdDialog.show({
-					templateUrl : "html/templates/locationTemplate.html",
+					templateUrl : "html/templates/dialogs/locationDialog.html",
 					controller : "locationDialogCtrl",
 					controllerAs : "ldCtrl",
 					locals : {
@@ -170,7 +169,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 			
 			else{
 				$mdDialog.show({
-					templateUrl : "html/templates/roomTemplate.html",
+					templateUrl : "html/templates/dialogs/roomDialog.html",
 					controller : "roomDialogCtrl",
 					controllerAs : "rdCtrl",
 					locals : {
@@ -198,10 +197,11 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 	lc.deleteSelected = function() {
 		var summary = lc.categorizeSelected();
 		$mdDialog.show({
-			templateUrl : "html/templates/deleteTemplate.html",
+			templateUrl : "html/templates/dialogs/deleteDialog.html",
 			controller : "deleteDialogCtrl", //deleteDialogController.js
 			controllerAs : "dCtrl",
 			locals : {
+				location : lc.selectedList[0].location,
 				list : lc.selectedList,
 				summary : summary
 			},
@@ -310,6 +310,14 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 		lc.selectedList = [];
 		locationService.getAll(function(response) {
 			lc.locations = response;
+			lc.locations.forEach(function(location){
+				location.buildings.forEach(function(building){
+					building.location = location;
+					building.rooms.forEach(function(room){
+						room.building = building;
+					});
+				}); 
+			});
 		}, function() {
 			lc.showToast("Could not fetch locations.");
 		});
@@ -322,7 +330,15 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog,
 	// data gathering
 	locationService.getAll(function(response) {
 		lc.locations = response;
-	}, function() {
+		lc.locations.forEach(function(location){
+			location.buildings.forEach(function(building){
+				building.location = location;
+				building.rooms.forEach(function(room){
+					room.building = building;
+				});
+			}); 
+		});
+	}, function(error) {
 		lc.showToast("Could not fetch locations.");
 	});
 

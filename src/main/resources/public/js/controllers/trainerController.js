@@ -1,7 +1,8 @@
 
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "trainerCtrl", function( $scope, $mdDialog, $mdToast, trainerService, s3Service, ptoService ) {
+    assignforce.controller( "trainerCtrl", function( $scope, $mdDialog, $mdToast, $location, trainerService, s3Service, ptoService ) {
+
         var tc = this;
 
           // functions
@@ -13,7 +14,7 @@
         //adds a trainer by popping up a dialog box
         tc.addTrainer = function () {
             $mdDialog.show({
-                templateUrl: "html/templates/trainerTemplate.html",
+                templateUrl: "html/templates/dialogs/trainerDialog.html",
                 controller: "trainerDialogCtrl",
                 controllerAs: "tdCtrl",
                 locals: {
@@ -22,10 +23,10 @@
                 bindToController: true,
                 clickOutsideToClose: true
             }).then(function () {
-                tc.showToast("Trainer success.");
+                tc.showToast("Trainer Added.");
                 tc.rePullTrainers();
             }, function () {
-                tc.showToast("Trainer Fails.")
+                tc.showToast("Failed to add trainer.")
             });
         };
 
@@ -36,17 +37,18 @@
 
             //calls the update method to set active to false in the database.
             trainerService.update(trainerRM, function () {
-                tc.showToast("success");
+                tc.showToast(trainerRM.firstName +" "+ trainerRM.lastName + " was removed successfully.");
             }, function () {
-                tc.showToast("failed");
+                tc.showToast("Failed to remove " + trainerRM.firstName +" "+ trainerRM.lastName);
             });
         };
 
         //connects to aws s3 to grab an object
-        tc.grabS3Resume = function (fileName) {
+        tc.grabS3Resume = function (trainer) {
+            var fileName = trainer.resume;
             //if the trainer has a null resume in the database then it will show the toast and stop running the function
             if(fileName == null){
-                tc.showToast("This Trainer does not have any resume uploaded.")
+                tc.showToast(trainer.firstName +" "+ trainer.lastName + " does not have any resume uploaded.")
                 return
             }
 
@@ -76,15 +78,26 @@
             document.body.removeChild(link);
         };
 
+            //activates a trainer
+        tc.activateTrainer = function (trainer) {
+            trainer.active = true;
+            trainerService.update(trainer, function () {
+                tc.showToast(trainer.firstName +" "+ trainer.lastName + " Activated")
+            }, function () {
+                tc.showToast("Unable to activate " + trainer.firstName +" "+ trainer.lastName);
+            })
+
+        }
+
             // reformats how an array of objects is joined
         tc.joinObjArrayByName = function(elem) {
             return elem.name;
         };
 
             // holdover until more trainer functionality is created
-        //may need to take an event parameter (event)
-        tc.goToTrainer = function() {
-            // nothing for now
+        tc.goToTrainer = function(event) {
+            var id = event.trainerId;
+            $location.path('/profile/' + id);
         };
 
             //queries the database for trainers. to be called after a change to the trainers array
@@ -104,14 +117,6 @@
         tc.showCalendar = function(){
 
             ptoService.authorize();
-
-            // $mdDialog.show({
-            //     templateUrl: "html/templates/calendarTemplate.html",
-            //     controller: "trainerCtrl",
-            //     controllerAs: "tCtrl",
-            //     bindToController: true,
-            //     clickOutsideToClose: true
-            // });
         }
 
         tc.hideCalendar = function(){

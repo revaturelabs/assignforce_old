@@ -9,8 +9,8 @@ app.service( "buildingService", function($resource) {
         return new Building();
     };
     
-    bs.getAlmostEmptyBuilding = function(locationID){
-        return new Building(locationID);
+    bs.getAlmostEmptyBuilding = function(location){
+        return new Building(location);
     };
     
     bs.create = function(building, success, error){
