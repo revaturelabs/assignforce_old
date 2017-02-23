@@ -29,7 +29,8 @@
                 bc.batch.id         = (bc.state == "edit")       ? incomingBatch.id                  : undefined;
 
                 bc.batch.name       = incomingBatch.name;
-                bc.batch.curriculum = (incomingBatch.curriculum) ? incomingBatch.curriculum.currId       : undefined;               
+                bc.batch.curriculum = (incomingBatch.curriculum) ? incomingBatch.curriculum.currId       : undefined;
+                bc.batch.focus = (incomingBatch.focus) ? incomingBatch.focus.currId       : undefined;
 
                 bc.batch.startDate = (incomingBatch.startDate) ? new Date(incomingBatch.startDate) : undefined;
                 bc.batch.endDate = (incomingBatch.endDate) ? new Date(incomingBatch.endDate) : undefined;
@@ -48,6 +49,16 @@
 
                 bc.batch.trainer    = (incomingBatch.trainer)    ? incomingBatch.trainer.trainerId   : undefined;
                 bc.batch.cotrainer  = (incomingBatch.cotrainer)  ? incomingBatch.cotrainer.trainerId : undefined;
+                
+                bc.selectedSkills = [];
+                if (incomingBatch.skills)
+                {
+                	for (var i = 0; i < incomingBatch.skills.length; i += 1)
+                	{
+                		bc.selectedSkills.push(incomingBatch.skills[i].skillId);
+                	}
+                }
+                
 
                 bc.updateWeeks();
             }
@@ -61,27 +72,72 @@
         };
         
         
+        //Updates list of selected skills.
+        bc.updateSelectedSkills = function()
+        {
+        	bc.selectedSkills = [];
+        	
+        	var cur = bc.curricula.find(function(a){
+        		return ((a.currId ? a.currId : -1) == bc.batch.curriculum);
+        	});
+    
+        	var foc = bc.foci.find(function(a){
+        		return ((a.currId ? a.currId : -1) == bc.batch.focus);
+        	});
+        	
+        	if (cur)
+        	{
+        		for (var i = 0; i < cur.skills.length; i += 1)
+        		{
+        			bc.selectedSkills.push(cur.skills[i].skillId);
+        		}
+        	}
+        	
+        	if (foc)
+        	{
+        		for (var i = 0; i < foc.skills.length; i += 1)
+        		{
+        			bc.selectedSkills.push(foc.skills[i].skillId);
+        		}
+        	}
+        	
+        	bc.updateBatchSkills();
+        }
+        
+        //Updates the batch's skills to reflect the skills list, but with the actual objects.
+        bc.updateBatchSkills = function()
+        {
+        	var skill;
+        	bc.batch.skills = [];
+        	
+        	for (var i = 0; i < bc.selectedSkills.length; i += 1)
+        	{
+        		skill = bc.skills.find(function(a){
+        			return ((a.skillId ? a.skillId : -1) == bc.selectedSkills[i]);
+        		});
+        		bc.batch.skills.push(skill)
+        	}
+        }
+        
         //Recalculates skill ratios for trainers based on the selected curriculum.
-        bc.updateCurriculumRatios = function()
+        bc.updateSkillRatios = function()
         {
             bc.trainers.forEach(function(t){
-            	bc.trainerSkillRatios[t.trainerId] = bc.calcTrainerCurriculumRatio(t);
+            	bc.trainerSkillRatios[t.trainerId] = bc.calcTrainerSkillRatio(t);
             });
         }
         
         	// calculates the percentage to which a trainer's skills correspond
         	// to the batch's curriculum.
-        bc.calcTrainerCurriculumRatio = function(trainer)
+        bc.calcTrainerSkillRatio = function(trainer)
         {
-        	var cur = bc.curricula.find(function(a){
-        		return ((a.currId ? a.currId : -1) == bc.batch.curriculum);
-        	});
+        	var cur = bc.selectedSkills;
         	
     		if (angular.isUndefined(cur) || cur === null)
     		{
     			return 0;
     		}
-    		else if (cur.skills.length == 0)
+    		else if (cur.length == 0)
     		{
     			return 100;
     		}
@@ -89,11 +145,11 @@
     		var matches = 0;
     		var total = 0;
     		
-    		for (var i = 0; i < cur.skills.length; i += 1)
+    		for (var i = 0; i < cur.length; i += 1)
     		{
     			for (var j = 0; j < trainer.skills.length; j += 1)
     			{
-    				if (cur.skills[i].skillId == (trainer.skills[j] ? trainer.skills[j].skillId : -1))
+    				if (cur[i] == (trainer.skills[j] ? trainer.skills[j].skillId : -1))
     				{
     					matches++;
     					break;
@@ -407,6 +463,8 @@
         bc.batch = batchService.getEmptyBatch();
         
         bc.batchesSelected = [];
+        
+        bc.selectedSkills = [];
 
             // state information
         bc.state = "create";
@@ -426,7 +484,6 @@
             // data gathering
         batchService.getAll( function(response) {
             bc.batches = response;
-            console.log(bc.batches);
         }, function() {
             bc.showToast( "Could not fetch batches.");
         });
@@ -458,7 +515,6 @@
         
         trainerService.getAll( function(response) {
             bc.trainers = response;
-            bc.updateCurriculumRatios();
         }, function() {
             bc.showToast( "Could not fetch trainers.");
         });

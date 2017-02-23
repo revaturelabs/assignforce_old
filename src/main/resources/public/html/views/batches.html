@@ -56,22 +56,47 @@
 
                 <div layout="columns" layout-xl="rows"  class="md-title">
 
-                    <!-- Curriculum, Start Date, End Date, Week Span -->
+                    <!-- Curriculum, Focus, Skills -->
                     <div flex layout="columns">                    
                     	<md-input-container flex>                       
                             <label> Curriculum </label>
-                            <md-select ng-model="bCtrl.batch.curriculum" ng-change="bCtrl.defaultName(); bCtrl.updateTrainers(bCtrl.trainers,bCtrl.batch.startDate,bCtrl.batch.endDate); bCtrl.updateCurriculumRatios()">
+                            <md-select ng-model="bCtrl.batch.curriculum" ng-change="bCtrl.defaultName(); bCtrl.updateTrainers(bCtrl.trainers,bCtrl.batch.startDate,bCtrl.batch.endDate); bCtrl.updateSelectedSkills()">
                                 <md-option ng-value="curriculum.currId" ng-repeat="curriculum in bCtrl.curricula"> {{ curriculum.name }} </md-option>
                             </md-select>
                         </md-input-container>
                         
                      	<md-input-container flex>                       
                             <label> Focus </label>
-                            <md-select ng-model="bCtrl.batch.focus" ng-change="bCtrl.updateCurriculumRatios()">
-                                <md-option ng-value="focus.currId" ng-repeat="focus in bCtrl.foci"> {{ focus.name }} </md-option>
+                            <md-select ng-model="bCtrl.batch.focus" ng-change="bCtrl.updateSelectedSkills()">
+                            	<div ng-if="bCtrl.batch.curriculum">
+                            		<md-option ng-value="null">No Focus</md-option>
+                                	<md-option ng-value="focus.currId" ng-repeat="focus in bCtrl.foci"> {{ focus.name }} </md-option>
+                            	</div>
+                            	<div ng-if="!bCtrl.batch.curriculum">
+                            		<md-option ng-value="null" disabled>Select a curriculum first.</md-option>
+                            	</div>
                             </md-select>
                         </md-input-container>
+
                         
+                     	<md-input-container flex>                       
+	                        <label> Skills </label>
+	                        <md-select ng-model="bCtrl.selectedSkills" ng-change="bCtrl.updateBatchSkills(); bCtrl.updateSkillRatios()" multiple>
+	                        	<div ng-if="bCtrl.batch.curriculum">
+	                            	<md-option ng-repeat="skill in bCtrl.skills" value="{{skill.skillId}}">{{skill.name}}</md-option>
+	                        	</div>
+	                        	<div ng-if="!bCtrl.batch.curriculum">
+	                        		<md-option ng-value="null" disabled>Select a curriculum first.</md-option>
+	                        	</div>
+	                        </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+                        
+                <div layout="columns" layout-xl="rows"  class="md-title">
+
+                    <!-- Start Date, End Date, Week Span, Name -->
+                    <div flex layout="columns">              
                         <md-input-container flex>
                             <label> Start Date </label>
                             <md-datepicker ng-value="batch.startDate" ng-model="bCtrl.batch.startDate" md-date-filter="bCtrl.enableMondays" md-open-on-focus md-hide-icons="calendar" ng-change="bCtrl.selectEndDate(); bCtrl.updateWeeks(); bCtrl.defaultName(); bCtrl.updateTrainers(bCtrl.trainers,bCtrl.batch.startDate,bCtrl.batch.endDate)"> </md-datepicker>
@@ -87,12 +112,6 @@
                         </md-input-container>
                     </div>
 
-                    <!-- Skills -->
-                    <!--<div class="md-padding">
-                        <label> Skill search </label>
-                        <md-chips ng-model="bCtrl.skillSet"> </md-chips> 
-                    </div>-->
-
                     <!-- Name -->
                     <div flex layout="columns">                    
 						<md-input-container flex>
@@ -103,9 +122,6 @@
                 </div>
                 
                 <div layout="columns" layout-xl="rows"  class="md-title">
-                </div>
-
-                <div layout="columns" layout-xl="rows"  class="md-title">
 
                     <!-- Trainer, Cotrainer -->
                     <div flex layout="columns">
@@ -113,16 +129,21 @@
                     	<md-input-container flex>                       
                             <label> Trainer </label>
                             <md-select ng-model="bCtrl.batch.trainer">
-                                <div ng-repeat="trainer in bCtrl.availableTrainers">
-                                	<div ng-if="bCtrl.availableTrainers.length > 0">
-	                                    <md-option ng-value="trainer.trainerId"> {{ trainer.firstName }}  {{ trainer.lastName }} ({{ bCtrl.trainerSkillRatios[trainer.trainerId] }} % skill match to selected curriculum.)</md-option>
-	                                    <td colspan="9" class="progressBar">
-	                                        <md-progress-linear class="md-accent" style="height: 2px" md-mode="determinate" value="{{ bCtrl.trainerSkillRatios[trainer.trainerId] }}"> </md-progress-linear>
-	                                    </td>
-                                    </div>
-                                    <div ng-if="bCtrl.availableTrainers.length <= 0">
-                                    	<md-option ng-value="null" disabled>No available trainers.</md-option>
-                                    </div>
+                            	<div ng-if="bCtrl.batch.curriculum">
+                            		<div ng-if="bCtrl.availableTrainers.length > 0">
+		                                <div ng-repeat="trainer in bCtrl.availableTrainers">
+		                                    <md-option ng-value="trainer.trainerId"> {{ trainer.firstName }}  {{ trainer.lastName }} ({{ bCtrl.trainerSkillRatios[trainer.trainerId] }} % skill match to required skills.)</md-option>
+		                                    <td colspan="9" class="progressBar">
+		                                        <md-progress-linear class="md-accent" style="height: 2px" md-mode="determinate" value="{{ bCtrl.trainerSkillRatios[trainer.trainerId] }}"> </md-progress-linear>
+		                                    </td>
+		                                </div>
+	                                </div>
+	                                <div ng-if="bCtrl.availableTrainers.length <= 0">
+	                                	<md-option ng-value="null" disabled>No available trainers.</md-option>
+	                                </div>
+                                </div>
+                                <div ng-if="!bCtrl.batch.curriculum">
+                                	<md-option ng-value="null" disabled>Select a curriculum first.</md-option>
                                 </div>
                             </md-select>
                     	</md-input-container>
@@ -133,7 +154,7 @@
                             	<div ng-if="bCtrl.batch.trainer">
 	                                <div ng-repeat="cotrainer in bCtrl.trainers">
 	                                	<div ng-if="cotrainer.trainerId != bCtrl.batch.trainer">
-		                                    <md-option ng-value="cotrainer.trainerId"> {{ cotrainer.firstName }}  {{ cotrainer.lastName }} ({{ bCtrl.calcTrainerCurriculumRatio(cotrainer, bCtrl.batch.curriculum)}} % skill match to selected curriculum.)</md-option>
+		                                    <md-option ng-value="cotrainer.trainerId"> {{ cotrainer.firstName }}  {{ cotrainer.lastName }} ({{ bCtrl.calcTrainerCurriculumRatio(cotrainer, bCtrl.batch.curriculum)}} % skill match to required skills.)</md-option>
 		                                    <td colspan="9" class="progressBar">
 		                                        <md-progress-linear class="md-accent" style="height: 2px" md-mode="determinate" value="{{ bCtrl.calcTrainerCurriculumRatio(cotrainer, bCtrl.batch.curriculum) }}"> </md-progress-linear>
 		                                    </td>
