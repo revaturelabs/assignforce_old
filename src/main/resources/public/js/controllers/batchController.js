@@ -74,7 +74,7 @@
         bc.updateSelectedSkills = function()
         {
         	bc.selectedSkills = [];
-        	var i = 0;
+        	var i;
         	
         	var cur = bc.curricula.find(function(a){
         		return ((a.currId ? a.currId : -1) == bc.batch.curriculum);
