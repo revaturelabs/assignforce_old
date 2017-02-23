@@ -1,6 +1,6 @@
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "batchCtrl", function($scope, batchService, curriculumService, trainerService, locationService, buildingService, roomService, calendarService, $filter, $window, $rootScope) {
+    assignforce.controller( "batchCtrl", function($scope, batchService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, $filter, $window) {
         var bc = this;
         bc.trainerSkillRatios = [];
         
@@ -23,7 +23,8 @@
 
             if (newState == "create") {
                 bc.batch = batchService.getEmptyBatch();
-                bc.batch.location = bc.findHQ();                
+                bc.batch.location = bc.findHQ;
+                bc.batch.building = bc.findHQBuilding;
             } else {
 
                 bc.batch.id         = (bc.state == "edit")       ? incomingBatch.id                  : undefined;
@@ -110,16 +111,20 @@
         }
         
         /*******************************************************************/
-            // defaults location to Reston branch 
-        bc.findHQ = function(){
-            return 1;
-        }
+     // defaults location to Reston branch 
+        settingService.getById(3, function(response){
+        	bc.findHQ = response.settingValue;
+        }, function(){
+        	bc.showToast("Setting not found");
+        });
         
         /*******************************************************************/
-        
-        bc.findHQBuilding = function(){
-        	return 1;
-        }
+                
+        settingService.getById(9, function(response){
+        	bc.findHQBuilding = response.settingValue;
+        }, function(){
+        	bc.showToast("Setting not found");
+        })
         
         /*******************************************************************/
         
@@ -288,7 +293,7 @@
             bc.changeState( "create", null );
             batchService.getAll( function(response) {
                 bc.batches = response;
-                $rootScope.$broadcast("repullTimeline");
+                $scope.$broadcast("repullTimeline");
             }, function() {
                 bc.showToast( "Could not fetch batches.");
             });
@@ -418,9 +423,7 @@
                                     "submit": "Save clone" } };
 
         
-        /*******************************************************************/
-        /*******************************************************************/
-        
+        /*******************************************************************/        
         
           // page initialization
             // data gathering
@@ -452,7 +455,7 @@
         
         locationService.getAll( function(response) {
             bc.locations = response;
-            bc.batch.location = bc.findHQ();
+            bc.batch.location = bc.findHQ;
         }, function() {
             bc.showToast( "Could not fetch locations.");
         });
