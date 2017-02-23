@@ -1,16 +1,7 @@
 var assignforce = angular.module("batchApp");
 
-assignforce.controller("reportCtrl", function($scope, limitToFilter, skillService, trainerService, settingService, batchService, curriculumService, monthList) {
-
-
-
-    $scope.ideas = [
-        ['ideas1', 1],
-        ['ideas2', 8],
-        ['ideas3', 5]
-    ];
-
-    $scope.limitedIdeas = limitToFilter($scope.ideas, 2);
+assignforce.controller("reportCtrl", function($scope, skillService, trainerService, settingService, batchService, curriculumService, monthList) {
+    
 
     var rc = this;
     rc.data = [];
@@ -499,9 +490,13 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
         var flagArr = [ 0, 0, 0 ];
         var count = 0;
 
-        if	( !( rc.cardArr[index].requiredGrads == undefined ) && !( rc.cardArr[index].reqDate == undefined ) &&
-            !( rc.cardArr[index].requiredBatches == undefined ) && !( rc.cardArr[index].startDate == undefined ) &&
-            !( rc.cardArr[index].formattedStartDate == undefined ) && !( rc.cardArr[index].batchType == undefined ) ) {
+        var sonarOne = !( rc.cardArr[index].requiredGrads == undefined ) && !( rc.cardArr[index].reqDate == undefined );
+        var sonarTwo = !( rc.cardArr[index].requiredBatches == undefined ) && !( rc.cardArr[index].startDate == undefined );
+        var sonarThree = !( rc.cardArr[index].formattedStartDate == undefined ) && !( rc.cardArr[index].batchType == undefined);
+
+
+
+        if	(sonarOne && sonarTwo && sonarThree) {
 
             var canSubmit = 0;
             rc.errMsg = "";
@@ -528,13 +523,11 @@ assignforce.controller("reportCtrl", function($scope, limitToFilter, skillServic
             //Checks if multiple inputs are missing or invalid.
             //Sets the error message to the appropriate phrase, if multiple inputs are missing.
             for (var x in flagArr ){
-                if( flagArr.hasOwnProperty(index) ){
-                    if( flagArr[x] == 1 ){
+                if((flagArr.hasOwnProperty(index)) && (flagArr[x] == 1)){
                         count = count + 1;
-                        if ( count > 1 ){
+                        if ( count > 1 ) {
                             rc.errMsg = "Multiple Inputs Required.";
                         }
-                    }
                 }
             }
 
