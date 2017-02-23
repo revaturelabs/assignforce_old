@@ -16,6 +16,16 @@ app.service('ptoService', function ($resource, $mdDialog) {
         gapi.load('client:auth2', initClient);
     }
 
+    function showCalendar(){
+        $mdDialog.show({
+            templateUrl: "html/templates/calendarTemplate.html",
+            controller: "trainerCtrl",
+            controllerAs: "tCtrl",
+            bindToController: true,
+            clickOutsideToClose: true
+        })
+    }
+
     function initClient() {
         // Initialize the gapi.client object, which app uses to make API requests.
         // Get API key and client ID from API Console.
@@ -27,49 +37,21 @@ app.service('ptoService', function ($resource, $mdDialog) {
         }).then(function(){
 
             GoogleAuth = gapi.auth2.getAuthInstance();
-            // Listen for sign-in state changes.
-            GoogleAuth.isSignedIn.listen(updateSigninStatus);
-            // Handle initial sign-in state. (Determine if user is already signed in.)
-            var user = GoogleAuth.currentUser.get();
-
-            setSigninStatus();
 
         }).then(function(){
 
             if (GoogleAuth.isSignedIn.get()) {
-                // User is authorized and has clicked 'Sign out' button.
-                var user = GoogleAuth.currentUser.get();
 
-                $mdDialog.show({
-                    templateUrl: "html/templates/calendarTemplate.html",
-                    controller: "trainerCtrl",
-                    controllerAs: "tCtrl",
-                    bindToController: true,
-                    clickOutsideToClose: true
-                })
+                showCalendar();
 
             } else {
                 // User is not signed in. Start Google auth flow.
                 GoogleAuth.signIn().then(function(){
-                    $mdDialog.show({
-                        templateUrl: "html/templates/calendarTemplate.html",
-                        controller: "trainerCtrl",
-                        controllerAs: "tCtrl",
-                        bindToController: true,
-                        clickOutsideToClose: true
-                    })
+                    
+                    showCalendar();
                 });
             }
         });
-    }
-
-    function setSigninStatus(){
-        var user = GoogleAuth.currentUser.get();
-        var isAuthorized = user.hasGrantedScopes(scopes);
-    }
-
-    function updateSigninStatus(){
-        setSigninStatus();
     }
 
     ptos.addPto = function(trainer, startDate, endDate){
@@ -121,13 +103,7 @@ app.service('ptoService', function ($resource, $mdDialog) {
             request.execute(function(){
                 $mdDialog.cancel();
 
-                $mdDialog.show({
-                    templateUrl: "html/templates/calendarTemplate.html",
-                    controller: "trainerCtrl",
-                    controllerAs: "tCtrl",
-                    bindToController: true,
-                    clickOutsideToClose: true
-                });
+                showCalendar();
             });
         });
     }
