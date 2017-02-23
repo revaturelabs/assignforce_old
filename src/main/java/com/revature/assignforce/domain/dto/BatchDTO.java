@@ -10,6 +10,7 @@ public class BatchDTO {
 	private int ID;
 	private String name;
 	private int curriculum;
+	private int focus;
 	private int trainer;
 	private int cotrainer;
 	private int location;
@@ -40,6 +41,14 @@ public class BatchDTO {
 	}
 	public void setCurriculum(int curr) {
 		this.curriculum = curr;
+	}
+	
+	  // focus
+	public int getFocus() {
+		return focus;
+	}
+	public void setFocus(int focus) {
+		this.focus = focus;
 	}
 	
 	  // trainer
@@ -100,8 +109,9 @@ public class BatchDTO {
 	
 	@Override
 	public String toString() {
-		return "BatchDTO [batchName=" + name + ", curr=" + curriculum + ", trainer=" + trainer + 
-				", cotrainer=" + cotrainer + ", room=" + room + ", date=" + startDate + ", date2=" + endDate + "]";
+		return "BatchDTO [batchName = " + name + ", curr = " + curriculum + ", focus = " + focus
+				+ ", trainer = " + trainer + ", cotrainer = " + cotrainer + ", room = " + room
+				+ ", date = " + startDate + ", date2 = " + endDate + "]";
 	}
 	
 	
