@@ -28,7 +28,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 	// adds location
 	lc.addLocation = function() {
 		$mdDialog.show({
-			templateUrl : "html/templates/locationTemplate.html",
+			templateUrl : "html/templates/dialogs/locationDialog.html",
 			controller : "locationDialogCtrl", //locationDialogController.js
 			controllerAs : "ldCtrl",
 			locals : {
@@ -56,7 +56,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 			lc.showToast("Please select a location.");
 		} else {
 			$mdDialog.show({
-				templateUrl : "html/templates/buildingTemplate.html",
+				templateUrl : "html/templates/dialogs/buildingDialog.html",
 				controller : "bldgDialogCtrl", //bldgDialogController.js
 				controllerAs : "bldgCtrl",
 				locals : {
@@ -85,7 +85,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 			lc.showToast("Please select a building.");
 		} else {
 			$mdDialog.show({
-				templateUrl : "html/templates/roomTemplate.html",
+				templateUrl : "html/templates/dialogs/roomDialog.html",
 				controller : "roomDialogCtrl", //roomDialogController.js
 				controllerAs : "rdCtrl",
 				locals : {
@@ -131,7 +131,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 			//if statement checks if the selected has a list of buildings (only locations gots those)
 			if (Array.isArray(lc.selectedList[0].buildings)) {
 				$mdDialog.show({
-					templateUrl : "html/templates/locationTemplate.html",
+					templateUrl : "html/templates/dialogs/locationDialog.html",
 					controller : "locationDialogCtrl",
 					controllerAs : "ldCtrl",
 					locals : {
@@ -169,7 +169,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 			
 			else{
 				$mdDialog.show({
-					templateUrl : "html/templates/roomTemplate.html",
+					templateUrl : "html/templates/dialogs/roomDialog.html",
 					controller : "roomDialogCtrl",
 					controllerAs : "rdCtrl",
 					locals : {
@@ -197,7 +197,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 	lc.deleteSelected = function() {
 		var summary = lc.categorizeSelected();
 		$mdDialog.show({
-			templateUrl : "html/templates/deleteTemplate.html",
+			templateUrl : "html/templates/dialogs/deleteDialog.html",
 			controller : "deleteDialogCtrl", //deleteDialogController.js
 			controllerAs : "dCtrl",
 			locals : {
