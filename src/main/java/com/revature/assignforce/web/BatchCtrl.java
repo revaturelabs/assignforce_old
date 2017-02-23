@@ -53,6 +53,7 @@ public class BatchCtrl {
 		int ID = in.getID();
 		String name = in.getName();
 		Curriculum curriculum = currService.getOneItem(in.getCurriculum());
+		Curriculum focus = currService.getOneItem(in.getFocus());
 		Room room = roomService.getOneItem(in.getRoom());
 		Trainer trainer = trainerService.getOneItem(in.getTrainer());
 		Trainer cotrainer = trainerService.getOneItem(in.getCotrainer());
@@ -61,7 +62,7 @@ public class BatchCtrl {
 		BatchStatusLookup status = new BatchStatusLookup(1, "Scheduled");
 		List<Skill> skills = in.getSkills();
 		
-		Batch out = new Batch( ID, name, curriculum, room, trainer, cotrainer, startDate, endDate, status, skills );
+		Batch out = new Batch( ID, name, curriculum, room, trainer, cotrainer, startDate, endDate, status, skills, focus);
 		out = batchService.saveItem( out );
 
 		if (out == null) {

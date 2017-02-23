@@ -1,6 +1,6 @@
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "batchCtrl", function($scope, batchService, curriculumService, trainerService, locationService, buildingService, roomService, calendarService, $filter, $window, $rootScope) {
+    assignforce.controller( "batchCtrl", function($scope, batchService, curriculumService, trainerService, locationService, buildingService, roomService, calendarService, skillService, $filter, $window, $rootScope) {
         var bc = this;
         bc.trainerSkillRatios = [];
         
@@ -426,20 +426,35 @@
             // data gathering
         batchService.getAll( function(response) {
             bc.batches = response;
+            console.log(bc.batches);
         }, function() {
             bc.showToast( "Could not fetch batches.");
         });
 
         /*******************************************************************/
         
+        skillService.getAll( function(response) {
+            bc.skills = response;
+        }, function() {
+            bc.showToast( "Could not fetch skills.");
+        });
+        
+        /*******************************************************************/
+        
         curriculumService.getAll( function(response) {
-            bc.curricula = response;
+        	var temp = response;
+        	
+            bc.curricula = temp.filter(function(t){
+            	return (t.core);
+            });
+            bc.foci = temp.filter(function(t){
+            	return !(t.core);
+            });
         }, function() {
             bc.showToast( "Could not fetch curricula.");
         });
 
         /*******************************************************************/
-        
         
         trainerService.getAll( function(response) {
             bc.trainers = response;
