@@ -1,0 +1,88 @@
+<md-card>
+    <md-toolbar layout="columns">
+        <div class="md-toolbar-tools">
+            <span>Curricula</span>
+        </div>
+    </md-toolbar>
+
+    <!--content for core Curricula-->
+    <md-card>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <span>Core Curricula</span>
+            </div>
+        </md-toolbar>
+        <md-card-content>
+            <md-list>
+                <md-list-item class="md-2-line" md-ink-ripple ng-repeat="curr in cCtrl.curricula" ng-if="curr.core == true">
+                    <h3 >{{curr.name}}</h3>
+                </md-list-item>
+            </md-list>
+        </md-card-content>
+    </md-card>
+
+    <!--content for focuses-->
+    <md-card>
+        <md-toolbar layout="columns">
+            <div class="md-toolbar-tools">
+                <span>Focuses</span>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cCtrl.toggleFocusStatus()">
+                    <md-tooltip class="md-title"> Create Focus</md-tooltip>
+                    <i class="material-icons">create</i>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-card-content>
+            <form name="focusForm" ng-show="cCtrl.focusStatus">
+                <div layout="row" class="md-padding">
+                    <md-input-container flex="50">
+                        <label>Focus Name:</label>
+                        <input type="text" name="focus" ng-model="cCtrl.focusName" required />
+                    </md-input-container>
+
+                    <md-input-container style="margin-right: 10px;" required flex="50">
+                        <label>Skills:</label>
+                        <md-select ng-model="cCtrl.selectedSkills" multiple>
+                            <md-option ng-repeat="skill in cCtrl.skills" value="{{skill.skillId}}">{{skill.name}}</md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+                <div layout="row" class="md-padding">
+                    <md-button ng-click="cCtrl.createFocus()" class="md-primary"> Create </md-button>
+                </div>
+            </form>
+            <md-list>
+                <md-list-item ng-repeat="curr in cCtrl.curricula" ng-if="curr.core == false" class="md-2-line" md-ink-ripple="#ff0000" >
+                    <h3 >{{curr.name}}</h3>
+                </md-list-item>
+            </md-list>
+        </md-card-content>
+    </md-card>
+
+    <md-content>
+        <md-toolbar layout="columns">
+            <div class="md-toolbar-tools">
+                <span>Skills</span>
+            </div>
+        </md-toolbar>
+
+        <form name="skillForm">
+            <div layout="row">
+                <md-input-container flex="50">
+                    <label>Skill Name:</label>
+                    <input type="text" name="skill" ng-model="cCtrl.skillName" required />
+                </md-input-container>
+            </div>
+            <div layout="row">
+                <md-button ng-click="cCtrl.createSkill()" class="md-primary"> Create </md-button>
+            </div>
+        </form>
+    </md-content>
+
+    <div ng-if="" layout="column" layout-wrap layout-align="center center">
+        <div flex="100"> &nbsp; </div>
+        <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
+        <div flex="100"> &nbsp; </div>
+    </div>
+</md-card>
