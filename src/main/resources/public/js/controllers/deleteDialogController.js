@@ -69,51 +69,56 @@
             }
             	
             var elem = delList.shift();
-            
+            //var updatedLocations = [];
+            var updatedBuildings = [];
+            var updatedRooms = [];
+            var locID;
+            var buildingID;
             // elem is location
             if (Array.isArray(elem.buildings)){
-            	//simplifying shallow copies
-            	Object.prototype.clone = function(){
-            		JSON.parse(JSON.stringify(this));
-            	}
+            	//updatedLocations.push(elem);
+            	locID = elem.id;
             	// if it has buildings            	
             	if(elem.buildings.length > 0){
-            		
             		angular.forEach(elem.buildings, function(building){
-            		console.log("for each building, these are locations:");
-            		console.log(elem);
+            		buildingID = building.id;
+            		updatedBuildings.push(building);
         				// if it has rooms
-            			if(building.rooms.length > 0){            				
+            			if(building.rooms.length > 0){
             				building.rooms.forEach(function(room){
-            					//= JSON.parse(JSON.stringify(building));
-            					console.log("for each room, these are buildings");
-            					console.log(building);
+            					updatedRooms.push(room);
             					//Inactivate room - inactive, location doesn't matter as room does not need location id, room's buildings cannot recurse
-            					room.active = false;
-            					room.building = building.clone();
-            /***Breaks here*/	room.building.location = undefined;
-            					room.building.rooms = [];
-            					console.log("Operations happened.  Buildings then locations:");
-            					console.log(building); //undefined
-            					console.log(elem);
             					
-            					roomService.update( room, function(){
-            		            }, function(){
-            		                $mdDialog.cancel();
-            		            });            					
+            					buildingService.getById(buildingID, function(response){
+            						room.building = response;
+            						
+            						room.active = false;
+                					room.building.rooms = [];
+                					room.building.location = undefined;
+                					roomService.update( room, function(){
+                    	            }, function(){
+                    	                $mdDialog.cancel();
+                    	            });    
+            					}, function(){
+            						
+            					});
+            					      					
             				});
             			}
             			
             			//Inactivate building - inactive, location must be original, location's buildings cannot recurse, building's rooms cannot recurse
-            			building.active = false;
-            			building.location = elem.clone();
-            			building.location.buildings = [];
-            			building.rooms = [];
             			
-            			buildingService.update( building, function(){
-                        }, function(){
-                            $mdDialog.cancel();
-                        });
+            			locationService.getById(locID, function(response){
+            				building.location = response;
+            				
+            				building.active = false;
+            				building.location.buildings = [];
+            				building.rooms = [];
+            				buildingService.update( building, function(){
+                            }, function(){
+                                $mdDialog.cancel();
+                            });
+            			});           			
             		});            		
             	}
             	
@@ -125,7 +130,24 @@
                 }, function(){
                 	$mdDialog.cancel();
                 });
+                /*
+                updatedBuildings.forEach(function (building){
+                	building.rooms = [];
+                	buildingService.update( building, function(){
+                		console.log(updatedBuildings);
+                    }, function(){
+                        $mdDialog.cancel();
+                    });
+                })                
                 
+                updatedRooms.forEach(function (room){
+                	roomService.update( room, function(){
+                		console.log(updatedRooms);
+    	            }, function(){
+    	                $mdDialog.cancel();
+    	            });  
+                })                 
+                */
             dc.deleteHelper(delList);
             
             }
