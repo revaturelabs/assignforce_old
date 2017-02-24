@@ -65,7 +65,6 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
     
     settingService.getById(3, function(response){
     	sc.defLoc = response;
-    	console.log(sc.defLoc);
     }, function(){
     	sc.showToast("Unable to find default location");
     });
