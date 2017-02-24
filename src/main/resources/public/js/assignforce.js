@@ -56,25 +56,28 @@
 		});
 
           // theme config
-        assignforce.config( function($mdThemingProvider) {
+    assignforce.config( function($mdThemingProvider) {
 
-            var revOrangeMap = $mdThemingProvider.extendPalette("deep-orange", {
-                "800": "#D9510D",
-                "500": "#F26925"
-            });
-
-            var revBlueMap = $mdThemingProvider.extendPalette("blue-grey", {
-                "A200": "#374C61",
-                "100" : "#C9DCE8"
-            });
-
-            $mdThemingProvider.definePalette("revOrange", revOrangeMap);
-            $mdThemingProvider.definePalette("revBlue", revBlueMap);
-                
-            $mdThemingProvider.theme("default")
-                .primaryPalette("revOrange")
-                .accentPalette("revBlue");
-                // .primaryPalette("indigo")
-                // .accentPalette("pink");
+        var revOrangeMap = $mdThemingProvider.extendPalette("deep-orange", {
+            "100": "#EF5407",
+            "A200": "#FF7A1C"
         });
+
+        var revBlueMap = $mdThemingProvider.extendPalette("blue-grey", {
+            // "A200": "#374C61",
+            // "100" : "#C9DCE8"
+            "500": "#37474F",
+			"800": "#597482"
+            // "800" : "#607D8B"
+        });
+
+        $mdThemingProvider.definePalette("revOrange", revOrangeMap);
+        $mdThemingProvider.definePalette("revBlue", revBlueMap);
+
+        $mdThemingProvider.theme("default")
+        // .primaryPalette("revOrange")
+        // .accentPalette("revBlue")
+            .primaryPalette("revBlue")
+            .accentPalette("revOrange");
+    });
 
