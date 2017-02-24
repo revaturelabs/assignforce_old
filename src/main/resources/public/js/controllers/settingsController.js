@@ -1,7 +1,7 @@
 
 var assignforce = angular.module( "batchApp");
 
-assignforce.controller("settingsCtrl", function ($scope, settingService, locationService) {
+assignforce.controller("settingsCtrl", function ($scope, settingService, locationService, buildingService) {
     var sc = this;
 
     //functions
@@ -50,17 +50,41 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
             if(sc.settings[i].settingId == 3){
                 sc.settings[i].settingValue = sc.defaultLocation.id;
             }
+            else if (sc.settings[i].settingId == 23){
+            	sc.settings[i].settingName = sc.defaultPattern;
+            }
+            else if (sc.settings[i].settingId == 9){
+            	sc.settings[i].settingValue = sc.defaultBuilding.id;
+            }
             //save each setting
             settingService.update(sc.settings[i]);
         }
 
         sc.showToast("Settings updated!");
     };
-
+    
+    settingService.getById(3, function(response){
+    	sc.defLoc = response;
+    }, function(){
+    	sc.showToast("Unable to find default location");
+    });
+    
     //Get all Settings
     settingService.getAll( function (response) {
         sc.settings = response;
         sc.getLocations();//this will initialize the Locations variable after the settings are loaded in.
+        //sc.getBuildings();
+        
+        sc.patterns = [];
+        angular.forEach(sc.settings, function(pattern){
+        	if (pattern.settingId > 14 && pattern.settingId < 23){
+        		sc.patterns.push(pattern);
+        	}
+        	else if (pattern.settingId == 23){
+        		sc.defaultPattern = pattern.settingName;
+        	}
+        })
+        
     }, function () {
         sc.showToast("Could not fetch settings.");
     });
@@ -68,20 +92,38 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
     //get all locations
     sc.getLocations = function() {
         locationService.getAll(function (response) {
-            sc.locations = response;
-
+            sc.locations = response;       
+            
             angular.forEach(sc.locations, function (location) {
-                if (sc.settings[2].settingValue == location.id) {
-                    sc.defaultLocation = location.name;
+                if (sc.defLoc.settingValue == location.id) {
+                    sc.defaultLocation = location;
+                    sc.buildings = [];
+                	angular.forEach(location.buildings, function (building){
+                		sc.buildings.push(building);
+                	});
                 }
-            })
+            });
         }, function () {
             sc.showToast("could not fetch locations.");
         });
     };
+    
+    sc.getBuildings = function(){
+    	sc.buildings = [];
+    	angular.forEach(sc.defaultLocation.buildings, function(building){
+    		sc.buildings.push(building);
+    	})
+    }
 
     //ex of getting a single setting
-    sc.test = settingService.getById(1);
+    /*
+    settingService.getById(1, function(response){
+    	//success
+    	sc.test = response;
+    }, function(){
+    	//failure
+    });
+*/
 
     //data
     sc.defaultLocation;

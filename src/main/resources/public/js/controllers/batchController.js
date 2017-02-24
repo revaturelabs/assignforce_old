@@ -1,6 +1,7 @@
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "batchCtrl", function($scope, batchService, curriculumService, trainerService, locationService, buildingService, roomService, calendarService, skillService, $filter, $window, $rootScope) {
+    assignforce.controller( "batchCtrl", function($scope, batchService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, skillService, $filter, $window, $rootScope) {
+
         var bc = this;
         bc.trainerSkillRatios = [];
         
@@ -23,7 +24,8 @@
 
             if (newState == "create") {
                 bc.batch = batchService.getEmptyBatch();
-                bc.batch.location = bc.findHQ();                
+                bc.batch.location = bc.findHQ;
+                bc.batch.building = bc.findHQBuilding;
             } else {
 
                 bc.batch.id         = (bc.state == "edit")       ? incomingBatch.id                  : undefined;
@@ -165,16 +167,30 @@
         }
         
         /*******************************************************************/
-            // defaults location to Reston branch 
-        bc.findHQ = function(){
-            return 1;
-        }
+     // defaults location to Reston branch 
+        settingService.getById(3, function(response){
+        	bc.findHQ = response.settingValue;
+        }, function(){
+        	bc.showToast("Location default not found");
+        });
         
         /*******************************************************************/
         
-        bc.findHQBuilding = function(){
-        	return 1;
-        }
+        //defaults building        
+        settingService.getById(9, function(response){
+        	bc.findHQBuilding = response.settingValue;
+        	//bc.resetForm(); //sets location and building defaults
+        }, function(){
+        	bc.showToast("Building default not found");
+        })
+        
+        //defaults batch naming convention
+        settingService.getById(23, function(response){
+        	bc.nameString = response.settingName;
+        }, function(){
+        	bc.nameString = "$c ($m/$d)";
+        	bc.showToast("Batch name default not found");
+        })
         
         /*******************************************************************/
         
@@ -212,6 +228,12 @@
                 return [];
             }
         };
+        
+        bc.filterBuildings = function(locationID){
+        	if(locationID != undefined){
+        		return bc.locations.filter(function(location){return location.id===locationID})[0].buildings;
+        	}
+        };
 
         /*******************************************************************/
         
@@ -219,9 +241,9 @@
         bc.updateWeeks = function(){
             var weeks = calendarService.countWeeks( bc.batch.startDate, bc.batch.endDate );
             if (!weeks) {
-                bc.weeksSpan = "spans 0 weeks";
+                bc.weeksSpan = "Spans 0 Weeks";
             } else {
-                bc.weeksSpan = "spans " + weeks + " weeks";
+                bc.weeksSpan = "Spans " + weeks + " Weeks";
             }
         };
 
@@ -237,7 +259,12 @@
                         currName = curr.name;
                     }
                 });
-                bc.batch.name = currName + " (" + (start.getMonth() + 1) + "/" + start.getDate() + ")";
+                //nameString needs to come from a stored string, selected in the settings
+                
+                bc.batch.name = bc.nameString.replace("$c", currName);
+                bc.batch.name = bc.batch.name.replace("$d", start.getDate());
+                bc.batch.name = bc.batch.name.replace("$m", (start.getMonth() + 1));
+                bc.batch.name = bc.batch.name.replace("$y", start.getFullYear());
         	}
         };
 
@@ -293,7 +320,8 @@
         bc.resetForm = function(){
             bc.batchesSelected = [];
             bc.changeState( "create", null );
-        };
+        };       
+        
 
         /*******************************************************************/
         
@@ -343,7 +371,7 @@
             bc.changeState( "create", null );
             batchService.getAll( function(response) {
                 bc.batches = response;
-                $rootScope.$broadcast("repullTimeline");
+                $scope.$broadcast("repullTimeline");
             }, function() {
                 bc.showToast( "Could not fetch batches.");
             });
@@ -456,7 +484,7 @@
         /*******************************************************************/
         
           // data
-        bc.weeksSpan = "spans 0 weeks";
+        bc.weeksSpan = "Spans 0 Weeks";
         bc.batchOrder = "startDate";
 
         bc.batch = batchService.getEmptyBatch();
@@ -467,17 +495,15 @@
 
             // state information
         bc.state = "create";
-        bc.stateMux = { "create": { "header": "Create new batch",
-                                    "submit": "Create new batch" },
-                        "edit"  : { "header": "Edit batch",
+        bc.stateMux = { "create": { "header": "Create New Batch",
+                                    "submit": "Create batch" },
+                        "edit"  : { "header": "Edit Batch",
                                     "submit": "Save changes" },
                         "clone" : { "header": "Create clone",
                                     "submit": "Save clone" } };
 
         
-        /*******************************************************************/
-        /*******************************************************************/
-        
+        /*******************************************************************/        
         
           // page initialization
             // data gathering
@@ -499,7 +525,6 @@
         
         curriculumService.getAll( function(response) {
         	var temp = response;
-        	
             bc.curricula = temp.filter(function(t){
             	return (t.core);
             });
@@ -522,7 +547,7 @@
         
         locationService.getAll( function(response) {
             bc.locations = response;
-            bc.batch.location = bc.findHQ();
+            bc.batch.location = bc.findHQ;
         }, function() {
             bc.showToast( "Could not fetch locations.");
         });
@@ -531,10 +556,12 @@
         
         buildingService.getAll( function(response) {
             bc.buildings = response;
-            bc.batch.building = 1;
+            bc.batch.building = bc.findHQBuilding;
+            // was being set here..bc.batch.building = 1;
         }, function() {
             bc.showToast("Could not fetch buildings.");
         });
+        
         roomService.getAll( function(response) {
             bc.rooms = response;
         }, function() {

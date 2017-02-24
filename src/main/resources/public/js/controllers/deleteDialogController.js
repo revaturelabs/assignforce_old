@@ -47,8 +47,12 @@
             title += "?";
             dc.desc = title;
         }formatText();
+        
+        
+        
+        
 
-          // delete rooms/locations
+          // Delete Rooms/Buildings/Locations
         dc.delete = function(){
             dc.thinking = true;
             var delList = dc.list;
@@ -65,91 +69,123 @@
             }
             	
             var elem = delList.shift();
-            
-            // if a location was selected, recurse building/room inactivation
+            //var updatedLocations = [];
+            var updatedBuildings = [];
+            var updatedRooms = [];
+            var locID;
+            var buildingID;
+            // elem is location
             if (Array.isArray(elem.buildings)){
-            	// if it has buildings
+            	//updatedLocations.push(elem);
+            	locID = elem.id;
+            	// if it has buildings            	
             	if(elem.buildings.length > 0){
             		angular.forEach(elem.buildings, function(building){
-            		
+            		buildingID = building.id;
+            		updatedBuildings.push(building);
         				// if it has rooms
             			if(building.rooms.length > 0){
             				building.rooms.forEach(function(room){
-            					room.active = false;
-            					room.building.rooms = [];
-            					room.building.location = undefined;
-            					roomService.update( room, function(){
-            						// donothing
-            		            }, function(){
-            		                $mdDialog.cancel();
-            		            });            					
+            					updatedRooms.push(room);
+            					//Inactivate room - inactive, location doesn't matter as room does not need location id, room's buildings cannot recurse
+            					
+            					buildingService.getById(buildingID, function(response){
+            						room.building = response;
+            						
+            						room.active = false;
+                					room.building.rooms = [];
+                					room.building.location = undefined;
+                					roomService.update( room, function(){
+                    	            }, function(){
+                    	                $mdDialog.cancel();
+                    	            });    
+            					}, function(){
+            						
+            					});
+            					      					
             				});
             			}
-            			building.active = false;
-            			building.location.buildings = [];
-            			building.rooms = [];
-            			buildingService.update( building, function(){   
-            				// donothing
-                        }, function(){
-                            $mdDialog.cancel();
-                        });
+            			
+            			//Inactivate building - inactive, location must be original, location's buildings cannot recurse, building's rooms cannot recurse
+            			
+            			locationService.getById(locID, function(response){
+            				building.location = response;
+            				
+            				building.active = false;
+            				building.location.buildings = [];
+            				building.rooms = [];
+            				buildingService.update( building, function(){
+                            }, function(){
+                                $mdDialog.cancel();
+                            });
+            			});           			
             		});            		
             	}
+            	
+            	//Inactivate location - not active, starting location, buildings array cannot recurse
             	elem.active = false;
             	elem.buildings = [];
-                //runs the locationService update, concentric with another deleteHelper call upon success.
-            	//Need the empty array [] here too?
+            	
                 locationService.update( elem, function(){
-                	// donothing
                 }, function(){
                 	$mdDialog.cancel();
                 });
+                /*
+                updatedBuildings.forEach(function (building){
+                	building.rooms = [];
+                	buildingService.update( building, function(){
+                		console.log(updatedBuildings);
+                    }, function(){
+                        $mdDialog.cancel();
+                    });
+                })                
                 
+                updatedRooms.forEach(function (room){
+                	roomService.update( room, function(){
+                		console.log(updatedRooms);
+    	            }, function(){
+    	                $mdDialog.cancel();
+    	            });  
+                })                 
+                */
             dc.deleteHelper(delList);
             
             }
-
-            //else if a building was selected, recurse room inactivation
+            //Inactivate Building/Rooms
             else if ( Array.isArray(elem.rooms) ) {
             	var temp = elem.location;
+            	var tempBuild = elem;
             	angular.forEach(elem.rooms, function(room){
-                   //temp is used to store location, but not currently working.
-                    //if(room.building.location != undefined){
-                	   //temp = room.building.location.id;
-                   //}
-            	   room.active = false;            	   
-            	   
-                    room.building.rooms = [];                    
-                    room.building.location = temp;
-                    room.building.location.buildings = [];
+            	    
+            		room.active = false;
+    /**Works Here*/	room.building = tempBuild;
+					room.building.location = undefined;
+					room.building.rooms = [];
                     
                     roomService.update( room, function(){
 		            }, function(){
 		                $mdDialog.cancel();
 		            });
                 });
+            	
                 elem.active = false;
-
-                /* elem needs location before I can set buildings.
-                 * Setting elem.location = temp here not only
-                 * doesn't work, but it breaks the successful
-                 * inactivation of the rooms
-                 */
-                //elem.location = temp;
-                //elem.location.buildings = [];
+                elem.location = temp;
+                elem.location.buildings = [];
                 elem.rooms = [];
+                
                 buildingService.update( elem, function(){
                 }, function(){
                     $mdDialog.cancel();
                 });
                 dc.deleteHelper(delList);
-            }
-            
-            //else room was called, so simply:
+            }            
+            //Inactivate room
             else {
+            	
             	elem.active = false;
             	elem.building.rooms = [];
             	elem.building.location = undefined;
+            	
             	roomService.update( elem, function(){
             		// donothing
 	            }, function(){
@@ -164,6 +200,10 @@
         dc.cancel = function(){
             $mdDialog.cancel();
         };
+        
+        
+        
+        
 
             // finds location that holds given room
         dc.findLocationFromRoom = function( roomIn ){
