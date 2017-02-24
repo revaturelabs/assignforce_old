@@ -699,8 +699,8 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
     /*************************************************************************/
 
-    rc.toggleIncoming = false; //used to hide and show incoming card
-    rc.toggleGrad = false; //used to hide and show graduates card
+    rc.toggleIncoming = true; //used to hide and show incoming card
+    rc.toggleGrad = true; //used to hide and show graduates card
     rc.initIncoming = false;
     rc.initGrad = false;
 
