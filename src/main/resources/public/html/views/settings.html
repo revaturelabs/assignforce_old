@@ -11,8 +11,8 @@
                 <div ng-if="setting.settingId != 23"class="md-list-item-text">
                     <h3>{{setting.settingName}}</h3>
                 </div>
-                <div ng-if="setting.settingId == 23" class="md-;list-item-text">
-                	<h3>Default Batch Naming convention<br>
+                <div ng-if="setting.settingId == 23" class="md-list-item-text">
+                	<h3>Default Batch Naming Convention<br>
                 		$c = curriculum name<br>
                 		$m = month<br>
                 		$d = day of month<br>
@@ -22,8 +22,14 @@
                 <span flex></span>
 
                 <md-input-container ng-if="setting.settingId == 3">
-                    <md-select ng-model="sCtrl.defaultLocation" placeholder="No Default Location" >
+                    <md-select ng-model="sCtrl.defaultLocation" placeholder="No Default Location" ng-change="sCtrl.getBuildings()">
                         <md-option ng-value="location" ng-repeat="location in sCtrl.locations" ng-selected="location.id == setting.settingValue">{{ location.name }}</md-option>
+                    </md-select>
+                </md-input-container>
+                
+                <md-input-container ng-if="setting.settingId == 9">
+                    <md-select ng-model="sCtrl.defaultBuilding" placeholder="No Default Building" >
+                        <md-option ng-value="building" ng-repeat="building in sCtrl.buildings" ng-selected="building.id == setting.settingValue">{{ building.name }}</md-option>
                     </md-select>
                 </md-input-container>
                 
@@ -33,7 +39,7 @@
                 	</md-select>
                 </md-input-container>
 
-                <md-input-container  ng-if="setting.settingId != 3 && setting.settingId != 23">
+                <md-input-container  ng-if="setting.settingId != 3 && setting.settingId != 23 && setting.settingId != 9">
                     <label></label>
                     <input ng-model= "setting.settingValue" class="settInput" type="Number" min="0">
                 </md-input-container>

@@ -45,6 +45,11 @@ public class Batch {
 	@JoinColumn(name = "CURRICULUM")
 	@Fetch(FetchMode.JOIN)
 	private Curriculum curriculum;
+	
+	@ManyToOne
+	@JoinColumn(name = "FOCUS")
+	@Fetch(FetchMode.JOIN)
+	private Curriculum focus;
 
 	@OneToOne
 	@JoinColumn(name = "ROOM") // one batch only belongs to one room
@@ -79,7 +84,9 @@ public class Batch {
 	}
 
 	public Batch(int iD, String name, Curriculum curriculum, Room room, Trainer trainer,
-			Trainer cotrainer, Timestamp startDate, Timestamp endDate, BatchStatusLookup status, List<Skill> skills) {
+			Trainer cotrainer, Timestamp startDate, Timestamp endDate, BatchStatusLookup status, List<Skill> skills,
+			Curriculum focus
+		) {
 		super();
 		ID = iD;
 		this.name = name;
@@ -91,10 +98,13 @@ public class Batch {
 		this.trainer = trainer;
 		this.cotrainer = cotrainer;
 		this.skills = skills;
+		this.focus = focus;
 	}
 
 	public Batch(int iD, String name, Timestamp startDate, Timestamp endDate, Curriculum curriculum, Room room,
-			BatchStatusLookup batchStatus, Trainer trainer, Trainer coTrainer, List<Skill> skills) {
+			BatchStatusLookup batchStatus, Trainer trainer, Trainer coTrainer, List<Skill> skills,
+			Curriculum focus
+		) {
 		super();
 		ID = iD;
 		this.name = name;
@@ -106,6 +116,7 @@ public class Batch {
 		this.trainer = trainer;
 		this.cotrainer = coTrainer;
 		this.skills = skills;
+		this.focus = focus;
 	}
 
 	public int getID() {
@@ -147,6 +158,14 @@ public class Batch {
 	public void setCurriculum(Curriculum curriculum) {
 		this.curriculum = curriculum;
 	}
+	
+	public Curriculum getFocus() {
+		return focus;
+	}
+
+	public void setFocus(Curriculum focus) {
+		this.focus = focus;
+	}
 
 	public Room getRoom() {
 		return room;
@@ -182,9 +201,9 @@ public class Batch {
 
 	@Override
 	public String toString() {
-		return "Batch [ID=" + ID + ", Name =" + name + ", startDate =" + startDate + ", endDate =" + endDate
-				+ ", curriculum =" + curriculum + ", room =" + room + ", batchStatus =" + batchStatus + ", trainer ="
-				+ trainer + ", cotrainer = " + cotrainer + "]";
+		return "Batch [ID=" + ID + ", Name = " + name + ", startDate = " + startDate + ", endDate = " + endDate
+				+ ", curriculum = " + curriculum + ", focus = " + focus + ", room = " + room
+				+ ",batchStatus = " + batchStatus + ", trainer = "+ trainer + ", cotrainer = " + cotrainer + "]";
 	}
 
 	public Trainer getCotrainer() {
