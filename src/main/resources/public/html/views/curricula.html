@@ -100,9 +100,16 @@
                         <label>Skill Name:</label>
                         <input type="text" name="skill" ng-model="cCtrl.skillName" required />
                     </md-input-container>
-                </div>
-                <div layout="row">
-                    <md-button ng-click="cCtrl.createSkill(skillForm)" class="md-primary"> Create </md-button>
+
+                    <!--<div layout="row">-->
+                        <!--<md-button ng-click="cCtrl.createSkill(skillForm)" class="md-primary"> Create </md-button>-->
+                    <!--</div>-->
+                    <div class="container" flex="50">
+                        <div class="btn" ng-click="cCtrl.createSkill(skillForm)">
+                            <span>Create</span>
+                            <div class="dot"></div>
+                        </div>
+                    </div>
                 </div>
             </form>
         </md-card-content>
