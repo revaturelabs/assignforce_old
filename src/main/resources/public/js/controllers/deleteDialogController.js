@@ -72,22 +72,30 @@
             
             // elem is location
             if (Array.isArray(elem.buildings)){
-            	
+            	//simplifying shallow copies
+            	Object.prototype.clone = function(){
+            		JSON.parse(JSON.stringify(this));
+            	}
             	// if it has buildings            	
             	if(elem.buildings.length > 0){
-            		var tempLoc = elem;
-            		angular.forEach(elem.buildings, function(building){
             		
+            		angular.forEach(elem.buildings, function(building){
+            		console.log("for each building, these are locations:");
+            		console.log(elem);
         				// if it has rooms
-            			if(building.rooms.length > 0){
-            				var buildTemp = building;
+            			if(building.rooms.length > 0){            				
             				building.rooms.forEach(function(room){
-            					
+            					//= JSON.parse(JSON.stringify(building));
+            					console.log("for each room, these are buildings");
+            					console.log(building);
             					//Inactivate room - inactive, location doesn't matter as room does not need location id, room's buildings cannot recurse
             					room.active = false;
-            					room.building = buildTemp;
+            					room.building = building.clone();
             /***Breaks here*/	room.building.location = undefined;
             					room.building.rooms = [];
+            					console.log("Operations happened.  Buildings then locations:");
+            					console.log(building); //undefined
+            					console.log(elem);
             					
             					roomService.update( room, function(){
             		            }, function(){
@@ -98,7 +106,7 @@
             			
             			//Inactivate building - inactive, location must be original, location's buildings cannot recurse, building's rooms cannot recurse
             			building.active = false;
-            			building.location = tempLoc;
+            			building.location = elem.clone();
             			building.location.buildings = [];
             			building.rooms = [];
             			

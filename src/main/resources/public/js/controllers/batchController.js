@@ -115,7 +115,7 @@
         settingService.getById(3, function(response){
         	bc.findHQ = response.settingValue;
         }, function(){
-        	bc.showToast("Setting not found");
+        	bc.showToast("Location default not found");
         });
         
         /*******************************************************************/
@@ -123,7 +123,14 @@
         settingService.getById(9, function(response){
         	bc.findHQBuilding = response.settingValue;
         }, function(){
-        	bc.showToast("Setting not found");
+        	bc.showToast("Building default not found");
+        })
+        
+        settingService.getById(23, function(response){
+        	bc.nameString = response.settingName;
+        }, function(){
+        	bc.nameString = "$c ($m/$d)";
+        	bc.showToast("Batch name default not found");
         })
         
         /*******************************************************************/
@@ -187,7 +194,12 @@
                         currName = curr.name;
                     }
                 });
-                bc.batch.name = currName + " (" + (start.getMonth() + 1) + "/" + start.getDate() + ")";
+                //nameString needs to come from a stored string, selected in the settings
+                
+                bc.batch.name = bc.nameString.replace("$c", currName);
+                bc.batch.name = bc.batch.name.replace("$d", start.getDate());
+                bc.batch.name = bc.batch.name.replace("$m", (start.getMonth() + 1));
+                bc.batch.name = bc.batch.name.replace("$y", start.getFullYear());
         	}
         };
 

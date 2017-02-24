@@ -50,6 +50,9 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
             if(sc.settings[i].settingId == 3){
                 sc.settings[i].settingValue = sc.defaultLocation.id;
             }
+            else if (sc.settings[i].settingId == 23){
+            	sc.settings[i].settingName = sc.defaultPattern;
+            }
             //save each setting
             settingService.update(sc.settings[i]);
         }
@@ -61,6 +64,17 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
     settingService.getAll( function (response) {
         sc.settings = response;
         sc.getLocations();//this will initialize the Locations variable after the settings are loaded in.
+        
+        sc.patterns = [];
+        angular.forEach(sc.settings, function(pattern){
+        	if (pattern.settingId > 14 && pattern.settingId < 23){
+        		sc.patterns.push(pattern);
+        	}
+        	else if (pattern.settingId == 23){
+        		sc.defaultPattern = pattern.settingName;
+        	}
+        })
+        
     }, function () {
         sc.showToast("Could not fetch settings.");
     });
