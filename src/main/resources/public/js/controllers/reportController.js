@@ -8,18 +8,16 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
     // functions
     // calls showToast method of aCtrl
-    /**************************************************************************
-     * sums months for given curriculum in chosen year
-     */
+    /**  Sums months for given curriculum in chosen year.  **/
     rc.showToast = function(message) {
         $scope.$parent.aCtrl.showToast(message);
     };
 
     /*************************************************************/
     // formats data to be exported as .csv file
-    /**************************************************************************
-     * sums months for given curriculum in chosen year
-     */
+    /*************************************************************/
+
+    /**  Sums months for given curriculum in chosen year  **/
     rc.export = function() {
         var formatted = [];
         formatted.push([
@@ -38,6 +36,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
             "December",
             "Total"
         ]);
+
         angular.forEach(rc.curricula, function(curr) {
             var year = [curr.name];
             var sum = 0;
@@ -66,9 +65,9 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
     /*************************************************************/
     // summarizes graduate output of given curriculum for chosen year
-    /**************************************************************************
-     * sums months for given curriculum in chosen year
-     */
+    /*************************************************************/
+
+    /** Sums months for given curriculum in chosen year. **/
     rc.currSummary = function(curriculum) {
 
         var summary = [];
@@ -102,12 +101,14 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
         return summary;
     };
+    
+    /*************************************************************/
+    
     rc.currSummary2 = function(curriculum) {
 
         var summary2 = [];
         var total2;
         var date;
-
 
         for (var month = 0; month < 12; month++) {
 
@@ -136,18 +137,17 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         return summary2;
     };
 
-
-    /**************************************************************************
-     * sums months for given curriculum in chosen year
-     */
+    /*************************************************************/
+    
+    /**  Sums months for given curriculum in chosen year.  **/
     rc.sumCurrYear = function(total, num) {
         return total + num;
     };
 
+    /*************************************************************/
+
     // sums all curricula for the year
-    /**************************************************************************
-     * sums months for given curriculum in chosen year
-     */
+    /**  Sums months for given curriculum in chosen year.  **/
     rc.sumYear = function() {
 
         var total = 0;
@@ -158,6 +158,9 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         });
         return total;
     };
+
+    /*************************************************************/
+
     rc.sumYear2 = function() {
 
         var total2 = 0;
@@ -169,11 +172,12 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         return total2;
     };
 
+
     /*************************************************************/
     // sums monthly total over all curricula
-    /**************************************************************************
-     * sums months for given curriculum in chosen year
-     */
+    /*************************************************************/
+
+    /**  Sums months for given curriculum in chosen year. **/
     rc.sumMonth = function (month) {
 
         if (rc.batches) {
@@ -189,6 +193,9 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
             return total;
         }
     };
+    
+    /*************************************************************/
+
     rc.sumMonth2 = function (month) {
 
         if (rc.batches) {
@@ -279,7 +286,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
      */
 
     rc.calcReqBatch = function(requiredTrainees, index){
-
+    	
         //Compute the total number of Batches estimated.
         var neededBatches = requiredTrainees/15;
 
@@ -289,12 +296,12 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
          * 					size is 15, the resulting number of batches is '2.666666'.
          * 					This result should be rounded up to accommodate for the remainder.
          */
-
-        if ( ( neededBatches > Math.floor( neededBatches ) ) && ( neededBatches < Math.ceil(neededBatches ) ) ) {
-            neededBatches = Math.ceil( neededBatches );
-        }
-
-        /**  Sets the reportsController's 'requiredBatches' data value in each index
+        
+    	if ( ( neededBatches > Math.floor( neededBatches ) ) && ( neededBatches < Math.ceil(neededBatches ) ) ) {
+    		neededBatches = Math.ceil( neededBatches ); 
+    	}
+    	
+    	/**  Sets the reportsController's 'requiredBatches' data value in each index 
          * 		of the 'cardArr' to the computed 'neededBatches' values.
          */
         rc.cardArr[index].requiredBatches = neededBatches;
@@ -430,112 +437,113 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
      * @param index
      * @return
      */
-
+    
     rc.createBatchClick = function( index ) {
+ 
+    	// Create 'can submit' flag here.  '0' implies successful submit, '1' implies submission failure. Default to 1 value.
+     	
+     	// Determines whether or not the user is allowed to create batches.
+     	var canSubmit = rc.submittionValidityAssertion( index );
 
-        // Create 'can submit' flag here.  '0' implies successful submit, '1' implies submission failure. Default to 1 value.
-        var canSubmit;
+     	if ( canSubmit == 0 ) {
+	    	
+	    	//Create a batch object in the Reports Controller, using the batchService.
+	        rc.newBatch = batchService.getEmptyBatch();
+	        
+	        //Declare a generic name for batch objects being created.
+	        var dName = " - ";
+	        
+	        for (var i = 0; i < rc.cardArr[index].requiredBatches; i++){
+	
+	        	//Assigns the 'generic name' the batch object.
+	            rc.newBatch.name = dName;
+	            
+	            //Assigns the 'start date' to the batch object. 
+	            rc.newBatch.startDate = rc.cardArr[index].startDate;
+	            
+	            //Assigns the 'end date' to the batch object.
+	            rc.newBatch.endDate = rc.cardArr[index].reqDate;
+	            
+	            //Assigns the 'id' value of the Curriculum ('batch type' variable) to
+	            //	to the batch object.
+	            rc.newBatch.curriculum = rc.cardArr[index].batchType.currId;
+	            
+	            //Create batch method called here...
+	            batchService.create(rc.newBatch, success, error);
+	        }
+	
+        
+    	}
+    	function success (){
+ 			rc.showToast("Successfully created Batch.");
+ 		}
 
-        // Determines whether or not the user is allowed to create batches.
-        canSubmit = rc.submittionValidityAssertion( index );
+ 		function error(){
+ 			rc.showToast("Failed to created Batch.");
+ 		}
 
-        if ( canSubmit == 0 ) {
-
-            //Create a batch object in the Reports Controller, using the batchService.
-            rc.newBatch = batchService.getEmptyBatch();
-
-            //Declare a generic name for batch objects being created.
-            var dName = " - ";
-
-            for (var i = 0; i < rc.cardArr[index].requiredBatches; i++){
-
-                //Assigns the 'generic name' the batch object.
-                rc.newBatch.name = dName;
-
-                //Assigns the 'start date' to the batch object.
-                rc.newBatch.startDate = rc.cardArr[index].startDate;
-
-                //Assigns the 'end date' to the batch object.
-                rc.newBatch.endDate = rc.cardArr[index].reqDate;
-
-                //Assigns the 'id' value of the Curriculum ('batch type' variable) to
-                //	to the batch object.
-                rc.newBatch.curriculum = rc.cardArr[index].batchType.currId;
-
-                //Create batch method called here...
-                batchService.create(rc.newBatch, success, error);
-            }
-        }
-        function success ( ) {
-                $scope.$parent.aCtrl.showToast("Successfully created Batch.");
-            }
-
-            function error ( ) {
-                $scope.$parent.aCtrl.showToast("Failed to created Batch.");
-            }
     };
 
     /************************************************************/
     /**
      * @Author:  Jaina L. Brehm
      * Description:  This method will assert that batches have valid credentials
-     * 					for submission.
+     * 					for submission. 
      *
      * @param index
      * @return canSubmit
      */
-
+    
     rc.submittionValidityAssertion = function( index ){
-        var flagArr = [ 0, 0, 0 ];
-        var count = 0;
+    	var flagArr = [ 0, 0, 0 ]; 	
+    	var count = 0;
 
-        var sonarOne = !( rc.cardArr[index].requiredGrads == undefined ) && !( rc.cardArr[index].reqDate == undefined );
-        var sonarTwo = !( rc.cardArr[index].requiredBatches == undefined ) && !( rc.cardArr[index].startDate == undefined );
-        var sonarThree = !( rc.cardArr[index].formattedStartDate == undefined ) && !( rc.cardArr[index].batchType == undefined);
-
-
-
-        if	(sonarOne && sonarTwo && sonarThree) {
-
-            var canSubmit = 0;
-            rc.errMsg = "";
-        }else{
-
-            if( rc.cardArr[index].requiredGrads == undefined ){
-                rc.errMsg = "Requires Trainee's.";
-                flagArr[0] = 1;
-            }
-            if( rc.cardArr[index].reqDate == undefined ) {
-                rc.errMsg = "Requires Hire Date.";
-                flagArr[1] = 1;
-            }
-            //Ensures that the start date can't occur before the current date.
-            if( rc.cardArr[index].startDate <= rc.today ){
-                rc.errMsg = "Invalid Hire Date.";
-                flagArr[1] = 1;
-            }
-            //Ensures the batch type is selected.
-            if( rc.cardArr[index].batchType == undefined ) {
-                rc.errMsg = "Invalid Batch Type.";
-                flagArr[2] = 1;
-            }
-            //Checks if multiple inputs are missing or invalid.
-            //Sets the error message to the appropriate phrase, if multiple inputs are missing.
-            for (var x in flagArr ){
-                if((flagArr.hasOwnProperty(index)) && (flagArr[x] == 1)){
-                        count = count + 1;
-                        if ( count > 1 ) {
-                            rc.errMsg = "Multiple Inputs Required.";
-                        }
-                }
-            }
-
-            canSubmit = 1;
-        }
-
-        return canSubmit;
+     	if	( !( rc.cardArr[index].requiredGrads == undefined ) && !( rc.cardArr[index].reqDate == undefined ) && !( rc.cardArr[index].batchType == undefined ) ) {
+     	
+     		var canSubmit = 0;
+     		rc.errMsg = "";
+     	}else{	
+     		
+     		if( rc.cardArr[index].requiredGrads == undefined ){
+     			rc.errMsg = "Requires Trainee's.";
+    			flagArr[0] = 1;
+     		}
+     		if( rc.cardArr[index].reqDate == undefined ) { 
+    			rc.errMsg = "Requires Hire Date.";
+    			flagArr[1] = 1;
+    		}
+     		//Ensures that the start date can't occur before the current date.
+     		if( rc.cardArr[index].startDate <= rc.today ){
+     			rc.errMsg = "Invalid Hire Date.";
+     			flagArr[1] = 1;
+     		}
+     		//Ensures the batch type is selected.
+    		if( rc.cardArr[index].batchType == undefined ) {
+    			rc.errMsg = "Invalid Batch Type.";
+    			flagArr[2] = 1;
+    		
+    		} 
+    	    	
+     		canSubmit = 1;
+     	} 
+     	
+     	//Checks if multiple inputs are missing or invalid.
+		//Sets the error message to the appropriate phrase, if multiple inputs are missing.
+		for ( var x in flagArr ){
+			
+				if( flagArr[x] == 1 ){
+					count = count + 1;
+					if ( count > 1 ){
+						rc.errMsg = "Multiple Inputs Required.";
+					}
+					
+				}
+		
+		}
+		
+     	return canSubmit;
     };
-
+    
     /************************************************************/
     /**
      * @Author:  Jaina L. Brehm
@@ -548,50 +556,52 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
     rc.createAllBatchClick = function(){
 
-        // Create 'can submit' flag here.  '0' implies successful submit, '1' implies submission failure. Default to 1 value.
-        var canSubmit;
+         
+    	// Create 'can submit' flag here.  '0' implies successful submit, '1' implies submission failure. Default to 1 value.
 
-        for ( var index in rc.cardArr ) {
+     	for ( var index in rc.cardArr ) {
+     			
+     		if( rc.cardArr.hasOwnProperty(index) ) {
+     		// Determines whether or not the user is allowed to create batches.
+     	     	var canSubmit = rc.submittionValidityAssertion( index );
+     	     	if ( canSubmit == 0 ) {		
+					//Create a batch object in the Reports Controller, using the batchService.
+					rc.newBatch = batchService.getEmptyBatch();
+						           
+					//Declare a generic name for batch objects being created.
+					var dName = " - ";
+					        
+					for ( var i = 0; i < rc.cardArr[index].requiredBatches; i++ ) {
+							
+						//Assigns the 'generic name' the batch object.
+						rc.newBatch.name = dName;
+						
+						//Assigns the 'start date' to the batch object. 
+						rc.newBatch.startDate = rc.cardArr[index].startDate;
+						            
+						//Assigns the 'end date' to the batch object.
+						rc.newBatch.endDate = rc.cardArr[index].reqDate;
+						            
+						//Assigns the 'id' value of the Curriculum ('batch type' variable) to
+						//	to the batch object.
+						rc.newBatch.curriculum = rc.cardArr[index].batchType.currId;
+				            
+				        //Create batch method called here...
+				        batchService.create(rc.newBatch, success, error);
+					}	        
+     		    
+     	     	}
+     	     	
+     		}
+     		
+     	}
+     	function success (){ /* success toast here eventually...*/ }
 
-            if( rc.cardArr.hasOwnProperty(index) ) {
-                // Determines whether or not the user is allowed to create batches.
-                canSubmit = rc.submittionValidityAssertion( index );
-                if ( canSubmit == 0 ) {
-                    //Create a batch object in the Reports Controller, using the batchService.
-                    rc.newBatch = batchService.getEmptyBatch();
-
-                    //Declare a generic name for batch objects being created.
-                    var dName = " - ";
-
-                    for ( var i = 0; i < rc.cardArr[index].requiredBatches; i++ ) {
-
-                        //Assigns the 'generic name' the batch object.
-                        rc.newBatch.name = dName;
-
-                        //Assigns the 'start date' to the batch object.
-                        rc.newBatch.startDate = rc.cardArr[index].startDate;
-
-                        //Assigns the 'end date' to the batch object.
-                        rc.newBatch.endDate = rc.cardArr[index].reqDate;
-
-                        //Assigns the 'id' value of the Curriculum ('batch type' variable) to
-                        //	to the batch object.
-                        rc.newBatch.curriculum = rc.cardArr[index].batchType.currId;
-
-                        //Create batch method called here...
-                        batchService.create(rc.newBatch, success, error);
-                    }
-                }
-            }
-        }
-        function success (){
-                rc.showToast("Successfully created Batch.");
-            }
-
-            function error(){
-                rc.showToast("Failed to created Batch.");
-            }
+	 	function error(){ /*failure toast here eventually...*/ }
     };
+    
+    /************************************************************/
+    /************************************************************/
 
     //toggle the Grads table and graph on and off
     rc.toggleGradToolbar = function () {
@@ -625,15 +635,33 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
     /*************************************************************************/
     /*************************************************************************/
+
     // Reports Controller Data members
     rc.year = new Date().getFullYear();
+    
+    //The number of graduates.
+    rc.graduates = 15;
 
-
+    //The current date.
+    rc.today = new Date();
+    
     //The date Trainee's are needed by.
     rc.reqDate = new Date();
 
     //Batch(s) StartDate variable.
     rc.startDate = new Date();
+
+    //Default batch time-period.
+    rc.defWeeks = 11;
+
+    //Error Message
+	rc.errMsg = "";
+    
+    //Number of Required Graduates.
+    rc.requiredGrads;
+
+    //The number of Batches needed to be created.
+    rc.requiredBatches;
 
     //The type of a 'batch' (ie. Java, SDET, .Net, ... )
     rc.batchType;
@@ -674,6 +702,8 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
     rc.monthList = monthList;
 
+    /*************************************************************************/
+
     rc.toggleIncoming = false; //used to hide and show incoming card
     rc.toggleGrad = false; //used to hide and show graduates card
     rc.initIncoming = false;
@@ -681,32 +711,41 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
     /*************************************************************************/
     /*************************************************************************/
+
     // data gathering
     settingService.getById(6, function(response) {
         rc.graduates = response.settingValue;
     });
+
+    /*************************************************************************/
+
     settingService.getById(7, function(response) {
         rc.batchLength = response.settingValue;
     });
+
+    /*************************************************************************/
 
     settingService.getById(8, function(response) {
         rc.incoming = response.settingValue;
     });
 
-    // var minBatchSize;
+    /*************************************************************************/
+
     settingService.getById(10, function(response){
         rc.minBatchSize = response.settingValue;
     }, function(){
         rc.showToast("failure")
     });
 
-    //var maxBatchSize = 16;
-    // var maxBatchSize;
+    /*************************************************************************/
+
     settingService.getById(11, function(response){
         rc.maxBatchSize = response.settingValue;
     }, function(){
         rc.showToast("failure")
     });
+
+    /*************************************************************************/
 
     batchService.getAll(function(response) {
         rc.batches = response;
@@ -717,6 +756,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         rc.showToast("Could not fetch batches.");
     });
 
+    /*************************************************************************/
 
     curriculumService.getAll(function(response) {
         rc.curricula = response;
@@ -724,6 +764,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         rc.showToast("Could not fetch curricula.");
     });
 
+    /*************************************************************************/
 
     // gets all trainers and stores them in variable trainers
     trainerService.getAll(function(response) {
@@ -732,7 +773,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         rc.showToast("Could not fetch trainers.");
     });
 
-
+    /*************************************************************************/
 
     // Create second var for graph tat defaults to tables default.
     rc.graphData = function() {
@@ -755,6 +796,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         return series;
     };
 
+    /*************************************************************************/
 
     rc.graphData2 = function() {
         var series = [];
@@ -776,13 +818,8 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         return series;
     };
 
-
-
-
-
-    /**************************************************************************
-     *
-     */
+    /**************************************************************************/
+    
     $scope.myGraph = function() {
         Highcharts.chart('container', {
             chart: {
@@ -819,135 +856,139 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         });
     };
 
+    /*************************************************************************/
 
-    $scope.myGraph2 = function() {
-        $scope.newTable = rc.graphData2();
-        Highcharts.chart('container2', {
-            chart: {
-                type: 'column'
-            },
-            title: {
-                text: 'Trainee Summary'
-            },
-            xAxis: {
-                categories: monthList,
-                crosshair: true
-            },
-            yAxis: {
-                min: 0,
-                title: {
-                    text: 'Trainees'
-                }
-            },
-            tooltip: {
-                headerFormat: "<span style='font-size:15px'>{point.key}</span><table>",
-                pointFormat: "<tr><td style='color:{series.color};padding:0'>{series.name}: </td>" +
-                "<td style='padding:0'><b>{point.y}</b></td></tr>",
-                footerFormat: '</table>',
-                shared: true,
-                useHTML: true
-            },
-            plotOptions: {
-                column: {
-                    pointPadding: 0.2,
-                    borderWidth: 0
-                }
-            },
-            series: rc.graphData2()
-        });
-    };
+	    $scope.myGraph2 = function() {
+	        $scope.newTable = rc.graphData2();
+	        Highcharts.chart('container2', {
+	            chart: {
+	                type: 'column'
+	            },
+	            title: {
+	                text: 'Trainee Summary'
+	            },
+	            xAxis: {
+	                categories: monthList,
+	                crosshair: true
+	            },
+	            yAxis: {
+	                min: 0,
+	                title: {
+	                    text: 'Trainees'
+	                }
+	            },
+	            tooltip: {
+	                headerFormat: "<span style='font-size:15px'>{point.key}</span><table>",
+	                pointFormat: "<tr><td style='color:{series.color};padding:0'>{series.name}: </td>" +
+	                "<td style='padding:0'><b>{point.y}</b></td></tr>",
+	                footerFormat: '</table>',
+	                shared: true,
+	                useHTML: true
+	            },
+	            plotOptions: {
+	                column: {
+	                    pointPadding: 0.2,
+	                    borderWidth: 0
+	                }
+	            },
+	            series: rc.graphData2()
+	        });
+	    };
+	
+	});
 
+	/*************************************************************************/
 
+	assignforce.directive('getData', function() {
+		return {
+			restrict: 'ACE',
+			scope: true,
+			template: '<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>',
+			bindToController: true,
+			controller: function($scope) {
+				$scope.myGraph();
+			}
+		};
+	});
+	
+	/*************************************************************************/
 
-});
+	assignforce.directive('getTrainData', function() {
+    	return {
+        	restrict: 'ACE',
+        	scope: true,
+        	template: '<div id="container2" style="min-width: 310px; height: 400px; margin: 0 auto"></div>',
+        	bindToController: true,
+        	controller: function($scope) {
+            	$scope.myGraph2();
+        	}
+    	};
+	});
 
+	/*************************************************************************/
 
+	assignforce.directive('getGradTableTemplate', function() {
+		// assignforce.tempTtl = 30;
+		return {
+			restrict: 'ACE',
+			scope: true,
+			templateUrl: "html/templates/gradTableTemplate.html",
+			bindToController: true
+		};	
+	});
 
+    /*************************************************************************/
 
-assignforce.directive('getData', function() {
-    return {
-        restrict: 'ACE',
-        scope: true,
-        template: '<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>',
-        bindToController: true,
-        controller: function($scope) {
-            $scope.myGraph();
-        }
-    };
-});
+	assignforce.directive('getGradGraphTemplate', function() {
+		// assignforce.tempTtl = 30;
+		return {
+			restrict: 'ACE',
+			scope: true,
+			templateUrl: "html/templates/gradGraphTemplate.html",
+			bindToController: true
+		};	
+	});
 
+	/*************************************************************************/
 
+	assignforce.directive('getIncomingTableTemplate', function() {
+		// tempTtl = rc.incoming;
+		return {
+			restrict: 'ACE',
+			scope: true,
+			templateUrl: "html/templates/incomingTableTemplate.html",
+			bindToController: true
+		};
+	});
 
+	/*************************************************************************/
 
-assignforce.directive('getTrainData', function() {
-    return {
-        restrict: 'ACE',
-        scope: true,
-        template: '<div id="container2" style="min-width: 310px; height: 400px; margin: 0 auto"></div>',
-        bindToController: true,
-        controller: function($scope) {
-            $scope.myGraph2();
-        }
-    };
-});
+	assignforce.directive('getBatchGenTemplate', function() {
+		// tempTtl = rc.incoming;
+		return {
+			restrict: 'ACE',
+			scope: true,
+			templateUrl: "html/templates/batchGenTemplate.html",
+			bindToController: true
+		};
+	});
+    
+	/*************************************************************************/
 
+	assignforce.directive('accordionDynamic', function() {
+		return {
+			restrict: 'ACE',
+			link: function(scope, element) {
+				var ele = angular.element(element);
+				ele.bind('click', function() {
+					ele.toggleClass('active');
+					ele.next('.content').stop().slideToggle();
+					ele.parents('md-card').siblings().find('md-toolbar').removeClass('active');
+					return false;
+				});
+			}
+		}
+	});
 
-
-
-assignforce.directive('getGradTableTemplate', function() {
-    // assignforce.tempTtl = 30;
-    return {
-        restrict: 'ACE',
-        scope: true,
-        templateUrl: "html/templates/gradTableTemplate.html",
-        bindToController: true
-    };
-});
-
-assignforce.directive('getGradGraphTemplate', function() {
-    // assignforce.tempTtl = 30;
-    return {
-        restrict: 'ACE',
-        scope: true,
-        templateUrl: "html/templates/gradGraphTemplate.html",
-        bindToController: true
-    };
-});
-
-assignforce.directive('getIncomingTableTemplate', function() {
-    // tempTtl = rc.incoming;
-    return {
-        restrict: 'ACE',
-        scope: true,
-        templateUrl: "html/templates/incomingTableTemplate.html",
-        bindToController: true
-    };
-});
-
-
-assignforce.directive('getBatchGenTemplate', function() {
-    // tempTtl = rc.incoming;
-    return {
-        restrict: 'ACE',
-        scope: true,
-        templateUrl: "html/templates/batchGenTemplate.html",
-        bindToController: true
-    };
-});
-
-
-
-assignforce.directive('accordionDynamic', function() {
-    return {
-        restrict: 'ACE',
-        link: function(scope, element) {
-            var ele = angular.element(element);
-            ele.bind('click', function() {
-                ele.toggleClass('active');
-                ele.next('.content').stop().slideToggle();
-                ele.parents('md-card').siblings().find('md-toolbar').removeClass('active');
-                return false;
-            });
-        }
-    }
-});
+    /*************************************************************************/
+    /*************************************************************************/
