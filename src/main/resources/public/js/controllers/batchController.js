@@ -219,9 +219,9 @@
         bc.updateWeeks = function(){
             var weeks = calendarService.countWeeks( bc.batch.startDate, bc.batch.endDate );
             if (!weeks) {
-                bc.weeksSpan = "spans 0 weeks";
+                bc.weeksSpan = "Spans 0 Weeks";
             } else {
-                bc.weeksSpan = "spans " + weeks + " weeks";
+                bc.weeksSpan = "Spans " + weeks + " Weeks";
             }
         };
 
@@ -456,7 +456,7 @@
         /*******************************************************************/
         
           // data
-        bc.weeksSpan = "spans 0 weeks";
+        bc.weeksSpan = "Spans 0 Weeks";
         bc.batchOrder = "startDate";
 
         bc.batch = batchService.getEmptyBatch();
@@ -467,9 +467,9 @@
 
             // state information
         bc.state = "create";
-        bc.stateMux = { "create": { "header": "Create new batch",
-                                    "submit": "Create new batch" },
-                        "edit"  : { "header": "Edit batch",
+        bc.stateMux = { "create": { "header": "Create New Batch",
+                                    "submit": "Create batch" },
+                        "edit"  : { "header": "Edit Batch",
                                     "submit": "Save changes" },
                         "clone" : { "header": "Create clone",
                                     "submit": "Save clone" } };
