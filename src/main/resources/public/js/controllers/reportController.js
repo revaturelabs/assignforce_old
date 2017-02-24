@@ -629,7 +629,9 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
                         rc.newBatch.curriculum = rc.cardArr[index].batchType.currId;
 
                         //Create batch method called here...
-                        batchService.create(rc.newBatch, success, error);
+                        batchService.create(rc.newBatch, function () {
+                            rc.showToast("All Batches Created")
+                        }, error);
                     }
 
                 }
