@@ -744,9 +744,6 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
     batchService.getAll(function(response) {
         rc.batches = response;
-        // $scope.data = rc.graphData();
-        // $scope.newTable = rc.graphData2();
-        // data.push(tData);
     }, function() {
         rc.showToast("Could not fetch batches.");
     });
@@ -754,11 +751,18 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     /*************************************************************************/
 
     curriculumService.getAll(function(response) {
-        rc.curricula = response;
+        var temp = response;
+        rc.curricula = temp.filter(function(t){
+            return (t.core);
+        });
+        rc.focuses = temp.filter(function(t){
+            return !(t.core);
+        });
+        console.log(rc.curricula);
+        console.log(rc.focuses);
     }, function() {
         rc.showToast("Could not fetch curricula.");
     });
-
     /*************************************************************************/
 
     // gets all trainers and stores them in variable trainers
@@ -921,18 +925,26 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
 
 
-    rc.updateG1 = function(){
-
-        var data = rc.graphData2();
-
-        for(var d = 0; d<chart2.series.length; d++) {
-            chart2.series[d].setData(data[d].data, true, true, true);
-        }
-
-    };
 
 
 });
+
+
+/*************************************************************************/
+
+assignforce.directive('getFocusData', function() {
+    return {
+        restrict: 'ACE',
+        scope: true,
+        template: '<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>',
+        bindToController: true,
+        controller: function($scope) {
+            $scope.myGraph();
+        }
+    };
+});
+
+
 
 /*************************************************************************/
 
