@@ -927,8 +927,6 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
         for(var d = 0; d<chart2.series.length; d++) {
             chart2.series[d].setData(data[d].data, true, true, true);
-            console.log(data[d]);
-            console.log(chart2.series[d].data);
         }
 
     };
