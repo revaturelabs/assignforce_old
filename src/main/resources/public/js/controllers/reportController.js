@@ -805,8 +805,6 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         rc.focuses = temp.filter(function(t){
             return !(t.core);
         });
-        console.log(rc.curricula);
-        console.log(rc.focuses);
     }, function() {
         rc.showToast("Could not fetch curricula.");
     });
