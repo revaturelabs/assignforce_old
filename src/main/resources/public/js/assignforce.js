@@ -61,7 +61,7 @@
         var revOrangeMap = $mdThemingProvider.extendPalette("deep-orange", {
             // "100": "#EF5407",
             // "100": "#597482",
-            "100": "rgba(89, 116, 130, 0.25)",
+            "100": "rgba(89, 116, 130, 0.2)",
             "A200": "#FF7A1C"
 
         });
