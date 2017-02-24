@@ -8,18 +8,16 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
     // functions
     // calls showToast method of aCtrl
-    /**************************************************************************
-     * sums months for given curriculum in chosen year
-     */
+    /**  Sums months for given curriculum in chosen year.  **/
     rc.showToast = function(message) {
         $scope.$parent.aCtrl.showToast(message);
     };
 
     /*************************************************************/
     // formats data to be exported as .csv file
-    /**************************************************************************
-     * sums months for given curriculum in chosen year
-     */
+    /*************************************************************/
+
+    /**  Sums months for given curriculum in chosen year  **/
     rc.export = function() {
         var formatted = [];
         formatted.push([
@@ -38,6 +36,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
             "December",
             "Total"
         ]);
+
         angular.forEach(rc.curricula, function(curr) {
             var year = [curr.name];
             var sum = 0;
@@ -66,9 +65,9 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
     /*************************************************************/
     // summarizes graduate output of given curriculum for chosen year
-    /**************************************************************************
-     * sums months for given curriculum in chosen year
-     */
+    /*************************************************************/
+
+    /** Sums months for given curriculum in chosen year. **/
     rc.currSummary = function(curriculum) {
 
         var summary = [];
@@ -102,12 +101,14 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
         return summary;
     };
+    
+    /*************************************************************/
+    
     rc.currSummary2 = function(curriculum) {
 
         var summary2 = [];
         var total2;
         var date;
-
 
         for (var month = 0; month < 12; month++) {
 
@@ -136,18 +137,17 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         return summary2;
     };
 
-
-    /**************************************************************************
-     * sums months for given curriculum in chosen year
-     */
+    /*************************************************************/
+    
+    /**  Sums months for given curriculum in chosen year.  **/
     rc.sumCurrYear = function(total, num) {
         return total + num;
     };
 
+    /*************************************************************/
+
     // sums all curricula for the year
-    /**************************************************************************
-     * sums months for given curriculum in chosen year
-     */
+    /**  Sums months for given curriculum in chosen year.  **/
     rc.sumYear = function() {
 
         var total = 0;
@@ -158,6 +158,9 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         });
         return total;
     };
+
+    /*************************************************************/
+
     rc.sumYear2 = function() {
 
         var total2 = 0;
@@ -169,11 +172,12 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         return total2;
     };
 
+
     /*************************************************************/
     // sums monthly total over all curricula
-    /**************************************************************************
-     * sums months for given curriculum in chosen year
-     */
+    /*************************************************************/
+
+    /**  Sums months for given curriculum in chosen year. **/
     rc.sumMonth = function (month) {
 
         if (rc.batches) {
@@ -189,6 +193,9 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
             return total;
         }
     };
+    
+    /*************************************************************/
+
     rc.sumMonth2 = function (month) {
 
         if (rc.batches) {
@@ -596,7 +603,6 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     /************************************************************/
     /************************************************************/
 
-
     //toggle the Grads table and graph on and off
     rc.toggleGradToolbar = function () {
         rc.initGrad = true;
@@ -629,6 +635,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
     /*************************************************************************/
     /*************************************************************************/
+
     // Reports Controller Data members
     rc.year = new Date().getFullYear();
     
