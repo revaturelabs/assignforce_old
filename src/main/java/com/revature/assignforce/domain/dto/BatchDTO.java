@@ -1,6 +1,9 @@
 package com.revature.assignforce.domain.dto;
 
 import java.sql.Timestamp;
+import java.util.List;
+
+import com.revature.assignforce.domain.Skill;
 
 public class BatchDTO {
 
@@ -13,6 +16,7 @@ public class BatchDTO {
 	private int room;
 	private Timestamp startDate;
 	private Timestamp endDate;
+	private List<Skill> skills;
 
 	  // ID
 	public int getID() {
@@ -84,6 +88,14 @@ public class BatchDTO {
 	}
 	public void setEndDate(Timestamp endDate) {
 		this.endDate = endDate;
+	}
+	
+	//skills
+	public List<Skill> getSkills() {
+		return skills;
+	}
+	public void setSkills(List<Skill> skills) {
+		this.skills = skills;
 	}
 	
 	@Override

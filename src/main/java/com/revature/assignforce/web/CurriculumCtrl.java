@@ -37,6 +37,7 @@ public class CurriculumCtrl {
 		List<Skill> skills = in.getSkills();
 		
 		Curriculum out = new Curriculum( id, name, skills );
+		out.setCore(false);
 		out = currService.saveItem( out );
 		
 		if (out == null) {
@@ -69,6 +70,8 @@ public class CurriculumCtrl {
 		List<Skill> skills = in.getSkills();
 		
 		Curriculum out = new Curriculum( id, name, skills );
+		out.setActive(in.getActive());
+		out.setCore(in.getCore());
 		out = currService.saveItem( out );
 		
 		if (out == null) {

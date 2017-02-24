@@ -1,15 +1,8 @@
-
 var assignforce = angular.module("batchApp");
 
 assignforce.controller("ptoCtrl", function ($scope, $mdDialog, ptoService) {
 
     var ptoc = this;
-
-    try{
-        ptoService.authorize();
-    } catch(error){
-        
-    }
 
     ptoc.cancel = function () {
         $mdDialog.cancel();
@@ -29,7 +22,3 @@ assignforce.controller("ptoCtrl", function ($scope, $mdDialog, ptoService) {
         }
     };
 });
-
-
-
-    
