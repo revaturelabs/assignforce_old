@@ -179,6 +179,7 @@
         //defaults building        
         settingService.getById(9, function(response){
         	bc.findHQBuilding = response.settingValue;
+        	//bc.resetForm(); //sets location and building defaults
         }, function(){
         	bc.showToast("Building default not found");
         })
@@ -226,6 +227,12 @@
             else {
                 return [];
             }
+        };
+        
+        bc.filterBuildings = function(locationID){
+        	if(locationID != undefined){
+        		return bc.locations.filter(function(location){return location.id===locationID})[0].buildings;
+        	}
         };
 
         /*******************************************************************/
@@ -313,7 +320,8 @@
         bc.resetForm = function(){
             bc.batchesSelected = [];
             bc.changeState( "create", null );
-        };
+        };       
+        
 
         /*******************************************************************/
         
@@ -517,14 +525,12 @@
         
         curriculumService.getAll( function(response) {
         	var temp = response;
-        	
             bc.curricula = temp.filter(function(t){
             	return (t.core);
             });
             bc.foci = temp.filter(function(t){
             	return !(t.core);
             });
-            console.log(bc.foci);
         }, function() {
             bc.showToast( "Could not fetch curricula.");
         });
@@ -550,6 +556,7 @@
         
         buildingService.getAll( function(response) {
             bc.buildings = response;
+            bc.batch.building = bc.findHQBuilding;
             // was being set here..bc.batch.building = 1;
         }, function() {
             bc.showToast("Could not fetch buildings.");
