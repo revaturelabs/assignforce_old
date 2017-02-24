@@ -186,6 +186,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     //Places a watch on changing the minimum date for the timeline.  Repulls if it changes.
 	$scope.$watch(
 		function(){
+			// console.log("mindate change");
 			return tlc.minDate;
 		},
 		function(){
@@ -198,6 +199,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	//Places a watch on changing the maximum date for the timeline.  Repulls if it changes.
 	$scope.$watch(
 		function(){
+			// console.log("maxdate change");
 			return tlc.maxDate;
 		},
 		function(){

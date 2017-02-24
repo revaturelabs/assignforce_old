@@ -154,9 +154,9 @@
                             	<div ng-if="bCtrl.batch.trainer">
 	                                <div ng-repeat="cotrainer in bCtrl.trainers">
 	                                	<div ng-if="cotrainer.trainerId != bCtrl.batch.trainer">
-		                                    <md-option ng-value="cotrainer.trainerId"> {{ cotrainer.firstName }}  {{ cotrainer.lastName }} ({{ bCtrl.calcTrainerCurriculumRatio(cotrainer, bCtrl.batch.curriculum)}} % skill match to required skills.)</md-option>
+		                                    <md-option ng-value="cotrainer.trainerId"> {{ cotrainer.firstName }}  {{ cotrainer.lastName }} ({{ bCtrl.trainerSkillRatios[cotrainer.trainerId] }} % skill match to required skills.)</md-option>
 		                                    <td colspan="9" class="progressBar">
-		                                        <md-progress-linear class="md-accent" style="height: 2px" md-mode="determinate" value="{{ bCtrl.calcTrainerCurriculumRatio(cotrainer, bCtrl.batch.curriculum) }}"> </md-progress-linear>
+		                                        <md-progress-linear class="md-accent" style="height: 2px" md-mode="determinate" value="{{ bCtrl.trainerSkillRatios[trainer.trainerId] }}"> </md-progress-linear>
 		                                    </td>
 	                                    </div>
 	                                </div>

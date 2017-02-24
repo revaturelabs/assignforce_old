@@ -1,16 +1,21 @@
 var app = angular.module("batchApp");
 
-app.service('ptoService', function ($resource, $mdDialog) {
+app.service('ptoService', function ($resource, $mdDialog, gCalService) {
 
     var ptos = this;
 
     var GoogleAuth;
-    // Google api console clientID and apiKey 
-    var clientId = '886656742164-p6bfqnbtv8d1k1q3kisf6ossh9jkurdj.apps.googleusercontent.com';
-    var apiKey = 'AIzaSyB2-e0FnmwRReoduEdI0bBv5fGG2TgrIZQ';
+
     // enter the scope of current project (this API must be turned on in the Google console)
     var scopes = 'https://www.googleapis.com/auth/calendar';
-    var calendarId = 'taj5130@gmail.com';
+
+    var creds;
+
+    gCalService.getCreds(function (response) {
+        creds = response;
+    }, function () {
+        // pc.showToast("Failed to fetch Credentials")
+    });
 
     ptos.authorize = function(){
         gapi.load('client:auth2', initClient);
@@ -31,8 +36,8 @@ app.service('ptoService', function ($resource, $mdDialog) {
         // Get API key and client ID from API Console.
         // 'scope' field specifies space-delimited list of access scopes.
         gapi.client.init({
-            'apiKey': apiKey,
-            'clientId': clientId,
+            'apiKey': creds.ApiKey,
+            'clientId': creds.ClientID,
             'scope': scopes
         }).then(function(){
 
@@ -95,7 +100,7 @@ app.service('ptoService', function ($resource, $mdDialog) {
 
         gapi.client.load('calendar', 'v3', function(){ // load the calendar api (version 3)
             var request = gapi.client.calendar.events.insert({
-                'calendarId': calendarId, 
+                'calendarId': creds.CalendarID, 
                 // calendar ID which id of Google Calendar where you are creating events. this can be copied from your Google Calendar user view.
                 'resource': resource    // above resource will be passed here
             });
