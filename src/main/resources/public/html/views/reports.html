@@ -1,11 +1,13 @@
+
+
 <md-card md-whiteframe="8" ng-cloak>
-    <md-toolbar layout="columns" class="md-primary md-hue-2">
+    <md-toolbar layout="columns" class="md-primary">
         <div class="md-toolbar-tools">
             <span> Reports </span>
             <span flex> </span>
         </div>
     </md-toolbar>
-    <md-content>
+    <md-content ng-if="rCtrl.batches != undefined">
         <!--  Required Trainee's Tab  -->
         <md-card md-whiteframe="8" ng-cloak>
             <!-- Graduates annual report -->
@@ -24,7 +26,7 @@
                 <div ng-if="rCtrl.batches != undefined" class="md-padding" layout="row">
                     <md-content flex="80" class="md-padding" layout-xs="column" layout="row">
                         <div flex-xs="" flex-gt-xs="20" layout="column" ng-repeat="n in rCtrl.cardArr track by $index">
-                            <md-card md-theme="{{ showDarkTheme ? 'dark-purple' : 'default' }}" md-theme-watch="">
+                            <md-card>
                                 <md-card-content class="md-padding" layout="column">
                                     <md-card-title>
                                         <md-card-title-text>
@@ -107,53 +109,56 @@
                     </div>
                 </div>
             </md-content>
-        </md-card>
+        </md-card><br><br>
 
-        <br><br><br>
 
-        <!--Graduates Info-->
+
+        <!--Graduates Table and Graph Accordion -->
         <md-card ng-if="rCtrl.batches != undefined">
-                <md-toolbar layout="columns" class="md-primary md-hue-2">
-                    <div class="md-toolbar-tools">
-                        <span> Graduate Summary for {{ rCtrl.year }} </span>
-                    </div>
-                    <span flex> </span>
-                    <md-menu md-position-mode="target-right target">
-                        <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button">
-                            <md-tooltip class="md-title"> Settings </md-tooltip>
-                            <md-icon md-menu-origin md-svg-icon="img/ic_settings_white_24px.svg"> </md-icon>
-                        </md-button>
-                        <md-menu-content width="4" class="md-padding">
-                            <md-menu-item>
-                                <md-input-container>
-                                    <label> Year </label>
-                                    <input ng-model="rCtrl.year" type="number">
-                                </md-input-container>
-                            </md-menu-item>
-                            <md-menu-item>
-                                <md-input-container>
-                                    <label> Graduates per batch </label>
-                                    <input ng-model="rCtrl.graduates" type="number">
-                                </md-input-container>
-                            </md-menu-item>
-                        </md-menu-content>
-                    </md-menu>
-                    <span flex> </span>
-                    <md-button class="md-icon-button" style="margin: 12px 6px;" ng-click="rCtrl.toggleGradToolbar()">
-                        <md-tooltip class="md-title"> Toggle Content </md-tooltip>
-                        <i id="gradArrow" class="material-icons">keyboard_arrow_up</i>
+            <md-toolbar layout="columns" class="md-primary md-hue-2">
+                <div class="md-toolbar-tools">
+                    <span> Graduate Summary for {{ rCtrl.year }} </span>
+                </div>
+                <span flex> </span>
+                <md-menu md-position-mode="target-right target">
+                    <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button">
+                        <md-tooltip class="md-title"> Settings </md-tooltip>
+                        <md-icon md-menu-origin md-svg-icon="img/ic_settings_white_24px.svg"> </md-icon>
                     </md-button>
-                </md-toolbar>
-                <md-card-content id="gradTable" ng-show="rCtrl.initGrad">
-                    <md-card>
-                        <get-grad-table-template></get-grad-table-template>
-                    </md-card>
-                    <md-card>
-                        <get-Data></get-Data>
-                    </md-card>
-                </md-card-content>
-        </md-card>
+                    <md-menu-content width="4" class="md-padding">
+                        <md-menu-item>
+                            <md-input-container>
+                                <label> Year </label>
+                                <input ng-model="rCtrl.year" type="number">
+                            </md-input-container>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-input-container>
+                                <label> Graduates per batch </label>
+                                <input ng-model="rCtrl.graduates" type="number">
+                            </md-input-container>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+                <span flex> </span>
+                <md-button class="md-icon-button" style="margin: 12px 6px;" ng-click="rCtrl.toggleGradToolbar()">
+                    <md-tooltip class="md-title"> Toggle Content </md-tooltip>
+                    <i id="gradArrow" class="material-icons">keyboard_arrow_up</i>
+                </md-button>
+            </md-toolbar>
+            <md-card-content id="gradTable" ng-show="rCtrl.initGrad">
+                <md-card>
+                    <get-grad-table-template></get-grad-table-template>
+                </md-card>
+                <md-card>
+                    <get-Grad-Data></get-Grad-Data>
+                </md-card>
+            </md-card-content>
+        </md-card><br><br>
 
+
+
+        <!--Incoming Trainee Table and Graph Accordion -->
         <md-card ng-if="rCtrl.batches != undefined">
             <md-toolbar layout="columns" class="md-primary md-hue-2">
                 <div class="md-toolbar-tools">
@@ -195,23 +200,11 @@
             </md-card-content>
         </md-card>
     </md-content>
-
     <div ng-if="rCtrl.batches == undefined" layout="column" layout-wrap layout-align="center center">
         <div flex="100"> &nbsp; </div>
         <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
         <div flex="100"> &nbsp; </div>
     </div>
-</md-card>
+</md-card><br><br>
 
 
-<!--<button ng-click="rCtrl.tester()"> Test Me....</button>-->
-<!--<br><br><br>-->
-<!--<p ng-init="summer(5)"><div>Test.... 5*11 = {{myNumber}}</div></p>-->
-<!--<div class="accordionWrap">-->
-<!--<md-card class="accordion-block" ng-class="{'active-block':$first}">-->
-<!--<md-content ng-change="rCtrl.tempp = 30">-->
-<!--<get-grad-table></get-grad-table>-->
-<!--</md-content>-->
-<!--</md-card>-->
-<!--</div>-->
-<!--<br><br><br>-->
