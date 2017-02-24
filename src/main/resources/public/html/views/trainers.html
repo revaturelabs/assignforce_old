@@ -38,8 +38,14 @@
         </md-list>
     </md-content>
 
+    <div ng-if="tCtrl.trainers == undefined" layout="column" layout-wrap layout-align="center center">
+        <div flex="100"> &nbsp; </div>
+        <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
+        <div flex="100"> &nbsp; </div>
+    </div>
+
     <!--toolbar for the inactive trainers-->
-    <md-toolbar layout="columns" ng-if="tCtrl.trainers != undefined">
+    <md-toolbar layout="columns">
         <div class="md-toolbar-tools">
             <span> Inactive Trainers </span>
             <span flex> </span>
