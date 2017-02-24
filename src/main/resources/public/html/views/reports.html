@@ -64,9 +64,15 @@
                                     <div ng-model="rCtrl.cardArr[$index].requiredBatches">
                                         <p> Required Batches: {{ rCtrl.cardArr[$index].requiredBatches }}</p>
                                     </div>
-                                    <md-card-actions layout="row" layout-align="end center" ng-click="rCtrl.createBatchClick($index)">
-                                        <md-button class="md-raised md-warn">Create Batch</md-button>
-                                    </md-card-actions>
+                                    <!--<md-card-actions layout="row" layout-align="end center" ng-click="rCtrl.createBatchClick($index)">-->
+                                        <!--<md-button class="md-raised md-warn">Create Batch</md-button>-->
+                                    <!--</md-card-actions>-->
+                                    <div class="container" >
+                                        <div class="btn" ng-click="rCtrl.createBatchClick($index)">
+                                            <span>Create Batch</span>
+                                            <div class="dot"></div>
+                                        </div>
+                                    </div>
                                 </md-card-content>
                             </md-card>
                         </div>
@@ -95,9 +101,15 @@
                                     <div ng-model="rCtrl.cardArr[$index].requiredBatches">
                                         <p> Cumulative Number of Batches: {{rCtrl.totalCumulativeBatches}}</p>
                                     </div>
-                                    <md-card-actions layout="row" layout-align="end center" ng-click="rCtrl.createAllBatchClick()">
-                                        <md-button class="md-raised md-warn">Create All Batches</md-button>
-                                    </md-card-actions>
+                                    <!--<md-card-actions layout="row" layout-align="end center" ng-click="rCtrl.createAllBatchClick()">-->
+                                        <!--<md-button class="md-raised md-warn">Create All Batches</md-button>-->
+                                    <!--</md-card-actions>-->
+                                    <div class="container" >
+                                        <div class="btn" ng-click="rCtrl.createAllBatchClick()" style="width: 9em;">
+                                            <span>Create All Batch</span>
+                                            <div class="dot" style="width: calc(9em * .2)!important;"></div>
+                                        </div>
+                                    </div>
                                 </md-card-content>
                             </md-card>
                         </div>
@@ -120,6 +132,10 @@
                     <span> Graduate Summary for {{ rCtrl.year }} </span>
                 </div>
                 <span flex> </span>
+                <md-button ng-click="null" ng-csv="rCtrl.export()" style="margin: 12px 6px;" filename="{{rCtrl.year}}report.csv" class="md-icon-button">
+                    <md-tooltip> Export to CSV </md-tooltip>
+                    <md-icon md-menu-origin class="material-icons"> file_download </md-icon>
+                </md-button>
                 <md-menu md-position-mode="target-right target">
                     <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button">
                         <md-tooltip class="md-title"> Settings </md-tooltip>
@@ -165,6 +181,10 @@
                     <span> Incoming Trainee Summary for {{ rCtrl.year }} </span>
                 </div>
                 <span flex> </span>
+                <md-button ng-click="null" ng-csv="rCtrl.export2()" style="margin: 12px 6px;" filename="{{rCtrl.year}}report.csv" class="md-icon-button">
+                    <md-tooltip> Export to CSV </md-tooltip>
+                    <md-icon md-menu-origin class="material-icons"> file_download </md-icon>
+                </md-button>
                 <md-menu md-position-mode="target-right target">
                     <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button">
                         <md-tooltip class="md-title"> Settings </md-tooltip>
