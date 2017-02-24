@@ -8,7 +8,7 @@
         </md-toolbar>
 
         <!--info section-->
-        <md-content layout="columns" layout-padding flex ng-if="pCtrl.trainer != undefined && pCtrl.skillsList != undefined">
+        <md-content layout="columns" layout-padding flex ng-if="pCtrl.trainer != undefined && pCtrl.skills != undefined">
             <img layout="column" style="border-radius: 50%" alt="" ng-src="https://app.revature.com/core/resources/download/default/interns/image?t=1486138020884" id="displayImage" class="width-200 height-200" src="https://app.revature.com/core/resources/download/default/interns/image?t=1486138020884">
             <div layout="column">
                 <div layout="row" flex layout-fill>
@@ -44,23 +44,22 @@
         </md-content>
 
         <!--skills section-->
-        <md-content ng-if="pCtrl.trainer != undefined && pCtrl.skillsList != undefined">
+        <md-content ng-if="pCtrl.trainer != undefined && pCtrl.skills != undefined">
             <md-toolbar class="md-primary md-hue-2" layout="columns">
                 <div class="md-toolbar-tools">
                     <span> Skills </span>
                     <span flex> </span>
                     <md-button class="md-icon-button" ng-click="pCtrl.saveTSkills()">
-                        <md-tooltip> Add Skills </md-tooltip>
+
+                        <md-tooltip class="md-title"> Save Skills </md-tooltip>
                         <i class="material-icons">save</i>
                     </md-button>
                 </div>
             </md-toolbar>
             <div class="md-padding" layout="column">
                 <md-subheader class="md-no-sticky"><h2>Select a skill:</h2></md-subheader>
-                <md-chips name="skills"  readonly="isReadOnly">
-                    <md-chip ng-repeat="skill in pCtrl.skillsList | orderBy: 'name' | skillFilter:pCtrl.trainer.skills" ng-click="pCtrl.addSkill(skill)">
-                        {{skill.name}}
-                    </md-chip>
+
+                <md-chips ng-model="pCtrl.skillsList" md-removable="false" md-on-select="pCtrl.addSkill($chip)">
                 </md-chips>
                 <md-list class="fixedRows">
                     <md-subheader class="md-no-sticky"><h2>Current skills:</h2></md-subheader>
@@ -73,7 +72,7 @@
         </md-content>
 
         <!--certifications section-->
-        <md-content ng-if="pCtrl.trainer != undefined && pCtrl.skillsList != undefined">
+        <md-content ng-if="pCtrl.trainer != undefined && pCtrl.skills != undefined">
             <md-toolbar class="md-primary md-hue-2" layout="columns">
                 <div class="md-toolbar-tools">
                     <span> Certifications </span>
@@ -117,7 +116,7 @@
             </div>
         </md-content>
 
-        <div ng-if="pCtrl.trainer == undefined || pCtrl.skillsList == undefined" layout="column" layout-wrap layout-align="center center">
+        <div ng-if="pCtrl.trainer == undefined || pCtrl.skills == undefined" layout="column" layout-wrap layout-align="center center">
             <div flex="100"> &nbsp; </div>
             <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
             <div flex="100"> &nbsp; </div>

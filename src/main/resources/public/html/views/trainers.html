@@ -1,76 +1,53 @@
-
-    <md-card md-whiteframe="8" ng-cloak>
-
-        <!--orange trainer title above list of trainers-->
-        <md-toolbar layout="columns">
-
-            <div class="md-toolbar-tools">
-                <span> Trainers </span>
-
+<md-card md-whiteframe="8" ng-cloak>
+    <!--orange trainer title above list of trainers-->
+    <md-toolbar layout="columns" ng-if="tCtrl.trainers != undefined">
+        <div class="md-toolbar-tools" >
+            <span> Trainers </span>
+            <span flex> </span>
+            <md-button class="md-icon-button" ng-click="tCtrl.addTrainer()">
+                <md-tooltip class="md-title"> Add Trainer </md-tooltip>
+                <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
+            </md-button>
+            <md-button class="md-icon-button" ng-click="tCtrl.showCalendar()">
+                <md-tooltip class="md-title"> View PTO Calendar </md-tooltip>
+                <md-icon md-svg-icon="img/ic_perm_contact_calendar_white_24px.svg"> </md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <!--shows a list of all the active trainers-->
+    <md-content ng-if="tCtrl.trainers != undefined">
+        <md-list>
+            <md-list-item class="md-2-line" md-ink-ripple="#ff0000" ng-repeat="trainer in tCtrl.trainers | orderBy: 'firstName' | activeItem track by trainer.trainerId" ng-click="tCtrl.goToTrainer(trainer)">
+                <md-icon md-svg-icon="img/ic_people_black_48px.svg"> </md-icon>
+                <div class="md-list-item-text" layout="column">
+                    <h3> {{ trainer.firstName }} {{ trainer.lastName }} </h3>
+                    <p ng-if="trainer.skills.length > 0"> Skills: {{ trainer.skills.map(tCtrl.joinObjArrayByName).join(", "); }} </p>
+                    <p ng-if="trainer.skills.length <= 0"> Skills: none </p>
+                </div>
                 <span flex> </span>
 
-                <md-button class="md-icon-button" ng-click="tCtrl.addTrainer()">
-                    <md-tooltip class="md-title"> Add Trainer </md-tooltip>
-                    <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
+                <md-button class="md-icon-button" ng-click="tCtrl.grabS3Resume(trainer)">
+                    <md-tooltip class="md-title"> Download Resume </md-tooltip>
+                    <i class="material-icons" style="color: #FB8C00;">file_download</i>
                 </md-button>
-                <md-button class="md-icon-button" ng-click="tCtrl.showCalendar()">
-                    <md-tooltip class="md-title"> View PTO Calendar </md-tooltip>
-                    <md-icon md-svg-icon="img/ic_perm_contact_calendar_white_24px.svg"> </md-icon>
+                <md-button class="md-icon-button" ng-click="tCtrl.removeTrainer(trainer)">
+                    <md-tooltip class="md-title"> Deactivate Trainer </md-tooltip>
+                    <i class="material-icons" style="color: #FB8C00;">remove_circle</i>
                 </md-button>
+            </md-list-item>
+        </md-list>
+    </md-content>
 
-                <!--<md-menu md-offset="-10 70">-->
-                    <!--<md-button ng-click="$mdOpenMenu($event)" class="md-icon-button">-->
-                        <!--<md-tooltip class="md-title"> Configurations </md-tooltip>-->
-                        <!--<md-icon md-menu-origin md-svg-icon="img/ic_settings_white_24px.svg"> </md-icon>-->
-                    <!--</md-button>-->
-                    <!--<md-menu-content width="4" class="md-padding">-->
-                        <!--<md-menu-item>-->
-                            <!--<md-input-container>-->
-                                <!--<label> Week </label>-->
-                                <!--<input ng-value="tCtrl.weeks" type="text">-->
-                            <!--</md-input-container>-->
-                        <!--</md-menu-item>-->
-                    <!--</md-menu-content>-->
-                <!--</md-menu>-->
-            </div>
-        </md-toolbar>
-        <md-content>
-            <md-list ng-if="tCtrl.trainers != undefined">
-                <md-list-item class="md-2-line" md-ink-ripple="#ff0000" ng-repeat="trainer in tCtrl.trainers | orderBy: 'firstName' | activeItem track by trainer.trainerId" ng-click="tCtrl.goToTrainer(trainer)">
-                    <md-icon md-svg-icon="img/ic_people_black_48px.svg"> </md-icon>
-                    <div class="md-list-item-text" layout="column">
-                        <h3> {{ trainer.firstName }} {{ trainer.lastName }} </h3>
-                        <p ng-if="trainer.skills.length > 0"> Skills: {{ trainer.skills.map(tCtrl.joinObjArrayByName).join(", "); }} </p>
-                        <p ng-if="trainer.skills.length <= 0"> Skills: none </p>
-                    </div>
-                    <span flex> </span>
-
-                    <md-button class="md-icon-button" ng-click="tCtrl.grabS3Resume(trainer)">
-                        <md-tooltip class="md-title"> Download Resume </md-tooltip>
-                        <i class="material-icons" style="color: #FB8C00;">file_download</i>
-                    </md-button>
-                    <md-button class="md-icon-button" ng-click="tCtrl.removeTrainer(trainer)">
-                        <md-tooltip class="md-title"> Deactivate Trainer </md-tooltip>
-                        <i class="material-icons" style="color: #FB8C00;">remove_circle</i>
-                    </md-button>
-                </md-list-item>
-            </md-list>
-
-            <div ng-if="tCtrl.trainers == undefined" layout="column" layout-wrap layout-align="center center">
-                <div flex="100"> &nbsp; </div>
-                <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
-                <div flex="100"> &nbsp; </div>
-            </div>
-        </md-content>
-
-        <md-content>
-        <md-toolbar layout="columns">
-            <div class="md-toolbar-tools">
-                <span> Inactive Trainers </span>
-                <span flex> </span>
-            </div>
-        </md-toolbar>
-        <md-list ng-if="tCtrl.trainers != undefined">
+    <!--toolbar for the inactive trainers-->
+    <md-toolbar layout="columns" ng-if="tCtrl.trainers != undefined">
+        <div class="md-toolbar-tools">
+            <span> Inactive Trainers </span>
+            <span flex> </span>
+        </div>
+    </md-toolbar>
+    <!--shows a list of all inactive trainers-->
+    <md-content class="md-padding" ng-if="tCtrl.trainers != undefined">
+        <md-list>
             <md-list-item class="md-2-line" md-ink-ripple="#ff0000" ng-repeat="trainer in tCtrl.trainers | orderBy: 'firstName' | inactiveItem">
                 <md-icon md-svg-icon="img/ic_people_black_48px.svg"> </md-icon>
                 <div class="md-list-item-text" layout="column">
@@ -80,11 +57,16 @@
                 </div>
                 <span flex> </span>
                 <md-button class="md-icon-button" ng-click="tCtrl.activateTrainer(trainer)">
-                    <md-tooltip class="md-title"> Deactivate Trainer </md-tooltip>
+                    <md-tooltip class="md-title"> Reactivate Trainer </md-tooltip>
                     <i class="material-icons" style="color: #FB8C00;">add_circle</i>
                 </md-button>
             </md-list-item>
         </md-list>
     </md-content>
-    </md-card>
+    <div ng-if="tCtrl.trainers == undefined" layout="column" layout-wrap layout-align="center center">
+        <div flex="100"> &nbsp; </div>
+        <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
+        <div flex="100"> &nbsp; </div>
+    </div>
+</md-card>
 

@@ -19,6 +19,7 @@ import com.revature.assignforce.domain.BatchStatusLookup;
 import com.revature.assignforce.domain.Curriculum;
 import com.revature.assignforce.domain.Location;
 import com.revature.assignforce.domain.Room;
+import com.revature.assignforce.domain.Skill;
 import com.revature.assignforce.domain.Trainer;
 import com.revature.assignforce.domain.dto.BatchDTO;
 import com.revature.assignforce.domain.dto.ResponseErrorDTO;
@@ -52,14 +53,16 @@ public class BatchCtrl {
 		int ID = in.getID();
 		String name = in.getName();
 		Curriculum curriculum = currService.getOneItem(in.getCurriculum());
+		Curriculum focus = currService.getOneItem(in.getFocus());
 		Room room = roomService.getOneItem(in.getRoom());
 		Trainer trainer = trainerService.getOneItem(in.getTrainer());
 		Trainer cotrainer = trainerService.getOneItem(in.getCotrainer());
 		Timestamp startDate = in.getStartDate();
 		Timestamp endDate = in.getEndDate();
 		BatchStatusLookup status = new BatchStatusLookup(1, "Scheduled");
+		List<Skill> skills = in.getSkills();
 		
-		Batch out = new Batch( ID, name, curriculum, room, trainer, cotrainer, startDate, endDate, status );
+		Batch out = new Batch( ID, name, curriculum, room, trainer, cotrainer, startDate, endDate, status, skills, focus);
 		out = batchService.saveItem( out );
 
 		if (out == null) {
