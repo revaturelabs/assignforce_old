@@ -150,7 +150,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 			//Edit Building
 			else if(Array.isArray(lc.selectedList[0].rooms)){
 				$mdDialog.show({
-					templateUrl : "html/templates/buildingTemplate.html",
+					templateUrl : "html/templates/dialogs/buildingDialog.html",
 					controller : "bldgDialogCtrl",
 					controllerAs : "bldgCtrl",
 					locals : {
