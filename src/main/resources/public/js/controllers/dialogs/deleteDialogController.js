@@ -46,11 +46,9 @@
             }
             title += "?";
             dc.desc = title;
-        }formatText();
+        }
         
-        
-        
-        
+        formatText();
 
           // Delete Rooms/Buildings/Locations
         dc.delete = function(){
@@ -69,14 +67,12 @@
             }
             	
             var elem = delList.shift();
-            //var updatedLocations = [];
             var updatedBuildings = [];
             var updatedRooms = [];
             var locID;
             var buildingID;
             // elem is location
             if (Array.isArray(elem.buildings)){
-            	//updatedLocations.push(elem);
             	locID = elem.id;
             	// if it has buildings            	
             	if(elem.buildings.length > 0){
@@ -95,12 +91,9 @@
             						room.active = false;
                 					room.building.rooms = [];
                 					room.building.location = undefined;
-                					roomService.update( room, function(){
-                    	            }, function(){
+                					roomService.update(room, function(){
                     	                $mdDialog.cancel();
                     	            });    
-            					}, function(){
-            						
             					});
             					      					
             				});
@@ -115,7 +108,6 @@
             				building.location.buildings = [];
             				building.rooms = [];
             				buildingService.update( building, function(){
-                            }, function(){
                                 $mdDialog.cancel();
                             });
             			});           			
@@ -127,27 +119,9 @@
             	elem.buildings = [];
             	
                 locationService.update( elem, function(){
-                }, function(){
                 	$mdDialog.cancel();
                 });
-                /*
-                updatedBuildings.forEach(function (building){
-                	building.rooms = [];
-                	buildingService.update( building, function(){
-                		console.log(updatedBuildings);
-                    }, function(){
-                        $mdDialog.cancel();
-                    });
-                })                
                 
-                updatedRooms.forEach(function (room){
-                	roomService.update( room, function(){
-                		console.log(updatedRooms);
-    	            }, function(){
-    	                $mdDialog.cancel();
-    	            });  
-                })                 
-                */
             dc.deleteHelper(delList);
             
             }
@@ -163,7 +137,6 @@
 					room.building.rooms = [];
                     
                     roomService.update( room, function(){
-		            }, function(){
 		                $mdDialog.cancel();
 		            });
                 });
@@ -174,7 +147,6 @@
                 elem.rooms = [];
                 
                 buildingService.update( elem, function(){
-                }, function(){
                     $mdDialog.cancel();
                 });
                 dc.deleteHelper(delList);
@@ -187,8 +159,6 @@
             	elem.building.location = undefined;
             	
             	roomService.update( elem, function(){
-            		// donothing
-	            }, function(){
 	                $mdDialog.cancel();
 	            });
             	dc.deleteHelper(delList);
@@ -211,7 +181,7 @@
             dc.locations.forEach( function(location){		
                 if (location.rooms.length > 0) {		
                     location.rooms.forEach( function(room){		
-                        if (room.roomID == roomIn.roomID) {	
+                        if (room.roomID == roomIn.roomID) {
                             room.active = false;
                             return location;
                         }		

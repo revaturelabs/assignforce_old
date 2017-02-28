@@ -1,6 +1,6 @@
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "batchCtrl", function($scope, batchService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, skillService, $filter, $window, $rootScope) {
+    assignforce.controller( "batchCtrl", function($scope, batchService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, skillService, $filter, $window) {
 
         var bc = this;
         bc.trainerSkillRatios = [];
@@ -179,7 +179,7 @@
         //defaults building        
         settingService.getById(9, function(response){
         	bc.findHQBuilding = response.settingValue;
-        	//bc.resetForm(); //sets location and building defaults
+        	//may need to call resetForm on bc
         }, function(){
         	bc.showToast("Building default not found");
         })
