@@ -32,6 +32,29 @@ app.service( "roomService", function($resource) {
     rs.update = function(room, success, error){
         Room.update(room, success, error);
     };
+    
+    rs.updateAll = function(rooms, success, error){
+    	console.log("I got in");
+    	rooms.forEach(function(room){
+    		console.log(room);
+    		console.log(room.roomID);
+    		room.active = false;
+    		room.building.rooms = [];
+    		room.batches = [];
+    		//circular reference here because room.building.location references building etc.
+    		console.log("updating room now");
+    		Room.update(room, function(){console.log("Room update success");}, function(){console.log("Room update failure");});
+    		//rs.getById (room.roomID, function(response){
+    			//response.active = false;
+    			//console.log("Before update");
+    			//Room.update (response, function(){}, function(){});
+    			//console.log("OK Wassup?");
+    			//console.log(response);
+    		//}, function(){
+    			//conosle.log("room failure");
+    		//});
+    	});
+    };
 
     rs.delete = function(room, success, error){
         room.$remove(success, error);

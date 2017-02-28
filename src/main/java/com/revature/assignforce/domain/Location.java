@@ -29,7 +29,7 @@ public class Location implements Activatable {
 	@Column(name = "active", insertable = false)
 	private Boolean active;
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany
 	@JoinColumn(name = "LOCATION")
 	@JsonIgnoreProperties("location")
 	private List<Building> buildings;

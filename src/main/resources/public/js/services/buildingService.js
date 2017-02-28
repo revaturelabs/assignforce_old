@@ -28,6 +28,19 @@ app.service( "buildingService", function($resource) {
     bs.update = function(building, success, error){
         Building.update(building, success, error);
     };
+    
+    bs.updateAll = function(buildings, success, error){
+    	buildings.forEach(function(building){
+    		console.log("getting building by ID now");
+    		bs.getById (building.id, function(response){
+    			response.active = false;
+    			console.log("updating building now");
+    			Building.update (response, function(){console.log("Building update success");}, function(){console.log("Building update failure");});
+    		}, function(){
+    			console.log("building getById failure");
+    		});	
+    	});
+    };
 
     bs.delete = function(building, success, error){
         building.$remove(success, error);

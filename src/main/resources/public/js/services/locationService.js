@@ -22,7 +22,15 @@ app.service( "locationService", function($resource) {
     };
 
     ls.update = function(location, success, error){
-        Location.update(location, success, error);
+    	Location.update(location, success, error);
+    	//location.active = false;
+    	//location.buildings = [];
+    	//console.log("Updating location now");
+    	/*ls.getById (location.id, function(response){
+    		Location.update(response, success, error);
+    	}, function(){
+    		console.log("location getById failure");
+    	});*/
     };
 
     //I am not really changing ls

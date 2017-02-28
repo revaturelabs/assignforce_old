@@ -61,6 +61,7 @@ public class BuildingCtrl {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No building found of ID " + ID + "."),
 					HttpStatus.NOT_FOUND);
 		} else {
+			System.out.println("error in building incoming");
 			return new ResponseEntity<Building>(out, HttpStatus.OK);
 		}
 	}

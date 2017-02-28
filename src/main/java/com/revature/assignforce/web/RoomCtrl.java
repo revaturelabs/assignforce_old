@@ -52,11 +52,15 @@ public class RoomCtrl {
 		// retrieve room with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveRoom( @PathVariable("id") int ID ) {
-		
+		System.out.println("trying to get one item");
 		Room out = roomService.getOneItem(ID);
+		System.out.println("Just got One");
+		System.out.println(out);
 		if (out == null) {
+			System.out.println("Out was null");
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No room found of ID " + ID + "."), HttpStatus.NOT_FOUND);
 		} else {
+			System.out.println("Out was NOT null");
 			return new ResponseEntity<Room>(out, HttpStatus.OK);
 		}
 	}
