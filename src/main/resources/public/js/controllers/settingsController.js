@@ -112,7 +112,7 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
     	angular.forEach(sc.defaultLocation.buildings, function(building){
     		sc.buildings.push(building);
     	})
-    }
+    };
 
     //data
     sc.defaultLocation;

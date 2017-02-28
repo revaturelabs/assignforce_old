@@ -40,7 +40,7 @@ assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
 					location.buildings.forEach(function(building) {
 						if (building.buildingID == bdc.building.buildingID) {
 							bdc.location = location;
-							return;
+
 						}
 					});
 				}

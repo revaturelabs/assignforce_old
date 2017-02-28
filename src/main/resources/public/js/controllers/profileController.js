@@ -75,7 +75,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         bucket.putObject(params, function (err) {
             if (err){
                 pc.showToast("could not upload file.");
-                return;
+
             }
         });
 
@@ -87,7 +87,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
             pc.showToast("Resume upload finished");
         }, function () {
             pc.showToast("Failed to upload resume");
-            return;
+
         });
 
         //set my file to undefined so that update and label will be hidden in the html
@@ -145,7 +145,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
             pc.showToast("Certification has been saved.");
         }, function () {
             pc.showToast("Failed saving Certification.");
-            return;
+
         });
 
         var bucket = new AWS.S3({
@@ -170,7 +170,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         bucket.putObject(params, function (err) {
             if (err) {
                 pc.showToast("File could not be uploaded.");
-                return;
+
             }
         });
 
