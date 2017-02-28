@@ -23,7 +23,7 @@ app.service('ptoService', function ($resource, $mdDialog, gCalService) {
 
     function showCalendar(){
         $mdDialog.show({
-            templateUrl: "html/templates/calendarTemplate.html",
+            templateUrl: "html/templates/dialogs/calendarDialog.html",
             controller: "trainerCtrl",
             controllerAs: "tCtrl",
             bindToController: true,
