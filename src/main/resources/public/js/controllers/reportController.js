@@ -66,6 +66,53 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         return formatted;
     };
 
+
+    rc.export2 = function() {
+        var formatted = [];
+        formatted.push([
+            "Curriculum",
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+            "Total"
+        ]);
+        angular.forEach(rc.curricula, function(curr) {
+            var year = [curr.name];
+            var sum = 0;
+            rc.currSummary2(curr).forEach(function(month) {
+                year.push(month);
+                sum += month;
+            });
+            year.push(sum);
+
+            formatted.push(year);
+        });
+
+        var totalMonth = ["Total"];
+        var sumTotal = 0;
+        for (var i = 0; i < 12; i++) {
+            var ttl = rc.sumMonth2(i);
+            totalMonth.push(ttl);
+            sumTotal += ttl;
+        }
+        totalMonth.push(sumTotal);
+
+        formatted.push(totalMonth);
+
+        return formatted;
+    };
+
+
+
     /*************************************************************/
     // summarizes graduate output of given curriculum for chosen year
     /**************************************************************************
@@ -582,7 +629,9 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
                         rc.newBatch.curriculum = rc.cardArr[index].batchType.currId;
 
                         //Create batch method called here...
-                        batchService.create(rc.newBatch, success, error);
+                        batchService.create(rc.newBatch, function () {
+                            rc.showToast("All Batches Created")
+                        }, error);
                     }
 
                 }
@@ -744,9 +793,6 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
     batchService.getAll(function(response) {
         rc.batches = response;
-        // $scope.data = rc.graphData();
-        // $scope.newTable = rc.graphData2();
-        // data.push(tData);
     }, function() {
         rc.showToast("Could not fetch batches.");
     });
@@ -754,11 +800,16 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     /*************************************************************************/
 
     curriculumService.getAll(function(response) {
-        rc.curricula = response;
+        var temp = response;
+        rc.curricula = temp.filter(function(t){
+            return (t.core);
+        });
+        rc.focuses = temp.filter(function(t){
+            return !(t.core);
+        });
     }, function() {
         rc.showToast("Could not fetch curricula.");
     });
-
     /*************************************************************************/
 
     // gets all trainers and stores them in variable trainers
@@ -921,18 +972,26 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
 
 
-    rc.updateG1 = function(){
-
-        var data = rc.graphData2();
-
-        for(var d = 0; d<chart2.series.length; d++) {
-            chart2.series[d].setData(data[d].data, true, true, true);
-        }
-
-    };
 
 
 });
+
+
+/*************************************************************************/
+
+assignforce.directive('getFocusData', function() {
+    return {
+        restrict: 'ACE',
+        scope: true,
+        template: '<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>',
+        bindToController: true,
+        controller: function($scope) {
+            $scope.myGraph();
+        }
+    };
+});
+
+
 
 /*************************************************************************/
 

@@ -134,21 +134,13 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
     cc.editFocus = function (focus) {
         cc.focusName = focus.name;
         cc.selectedSkills = focus.skills;
-
+        cc.focusStatus = true;
+        console.log(cc.selectedSkills);
     };
 
     //used to join the skills together
     cc.joinObjArrayByName = function(elem) {
         return elem.name;
-    };
-
-    cc.rePullCurricula = function () {
-        cc.curricula = undefined;
-        curriculumService.getAll(function (response) {
-            cc.curricula = response;
-        }, function () {
-            cc.showToast("Could not fetch curricula.");
-        });
     };
 
     //retrieving data

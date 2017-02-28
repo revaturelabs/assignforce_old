@@ -59,8 +59,11 @@
     assignforce.config( function($mdThemingProvider) {
 
         var revOrangeMap = $mdThemingProvider.extendPalette("deep-orange", {
-            "100": "#EF5407",
+            // "100": "#EF5407",
+            // "100": "#597482",
+            "100": "rgba(89, 116, 130, 0.2)",
             "A200": "#FF7A1C"
+
         });
 
         var revBlueMap = $mdThemingProvider.extendPalette("blue-grey", {
@@ -80,4 +83,5 @@
             .primaryPalette("revBlue")
             .accentPalette("revOrange");
     });
+
 
