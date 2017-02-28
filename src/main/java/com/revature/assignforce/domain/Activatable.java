@@ -7,5 +7,5 @@ package com.revature.assignforce.domain;
 @FunctionalInterface
 public interface Activatable {
 
-    public void setActive(Boolean active);
+    void setActive(Boolean active);
 }

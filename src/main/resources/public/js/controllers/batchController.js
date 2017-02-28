@@ -7,7 +7,7 @@
         
         bc.convertUnavailability = function(incoming){
         	return new Date(incoming);
-        }
+        };
 
         /*******************************************************************/
         
@@ -103,14 +103,14 @@
         	}
         	
         	bc.updateBatchSkills();
-        }
+        };
         
         //Updates the batch's skills to reflect the skills list, but with the actual objects.
         bc.updateBatchSkills = function()
         {
         	var findFunction = function(a){
     			return ((a.skillId ? a.skillId : -1) == bc.selectedSkills[i]);
-    		}
+    		};
         	
         	bc.batch.skills = [];
         	
@@ -118,7 +118,7 @@
         	{
         		bc.batch.skills.push(bc.skills.find(findFunction))
         	}
-        }
+        };
         
         //Recalculates skill ratios for trainers based on the selected curriculum.
         bc.updateSkillRatios = function()
@@ -126,7 +126,7 @@
             bc.trainers.forEach(function(t){
             	bc.trainerSkillRatios[t.trainerId] = bc.calcTrainerSkillRatio(t);
             });
-        }
+        };
         
         	// calculates the percentage to which a trainer's skills correspond
         	// to the batch's curriculum.
@@ -164,7 +164,7 @@
     		}
     		
     		return 100;
-        }
+        };
         
         /*******************************************************************/
      // defaults location to Reston branch 
@@ -182,7 +182,7 @@
         	//may need to call resetForm on bc
         }, function(){
         	bc.showToast("Building default not found");
-        })
+        });
         
         //defaults batch naming convention
         settingService.getById(23, function(response){
@@ -190,7 +190,7 @@
         }, function(){
         	bc.nameString = "$c ($m/$d)";
         	bc.showToast("Batch name default not found");
-        })
+        });
         
         /*******************************************************************/
         
@@ -341,7 +341,7 @@
         // check if all are selected
         bc.allSelected = function(){
             return bc.batchesSelected.length == bc.batches.length;
-        }
+        };
         
         /*******************************************************************/
 
@@ -568,4 +568,4 @@
             bc.showToast("Could not fetch rooms.");
         });
         
-    })
+    });

@@ -46,7 +46,7 @@ assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationS
                     });                	
                 }
             }
-        }
+        };
 
             // returns building that contains given room
         rdc.findBuildingFromRoom = function() {
@@ -57,7 +57,7 @@ assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationS
                         building.rooms.forEach( function(room){
                             if (room.roomID == rdc.room.roomID) {
                                 rdc.building = building;
-                                return;
+
                             }
                         });
                     }
