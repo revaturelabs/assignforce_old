@@ -28,7 +28,7 @@ public class ActivatableObjectDaoService<T extends Activatable, ID extends Seria
             repo.delete(id);
         }catch(Exception ex){
         	Logger.getRootLogger().error(ex);
-            Activatable item = (Activatable) repo.findOne(id);
+            Activatable item = repo.findOne(id);
             item.setActive(false);
 
             T saveItem = (T)item;

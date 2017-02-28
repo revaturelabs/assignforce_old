@@ -8,7 +8,7 @@ app.service('trainerService', function($resource) {
     //created an empty Trainer
     ts.getEmptyTrainer = function () {
         return new Trainer();
-    }
+    };
 
     //Gets all trainers in the database
     ts.getAll = function(success, error) {
@@ -17,15 +17,15 @@ app.service('trainerService', function($resource) {
 
     ts.getById = function(id, success, error){
         Trainer.get({trainerId: id}, success, error);
-    }
+    };
 
     ts.create = function (trainer, success, error) {
         trainer.$save(success, error);
-    }
+    };
 
     ts.update = function (trainer, success, error) {
         Trainer.update(trainer, success, error);
-    }
+    };
 
     ts.delete = function (id, success, error) {
         Trainer.delete({trainerId: id}, success, error);
