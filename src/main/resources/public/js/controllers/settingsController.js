@@ -1,7 +1,7 @@
 
 var assignforce = angular.module( "batchApp");
 
-assignforce.controller("settingsCtrl", function ($scope, settingService, locationService, buildingService) {
+assignforce.controller("settingsCtrl", function ($scope, settingService, locationService) {
     var sc = this;
 
     //functions
@@ -73,7 +73,6 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
     settingService.getAll( function (response) {
         sc.settings = response;
         sc.getLocations();//this will initialize the Locations variable after the settings are loaded in.
-        //sc.getBuildings();
         
         sc.patterns = [];
         angular.forEach(sc.settings, function(pattern){
@@ -114,16 +113,6 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
     		sc.buildings.push(building);
     	})
     };
-
-    //ex of getting a single setting
-    /*
-    settingService.getById(1, function(response){
-    	//success
-    	sc.test = response;
-    }, function(){
-    	//failure
-    });
-*/
 
     //data
     sc.defaultLocation;

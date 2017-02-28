@@ -52,6 +52,7 @@
     //
     // Returns a tip
     tip.show = function() {
+      
       var args = Array.prototype.slice.call(arguments);
       if (args[args.length - 1] instanceof SVGElement) target = args.pop();
 
@@ -71,6 +72,7 @@
 
       while (i--) nodel.classed(directions[i], false);
       coords = directionCallbacks.get(dir).apply(this);
+
       nodel.classed(dir, true)
         .style('top', (coords.top + poffset[0]) + scrollTop + 'px')
         .style('left', (coords.left + poffset[1]) + scrollLeft + 'px');

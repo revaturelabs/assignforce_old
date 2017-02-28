@@ -2,7 +2,6 @@ var assignforce = angular.module("batchApp");
 
 assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
 		locationService, buildingService) {
-	// console.log("Beginning building dialog controller.");
 	var bdc = this;
 
 	// functions
@@ -22,12 +21,7 @@ assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
 				bdc.building.location = bdc.location.id; //saves the location id reference to building
 				bdc.location.buildings.push(bdc.building);
 			}
-//TODO may have to adjust this to have building contain location
-//			buildingService.update(bdc.building, function() {
-//				$mdDialog.hide();
-//			}, function() {
-//				$mdDialog.cancel();
-//			});
+			//may need to call buildingService update method here
 			buildingService.create(bdc.building, function() {
 				$mdDialog.hide();
 			}, function() {
@@ -68,16 +62,6 @@ assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
 		}
 	};
 
-	// data
-
-//	if (bdc.building.name.split("-").length > 1) {
-//		bdc.building = bdc.building.name.split("-")[0].trim();
-//		bdc.building.name = bdc.building.name.split("-")[1]
-//				.trim(); 
-//	} else {
-//		bdc.building = "";
-//	}
-
 	// page initialization
 	// data gathering
 	locationService.getAll(function(response) {
@@ -91,8 +75,6 @@ assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
 					+ bdc.location.name;
 		}
 	}, function(error) {
-		// console.log(" (bdc) Failed to retrieve all locations with error:",
-		// error.data.message);
 		$mdDialog.cancel();
 	});
 });
