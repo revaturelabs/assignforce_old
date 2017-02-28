@@ -14,39 +14,6 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
         $scope.$parent.aCtrl.showToast( message )
     };
 
-    //create a focus
-    cc.createFocus = function (focusForm) {
-        //show a hidden field with a list of skill to select from, a name field, and a save button
-        if(focusForm.$valid){
-            var skillList = [];
-            for(var i = 0; i < cc.selectedSkills.length; i++){
-                for(var j = 0; j < cc.skills.length; j++){
-                    if(cc.skills[j].skillId == cc.selectedSkills[i]){
-                        skillList.push(cc.skills[j]);
-                        break;
-                    }
-                }
-            }
-
-            var curriculum = {
-                name    : cc.focusName,
-                skills  : skillList
-            };
-
-            curriculumService.create(curriculum, function () {
-                cc.showToast("Focus created")
-            }, function () {
-                cc.showToast("Failed to create focus")
-            })
-
-        } else {
-            cc.showToast("Missing input fields.")
-        }
-
-        cc.selectedSkills = [];
-        cc.focusName = undefined;
-    };
-
     //create a skill and add it to the database
     cc.createSkill = function (skillForm) {
         if(skillForm.$valid) {
@@ -67,15 +34,6 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
         cc.skillName = undefined;
     };
 
-    //Used to show the create focus card
-    cc.toggleFocusStatus = function () {
-        if(cc.focusStatus){
-            cc.focusStatus = false;
-        } else {
-            cc.focusStatus = true;
-        }
-    };
-
     //hides and shows the skill card's content when called
     cc.toggleSkillToolbar = function () {
         if(cc.skillToggle){
@@ -87,19 +45,6 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
         }
 
         $("#skill").slideToggle();
-    };
-
-    //hides and shows the focus card's content when called
-    cc.toggleFocusToolbar = function () {
-        if(cc.focusToggle){
-            cc.focusToggle = false;
-            $("#focusArrow").text("keyboard_arrow_down");
-        } else {
-            cc.focusToggle = true;
-            $("#focusArrow").text("keyboard_arrow_up");
-        }
-
-        $('#focus').slideToggle();
     };
 
     //hides and shows the core card's content when called
@@ -115,6 +60,67 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
         $('#core').slideToggle();
     };
 
+    //focus functions
+    //create a focus
+    cc.createFocus = function (focusForm) {
+        //show a hidden field with a list of skill to select from, a name field, and a save button
+        if(focusForm.$valid){
+            var skillList = [];
+            for(var i = 0; i < cc.selectedSkills.length; i++){
+                for(var j = 0; j < cc.skills.length; j++){
+                    if(cc.skills[j].skillId == cc.selectedSkills[i]){
+                        skillList.push(cc.skills[j]);
+                        break;
+                    }
+                }
+            }
+
+            var curriculum = {
+                name    : cc.focusName,
+                skills  : skillList,
+                active  : true,
+                core    : false
+            };
+
+            curriculumService.create(curriculum, function () {
+                cc.showToast("Focus created")
+            }, function () {
+                cc.showToast("Failed to create focus")
+            })
+
+            //reload curriculum
+            cc.curricula.push(curriculum);
+
+        } else {
+            cc.showToast("Missing input fields.")
+        }
+
+        cc.selectedSkills = [];
+        cc.focusName = undefined;
+    };
+
+    //Used to show the create focus card
+    cc.toggleFocusStatus = function () {
+        if(cc.focusStatus){
+            cc.focusStatus = false;
+        } else {
+            cc.focusStatus = true;
+        }
+    };
+
+    //hides and shows the focus card's content when called
+    cc.toggleFocusToolbar = function () {
+        if(cc.focusToggle){
+            cc.focusToggle = false;
+            $("#focusArrow").text("keyboard_arrow_down");
+        } else {
+            cc.focusToggle = true;
+            $("#focusArrow").text("keyboard_arrow_up");
+        }
+
+        $('#focus').slideToggle();
+    };
+
     //removes a focus
     cc.removeFocus = function (curr) {
         curr.active = false;
@@ -125,18 +131,36 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
         })
     };
 
+    cc.editFocus = function (focus) {
+        cc.focusName = focus.name;
+        cc.selectedSkills = focus.skills;
+
+    };
+
     //used to join the skills together
     cc.joinObjArrayByName = function(elem) {
         return elem.name;
     };
 
+    cc.rePullCurricula = function () {
+        cc.curricula = undefined;
+        curriculumService.getAll(function (response) {
+            cc.curricula = response;
+        }, function () {
+            cc.showToast("Could not fetch curricula.");
+        });
+    };
+
     //retrieving data
+
+    //Grabs all Curriculums
     curriculumService.getAll(function (response) {
         cc.curricula = response;
     }, function () {
         cc.showToast("Could not fetch curricula.");
     });
 
+    //Grabs all Skills
     skillService.getAll(function (response) {
         cc.skills = response;
     }, function () {
