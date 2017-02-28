@@ -629,9 +629,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
                         rc.newBatch.curriculum = rc.cardArr[index].batchType.currId;
 
                         //Create batch method called here...
-                        batchService.create(rc.newBatch, function () {
-                            rc.showToast("All Batches Created")
-                        }, error);
+                        batchService.create(rc.newBatch, createSuccess, error);
                     }
 
                 }
@@ -639,7 +637,9 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
             }
 
         }
-        function success (){ /* success toast here eventually...*/ }
+        function createSuccess(){rc.showToast("All Batches Created")}
+        
+        
 
         function error(){ /*failure toast here eventually...*/ }
     };
@@ -1024,7 +1024,6 @@ assignforce.directive('getTrainData', function() {
 /*************************************************************************/
 
 assignforce.directive('getGradTableTemplate', function() {
-    // assignforce.tempTtl = 30;
     return {
         restrict: 'ACE',
         scope: true,
@@ -1036,7 +1035,6 @@ assignforce.directive('getGradTableTemplate', function() {
 /*************************************************************************/
 
 assignforce.directive('getGradGraphTemplate', function() {
-    // assignforce.tempTtl = 30;
     return {
         restrict: 'ACE',
         scope: true,
@@ -1048,7 +1046,6 @@ assignforce.directive('getGradGraphTemplate', function() {
 /*************************************************************************/
 
 assignforce.directive('getIncomingTableTemplate', function() {
-    // tempTtl = rc.incoming;
     return {
         restrict: 'ACE',
         scope: true,
@@ -1060,7 +1057,6 @@ assignforce.directive('getIncomingTableTemplate', function() {
 /*************************************************************************/
 
 assignforce.directive('getBatchGenTemplate', function() {
-    // tempTtl = rc.incoming;
     return {
         restrict: 'ACE',
         scope: true,
@@ -1085,6 +1081,3 @@ assignforce.directive('accordionDynamic', function() {
         }
     }
 });
-
-/*************************************************************************/
-/*************************************************************************/

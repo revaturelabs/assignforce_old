@@ -338,7 +338,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 				});
 			}); 
 		});
-	}, function(error) {
+	}, function() {
 		lc.showToast("Could not fetch locations.");
 	});
 

@@ -107,7 +107,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		
 		var startDate;
 		var endDate;
-		
+		//I hope whoever wrote this steps on a thousand legos
 		for (var b in tlc.batches)
 		{
 			if (!angular.isUndefined(tlc.batches[b].trainer) && tlc.batches[b].trainer !== null && !angular.isUndefined(tlc.batches[b].startDate) && tlc.batches[b].startDate !== null && !angular.isUndefined(tlc.batches[b].endDate) && tlc.batches[b].endDate !== null)
@@ -171,22 +171,17 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
         tlc.curricula = temp.filter(function(t){
         	return (t.core);
         });
-    }, function() {
-    	//error
     });
 
     //Fetches the default value for trainers displayed per page.
     settingService.getById(5, function (response) {
         tlc.trainersPerPage = response.settingValue;
         tlc.changeTrainersPerPage();
-    }, function () {
-    	//error probably
     });
     
     //Places a watch on changing the minimum date for the timeline.  Repulls if it changes.
 	$scope.$watch(
 		function(){
-			// console.log("mindate change");
 			return tlc.minDate;
 		},
 		function(){
@@ -199,7 +194,6 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	//Places a watch on changing the maximum date for the timeline.  Repulls if it changes.
 	$scope.$watch(
 		function(){
-			// console.log("maxdate change");
 			return tlc.maxDate;
 		},
 		function(){
