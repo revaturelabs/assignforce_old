@@ -35,7 +35,7 @@ public class RoomCtrl {
 	
 		int ID = in.getRoomID();
 		String name = in.getRoomName();
-		Building building = in.getBuilding();
+		int building = in.getBuilding();
 		List<Unavailable> unavailabilities = in.getUnavailabilities();
 		
 		Room out = new Room( ID, name, building, unavailabilities );
@@ -72,7 +72,7 @@ public class RoomCtrl {
 		
 		int ID = in.getRoomID();
 		String name = in.getRoomName();
-		Building building = in.getBuilding();
+		int building = in.getBuilding();
 		List<Unavailable> unavailabilities = in.getUnavailabilities();
 		Boolean active = in.getActive();
 		Room out = new Room( ID, name, building, unavailabilities, active);
@@ -98,7 +98,7 @@ public class RoomCtrl {
 		// retrieve all rooms
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveAllRooms() {
-		
+		System.out.println("Made it in the pulling all rooms method");
 		List<Room> all = roomService.getAllItems();
 		if (all == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Fetching all rooms failed."), HttpStatus.NOT_FOUND);

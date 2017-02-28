@@ -66,16 +66,34 @@
                 $mdDialog.hide();
                 return;
             }
-            	
-            var elem = delList.shift();
-            var updatedLocations = [];
-            var updatedBuildings = [];
-            var updatedRooms = [];
-            var locID;
-            var buildingID;
+            var location = delList.shift();
+            console.log(location);
             
+            deleteBuildings(location.buildings);
+            locationService.delete(location);
+            
+            dc.deleteHelper(delList);
+            
+        };
+        
+        function deleteBuildings(arr){
+        	arr.forEach(function(building){
+        		console.log(building);
+        		deleteRooms(building.rooms);
+        		building = buildingService.cloneBuilding(building);
+        		buildingService.delete(building);
+        	});
+        }
+        
+        function deleteRooms(arr){
+        	arr.forEach(function(room){
+        		console.log(room);
+        		room = roomService.cloneRoom(room);
+            	roomService.delete(room);
+        	});
+        }
+            /*
             // location was selected
-            // elem = location;
             if (Array.isArray(elem.buildings)){
             	updatedLocations.push(elem); //push elem onto list of locations to be updated (should not be necessary since there should only be one location)
             	locID = elem.id; //id for finding the location by ID later
@@ -86,6 +104,19 @@
             		
             	});
             	
+            	angular.forEach(elem.buildings, function(building){
+            		buildingService.getById(building.id, function(response){
+            			buildingService.delete(response, function(){}, function(){});
+            		}, function(){
+            			
+            		});
+            		
+            		angular.forEach(building.rooms, function(room){
+            			roomService.getById(room.roomID, function(response){
+            				roomService.delete(response, function(){}, function(){});
+            			});
+            		});
+            	});
             	// if it has buildings            	
             	/*if(elem.buildings.length > 0){
             		angular.forEach(elem.buildings, function(building){
@@ -140,11 +171,11 @@
             			});           			
             		});            		
             	}*/
-            	
+            	/*
             	console.log(updatedRooms);
             	console.log(updatedBuildings);
             	
-            	
+            	*/
             	
             	
             	//Inactivate location - not active, starting location, buildings array cannot recurse
@@ -186,17 +217,17 @@
     	            });  
                 })                 
                 */
-            dc.deleteHelper(delList); //should I do all my stuff after this call??
+            //dc.deleteHelper(delList); //should I do all my stuff after this call??
             
-            }
+            //}
             //Inactivate Building/Rooms
-            else if ( Array.isArray(elem.rooms) ) {
+    /*else if ( Array.isArray(elem.rooms) ) {
             	var temp = elem.location;
             	var tempBuild = elem;
             	angular.forEach(elem.rooms, function(room){
             	    
             		room.active = false;
-    /**Works Here*/	room.building = tempBuild;
+    /**Works Here*//*	room.building = tempBuild;
 					room.building.location = undefined;
 					room.building.rooms = [];
                     
@@ -238,7 +269,7 @@
         dc.cancel = function(){
             $mdDialog.cancel();
         };
-        
+        */
         
         
         
