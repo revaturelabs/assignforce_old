@@ -262,13 +262,11 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 
 			    // If the mouse moves up
 			    if(pageY > evt.pageY && millisecondRange > MIN_RANGE){
-
 			    	// Set the newly calculated min and max dates
 			    	tlc.minDate = new Date(minDateMilliseconds + topMilliseconds);
 			    	tlc.maxDate = new Date(maxDateMilliseconds - bottomMilliseconds);
-				
-				} else if(pageY < evt.pageY && millisecondRange < MAX_RANGE) {
-
+				}
+			    else if(pageY < evt.pageY && millisecondRange < MAX_RANGE) {
 					tlc.minDate = new Date(minDateMilliseconds - topMilliseconds);
 					tlc.maxDate = new Date(maxDateMilliseconds + bottomMilliseconds);
 				}
@@ -311,7 +309,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     	//error
     });
     
-    //Function repulls the timeline.
+    //Function repulls the trainers and batches, and re-projects the timeline.
     tlc.repull = function()
     {
         tlc.repullPromise.then(function(result)
@@ -322,6 +320,11 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	    }, function(){
 	    	//error
 	    });
+    }
+    
+    tlc.projectTimelineOnly = function()
+    {
+        tlc.projectTimeline(-100);
     }
     
     //Function to change how many trainers are displayed per page.
@@ -344,11 +347,6 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		tlc.realTrainerPage = 1;
 		tlc.trainerPage = tlc.realTrainerPage;
 		tlc.maxTrainerPages = Math.ceil(numTrainers / tlc.realTrainersPerPage);
-		
-		if (tlc.realTrainersPerPage > 0)
-		{
-			tlc.hideBatchlessTrainers = 0;
-		}
 		
 		tlc.previousPageButtonStatus();
 		tlc.nextPageButtonStatus();
@@ -466,7 +464,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 			
 			if (tlc.hideBatchlessTrainers)
 			{
-				tlc.filteredTrainers = tlc.trainers.filter(tlc.removeBatchlessTrainers).filter(tlc.removeTrainersOutOfPage);
+				tlc.filteredTrainers = tlc.filteredTrainers.filter(tlc.removeBatchlessTrainers);
 			}
 			
 			//Sorts the trainer column names based on id.

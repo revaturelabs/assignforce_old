@@ -298,7 +298,7 @@
                         
                         <md-input-container flex="none">
                         	<label> Batches to View </label>
-                            <md-select ng-model="tlCtrl.selectedCurriculum" ng-change="tlCtrl.repull()" ng-style="{'width': 160 + 'px'}">
+                            <md-select ng-model="tlCtrl.selectedCurriculum" ng-change="tlCtrl.projectTimelineOnly()" ng-style="{'width': 160 + 'px'}">
                             	<md-option ng-value = "0">All</md-option>
                                 <md-option ng-value="curriculum.currId" ng-repeat="curriculum in tlCtrl.curricula"> {{ curriculum.name }} </md-option>
                             </md-select>
@@ -306,32 +306,25 @@
                   
                         <div flex> </div>
                         
-                        <div ng-if="tlCtrl.realTrainersPerPage <= 0">
-	                        <md-checkbox aria-label="Hide Batchless Trainers?" ng-model="tlCtrl.hideBatchlessTrainers" ng-change="tlCtrl.repull()">
-	                        	Hide Batchless Trainers?
-	                        </md-checkbox>
-                        </div>
-                        <div ng-if="tlCtrl.realTrainersPerPage > 0">
-	                        <md-checkbox aria-label="Hide Batchless Trainers?" ng-model="tlCtrl.hideBatchlessTrainers" ng-checked="false" disabled>
-	                        	Hide Batchless Trainers?
-	                        </md-checkbox>
-                        </div>
+                        <md-checkbox aria-label="Hide Batchless Trainers?" ng-model="tlCtrl.hideBatchlessTrainers" ng-change="tlCtrl.projectTimelineOnly()">
+                        	Hide Batchless Trainers?
+                        </md-checkbox>
                     </div>
 	                <div class="md-padding" layout="columns">
                         <md-input-container flex="none">
                         	<label> Trainers Per Page (0 to see All) </label>
-                            <input type = "number" min = "0" max = "tlCtrl.maxTrainerPages" ng-model="tlCtrl.trainersPerPage" ng-change="tlCtrl.changeTrainersPerPage(); tlCtrl.repull()" ng-style="{'width': 320 + 'px'}"/>
+                            <input type = "number" min = "0" max = "tlCtrl.maxTrainerPages" ng-model="tlCtrl.trainersPerPage" ng-change="tlCtrl.changeTrainersPerPage(); tlCtrl.projectTimelineOnly()" ng-style="{'width': 320 + 'px'}"/>
                         </md-input-container>
                         
                         <div class="md-padding" layout="columns">
-	                        <md-button id = "firstTrainerPageButton" class="md-fab md-mini" ng-click="tlCtrl.firstTrainerPage(); tlCtrl.repull()" ng-disabled = "tlCtrl.previousPageButtonDisabled"> 
+	                        <md-button id = "firstTrainerPageButton" class="md-fab md-mini" ng-click="tlCtrl.firstTrainerPage(); tlCtrl.projectTimelineOnly()" ng-disabled = "tlCtrl.previousPageButtonDisabled"> 
 	                            <md-tooltip class="md-title"> Jump to First Page </md-tooltip>
 	                            <md-icon md-svg-src="img/ic_skip_previous_white_24px.svg"></md-icon>
 	                        </md-button>
 	                        
 	                        <div flex> </div>
                         
-	                        <md-button id = "previousTrainerPageButton" class="md-fab md-mini" ng-click="tlCtrl.previousTrainerPage(); tlCtrl.repull()" ng-disabled = "tlCtrl.previousPageButtonDisabled"> 
+	                        <md-button id = "previousTrainerPageButton" class="md-fab md-mini" ng-click="tlCtrl.previousTrainerPage(); tlCtrl.projectTimelineOnly()" ng-disabled = "tlCtrl.previousPageButtonDisabled"> 
 	                            <md-tooltip class="md-title"> Previous Page </md-tooltip>
 	                            <md-icon md-svg-src="img/ic_arrow_back_white_24px.svg"></md-icon>
 	                        </md-button>
@@ -345,7 +338,7 @@
 	                        		</div>
 			                        <md-input-container flex="none">
 			                        	<label> Go To Page </label>
-			                            <input type = "number" min = "1" max = "tlCtrl.maxTrainerPages" ng-model="tlCtrl.trainerPage" ng-change="tlCtrl.goToTrainerPage(); tlCtrl.repull()" ng-style="{'width': 160 + 'px'}"/>
+			                            <input type = "number" min = "1" max = "tlCtrl.maxTrainerPages" ng-model="tlCtrl.trainerPage" ng-change="tlCtrl.goToTrainerPage(); tlCtrl.projectTimelineOnly()" ng-style="{'width': 160 + 'px'}"/>
 			                        </md-input-container>
 	                        	</div>
 	                        	<div ng-if = "tlCtrl.realTrainersPerPage <= 0 || tlCtrl.maxTrainerPages <= 1">
@@ -357,14 +350,14 @@
 	                        
 	                        <div flex> </div>
 	                        
-	                        <md-button id = "nextTrainerPageButton"  class="md-fab md-mini" ng-click="tlCtrl.nextTrainerPage(); tlCtrl.repull()" ng-disabled = "tlCtrl.nextPageButtonDisabled"> 
+	                        <md-button id = "nextTrainerPageButton"  class="md-fab md-mini" ng-click="tlCtrl.nextTrainerPage(); tlCtrl.projectTimelineOnly()" ng-disabled = "tlCtrl.nextPageButtonDisabled"> 
 	                            <md-tooltip class="md-title"> Next Page </md-tooltip>
 	                            <md-icon md-svg-src="img/ic_arrow_forward_white_24px.svg"></md-icon>
 	                        </md-button>
 	                      
 	                        <div flex> </div>
 	                        
-	                        <md-button id = "lastTrainerPageButton"  class="md-fab md-mini" ng-click="tlCtrl.lastTrainerPage(); tlCtrl.repull()" ng-disabled = "tlCtrl.nextPageButtonDisabled"> 
+	                        <md-button id = "lastTrainerPageButton"  class="md-fab md-mini" ng-click="tlCtrl.lastTrainerPage(); tlCtrl.projectTimelineOnly()" ng-disabled = "tlCtrl.nextPageButtonDisabled"> 
 	                            <md-tooltip class="md-title"> Jump to Last Page </md-tooltip>
 	                            <md-icon md-svg-src="img/ic_skip_next_white_24px.svg"></md-icon>
 	                        </md-button>
