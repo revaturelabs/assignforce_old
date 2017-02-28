@@ -53,7 +53,9 @@
     // Returns a tip
     tip.show = function() {
       var args = Array.prototype.slice.call(arguments)
-      if (args[args.length - 1] instanceof SVGElement) target = args.pop()
+      if (args[args.length - 1] instanceof SVGElement) {
+    	  target = args.pop();
+      }
 
       var content = html.apply(this, args),
           poffset = offset.apply(this, args),
@@ -69,7 +71,9 @@
       nodel.html(content)
         .style('opacity', 1).style('pointer-events', 'all')
 
-      while (i--) nodel.classed(directions[i], false)
+      while (i--) {
+    	  nodel.classed(directions[i], false);
+      }
       coords = directionCallbacks.get(dir).apply(this)
       nodel.classed(dir, true)
         .style('top', (coords.top + poffset[0]) + scrollTop + 'px')

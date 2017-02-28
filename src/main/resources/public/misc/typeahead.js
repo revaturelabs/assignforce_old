@@ -858,7 +858,7 @@
                 }
             },
             _initialize: function initialize() {
-                var that = this, deferred;
+                var that = this;
                 this.clear();
                 (this.initPromise = this._loadPrefetch()).done(addLocalToIndex);
                 return this.initPromise;
