@@ -48,7 +48,7 @@
             var fileName = trainer.resume;
             //if the trainer has a null resume in the database then it will show the toast and stop running the function
             if(fileName == null){
-                tc.showToast(trainer.firstName +" "+ trainer.lastName + " does not have any resume uploaded.")
+                tc.showToast(trainer.firstName +" "+ trainer.lastName + " does not have any resume uploaded.");
                 return
             }
 
@@ -87,7 +87,7 @@
                 tc.showToast("Unable to activate " + trainer.firstName +" "+ trainer.lastName);
             })
 
-        }
+        };
 
             // reformats how an array of objects is joined
         tc.joinObjArrayByName = function(elem) {
@@ -117,11 +117,11 @@
         tc.showCalendar = function(){
 
             ptoService.authorize();
-        }
+        };
 
         tc.hideCalendar = function(){
             $mdDialog.cancel();
-        }
+        };
 
         tc.showPTODialog = function(){
 
@@ -132,7 +132,7 @@
                 bindToController: true,
                 clickOutsideToClose: true
             });
-        }
+        };
 
         // page initialization
         //get the S3 bucket credentials and store them in creds

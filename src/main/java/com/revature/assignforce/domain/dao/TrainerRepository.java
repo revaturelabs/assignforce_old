@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface TrainerRepository extends ActivatableObjectRepository<Trainer, Integer> {
-	public Trainer findByFirstName(String name);
-	public List<Trainer> findByActiveIsTrue();
+	Trainer findByFirstName(String name);
+	List<Trainer> findByActiveIsTrue();
 }

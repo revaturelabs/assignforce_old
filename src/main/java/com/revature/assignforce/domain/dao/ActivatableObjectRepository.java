@@ -11,5 +11,5 @@ import java.util.List;
  */
 @NoRepositoryBean
 public interface ActivatableObjectRepository<T extends Activatable, ID extends Serializable> extends BaseRepository<T, ID>{
-    public List<T> findByActiveIsTrue();
+    List<T> findByActiveIsTrue();
 }
