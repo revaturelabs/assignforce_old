@@ -496,11 +496,11 @@
             // state information
         bc.state = "create";
         bc.stateMux = { "create": { "header": "Create New Batch",
-                                    "submit": "Create batch" },
+                                    "submit": "Create Batch" },
                         "edit"  : { "header": "Edit Batch",
-                                    "submit": "Save changes" },
-                        "clone" : { "header": "Create clone",
-                                    "submit": "Save clone" } };
+                                    "submit": "Save Changes" },
+                        "clone" : { "header": "Create Clone",
+                                    "submit": "Save Clone" } };
 
         
         /*******************************************************************/        

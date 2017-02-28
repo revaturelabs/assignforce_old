@@ -126,7 +126,7 @@
         tc.showPTODialog = function(){
 
             $mdDialog.show({
-                templateUrl: "html/templates/ptoRequest.html",
+                templateUrl: "html/templates/dialogs/ptoRequestDialog.html",
                 controller: "ptoCtrl",
                 controllerAs: "ptoCtrl",
                 bindToController: true,

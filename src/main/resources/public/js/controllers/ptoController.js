@@ -8,7 +8,7 @@ assignforce.controller("ptoCtrl", function ($scope, $mdDialog, ptoService) {
         $mdDialog.cancel();
 
         $mdDialog.show({
-            templateUrl: "html/templates/calendarTemplate.html",
+            templateUrl: "html/templates/dialogs/calendarDialog.html",
             controller: "trainerCtrl",
             controllerAs: "tCtrl",
             bindToController: true,
