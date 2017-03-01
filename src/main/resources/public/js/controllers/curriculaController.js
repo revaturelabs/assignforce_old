@@ -136,7 +136,6 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
         cc.focusName = focus.name;
         cc.selectedSkills = focus.skills;
         cc.focusStatus = true;
-        console.log(cc.selectedSkills);
     };
 
     //used to join the skills together

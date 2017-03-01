@@ -12,7 +12,6 @@ assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationS
 
             // save changes/new room
         rdc.save = function(roomForm) {
-            console.log(roomForm.$valid);
 
             if (roomForm.$valid) { //check if the room dialog form is valid
                 
@@ -23,7 +22,6 @@ assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationS
                         $mdDialog.cancel();
                     });
                 } else if (rdc.state == "create") { //Create a new room
-                    console.log(rdc.building);
                     rdc.room.building = rdc.building.id;
 
                     roomService.create( rdc.room, function() {

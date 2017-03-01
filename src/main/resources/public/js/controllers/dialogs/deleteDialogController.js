@@ -9,10 +9,6 @@ assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeou
     function formatText() {
         var title = "Delete ";
 
-        console.log(dc.location);
-        console.log(dc.list);
-
-
         if(dc.summary.locations > 0){
             title += dc.summary.locations + " Location(s), ";
         }
@@ -71,7 +67,6 @@ assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeou
 
     function deleteBuildings(arr){
         arr.forEach(function(building){
-            console.log(building);
             deleteRooms(building.rooms);
             building = buildingService.cloneBuilding(building);
             buildingService.delete(building);
@@ -81,7 +76,6 @@ assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeou
 
     function deleteRooms(arr){
         arr.forEach(function(room){
-            console.log(room);
             room = roomService.cloneRoom(room);
             roomService.delete(room);
         })
