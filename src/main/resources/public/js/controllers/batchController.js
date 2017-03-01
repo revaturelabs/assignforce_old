@@ -1,6 +1,6 @@
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "batchCtrl", function($scope, batchService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, skillService, $filter, $window, $rootScope) {
+    assignforce.controller( "batchCtrl", function($scope, batchService, unavailableService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, skillService, $filter, $window, $rootScope) {
 
         var bc = this;
         bc.trainerSkillRatios = [];
@@ -44,7 +44,10 @@
                 		if (bc.batch.room.unavailability){
                 			bc.batch.room.unavailability.startDate = (incomingBatch.startDate) ? incomingBatch.room.unavailability.startDate : undefined;
                 			bc.batch.room.unavailability.endDate = (incomingBatch.endDate) ? incomingBatch.room.unavailability.endDate : undefined;
-                		}
+                			unavailableService.update(bc.batch.room.unavailability, function () {
+                            }, function () {
+                            });
+                        }
                 }
 
                 bc.batch.trainer    = (incomingBatch.trainer)    ? incomingBatch.trainer.trainerId   : undefined;

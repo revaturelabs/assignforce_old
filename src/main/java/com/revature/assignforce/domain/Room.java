@@ -29,8 +29,10 @@ public class Room implements Activatable {
 	private int building;
 
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "ROOM_UNAVAILABILITY_JT", joinColumns = @JoinColumn(name = "ROOM_ID"), inverseJoinColumns = @JoinColumn(name = "UNAVAILABLE_ID"))
-	@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
+	@JoinTable(name = "ROOM_UNAVAILABILITY_JT",
+	joinColumns = @JoinColumn(name = "ROOM_ID"),
+	inverseJoinColumns = @JoinColumn(name = "UNAVAILABLE_ID"))
+	//@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
 	private List<Unavailable> unavailable;
 
 	@OneToMany(mappedBy = "room")
