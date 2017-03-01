@@ -1,4 +1,3 @@
-
 var assignforce = angular.module( "batchApp" );
 
 assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationService, buildingService, roomService ){
@@ -11,91 +10,30 @@ assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationS
             $mdDialog.cancel();
         };
 
-            // save changes/new
-        rdc.save = function(isValid) {
-            console.log(rdc.state);
-            console.log(rdc.isValid);
+            // save changes/new room
+        rdc.save = function(roomForm) {
+            console.log(roomForm.$valid);
 
-            // if (isValid) {
+            if (roomForm.$valid) { //check if the room dialog form is valid
                 
-                if (rdc.state == "edit") {
-                    // rdc.swapRoom( rdc.room );
-                    //
-                    // rdc.room.building = rdc.building;
-                    // rdc.room.building.rooms = []; //This is necessary to prevent JSON circular referencing
-                    // rdc.room.building.location = undefined;
-                        // roomService.update( rdc.room, function(){
-                        //     $mdDialog.hide();
-                        // }, function(){
-                        //     $mdDialog.cancel();
-                        // });
-                }
-                    
-                    /*try to set room.building.rooms to [] right before passing it*/
-                    
-                else if (rdc.state == "create") {
+                if (rdc.state == "edit") { //edit an existing room
+                    roomService.update( rdc.room, function(){
+                        $mdDialog.hide();
+                    }, function(){
+                        $mdDialog.cancel();
+                    });
+                } else if (rdc.state == "create") { //Create a new room
                     console.log(rdc.building);
                     rdc.room.building = rdc.building.id;
 
-                    console.log(rdc.room);
-
-                    // rdc.room.building.rooms = [];//This is necessary to prevent JSON circular referencing
-                    // rdc.room.building.location = undefined;
-                    //
                     roomService.create( rdc.room, function() {
-                        // rdc.room.building = rdc.building;
                         $mdDialog.hide();
                     }, function () {
                         $mdDialog.cancel();
                     })
                 }
-            // }
+            } else {
+                //display an error message saying that the name field is empty
+            }
         };
-
-            // returns building that contains given room
-        // rdc.findBuildingFromRoom = function() {
-        //
-        //     if (rdc.buildings != undefined) {
-        //         rdc.buildings.forEach( function(building){
-        //             if (building.rooms.length != 0) {
-        //                 building.rooms.forEach( function(room){
-        //                     if (room.roomID == rdc.room.roomID) {
-        //                         rdc.building = building;
-        //                         return;
-        //                     }
-        //                 });
-        //             }
-        //         });
-        //     }
-        // };
-        //
-        //     // swaps editted room out for old one
-        // rdc.swapRoom = function(newRoom) {
-        //
-        //     if (rdc.building.rooms.length == 0) {
-        //         rdc.building.rooms.push(newRoom);
-        //     } else {
-        //         rdc.building.rooms.forEach( function(room){
-        //             if (room.roomID == newRoom.roomID) {
-        //                 room.roomName = newRoom.roomName;
-        //             }
-        //         });
-        //     }
-        // };
-
-          // data
-        
-          // page initialization
-            // data gathering
-        // buildingService.getAll( function(response) {
-        //     rdc.buildings = response;
-        //     if (rdc.state == "create") {
-        //         rdc.title = "Add new room to " + rdc.building.name;
-        //     } else if (rdc.state == "edit") {
-        //         rdc.findBuildingFromRoom();
-        //         rdc.title = "Edit " + rdc.room.roomName + " at " + rdc.building.name;
-        //     }
-        // }, function() {
-        //     $mdDialog.cancel();
-        // });
     });

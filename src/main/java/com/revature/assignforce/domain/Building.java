@@ -33,7 +33,6 @@ public class Building implements Activatable {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "BUILDING")
-	@JsonIgnoreProperties("building")
 	private List<Room> rooms;
 
 	public Building() {

@@ -33,6 +33,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 			controllerAs : "ldCtrl",
 			locals : {
 				location : locationService.getEmptyLocation(),
+                title    : "Creating a Location",
 				state : "create"
 			},
 			bindToController : true,
@@ -62,7 +63,8 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 				controllerAs : "bldgCtrl",
 				locals : {
 					location : lc.selectedList[0],
-					building : buildingService.getAlmostEmptyBuilding(lc.selectedList[0].id), 
+					building : buildingService.getEmptyBuilding(),
+                    title    : "Creating a Building",
 					state : "create"
 				},
 				bindToController : true,
@@ -94,6 +96,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 				locals : {
 					building : lc.selectedList[0], //just a building object
                     room     : roomService.getEmptyRoom(),
+                    title    : "Creating a Room",
 					state    : "create"
 				},
 				bindToController : true,
@@ -118,9 +121,6 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 			});
 		}
 	};
-	
-	
-	
 
 	// edit location
 	lc.editSelected = function() {
@@ -139,6 +139,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 					controllerAs : "ldCtrl",
 					locals : {
 						location : lc.selectedList[0],
+                        title    : "Edit Location",
 						state : "edit"
 					},
 					bindToController : true,
@@ -158,6 +159,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 					controllerAs : "bldgCtrl",
 					locals : {
 						building : lc.selectedList[0],
+                        title    : "Edit Building",
 						state : "edit"
 					},
 					bindToController : true,
@@ -176,7 +178,8 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 					controller : "roomDialogCtrl",
 					controllerAs : "rdCtrl",
 					locals : {
-						room : lc.selectedList[0],
+						room  : lc.selectedList[0],
+                        title : "Edit Room",
 						state : "edit"
 					},
 					bindToController : true,
@@ -255,8 +258,9 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 			rooms : 0,
 			buildings: 0,
 			locations : 0
-		}; //this is where the deletion is mucking up
-		if (lc.selectedList.length > 0) {			
+		};
+
+		if (lc.selectedList.length > 0) {
 			lc.selectedList.forEach(function(item) {
 				if (Array.isArray(item.rooms)) {
 					item.rooms.forEach(function(){
@@ -275,6 +279,7 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 				}
 			});
 		}
+
 		return summary;
 	};
 
@@ -312,14 +317,6 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 		lc.selectedList = [];
 		locationService.getAll(function(response) {
 			lc.locations = response;
-			// lc.locations.forEach(function(location){
-			// 	location.buildings.forEach(function(building){
-			// 		building.location = location;
-			// 		building.rooms.forEach(function(room){
-			// 			room.building = building;
-			// 		});
-			// 	});
-			// });
 		}, function() {
 			lc.showToast("Could not fetch locations.");
 		});
@@ -332,14 +329,6 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 	// data gathering
 	locationService.getAll(function(response) {
 		lc.locations = response;
-		// lc.locations.forEach(function(location){
-		// 	location.buildings.forEach(function(building){
-		// 		building.location = location;
-		// 		building.rooms.forEach(function(room){
-		// 			room.building = building;
-		// 		});
-		// 	});
-		// });
 	}, function() {
 		lc.showToast("Could not fetch locations.");
 	});

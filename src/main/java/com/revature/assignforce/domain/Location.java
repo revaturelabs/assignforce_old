@@ -31,7 +31,6 @@ public class Location implements Activatable {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "LOCATION")
-	@JsonIgnoreProperties("location")
 	private List<Building> buildings;
 
 	public Location() {
