@@ -9,6 +9,10 @@ app.service( "locationService", function($resource) {
         return new Location();
     };
 
+    ls.getClone = function (loc) {
+        return new Location(loc);
+    };
+
     ls.create = function(location, success, error){
         location.$save(success, error);
     };

@@ -9,7 +9,7 @@ public class BuildingDTO {
 
 	private int ID;
 	private String name;
-	private Location location;
+	private int location;
 	private List<Room> rooms;
 	private Boolean active;
 
@@ -29,11 +29,11 @@ public class BuildingDTO {
 		this.name = name;
 	}
 
-	public Location getLocation() {
+	public int getLocation() {
 		return location;
 	}
 
-	public void setLocation(Location location) {
+	public void setLocation(int location) {
 		this.location = location;
 	}
 

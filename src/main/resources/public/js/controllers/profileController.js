@@ -1,5 +1,6 @@
 /**
  * Created by Zach Nelson on 2/2/2017.
+ * Modified by Lazaro Perez
  */
 
 var assignforce = angular.module( "batchApp" );
@@ -20,27 +21,27 @@ assignforce.directive("fileModel", ['$parse', function ($parse) {
     };
 }]);
 
-assignforce.filter('skillFilter', function(){
-    return function(input, check){
-        var out = [];
-        var insertSkill = true;
-
-        if (input != undefined && check != undefined){
-            for (var i = 0; i < input.length; i++) {
-                for (var j = 0; j < check.length; j++) {
-                    if(input[i].skillId == check[j].skillId){
-                        insertSkill = false;
-                    }
-                }
-                if (insertSkill){
-                    out.push(input[i]);
-                }
-                insertSkill = true;
-            }
-        }
-        return out;
-    }
-});
+// assignforce.filter('skillFilter', function(){
+//     return function(input, check){
+//         var out = [];
+//         var insertSkill = true;
+//
+//         if (input != undefined && check != undefined){
+//             for (var i = 0; i < input.length; i++) {
+//                 for (var j = 0; j < check.length; j++) {
+//                     if(input[i].skillId == check[j].skillId){
+//                         insertSkill = false;
+//                     }
+//                 }
+//                 if (insertSkill){
+//                     out.push(input[i]);
+//                 }
+//                 insertSkill = true;
+//             }
+//         }
+//         return out;
+//     }
+// });
 
 assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, trainerService, skillService, s3Service, $routeParams) {
     var pc = this;
@@ -53,6 +54,8 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
     };
 
     pc.uploadResume = function () {
+        var path = "Resumes/" + pc.trainer.trainerId + "_" + pc.myFile.name;
+
         //This initializes a bucket with the keys obtained from Creds rest controller
         var bucket = new AWS.S3({
             apiVersion: '2006-03-01',
@@ -67,7 +70,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         //set the parameters needed to put an object in the aws s3 bucket
         var params = {
             Bucket: pc.creds.BucketName,
-            Key: pc.myFile.name,
+            Key: path,
             Body: pc.myFile
         };
 
