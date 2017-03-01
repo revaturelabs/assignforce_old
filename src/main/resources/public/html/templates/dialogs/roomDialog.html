@@ -3,7 +3,7 @@
 
         <form name="roomForm" ng-submit="rdCtrl.save(roomForm.$valid)" novalidate>
 
-            <div ng-if="rdCtrl.buildings != undefined">
+            <div>
                 
                 <md-dialog-content>
 
@@ -15,12 +15,6 @@
 
                         <div class="md-padding">
                             <div layout layout-wrap>
-
-                                <!-- <md-input-container flex="100">
-                                    <label> Building </label>
-                                    <input ng-model="ldCtrl.building">
-                                </md-input-container>
- -->
                                 <md-input-container flex="100">
                                     <label> Room number </label>
                                     <input ng-model="rdCtrl.room.roomName" required>
@@ -39,11 +33,11 @@
                 </md-dialog-actions>
             </div>
 
-            <div ng-if="rdCtrl.buildings == undefined" layout="column" layout-wrap layout-align="center center">
-                <div flex="100"> &nbsp; </div>
-                <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
-                <div flex="100"> &nbsp; </div>
-            </div>
+            <!--<div ng-if="rdCtrl.buildings == undefined" layout="column" layout-wrap layout-align="center center">-->
+                <!--<div flex="100"> &nbsp; </div>-->
+                <!--<md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>-->
+                <!--<div flex="100"> &nbsp; </div>-->
+            <!--</div>-->
 
         </form>
 

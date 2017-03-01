@@ -35,7 +35,7 @@ public class RoomCtrl {
 	
 		int ID = in.getRoomID();
 		String name = in.getRoomName();
-		Building building = in.getBuilding();
+		int building = in.getBuilding();
 		List<Unavailable> unavailabilities = in.getUnavailabilities();
 		
 		Room out = new Room( ID, name, building, unavailabilities );
@@ -68,7 +68,7 @@ public class RoomCtrl {
 		
 		int ID = in.getRoomID();
 		String name = in.getRoomName();
-		Building building = in.getBuilding();
+		int building = in.getBuilding();
 		List<Unavailable> unavailabilities = in.getUnavailabilities();
 		Boolean active = in.getActive();
 		Room out = new Room( ID, name, building, unavailabilities, active);

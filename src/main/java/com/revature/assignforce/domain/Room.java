@@ -25,11 +25,8 @@ public class Room implements Activatable {
 	private String roomName;
 	
 	//it is a one to one relationship, but we only need an id here..  Right?
-	@ManyToOne
-	@JoinColumn(name = "BUILDING")
-	@Fetch(FetchMode.JOIN)
-	@JsonIgnoreProperties("rooms")
-	private Building building;
+	@Column(name = "BUILDING")
+	private int building;
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "ROOM_UNAVAILABILITY_JT", joinColumns = @JoinColumn(name = "ROOM_ID"), inverseJoinColumns = @JoinColumn(name = "UNAVAILABLE_ID"))
@@ -47,7 +44,7 @@ public class Room implements Activatable {
 		//No arg constructor
 	}
 
-	public Room(int roomID, String roomName, Building building, List<Unavailable> unavailable) {
+	public Room(int roomID, String roomName, int building, List<Unavailable> unavailable) {
 		super();
 		this.roomID = roomID;
 		this.roomName = roomName;
@@ -55,7 +52,7 @@ public class Room implements Activatable {
 		this.unavailable = unavailable;
 	}
 	
-	public Room(int roomID, String roomName, Building building, List<Unavailable> unavailable, Boolean active) {
+	public Room(int roomID, String roomName, int building, List<Unavailable> unavailable, Boolean active) {
 		super();
 		this.roomID = roomID;
 		this.roomName = roomName;
@@ -64,15 +61,15 @@ public class Room implements Activatable {
 		this.active = active;
 	}
 	
-	public Room(Building buildingID){
+	public Room(int buildingID){
 		this.building = buildingID;
 	}
 
-	public Building getBuilding() {
+	public int getBuilding() {
 		return building;
 	}
 
-	public void setBuilding(Building building) {
+	public void setBuilding(int building) {
 		this.building = building;
 	}
 

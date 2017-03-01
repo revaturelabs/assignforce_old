@@ -51,10 +51,11 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 			lc.showToast("Please select only one location.");
 		}
 		// indicates that the list item is actually a location and not something
-		// else
-		else if ((lc.selectedList[0].buildings) && (!(Array.isArray(lc.selectedList[0].buildings)))) {
+		else if (lc.selectedList.length == 0) {
 			lc.showToast("Please select a location.");
-		} else {
+		} else if(lc.selectedList[0].buildings == undefined) {
+            lc.showToast("Buildings can only be added to locations.");
+        } else {
 			$mdDialog.show({
 				templateUrl : "html/templates/dialogs/buildingDialog.html",
 				controller : "bldgDialogCtrl", //bldgDialogController.js
@@ -81,17 +82,19 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 			lc.showToast("Please select only one building.");
 		}
 		// indicates that the list item is actually a building and not a location
-		else if (!Array.isArray(lc.selectedList[0].rooms)) {
+		else if (lc.selectedList.length == 0) {
 			lc.showToast("Please select a building.");
+		} else if (lc.selectedList[0].rooms == undefined) {
+            lc.showToast("Rooms can only be added to Buildings.")
 		} else {
 			$mdDialog.show({
 				templateUrl : "html/templates/dialogs/roomDialog.html",
 				controller : "roomDialogCtrl", //roomDialogController.js
 				controllerAs : "rdCtrl",
 				locals : {
-					building : lc.selectedList[0],//just a building object 
-					room : roomService.getAlmostEmptyRoom(lc.selectedList[0].id), //referencing building object
-					state : "create"
+					building : lc.selectedList[0], //just a building object
+                    room     : roomService.getEmptyRoom(),
+					state    : "create"
 				},
 				bindToController : true,
 				clickOutsideToClose : true
@@ -185,35 +188,34 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 					lc.showToast("Failed to update room.");
 				});
 			}
-			
-			
-			
-			
-		
 		}
 	};
 
 	// delete Room/Building/Location
 	lc.deleteSelected = function() {
-		var summary = lc.categorizeSelected();
-		$mdDialog.show({
-			templateUrl : "html/templates/dialogs/deleteDialog.html",
-			controller : "deleteDialogCtrl", //deleteDialogController.js
-			controllerAs : "dCtrl",
-			locals : {
-				location : lc.selectedList[0].location,
-				list : lc.selectedList,
-				summary : summary
-			},
-			bindToController : true,
-			clickOutsideToClose : true
-	}).then(function() {
-			lc.showToast(lc.formatMessage(summary) + " inactivated.");
-			lc.showToast("Item inactivated.");
-			lc.repull();
-		}, function() {
-			lc.showToast("Failed to inactivate rooms/buildings/locations.");
-		});
+        if (lc.selectedList.length == 0) {
+            lc.showToast("Please select an item.");
+        } else {
+            var summary = lc.categorizeSelected();
+            $mdDialog.show({
+                templateUrl: "html/templates/dialogs/deleteDialog.html",
+                controller: "deleteDialogCtrl", //deleteDialogController.js
+                controllerAs: "dCtrl",
+                locals: {
+                    location: lc.selectedList[0].location,
+                    list: lc.selectedList,
+                    summary: summary
+                },
+                bindToController: true,
+                clickOutsideToClose: true
+            }).then(function () {
+                lc.showToast(lc.formatMessage(summary) + " inactivated.");
+                lc.showToast("Item inactivated.");
+                lc.repull();
+            }, function () {
+                lc.showToast("Failed to inactivate rooms/buildings/locations.");
+            });
+        }
 	};
 
 	// formats toast message based on deletion summary
@@ -310,14 +312,14 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 		lc.selectedList = [];
 		locationService.getAll(function(response) {
 			lc.locations = response;
-			lc.locations.forEach(function(location){
-				location.buildings.forEach(function(building){
-					building.location = location;
-					building.rooms.forEach(function(room){
-						room.building = building;
-					});
-				}); 
-			});
+			// lc.locations.forEach(function(location){
+			// 	location.buildings.forEach(function(building){
+			// 		building.location = location;
+			// 		building.rooms.forEach(function(room){
+			// 			room.building = building;
+			// 		});
+			// 	});
+			// });
 		}, function() {
 			lc.showToast("Could not fetch locations.");
 		});
@@ -330,15 +332,15 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 	// data gathering
 	locationService.getAll(function(response) {
 		lc.locations = response;
-		lc.locations.forEach(function(location){
-			location.buildings.forEach(function(building){
-				building.location = location;
-				building.rooms.forEach(function(room){
-					room.building = building;
-				});
-			}); 
-		});
-	}, function(error) {
+		// lc.locations.forEach(function(location){
+		// 	location.buildings.forEach(function(building){
+		// 		building.location = location;
+		// 		building.rooms.forEach(function(room){
+		// 			room.building = building;
+		// 		});
+		// 	});
+		// });
+	}, function() {
 		lc.showToast("Could not fetch locations.");
 	});
 
