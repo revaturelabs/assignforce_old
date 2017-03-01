@@ -2,7 +2,6 @@ var assignforce = angular.module("batchApp");
 
 assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
 		locationService, buildingService) {
-	// console.log("Beginning building dialog controller.");
 	var bdc = this;
 
 	// functions
@@ -34,3 +33,4 @@ assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
 		}
 	};
 });
+

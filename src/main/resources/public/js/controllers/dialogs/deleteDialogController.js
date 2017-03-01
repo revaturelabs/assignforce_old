@@ -35,7 +35,6 @@ assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeou
 
       // Delete Rooms/Buildings/Locations
     dc.delete = function(){
-        dc.thinking = true;
         var delList = dc.list;
         dc.deleteHelper(delList);
     };

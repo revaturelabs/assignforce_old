@@ -36,4 +36,4 @@ assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationS
                 //display an error message saying that the name field is empty
             }
         };
-    });
+});

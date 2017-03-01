@@ -62,6 +62,7 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
 
     //focus functions
     //create a focus
+    //I want to fix this to be readable - Sam
     cc.createFocus = function (focusForm) {
         //show a hidden field with a list of skill to select from, a name field, and a save button
         if(focusForm.$valid){
