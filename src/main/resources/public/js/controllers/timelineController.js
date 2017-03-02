@@ -18,6 +18,11 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
         return (batch.trainer);
     };
     
+    //Filter removes batches that have already concluded.
+    tlc.removeConcluded = function(batch) {
+        return (batch.endDate > tlc.currentDate);
+    };
+    
     //Filter removes batches whose dates don't exist.
     tlc.removeDateless = function(batch) {
         return (batch.startDate && batch.endDate);
@@ -33,6 +38,12 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     tlc.removeUnmatchingCurriculum = function(batch)
     {
     	return (tlc.selectedCurriculum == 0 || (!(angular.isUndefined(batch.curriculum)) && (batch.curriculum.currId == tlc.selectedCurriculum)));
+    };
+    
+    //Filter removes batches that don't have a matching focus to the selected view by the user.
+    tlc.removeUnmatchingFocus = function(batch)
+    {
+    	return (tlc.selectedFocus == 0 || (!(angular.isUndefined(batch.focus)) && (batch.focus.currId == tlc.selectedFocus)));
     };
     
     //Filter removes batches who don't have any matching trainers.
@@ -74,10 +85,10 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	};
 	
 	//Timeline axis range variables
-	tlc.minDate = new Date(3000, 7, 0);
-	tlc.oldMinDate = new Date(tlc.minDate);
-	tlc.maxDate = new Date(2000, 12, 0);
-	tlc.oldMaxDate = new Date(tlc.maxDate);
+	tlc.minDate;
+	tlc.oldMinDate;
+	tlc.maxDate;
+	tlc.oldMaxDate;
 	tlc.currentDate = (new Date()).getTime();
 
 	//Timeline variables
@@ -91,6 +102,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	tlc.timelineFormatting.xPadding = 72;
 	
 	tlc.selectedCurriculum = 0;
+	tlc.selectedFocus = 0;
 	tlc.selectedLocation = 0;
 	tlc.selectedBuilding = 0;
 	tlc.trainersPerPage = 0;
@@ -137,27 +149,43 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 
 	//Set the min and max dates based on the batches.
 	//Also grabs the length of the longest trainer name.
-	tlc.getDateRange = function()
+	tlc.getDateRange = function(byFilteredBatches)
 	{	
-		if (!tlc.batches)
+		var batchList;
+		
+		if (byFilteredBatches)
+		{
+			batchList = tlc.filteredBatches;
+		}
+		else
+		{
+			batchList = tlc.batches;
+		}
+		
+		if (!batchList || batchList.length <= 0)
 		{
 			return;
 		}
 		
+		tlc.minDate = new Date(3000, 7, 0);
+		tlc.oldMinDate = new Date(tlc.minDate);
+		tlc.maxDate = new Date(2000, 12, 0);
+		tlc.oldMaxDate = new Date(tlc.maxDate);
+		
 		var startDate;
 		var endDate;
-		//I hope whoever wrote this steps on a thousand legos
-		for (var b in tlc.batches)
+
+		for (var b in batchList)
 		{
-			if (!angular.isUndefined(tlc.batches[b].trainer) && tlc.batches[b].trainer !== null && !angular.isUndefined(tlc.batches[b].startDate) && tlc.batches[b].startDate !== null && !angular.isUndefined(tlc.batches[b].endDate) && tlc.batches[b].endDate !== null)
+			if (!angular.isUndefined(batchList[b].trainer) && batchList[b].trainer !== null && !angular.isUndefined(batchList[b].startDate) && batchList[b].startDate !== null && !angular.isUndefined(batchList[b].endDate) && batchList[b].endDate !== null)
 			{
 				if (angular.isUndefined(tlc.minDate))
 				{
-					tlc.minDate = new Date(tlc.batches[b].startDate);
+					tlc.minDate = new Date(batchList[b].startDate);
 				}
 				else
 				{
-					startDate = new Date(tlc.batches[b].startDate);
+					startDate = new Date(batchList[b].startDate);
 					if (startDate.getTime() < tlc.minDate.getTime()) {
 						tlc.minDate = startDate;
 					}
@@ -165,11 +193,11 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 				
 				if (angular.isUndefined(tlc.maxDate))
 				{
-					tlc.maxDate = new Date(tlc.batches[b].endDate);
+					tlc.maxDate = new Date(batchList[b].endDate);
 				}
 				else
 				{
-					endDate = new Date(tlc.batches[b].endDate);
+					endDate = new Date(batchList[b].endDate);
 					if (endDate.getTime() > tlc.maxDate.getTime()) {
 						tlc.maxDate = endDate;
 					}
@@ -186,8 +214,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	{
 	    batchService.getAll( function(response) {
 	        tlc.batches = response;
-	        console.log(tlc.batches);
-	        tlc.getDateRange();
+	        tlc.getDateRange(false);
 	        resolve(1);
 	    }, function() {
 	    	resolve(0);
@@ -213,6 +240,10 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     	
         tlc.curricula = temp.filter(function(t){
         	return (t.core);
+        });
+        
+        tlc.foci = temp.filter(function(t){
+        	return !(t.core);
         });
     });
     
@@ -329,6 +360,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     tlc.repullPromise.then(function(result)
     {
     	if (result){ 
+    		tlc.filterTimelineData();
     		tlc.projectTimeline(-100); 
     	}
     }, function(){
@@ -480,35 +512,55 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	//Calls for an update to the trainers per page upon loading the page.
 	tlc.changeTrainersPerPage();
 	
-	//Filters the list of trainers and batches, and calls for the timeline to be re-projected.
+	//Conditions on which to use the filtered list of batches, for requisite functions.
+	tlc.useFilteredBatches = function()
+	{
+		return (tlc.hideConcludedBatches || tlc.hideFocuslessBatches);
+	}
+	
+	//Refilters the data for the timeline.
+	tlc.filterTimelineData = function()
+	{
+		tlc.filteredTrainers = tlc.trainers.filter(tlc.removeTrainersOutOfPage);
+		
+		tlc.filteredBatches = tlc.batches.filter(tlc.removeNoTrainer).filter(tlc.removeIrrelevantBatches).filter(tlc.removeDateless).filter(tlc.removeOutOfDateRange).filter(tlc.removeUnmatchingCurriculum).filter(tlc.removeUnmatchingFocus);
+		
+		if (tlc.hideConcludedBatches)
+		{
+			tlc.filteredBatches = tlc.filteredBatches.filter(tlc.removeConcluded);
+		}
+		
+		if (tlc.hideFocuslessBatches)
+		{
+			tlc.filteredBatches = tlc.filteredBatches.filter(tlc.removeFocusless);
+		}
+		
+		if (tlc.hideBatchlessTrainers)
+		{
+			tlc.filteredTrainers = tlc.filteredTrainers.filter(tlc.removeBatchlessTrainers);
+		}
+		
+		//Sorts the trainer column names based on id.
+		tlc.filteredTrainers.sort(function(a,b)
+		{
+			var aID = parseInt(a.substring(1, a.indexOf(')')));
+			var bID = parseInt(b.substring(1, b.indexOf(')')));
+			
+			if(aID < bID){ 
+				return -1; 
+			}
+			else if(aID > bID){ 
+				return 1; 
+			}
+			return 0;
+		});
+	}
+	
+	//Calls for the timeline to be re-projected.
 	tlc.projectTimeline = function(yOffset)
 	{
 		if (tlc.trainers && tlc.batches)
 		{
-			tlc.filteredTrainers = tlc.trainers.filter(tlc.removeTrainersOutOfPage);
-			
-			tlc.filteredBatches = tlc.batches.filter(tlc.removeNoTrainer).filter(tlc.removeIrrelevantBatches).filter(tlc.removeDateless).filter(tlc.removeOutOfDateRange).filter(tlc.removeUnmatchingCurriculum);
-			
-			if (tlc.hideBatchlessTrainers)
-			{
-				tlc.filteredTrainers = tlc.filteredTrainers.filter(tlc.removeBatchlessTrainers);
-			}
-			
-			//Sorts the trainer column names based on id.
-			tlc.filteredTrainers.sort(function(a,b)
-			{
-				var aID = parseInt(a.substring(1, a.indexOf(')')));
-				var bID = parseInt(b.substring(1, b.indexOf(')')));
-				
-				if(aID < bID){ 
-					return -1; 
-				}
-				else if(aID > bID){ 
-					return 1; 
-				}
-				return 0;
-			});
-			
 			$scope.projectTimeline(tlc.timelineFormatting, tlc.minDate, tlc.maxDate, yOffset, tlc.filteredBatches, $scope.$parent, calendarService.countWeeks, tlc.filteredTrainers);
 		}
 	};
