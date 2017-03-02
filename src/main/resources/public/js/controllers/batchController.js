@@ -135,50 +135,41 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
         	}
         };
         
-        //Recalculates skill ratios for trainers based on the selected curriculum.
-        bc.updateSkillRatios = function()
-        {
-            bc.batch.endDate = new Date(bc.oldBatchEndDate);
-            bc.showToast("Batch's end date cannot be less than or equal to the batch's start date!");
-        }
-        else
-        {
-        	var cur = bc.selectedSkills;
-        	
-    		if (angular.isUndefined(cur) || cur === null)
-    		{
-    			return 0;
-    		}
-    		else if (cur.length == 0)
-    		{
-    			return 100;
-    		}
-
-    		var matches = 0;
-    		var total = 0;
-    		
-    		for (var i = 0; i < cur.length; i += 1)
-    		{
-    			for (var j = 0; j < trainer.skills.length; j += 1)
-    			{
-    				if (cur[i] == (trainer.skills[j] ? trainer.skills[j].skillId : -1))
-    				{
-    					matches++;
-    					break;
-    				}
-    			}
-    			total++;
-    		}
-    		
-    		if (total > 0) { 
-    			return Math.floor((matches / total) * 100); 
-    		}
-    		
-    		return 100;
-        };
+        // calculates the percentage to which a trainer's skills correspond
+        // to the batch's curriculum.
+        bc.calcTrainerSkillRatio = function(trainer) {
+            var cur = bc.selectedSkills;
         
+            if (angular.isUndefined(cur) || cur === null) {
+                return 0;
+            } else if (cur.length == 0) {
+                return 100;
+            }
+        
+            var matches = 0;
+            var total = 0;
+        
+            for (var i = 0; i < cur.length; i += 1) {
+                for (var j = 0; j < trainer.skills.length; j += 1) {
+                    if (cur[i] == (trainer.skills[j] ? trainer.skills[j].skillId : -1)) {
+                        matches++;
+                        break;
+                    }
+                }
+                total++;
+            }
+        
+            if (total > 0) {
+                return Math.floor((matches / total) * 100);
+            }
+        
+            return 100;
+        };
+
+
+
         /*******************************************************************/
-     // defaults location to Reston branch 
+        // defaults location to Reston branch 
         settingService.getById(3, function(response){
         	bc.findHQ = response.settingValue;
         }, function(){
