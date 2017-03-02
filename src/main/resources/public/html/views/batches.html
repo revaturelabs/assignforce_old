@@ -104,7 +104,7 @@
                         
                         <md-input-container flex>
                             <label> End Date </label>
-                            <md-datepicker ng-value="batch.endDate" ng-model="bCtrl.batch.endDate" md-date-filter="bCtrl.enableFridays" md-open-on-focus md-hide-icons="calendar" ng-change="bCtrl.updateWeeks(); bCtrl.updateTrainers(bCtrl.trainers,bCtrl.batch.startDate,bCtrl.batch.endDate)"> </md-datepicker>
+                            <md-datepicker ng-value="batch.endDate" ng-model="bCtrl.batch.endDate" md-date-filter="bCtrl.enableFridays" md-open-on-focus md-hide-icons="calendar" ng-change="bCtrl.validateBatchEndDate(); bCtrl.updateWeeks(); bCtrl.updateTrainers(bCtrl.trainers,bCtrl.batch.startDate,bCtrl.batch.endDate)"> </md-datepicker>
                         </md-input-container>  
                         
                         <md-input-container flex>
@@ -284,32 +284,69 @@
                     <div class="md-padding" layout="columns">
                         <md-input-container flex="none">
                             <label> Start Date </label>
-                            <md-datepicker ng-model="tlCtrl.minDate" md-current-view="year" md-open-on-focus md-hide-icons="calendar"> </md-datepicker>
+                            <md-datepicker ng-model="tlCtrl.minDate" md-current-view="year" md-open-on-focus md-hide-icons="calendar" ng-change="tlCtrl.validateStartDate(); tlCtrl.projectTimelineOnly()"> </md-datepicker>
                         </md-input-container>
                         
                         <div flex> </div>
 
                         <md-input-container flex="none">
                             <label> End Date </label>
-                            <md-datepicker ng-model="tlCtrl.maxDate" md-current-view="year" md-open-on-focus md-hide-icons="calendar"> </md-datepicker>
+                            <md-datepicker ng-model="tlCtrl.maxDate" md-current-view="year" md-open-on-focus md-hide-icons="calendar" ng-change="tlCtrl.validateEndDate(); tlCtrl.projectTimelineOnly()"> </md-datepicker>
                         </md-input-container>
                         
                         <div flex> </div>
                         
                         <md-input-container flex="none">
-                        	<label> Batches to View </label>
+                        	<label> Curriculum </label>
                             <md-select ng-model="tlCtrl.selectedCurriculum" ng-change="tlCtrl.projectTimelineOnly()" ng-style="{'width': 160 + 'px'}">
-                            	<md-option ng-value = "0">All</md-option>
+                            	<md-option ng-value = "0">Any</md-option>
                                 <md-option ng-value="curriculum.currId" ng-repeat="curriculum in tlCtrl.curricula"> {{ curriculum.name }} </md-option>
                             </md-select>
                         </md-input-container>
                   
                         <div flex> </div>
                         
-                        <md-checkbox aria-label="Hide Batchless Trainers?" ng-model="tlCtrl.hideBatchlessTrainers" ng-change="tlCtrl.projectTimelineOnly()">
-                        	Hide Batchless Trainers?
-                        </md-checkbox>
+                        <md-input-container flex="none">
+                        	<label> Location </label>
+                            <md-select ng-model="tlCtrl.selectedLocation" ng-change="tlCtrl.projectTimelineOnly()" ng-style="{'width': 160 + 'px'}">
+                            	<md-option ng-value = "0">Any</md-option>
+                                <md-option ng-value="location.id" ng-repeat="location in tlCtrl.locations"> {{ location.name }} {{ location.city }}, {{ location.state }}</md-option>
+                            </md-select>
+                        </md-input-container>
+                  
+                        <div flex> </div>
+                        
+                       	<div ng-if = "tlCtrl.selectedLocation != 0">
+                       		<md-input-container flex="none">
+                       			<label> Building </label>
+	                            <md-select ng-model="tlCtrl.selectedBuilding" ng-change="tlCtrl.projectTimelineOnly()" ng-style="{'width': 160 + 'px'}">
+	                            	<md-option ng-value = "0">Any</md-option>
+	                                <md-option ng-value="building.id" ng-repeat="building in tlCtrl.buildings"> {{ building.name }} </md-option>
+	                            </md-select>
+                            </md-input-container>
+                        </div>
+                        
+                        <div ng-if = "tlCtrl.selectedLocation == 0">
+                           	<md-input-container flex="none">
+                           		<label> Building </label>
+	                            <md-select ng-model="tlCtrl.selectedBuilding" ng-change="tlCtrl.projectTimelineOnly()" ng-style="{'width': 160 + 'px'}" disabled>
+	                            	<md-option ng-value = "0" selected>Any</md-option>
+	                            </md-select>
+                            </md-input-container>
+                        </div>
+                        
+                        <div flex> </div>
+                        
+                        <div class="md-padding" layout="columns">
+	                        <md-checkbox aria-label="Hide Concluded Batches?" ng-model="tlCtrl.hideConcludedBatches" ng-change="tlCtrl.projectTimelineOnly()">
+	                        	Hide Concluded Batches?
+	                        </md-checkbox>
+	                        <md-checkbox aria-label="Hide Batchless Trainers?" ng-model="tlCtrl.hideBatchlessTrainers" ng-change="tlCtrl.projectTimelineOnly()">
+	                        	Hide Batchless Trainers?
+	                        </md-checkbox>
+                        </div>
                     </div>
+                    
 	                <div class="md-padding" layout="columns">
                         <md-input-container flex="none">
                         	<label> Trainers Per Page (0 to see All) </label>
