@@ -4,6 +4,7 @@
 
         var bc = this;
         bc.trainerSkillRatios = [];
+        bc.oldBatchEndDate;
         
         bc.convertUnavailability = function(incoming){
         	return new Date(incoming);
@@ -59,12 +60,26 @@
                 	}
                 }
                 
+                bc.oldBatchEndDate = new Date(bc.batch.endDate);
 
                 bc.updateWeeks();
             }
         };
         
         /*******************************************************************/
+        //Ensures the batch end date can't be set before the start date.
+        bc.validateBatchEndDate = function()
+        {
+        	if (bc.batch.startDate && bc.batch.endDate <= bc.batch.startDate)
+        	{
+        		bc.batch.endDate = new Date(bc.oldBatchEndDate);
+        		bc.showToast("Batch's end date cannot be less than or equal to the batch's start date!");
+        	}
+        	else
+        	{
+        		bc.oldBatchEndDate = new Date(bc.batch.endDate);
+        	}
+        }
         
         //Filters trainers based on available dates by calling the trainerSelection filter
         bc.updateTrainers = function(trainers, batchStart, batchEnd){
@@ -198,6 +213,8 @@
         bc.selectEndDate = function(){
             var startDate = new Date(bc.batch.startDate);
             bc.batch.endDate = new Date( startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 67 );
+            
+            bc.oldBatchEndDate = new Date(bc.batch.endDate);
         };
 
         /*******************************************************************/
