@@ -25,25 +25,21 @@ public class Building implements Activatable {
 	@Column(name = "NAME", unique = true, nullable = false)
 	private String name;
 
-	@ManyToOne
-	@JoinColumn(name = "LOCATION") // is it building or location??
-	@Fetch(FetchMode.JOIN)
-	@JsonIgnoreProperties("buildings")
-	private Location location;
+	@Column(name = "LOCATION")
+	private int location;
 
 	@Column(name = "active", insertable = false)
 	private Boolean active;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "BUILDING")
-	@JsonIgnoreProperties("building")
 	private List<Room> rooms;
 
 	public Building() {
 		//No arg constructor
 	}
 
-	public Building(int ID, String name, List<Room> rooms, boolean active, Location location) {
+	public Building(int ID, String name, List<Room> rooms, boolean active, int location) {
 		super();
 		this.ID = ID;
 		this.name = name;
@@ -52,7 +48,7 @@ public class Building implements Activatable {
 		this.active = active;
 	}
 
-	public Building(Location location) {
+	public Building(int location) {
 		this.location = location;
 	}
 
@@ -80,11 +76,11 @@ public class Building implements Activatable {
 		this.name = name;
 	}
 
-	public Location getLocation() {
+	public int getLocation() {
 		return location;
 	}
 
-	public void setLocation(Location location) {
+	public void setLocation(int location) {
 		this.location = location;
 	}
 

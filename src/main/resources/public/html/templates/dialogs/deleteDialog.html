@@ -1,7 +1,7 @@
 <!-- dCtrl is deleteDialogController.js -->
     <md-dialog aria-label="delete dialog">
 
-        <div ng-if="(!dCtrl.thinking || dCtrl.flag) && dCtrl.locations != undefined">
+        <div ng-if="!thinking">
             
             <md-dialog-content>
 
@@ -26,7 +26,7 @@
 
         </div>
 
-        <div ng-if="(dCtrl.thinking && !dCtrl.flag) || dCtrl.locations == undefined" layout="column" layout-wrap layout-align="center center">
+        <div ng-if="thinking" layout="column" layout-wrap layout-align="center center">
             <div flex="100"> &nbsp; </div>
             <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
             <div flex="100"> &nbsp; </div>

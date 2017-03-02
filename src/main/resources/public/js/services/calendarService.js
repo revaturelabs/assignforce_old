@@ -19,7 +19,7 @@ app.service( "calendarService", function(){
 
     cs.countMilliseconds = function(startDate, endDate){
         return (endDate / 1000) - (startDate / 1000);
-    }
+    };
 
     cs.createDate = function(ms){
         var date = new Date(ms).toDateString();

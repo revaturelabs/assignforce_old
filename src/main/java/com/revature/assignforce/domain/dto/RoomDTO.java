@@ -9,18 +9,9 @@ public class RoomDTO {
 
 	private int roomID;
 	private String roomName;
-	private Building building;
-	private List<Unavailable> unavailabilities;	
+	private int building;
+	private List<Unavailable> unavailability;
 	private Boolean active;
-	private int buildingId;
-	
-	public int getBuildingId(){
-		return buildingId;
-	}
-	
-	public void setBuildingId(int buildingId){
-		this.buildingId = buildingId;
-	}
 	
 	public int getRoomID() {
 		return roomID;
@@ -28,24 +19,28 @@ public class RoomDTO {
 	public void setRoomID(int iD) {
 		roomID = iD;
 	}
+
 	public String getRoomName() {
 		return roomName;
 	}
 	public void setRoomName(String name) {
 		roomName = name;
 	}
-	public void setBuilding(Building building){
+
+	public void setBuilding(int building){
 		this.building = building;
 	}
-	public Building getBuilding() {		
+	public int getBuilding() {
 		return this.building;
 	}	
-	public List<Unavailable> getUnavailabilities() {
-		return unavailabilities;
+
+	public List<Unavailable> getUnavailability() {
+		return unavailability;
 	}
-	public void setUnavailabilities(List<Unavailable> unavailabilities) {
-		this.unavailabilities = unavailabilities;
+	public void setUnavailability(List<Unavailable> unavailability) {
+		this.unavailability = unavailability;
 	}
+
 	public Boolean getActive() {
 		return active;
 	}
