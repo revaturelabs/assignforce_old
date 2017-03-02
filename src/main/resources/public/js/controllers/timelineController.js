@@ -8,8 +8,6 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	
     var tlc = this;
     
-    console.log($scope);
-    
     //For displaying toast messages.
     tlc.showToast = function( message ){
         $scope.$parent.aCtrl.showToast( message );
