@@ -6,7 +6,7 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
     bc.oldBatchEndDate;
     
     bc.convertUnavailability = function(incoming){
-    	return new Date(incoming);
+        return new Date(incoming);
     };
 
     bc.convertUnavailability = function(incoming){
