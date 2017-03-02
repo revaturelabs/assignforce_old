@@ -6,21 +6,26 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     rc.data = [];
     rc.newTable = [];
 
-    var chart1, chart2;
 
-    // functions
-    // calls showToast method of aCtrl
+    var chart1, chart2;
+    var canSubmit;
+
+
+
     /**************************************************************************
-     * sums months for given curriculum in chosen year
+     *                                                              FUNCTIONS
+     *************************************************************************/
+
+    /** FUNCTION:
+     * Calls showToast method of aCtrl
      */
     rc.showToast = function(message) {
         $scope.$parent.aCtrl.showToast(message);
     };
 
-    /*************************************************************/
-    // formats data to be exported as .csv file
-    /**************************************************************************
-     * sums months for given curriculum in chosen year
+
+    /** FUNCTION:
+     * Formats data to be exported as .csv file
      */
     rc.export = function() {
         var formatted = [];
