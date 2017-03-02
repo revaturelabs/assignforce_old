@@ -4,17 +4,20 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
 
     var bc = this;
     bc.trainerSkillRatios = [];
+    bc.oldBatchEndDate;
 
     bc.convertUnavailability = function(incoming){
         return new Date(incoming);
     };
 
+    /*******************************************************************/
 
     // functions
     bc.showToast = function( message ){
         $scope.$parent.aCtrl.showToast( message );
     };
 
+    /*******************************************************************/
 
     // changes form state and populates fields if need-be
     bc.changeState = function( newState, incomingBatch ){
@@ -57,11 +60,26 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
                 }
             }
 
+            bc.oldBatchEndDate = new Date(bc.batch.endDate);
 
             bc.updateWeeks();
         }
     };
 
+    /*******************************************************************/
+    //Ensures the batch end date can't be set before the start date.
+    bc.validateBatchEndDate = function()
+    {
+        if (bc.batch.startDate && bc.batch.endDate <= bc.batch.startDate)
+        {
+            bc.batch.endDate = new Date(bc.oldBatchEndDate);
+            bc.showToast("Batch's end date cannot be less than or equal to the batch's start date!");
+        }
+        else
+        {
+            bc.oldBatchEndDate = new Date(bc.batch.endDate);
+        }
+    }
 
     //Filters trainers based on available dates by calling the trainerSelection filter
     bc.updateTrainers = function(trainers, batchStart, batchEnd){
@@ -163,6 +181,7 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
         return 100;
     };
 
+    /*******************************************************************/
     // defaults location to Reston branch
     settingService.getById(3, function(response){
         bc.findHQ = response.settingValue;
@@ -170,6 +189,7 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
         bc.showToast("Location default not found");
     });
 
+    /*******************************************************************/
 
     //defaults building
     settingService.getById(9, function(response){
@@ -187,25 +207,31 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
         bc.showToast("Batch name default not found");
     });
 
+    /*******************************************************************/
 
     // select end date based on start date
     bc.selectEndDate = function(){
         var startDate = new Date(bc.batch.startDate);
         bc.batch.endDate = new Date( startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 67 );
+
+        bc.oldBatchEndDate = new Date(bc.batch.endDate);
     };
 
+    /*******************************************************************/
 
     // disables all but Mondays in start datepickers
     bc.enableMondays = function( date ){
         return date.getDay() == 1;
     };
 
+    /*******************************************************************/
 
     // disables all but Fridays in start datepickers
     bc.enableFridays = function( date ){
         return date.getDay() == 5;
     };
 
+    /*******************************************************************/
 
     // filters rooms based on selected location SAM
     // filterRooms should be filtered rooms based on selected building
@@ -226,6 +252,7 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
         }
     };
 
+    /*******************************************************************/
 
     // counts the number of weeks between the start and end dates
     bc.updateWeeks = function(){
@@ -237,6 +264,7 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
         }
     };
 
+    /*******************************************************************/
 
     // defaults name to _curriculum_ (_start date_) if both are chosen and name is not
     bc.defaultName = function(){
@@ -257,6 +285,7 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
         }
     };
 
+    /*******************************************************************/
 
     // outputs progress as a percent
     bc.calcProgress = function( paramLow, paramHigh ){
@@ -280,6 +309,7 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
         }
     };
 
+    /*******************************************************************/
 
     // highlights batches clicked on timeline
     bc.highlightBatch = function(batch){
@@ -292,6 +322,7 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
             .attr('filter', 'url(#highlight)');
     };
 
+    /*******************************************************************/
 
     // determines if input table row needs the selectedBatch class
     bc.selectedBatchRow = function(batch){
@@ -300,6 +331,7 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
         }
     };
 
+    /*******************************************************************/
 
     // resets form
     bc.resetForm = function(){
@@ -308,6 +340,7 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
     };
 
 
+    /*******************************************************************/
 
     /* table checkbox functions*/
     // toggle all
@@ -320,18 +353,21 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
         }
     };
 
+    /*******************************************************************/
 
     // check if all are selected
     bc.allSelected = function(){
         return bc.batchesSelected.length == bc.batches.length;
     };
 
+    /*******************************************************************/
 
     // checks box if batch is in batchesSelected list
     bc.exists = function(batch){
         return bc.batchesSelected.indexOf( batch ) > -1;
     };
 
+    /*******************************************************************/
 
     // adds/removes batch from batchesSelected list
     bc.toggle = function(batch){
@@ -344,6 +380,7 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
         }
     };
 
+    /*******************************************************************/
 
     // repull batches
     bc.repull = function(){
@@ -357,6 +394,7 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
         });
     };
 
+    /*******************************************************************/
 
     /* batch table button functions*/
     // edit batch
@@ -366,6 +404,7 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
         $window.scrollTo(0, 0);
     };
 
+    /*******************************************************************/
 
     // clone batch
     bc.clone = function( batch ){
@@ -374,6 +413,7 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
         $window.scrollTo(0, 0);
     };
 
+    /*******************************************************************/
 
     // delete single batch
     bc.delete = function( batch ){
@@ -385,6 +425,7 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
         });
     };
 
+    /*******************************************************************/
 
     // delete multiple batches
     bc.deleteMultiple = function(){
@@ -394,6 +435,7 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
         bc.deleteMultipleHelper(delList);
     };
 
+    /*******************************************************************/
 
     // recursively deletes the first entry in bc.batchesSelected until it is empty
     bc.deleteMultipleHelper = function( delList ){
@@ -413,6 +455,7 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
         });
     };
 
+    /*******************************************************************/
 
     // saves/updates batch
     bc.saveBatch = function(isValid){
@@ -455,6 +498,7 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
         }
     };
 
+    /*******************************************************************/
 
     // data
     bc.weeksSpan = "Spans 0 Weeks";
@@ -476,6 +520,7 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
             "submit": "Save Clone" } };
 
 
+    /*******************************************************************/
 
     // page initialization
     // data gathering
@@ -485,6 +530,7 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
         bc.showToast( "Could not fetch batches.");
     });
 
+    /*******************************************************************/
 
     skillService.getAll( function(response) {
         bc.skills = response;
@@ -492,6 +538,7 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
         bc.showToast( "Could not fetch skills.");
     });
 
+    /*******************************************************************/
 
     curriculumService.getAll( function(response) {
         var temp = response;
@@ -505,12 +552,15 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
         bc.showToast( "Could not fetch curricula.");
     });
 
+    /*******************************************************************/
+
     trainerService.getAll( function(response) {
         bc.trainers = response;
     }, function() {
         bc.showToast( "Could not fetch trainers.");
     });
 
+    /*******************************************************************/
 
     locationService.getAll( function(response) {
         bc.locations = response;
@@ -519,6 +569,7 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
         bc.showToast( "Could not fetch locations.");
     });
 
+    /*******************************************************************/
 
     buildingService.getAll( function(response) {
         bc.buildings = response;
