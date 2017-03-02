@@ -36,7 +36,7 @@ public class BuildingCtrl {
 		
 		int ID = in.getID(); //we shouldn't need the building id - it will be generated...  right?
 		String name = in.getName(); //building name
-		Location location = in.getLocation(); //building's location id.  This is where it is was breaking - said the location id is 0
+		int location = in.getLocation(); //building's location id.  This is where it is was breaking - said the location id is 0
 		List<Room> rooms = in.getRooms(); //list of rooms(if being created in this step, no rooms..)
 
 		// int iD, String name, String city, String state, List<Building>
@@ -73,7 +73,7 @@ public class BuildingCtrl {
 
 		int ID = in.getID();
 		String name = in.getName();
-		Location location = in.getLocation();
+		int location = in.getLocation();
 		List<Room> rooms = in.getRooms();
 		Boolean active = in.getActive();
 		Building out = new Building(ID, name, rooms, active, location);

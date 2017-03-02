@@ -52,13 +52,14 @@ public class TrainerCtrl {
 	public Object retrieveTrainer( @PathVariable("id") int ID ) {
 		
 		Trainer out = trainerService.getOneItem(ID);
+
 		if (out == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No trainer found of ID " + ID + "."), HttpStatus.NOT_FOUND);
 		} else {
 			return new ResponseEntity<Trainer>(out, HttpStatus.OK);
 		}
 	}
-	
+
 	  // UPDATE
 		// updating an existing trainer object with information passed from trainer data transfer object
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
