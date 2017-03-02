@@ -23,7 +23,7 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
     /*******************************************************************/
 
     // changes form state and populates fields if need-be
-    bc.changeState = function( newState, incomingBatch ){
+    bc.changeState = function( newState, incomingBatch ) {
         bc.state = newState;
 
         if (newState == "create") {
@@ -32,39 +32,38 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
             bc.batch.building = bc.findHQBuilding;
         } else {
 
-            bc.batch.id         = (bc.state == "edit")       ? incomingBatch.id                  : undefined;
+            bc.batch.id = (bc.state == "edit") ? incomingBatch.id : undefined;
 
-            bc.batch.name       = incomingBatch.name;
-            bc.batch.curriculum = (incomingBatch.curriculum) ? incomingBatch.curriculum.currId       : undefined;
-            bc.batch.focus = (incomingBatch.focus) ? incomingBatch.focus.currId       : undefined;
+            bc.batch.name = incomingBatch.name;
+            bc.batch.curriculum = (incomingBatch.curriculum) ? incomingBatch.curriculum.currId : undefined;
+            bc.batch.focus = (incomingBatch.focus) ? incomingBatch.focus.currId : undefined;
 
             bc.batch.startDate = (incomingBatch.startDate) ? new Date(incomingBatch.startDate) : undefined;
             bc.batch.endDate = (incomingBatch.endDate) ? new Date(incomingBatch.endDate) : undefined;
-            bc.batch.room       = (incomingBatch.room)       ? incomingBatch.room.roomID         : undefined;
+            bc.batch.room = (incomingBatch.room) ? incomingBatch.room.roomID : undefined;
 
-            if(bc.batch.room){
+            if (bc.batch.room) {
                 bc.batch.building = incomingBatch.room.building.id;
                 bc.batch.location = incomingBatch.room.building.location;
-                if (bc.batch.room.unavailability){
+                if (bc.batch.room.unavailability) {
                     bc.batch.room.unavailability.startDate = (incomingBatch.startDate) ? incomingBatch.room.unavailability.startDate : undefined;
                     bc.batch.room.unavailability.endDate = (incomingBatch.endDate) ? incomingBatch.room.unavailability.endDate : undefined;
                 }
             }
 
-            bc.batch.trainer    = (incomingBatch.trainer)    ? incomingBatch.trainer.trainerId   : undefined;
-            bc.batch.cotrainer  = (incomingBatch.cotrainer)  ? incomingBatch.cotrainer.trainerId : undefined;
+            bc.batch.trainer = (incomingBatch.trainer) ? incomingBatch.trainer.trainerId : undefined;
+            bc.batch.cotrainer = (incomingBatch.cotrainer) ? incomingBatch.cotrainer.trainerId : undefined;
 
             bc.selectedSkills = [];
-            if (incomingBatch.skills)
-            {
-                for (var i = 0; i < incomingBatch.skills.length; i += 1)
-                {
+            if (incomingBatch.skills) {
+                for (var i = 0; i < incomingBatch.skills.length; i += 1) {
                     bc.selectedSkills.push(incomingBatch.skills[i].skillId);
                 }
                 bc.oldBatchEndDate = new Date(bc.batch.endDate);
                 bc.updateWeeks();
             }
-        };
+        }
+    };
         
         /*******************************************************************/
         //Ensures the batch end date can't be set before the start date.
