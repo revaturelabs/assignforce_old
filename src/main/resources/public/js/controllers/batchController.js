@@ -1,10 +1,13 @@
 var assignforce = angular.module( "batchApp" );
 
 assignforce.controller( "batchCtrl", function($scope, batchService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, skillService, $filter, $window) {
-
     var bc = this;
     bc.trainerSkillRatios = [];
     bc.oldBatchEndDate;
+    
+    bc.convertUnavailability = function(incoming){
+    	return new Date(incoming);
+    };
 
     bc.convertUnavailability = function(incoming){
         return new Date(incoming);
@@ -58,28 +61,157 @@ assignforce.controller( "batchCtrl", function($scope, batchService, curriculumSe
                 {
                     bc.selectedSkills.push(incomingBatch.skills[i].skillId);
                 }
+                bc.oldBatchEndDate = new Date(bc.batch.endDate);
+                bc.updateWeeks();
             }
-
-            bc.oldBatchEndDate = new Date(bc.batch.endDate);
-
-            bc.updateWeeks();
+        };
+        
+        /*******************************************************************/
+        //Ensures the batch end date can't be set before the start date.
+        bc.validateBatchEndDate = function()
+        {
+        	if (bc.batch.startDate && bc.batch.endDate <= bc.batch.startDate)
+        	{
+        		bc.batch.endDate = new Date(bc.oldBatchEndDate);
+        		bc.showToast("Batch's end date cannot be less than or equal to the batch's start date!");
+        	}
+        	else
+        	{
+        		bc.oldBatchEndDate = new Date(bc.batch.endDate);
+        	}
         }
-    };
-
-    /*******************************************************************/
-    //Ensures the batch end date can't be set before the start date.
-    bc.validateBatchEndDate = function()
-    {
-        if (bc.batch.startDate && bc.batch.endDate <= bc.batch.startDate)
+        
+        //Filters trainers based on available dates by calling the trainerSelection filter
+        bc.updateTrainers = function(trainers, batchStart, batchEnd){
+        	bc.availableTrainers = $filter('trainerSelection')(trainers, batchStart, batchEnd);
+        };
+        
+        
+        //Updates list of selected skills.
+        bc.updateSelectedSkills = function()
+        {
+        	bc.selectedSkills = [];
+        	var i;
+        	
+        	var cur = bc.curricula.find(function(a){
+        		return ((a.currId ? a.currId : -1) == bc.batch.curriculum);
+        	});
+    
+        	var foc = bc.foci.find(function(a){
+        		return ((a.currId ? a.currId : -1) == bc.batch.focus);
+        	});
+        	
+        	if (cur)
+        	{
+        		for (i = 0; i < cur.skills.length; i += 1)
+        		{
+        			bc.selectedSkills.push(cur.skills[i].skillId);
+        		}
+        	}
+        	
+        	if (foc)
+        	{
+        		for (i = 0; i < foc.skills.length; i += 1)
+        		{
+        			bc.selectedSkills.push(foc.skills[i].skillId);
+        		}
+        	}
+        	
+        	bc.updateBatchSkills();
+        };
+        
+        //Updates the batch's skills to reflect the skills list, but with the actual objects.
+        bc.updateBatchSkills = function()
+        {
+        	var findFunction = function(a){
+    			return ((a.skillId ? a.skillId : -1) == bc.selectedSkills[i]);
+    		};
+        	
+        	bc.batch.skills = [];
+        	
+        	for (var i = 0; i < bc.selectedSkills.length; i += 1)
+        	{
+        		bc.batch.skills.push(bc.skills.find(findFunction))
+        	}
+        };
+        
+        //Recalculates skill ratios for trainers based on the selected curriculum.
+        bc.updateSkillRatios = function()
         {
             bc.batch.endDate = new Date(bc.oldBatchEndDate);
             bc.showToast("Batch's end date cannot be less than or equal to the batch's start date!");
         }
         else
         {
+        	var cur = bc.selectedSkills;
+        	
+    		if (angular.isUndefined(cur) || cur === null)
+    		{
+    			return 0;
+    		}
+    		else if (cur.length == 0)
+    		{
+    			return 100;
+    		}
+
+    		var matches = 0;
+    		var total = 0;
+    		
+    		for (var i = 0; i < cur.length; i += 1)
+    		{
+    			for (var j = 0; j < trainer.skills.length; j += 1)
+    			{
+    				if (cur[i] == (trainer.skills[j] ? trainer.skills[j].skillId : -1))
+    				{
+    					matches++;
+    					break;
+    				}
+    			}
+    			total++;
+    		}
+    		
+    		if (total > 0) { 
+    			return Math.floor((matches / total) * 100); 
+    		}
+    		
+    		return 100;
+        };
+        
+        /*******************************************************************/
+     // defaults location to Reston branch 
+        settingService.getById(3, function(response){
+        	bc.findHQ = response.settingValue;
+        }, function(){
+        	bc.showToast("Location default not found");
+        });
+        
+        /*******************************************************************/
+        
+        //defaults building        
+        settingService.getById(9, function(response){
+        	bc.findHQBuilding = response.settingValue;
+        	//may need to call resetForm on bc
+        }, function(){
+        	bc.showToast("Building default not found");
+        });
+        
+        //defaults batch naming convention
+        settingService.getById(23, function(response){
+        	bc.nameString = response.settingName;
+        }, function(){
+        	bc.nameString = "$c ($m/$d)";
+        	bc.showToast("Batch name default not found");
+        });
+        
+        /*******************************************************************/
+        
+        // select end date based on start date
+        bc.selectEndDate = function(){
+            var startDate = new Date(bc.batch.startDate);
+            bc.batch.endDate = new Date( startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 67 );
+            
             bc.oldBatchEndDate = new Date(bc.batch.endDate);
-        }
-    }
+        };
 
     //Filters trainers based on available dates by calling the trainerSelection filter
     bc.updateTrainers = function(trainers, batchStart, batchEnd){

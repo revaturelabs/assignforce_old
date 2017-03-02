@@ -35,10 +35,10 @@ public class RoomCtrl {
 	
 		int ID = in.getRoomID();
 		String name = in.getRoomName();
-		Building building = in.getBuilding();
-		List<Unavailable> unavailabilities = in.getUnavailabilities();
+		int building = in.getBuilding();
+		List<Unavailable> unavailability = in.getUnavailability();
 		
-		Room out = new Room( ID, name, building, unavailabilities );
+		Room out = new Room( ID, name, building, unavailability );
 		out = roomService.saveItem( out );
 		
 		if (out == null) {
@@ -54,6 +54,7 @@ public class RoomCtrl {
 	public Object retrieveRoom( @PathVariable("id") int ID ) {
 		
 		Room out = roomService.getOneItem(ID);
+
 		if (out == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No room found of ID " + ID + "."), HttpStatus.NOT_FOUND);
 		} else {
@@ -68,10 +69,10 @@ public class RoomCtrl {
 		
 		int ID = in.getRoomID();
 		String name = in.getRoomName();
-		Building building = in.getBuilding();
-		List<Unavailable> unavailabilities = in.getUnavailabilities();
+		int building = in.getBuilding();
+		List<Unavailable> unavailability = in.getUnavailability();
 		Boolean active = in.getActive();
-		Room out = new Room( ID, name, building, unavailabilities, active);
+		Room out = new Room( ID, name, building, unavailability, active);
 		out = roomService.saveItem( out );
 		
 		if (out == null) {
@@ -96,6 +97,7 @@ public class RoomCtrl {
 	public Object retrieveAllRooms() {
 		
 		List<Room> all = roomService.getAllItems();
+
 		if (all == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Fetching all rooms failed."), HttpStatus.NOT_FOUND);
 		} else if (all.isEmpty()) {

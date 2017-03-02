@@ -6,7 +6,7 @@
     </md-toolbar>
 
     <!--content for core Curricula-->
-    <md-card ng-if="cCtrl.curricula != undefined && cCtrl.skills != undefined">
+    <md-card >
         <md-toolbar class="md-primary md-hue-2">
             <div class="md-toolbar-tools">
                 <span>Core Curricula</span>
@@ -17,7 +17,7 @@
                 </md-button>
             </div>
         </md-toolbar>
-        <md-card-content id="core">
+        <md-card-content id="core" ng-if="cCtrl.curricula != undefined && cCtrl.skills != undefined">
             <md-list>
                 <md-list-item class="md-2-line" md-ink-ripple ng-repeat="curr in cCtrl.curricula | activeItem" ng-if="curr.core == true">
                     <div class="md-list-item-text" layout="column">
@@ -30,14 +30,14 @@
     </md-card>
 
     <!--content for focuses-->
-    <md-card ng-if="cCtrl.curricula != undefined && cCtrl.skills != undefined">
+    <md-card>
         <md-toolbar class="md-primary md-hue-2">
             <div class="md-toolbar-tools">
                 <span>Focuses</span>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cCtrl.toggleFocusStatus()">
                     <md-tooltip class="md-title"> Create Focus</md-tooltip>
-                    <i class="material-icons">create</i>
+                    <i class="material-icons">add_circle</i>
                 </md-button>
                 <md-button class="md-icon-button" ng-click="cCtrl.toggleFocusToolbar()">
                     <md-tooltip class="md-title"> Toggle Content </md-tooltip>
@@ -45,7 +45,8 @@
                 </md-button>
             </div>
         </md-toolbar>
-        <md-card-content id="focus">
+
+        <md-card-content id="focus" ng-if="cCtrl.curricula != undefined && cCtrl.skills != undefined">
             <md-card class="simpleCard">
                 <form name="focusForm" ng-show="cCtrl.focusStatus">
                     <div layout="row" class="md-padding">
@@ -62,10 +63,11 @@
                         </md-input-container>
                     </div>
                     <div layout="row" class="md-padding">
-                        <md-button ng-click="cCtrl.createFocus(focusForm)" class="md-primary"> Create </md-button>
+                        <md-button ng-click="cCtrl.createFocus(focusForm)" class="md-primary"> Save </md-button>
                     </div>
                 </form>
             </md-card>
+
             <md-list>
                 <md-list-item ng-repeat="curr in cCtrl.curricula | activeItem" ng-if="curr.core == false" class="md-2-line" md-ink-ripple="#ff0000" >
                     <div class="md-list-item-text" layout="column">
@@ -73,16 +75,20 @@
                         <p>Skills: {{ curr.skills.map(cCtrl.joinObjArrayByName).join(", ");}}</p>
                     </div>
                     <span flex></span>
+                    <!--<md-button class="md-icon-button" ng-click="cCtrl.editFocus(curr)">-->
+                        <!--<md-tooltip class="md-title"> Edit Focus </md-tooltip>-->
+                        <!--<i class="material-icons revOrange"> edit </i>-->
+                    <!--</md-button>-->
                     <md-button class="md-icon-button" ng-click="cCtrl.removeFocus(curr)">
                         <md-tooltip class="md-title"> Remove Focus </md-tooltip>
-                        <i class="material-icons" style="color: #FB8C00;">remove_circle</i>
+                        <i class="material-icons revOrange">remove_circle</i>
                     </md-button>
                 </md-list-item>
             </md-list>
         </md-card-content>
     </md-card>
 
-    <md-card ng-if="cCtrl.curricula != undefined && cCtrl.skills != undefined">
+    <md-card>
         <md-toolbar class="md-primary md-hue-2">
             <div class="md-toolbar-tools">
                 <span>Skills</span>
@@ -93,7 +99,8 @@
                 </md-button>
             </div>
         </md-toolbar>
-        <md-card-content id="skill">
+
+        <md-card-content id="skill" ng-if="cCtrl.curricula != undefined && cCtrl.skills != undefined">
             <form name="skillForm">
                 <div layout="row">
                     <md-input-container flex="50">
@@ -101,9 +108,6 @@
                         <input type="text" name="skill" ng-model="cCtrl.skillName" required />
                     </md-input-container>
 
-                    <!--<div layout="row">-->
-                        <!--<md-button ng-click="cCtrl.createSkill(skillForm)" class="md-primary"> Create </md-button>-->
-                    <!--</div>-->
                     <div class="container" flex="50">
                         <div class="btn" ng-click="cCtrl.createSkill(skillForm)">
                             <span>Create</span>
