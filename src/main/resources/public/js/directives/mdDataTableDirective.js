@@ -724,8 +724,11 @@ function mdHead($compile) {
   function postLink(scope, element, attrs, tableCtrl) {
     // because scope.$watch is unpredictable
     // var oldValue = new Array(2);
-    var oldValue = [];
+    var oldValue = [0, 1];
+    // oldValue[0] = 0
     
+
+
     function addCheckboxColumn() {
       element.children().prepend('<th class="md-column md-checkbox-column">');
     }
