@@ -12,7 +12,7 @@ assignforce.filter( "inactiveItem", function(){
 
         var result = [];
         items.forEach( function(item){
-            if (item.active == false) {
+            if (!item.active) {
                 result.push(item);
             }
         });

@@ -36,6 +36,7 @@ public class RoomCtrl {
 		int ID = in.getRoomID();
 		String name = in.getRoomName();
 		int building = in.getBuilding();
+
 		List<Unavailable> unavailabilities = in.getUnavailabilities();
 		
 		Room out = new Room( ID, name, building, unavailabilities );
@@ -54,8 +55,6 @@ public class RoomCtrl {
 	public Object retrieveRoom( @PathVariable("id") int ID ) {
 		System.out.println("trying to get one item");
 		Room out = roomService.getOneItem(ID);
-		System.out.println("Just got One");
-		System.out.println(out);
 		if (out == null) {
 			System.out.println("Out was null");
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No room found of ID " + ID + "."), HttpStatus.NOT_FOUND);
@@ -73,6 +72,7 @@ public class RoomCtrl {
 		int ID = in.getRoomID();
 		String name = in.getRoomName();
 		int building = in.getBuilding();
+
 		List<Unavailable> unavailabilities = in.getUnavailabilities();
 		Boolean active = in.getActive();
 		Room out = new Room( ID, name, building, unavailabilities, active);
@@ -100,6 +100,7 @@ public class RoomCtrl {
 	public Object retrieveAllRooms() {
 		System.out.println("Made it in the pulling all rooms method");
 		List<Room> all = roomService.getAllItems();
+
 		if (all == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Fetching all rooms failed."), HttpStatus.NOT_FOUND);
 		} else if (all.isEmpty()) {

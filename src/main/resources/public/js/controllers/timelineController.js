@@ -22,13 +22,13 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     //Filter removes batches whose date range fall outside the view of the timeline.
     tlc.removeOutOfDateRange = function(batch) {
     	return ((new Date(batch.startDate) <= tlc.maxDate) && (new Date(batch.endDate) >= tlc.minDate));
-    }
+    };
     
     //Filter removes batches that don't have a matching curriculum to the selected view by the user.
     tlc.removeUnmatchingCurriculum = function(batch)
     {
     	return (tlc.selectedCurriculum == 0 || (!(angular.isUndefined(batch.curriculum)) && (batch.curriculum.currId == tlc.selectedCurriculum)));
-    }
+    };
     
     //Filter removes batches who don't have any matching trainers.
     tlc.removeIrrelevantBatches = function(batch) {
@@ -66,7 +66,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	tlc.options = {
 		datepickerMode: "month",
 		minMode: "month"
-	}
+	};
 	
 	//Timeline axis range variables
 	tlc.minDate = new Date(3000, 7, 0);
@@ -107,7 +107,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		
 		var startDate;
 		var endDate;
-		
+		//I hope whoever wrote this steps on a thousand legos
 		for (var b in tlc.batches)
 		{
 			if (!angular.isUndefined(tlc.batches[b].trainer) && tlc.batches[b].trainer !== null && !angular.isUndefined(tlc.batches[b].startDate) && tlc.batches[b].startDate !== null && !angular.isUndefined(tlc.batches[b].endDate) && tlc.batches[b].endDate !== null)
@@ -137,7 +137,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 				}
 			}
 		}
-	}
+	};
 
 	//Fetches all the batches for the controller.
 	tlc.getAllBatches = new Promise(function(resolve)
@@ -171,22 +171,17 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
         tlc.curricula = temp.filter(function(t){
         	return (t.core);
         });
-    }, function() {
-    	//error
     });
 
     //Fetches the default value for trainers displayed per page.
     settingService.getById(5, function (response) {
         tlc.trainersPerPage = response.settingValue;
         tlc.changeTrainersPerPage();
-    }, function () {
-    	//error probably
     });
     
     //Places a watch on changing the minimum date for the timeline.  Repulls if it changes.
 	$scope.$watch(
 		function(){
-			// console.log("mindate change");
 			return tlc.minDate;
 		},
 		function(){
@@ -199,7 +194,6 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	//Places a watch on changing the maximum date for the timeline.  Repulls if it changes.
 	$scope.$watch(
 		function(){
-			// console.log("maxdate change");
 			return tlc.maxDate;
 		},
 		function(){
@@ -322,7 +316,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	    }, function(){
 	    	//error
 	    });
-    }
+    };
     
     //Function to change how many trainers are displayed per page.
 	tlc.changeTrainersPerPage = function()
@@ -352,7 +346,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		
 		tlc.previousPageButtonStatus();
 		tlc.nextPageButtonStatus();
-	}
+	};
 	
 	//Function to go to the previous trainer page.
 	tlc.previousTrainerPage = function()
@@ -365,7 +359,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		
 		tlc.previousPageButtonStatus();
 		tlc.nextPageButtonStatus();
-	}
+	};
 	
 	//Function to go to the next trainer page.
 	tlc.nextTrainerPage = function()
@@ -378,7 +372,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		
 		tlc.previousPageButtonStatus();
 		tlc.nextPageButtonStatus();
-	}
+	};
 	
 	//Function to jump to the first trainer page.
 	tlc.firstTrainerPage = function()
@@ -391,7 +385,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		
 		tlc.previousPageButtonStatus();
 		tlc.nextPageButtonStatus();
-	}
+	};
 	
 	//Function to jump to the last trainer page.
 	tlc.lastTrainerPage = function()
@@ -404,7 +398,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		
 		tlc.previousPageButtonStatus();
 		tlc.nextPageButtonStatus();
-	}
+	};
 	
 	//Function for going to a specific page based on user input.
 	tlc.goToTrainerPage = function()
@@ -424,7 +418,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		
 		tlc.previousPageButtonStatus();
 		tlc.nextPageButtonStatus();
-	}
+	};
 	
 	//Status of the previous page button.  Enabled/Disabled.
 	tlc.previousPageButtonStatus = function()
@@ -436,7 +430,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		else { 
 			tlc.previousPageButtonDisabled = false; 
 		}
-	}
+	};
 	
 	
 	//Status of the next page button.  Enabled/Disabled.
@@ -449,7 +443,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 			tlc.nextPageButtonDisabled = true;
 		}
 		else { tlc.nextPageButtonDisabled = false; }
-	}
+	};
 	
 	
 	//Calls for an update to the trainers per page upon loading the page.
@@ -486,13 +480,13 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 			
 			$scope.projectTimeline(tlc.timelineFormatting, tlc.minDate, tlc.maxDate, yOffset, tlc.filteredBatches, $scope.$parent, calendarService.countWeeks, tlc.filteredTrainers);
 		}
-	}
+	};
 	
 	//Generates the string used in the columns
 	$scope.trainerColumnName = function(trainer)
 	{
 		return ("(" + trainer.trainerId + ")" + " " + trainer.firstName + " " + trainer.lastName);
-	}
+	};
 
 	// Draw timeline
 	$scope.projectTimeline = function(timelineFormatting, minDate, maxDate, yCoord, timelineData, parentScope, numWeeks, trainerNames){
@@ -517,7 +511,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		var xAxis = d3.svg.axis()
 			.scale(xScale)
 			.orient('top')
-			.tickSize(6,0)
+			.tickSize(6,0);
 		
 		//Used to create line breaks in table word data.
 		var wrap = function (text, width) {
@@ -544,7 +538,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 				      }
 				    }
 				  });
-				}
+				};
 		
 		//Sort data for Timeline
 		
@@ -631,7 +625,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		
 		//Add swimlanes to timeline
 		svg.append('g')
-			.attr('class','swimlanes')
+			.attr('class','swimlanes');
 			
 		d3.select('.swimlanes')
 			.selectAll('line')
@@ -654,7 +648,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		
 		//Add line for current date on timeline
 		svg.append('g')
-			.attr('class','currentdate')
+			.attr('class','currentdate');
 			
 		d3.select('.currentdate')
 			.append('line')
@@ -666,7 +660,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 
 		// Create line for zoompoint
 		svg.append('g')
-			.attr('class','zoompoint')
+			.attr('class','zoompoint');
 			
 		d3.select('.zoompoint')
 			.append('line')
@@ -681,7 +675,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		var defs = svg.append("defs");
 
 		var filter = defs.append("filter")
-			.attr("id", "highlight")
+			.attr("id", "highlight");
 
 		filter.append("feGaussianBlur")
 			.attr("in", "SourceAlpha")
@@ -692,7 +686,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 			.attr("result","betterBlur")
 			.append("feFuncA")
 			.attr("type","linear")
-			.attr("slope","1.5")
+			.attr("slope","1.5");
 		filter.append("feFlood")
 			.attr("in", "betterBlur")
 			.attr("flood-color", "#f26a25")
@@ -706,7 +700,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		var feMerge = filter.append("feMerge");
 		
 		feMerge.append("feMergeNode")
-			.attr("in", "colorBlur")
+			.attr("in", "colorBlur");
 		feMerge.append("feMergeNode")
 			.attr("in", "SourceGraphic");
 		  
@@ -836,7 +830,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 					d3.event.stopPropagation();
 				})
 				.text(function(d) {return numWeeks(d.startDate,d.endDate) + " W E E K S";})
-					.attr("dy", 0)
+					.attr("dy", 0);
 		
 		d3.selectAll('.rect')
 			.selectAll("text")

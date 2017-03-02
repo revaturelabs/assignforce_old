@@ -1,9 +1,9 @@
 <!-- rdCtrl is roomDialogController.js -->
-    <md-dialog>
+    <md-dialog aria-label="Add Room">
 
-        <form name="roomForm" ng-submit="rdCtrl.save(roomForm.$valid)" novalidate>
+        <form name="roomForm">
 
-            <div ng-if="rdCtrl.buildings != undefined">
+            <div>
                 
                 <md-dialog-content>
 
@@ -15,12 +15,6 @@
 
                         <div class="md-padding">
                             <div layout layout-wrap>
-
-                                <!-- <md-input-container flex="100">
-                                    <label> Building </label>
-                                    <input ng-model="ldCtrl.building">
-                                </md-input-container>
- -->
                                 <md-input-container flex="100">
                                     <label> Room number </label>
                                     <input ng-model="rdCtrl.room.roomName" required>
@@ -33,16 +27,10 @@
 
                 <md-dialog-actions>
 
-                    <md-button class="md-primary" type="submit"> Save </md-button>
+                    <md-button class="md-primary" ng-click="rdCtrl.save(roomForm)"> Save </md-button>
                     <md-button class="md-primary" ng-click="rdCtrl.cancel()"> Cancel </md-button>
                 
                 </md-dialog-actions>
-            </div>
-
-            <div ng-if="rdCtrl.buildings == undefined" layout="column" layout-wrap layout-align="center center">
-                <div flex="100"> &nbsp; </div>
-                <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
-                <div flex="100"> &nbsp; </div>
             </div>
 
         </form>

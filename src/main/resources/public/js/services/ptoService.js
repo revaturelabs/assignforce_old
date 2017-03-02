@@ -19,11 +19,11 @@ app.service('ptoService', function ($resource, $mdDialog, gCalService) {
 
     ptos.authorize = function(){
         gapi.load('client:auth2', initClient);
-    }
+    };
 
     function showCalendar(){
         $mdDialog.show({
-            templateUrl: "html/templates/calendarTemplate.html",
+            templateUrl: "html/templates/dialogs/calendarDialog.html",
             controller: "trainerCtrl",
             controllerAs: "tCtrl",
             bindToController: true,
@@ -65,7 +65,7 @@ app.service('ptoService', function ($resource, $mdDialog, gCalService) {
             var dat = new Date(this.valueOf());
             dat.setDate(dat.getDate() + days);
             return dat;
-        }
+        };
 
         Date.prototype.formatDate = function() {
 
@@ -82,7 +82,7 @@ app.service('ptoService', function ($resource, $mdDialog, gCalService) {
 		    }
 
 		    return [year, month, day].join('-');
-		}
+		};
 
 		startDate = startDate.formatDate();
 		endDate = endDate.addDays(1).formatDate();

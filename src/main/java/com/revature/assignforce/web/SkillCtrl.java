@@ -64,7 +64,7 @@ public class SkillCtrl {
         String name = in.getName();
 
         Skill out = new Skill( ID, name );
-//        out.setActive(true);
+        // may need to set outs active to true
         out = skillService.saveItem( out );
 
         if (out == null) {

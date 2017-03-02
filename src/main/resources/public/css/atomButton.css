@@ -57,3 +57,7 @@
     80% {transform: translateX(0) rotate(180deg);}
     100% {transform: translateX(0) rotate(360deg);}
 }
+
+.revOrange{
+    color: #FB8C00;
+}
