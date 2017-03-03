@@ -1,5 +1,5 @@
 /**
- *This controller is used to controller user access and facilitate user authorization 
+ *This controller is used to control user access and facilitate user authorization
  */
 
 var app = angular.module("batchApp");
