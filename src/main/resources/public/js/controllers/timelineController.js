@@ -52,6 +52,18 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     	return (tlc.selectedCurriculum == 0 || (!tlc.isUndefinedOrNull(batch.curriculum) && (batch.curriculum.currId == tlc.selectedCurriculum)));
     };
     
+    //Filter removes batches that don't have a matching location to the selected view by the user.
+    tlc.removeUnmatchingLocation = function(batch)
+    {
+    	return (tlc.selectedLocation == 0 || (!tlc.isUndefinedOrNull(batch.location) && (batch.location.id == tlc.selectedLocation)));
+    };
+    
+    //Filter removes batches that don't have a matching building to the selected view by the user.
+    tlc.removeUnmatchingBuilding = function(batch)
+    {
+    	return (tlc.selectedBuilding == 0 || (!tlc.isUndefinedOrNull(batch.building) && (batch.building.id == tlc.selectedBuilding)));
+    };
+    
     //Filter removes batches that don't have a matching focus to the selected view by the user.
     tlc.removeUnmatchingFocus = function(batch)
     {
@@ -137,7 +149,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		if (tlc.minDate >= tlc.maxDate)
 		{
 			tlc.minDate = new Date(tlc.oldMinDate);
-			tlc.showToast("Start date cannot be equal to or after the end date!");
+			tlc.showToast("Timeline:  Start date cannot be equal to or after the end date!");
 		}
 		else
 		{
@@ -151,7 +163,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		if (tlc.maxDate <= tlc.minDate)
 		{
 			tlc.maxDate = new Date(tlc.oldMaxDate);
-			tlc.showToast("End date cannot be equal to or before the start date!");
+			tlc.showToast("Timeline:  End date cannot be equal to or before the start date!");
 		}
 		else
 		{
@@ -207,15 +219,45 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		tlc.oldMaxDate = new Date(tlc.maxDate);
 	}
 
-	//Fetches all the batches for the controller.
+	//Fetches all the batches for the controller  Also attaches their location and building information if possible.
 	tlc.getAllBatches = new Promise(function(resolve)
 	{
 	    batchService.getAll( function(response) {
 	        tlc.batches = response;
 	        tlc.getDateRange(false);
+	        
+	        tlc.batches.forEach(function(b){
+	        	if (!tlc.isUndefinedOrNull(b.room))
+	        	{
+	        		buildingService.getById(b.room.building, function(response)
+	        		{
+	        			b.building = response;
+	        			
+	        			locationService.getById(b.building.location, function(response)
+	        			{
+	        				b.location = response;
+	        			},function(error)
+		        		{
+		        			tlc.showToast("Timeline:  Could not fetch batch's location.");
+			        		b.location = undefined;
+		        		});
+	        		},function(error)
+	        		{
+	        			tlc.showToast("Timeline:  Could not fetch batch's building.");
+		        		b.building = undefined;
+		        		b.location = undefined;
+	        		});
+	        	}
+	        	else
+	        	{
+	        		b.building = undefined;
+	        		b.location = undefined;
+	        	}
+	        });
+	        
 	        resolve(1);
 	    }, function() {
-	    	tlc.showToast("Timeline Controller:  Could not fetch batches.");
+	    	tlc.showToast("Timeline:  Could not fetch batches.");
 	    	resolve(0);
 	    });
 	});
@@ -229,7 +271,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 
 			resolve(1);
 	    }, function() {
-	    	tlc.showToast("Timeline Controller:  Could not fetch trainers.");
+	    	tlc.showToast("Timeline:  Could not fetch trainers.");
 	    	resolve(0);
 	    });
 	});
@@ -246,29 +288,21 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
         	return !(t.core);
         });
     }, function() {
-    	tlc.showToast("Timeline Controller:  Could not fetch curricula.");
+    	tlc.showToast("Timeline:  Could not fetch curricula.");
     });
     
 	//Fetches all the locations for the controller.
     locationService.getAll( function(response) {
         tlc.locations = response;
     }, function() {
-    	tlc.showToast("Timeline Controller:  Could not fetch locations.");
-    });
-    
-	//Fetches all the buildings for the controller.
-    buildingService.getAll( function(response) {
-        tlc.buildings = response;
-    }, function() {
-    	tlc.showToast("Timeline Controller:  Could not fetch buildings.");
+    	tlc.showToast("Timeline:  Could not fetch locations.");
     });
 
     //Fetches the default value for trainers displayed per page.
     settingService.getById(5, function (response) {
         tlc.trainersPerPage = response.settingValue;
-        tlc.changeTrainersPerPage();
     }, function(){
-    	tlc.showToast("Timeline Controller:  Could not fetch setting for default trainers per page.");
+    	tlc.showToast("Timeline:  Could not fetch setting for default trainers per page.");
     });
 
 	//Watches for "repullTimeline" to be broadcast, such that the timeline is repulled.
@@ -527,7 +561,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	{
 		tlc.filteredTrainers = tlc.trainers.filter(tlc.removeTrainersOutOfPage);
 		
-		tlc.filteredBatches = tlc.batches.filter(tlc.removeNoTrainer).filter(tlc.removeIrrelevantBatches).filter(tlc.removeDateless).filter(tlc.removeOutOfDateRange).filter(tlc.removeUnmatchingCurriculum).filter(tlc.removeUnmatchingFocus);
+		tlc.filteredBatches = tlc.batches.filter(tlc.removeNoTrainer).filter(tlc.removeIrrelevantBatches).filter(tlc.removeDateless).filter(tlc.removeOutOfDateRange).filter(tlc.removeUnmatchingCurriculum).filter(tlc.removeUnmatchingFocus).filter(tlc.removeUnmatchingLocation).filter(tlc.removeUnmatchingBuilding);
 		
 		if (tlc.hideConcludedBatches)
 		{
@@ -681,11 +715,15 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 			  
 			  msg += d.curriculum ? ("<span style='color:orange'>" + d.curriculum.name + "</span> Batch <br/>") : "<span style='color:red'>No curriculum</span> for this batch. <br/>";
 			  msg += d.focus ? ("w/ focus on <span style='color:orange'>" + d.focus.name + "</span><br/>") : "w/ <span style='color:red'>no focus</span>. <br/>";
-			  msg += "__________<br/>";
+			  msg += "----------<br/>";
 			  msg += d.trainer ? ("Trainer:  <span style='color:gold'>" + d.trainer.firstName + " " + d.trainer.lastName + "</span> <br/>") : "<span style='color:red'>No trainer</span> for this batch. <br/>";
 			  msg += d.cotrainer ? ("Cotrainer:  <span style='color:gold'>" + d.cotrainer.firstName + " " + d.cotrainer.lastName + "</span> <br/>") : "<span style='color:red'>No cotrainer</span> for this batch. <br/>";
 			  msg += d.startDate ? ("Start Date:  <span style='color:gold'>" + days[startDate.getDay()] + ", " + months[startDate.getMonth()] + " " + startDate.getDate() + ", " + startDate.getFullYear() + "</span> <br/>") : "<span style='color:red'>No start date</span> for this batch. <br/>";
 			  msg += d.endDate ? ("End Date:  <span style='color:gold'>" + days[endDate.getDay()] + ", " + months[endDate.getMonth()] + " " + endDate.getDate() + ", " + endDate.getFullYear() + "</span> <br/>") : "<span style='color:red'>No end date</span> for this batch. <br/>";
+			  msg += "----------<br/>";
+			  msg += d.location ? ("Location:  <span style='color:gold'>" + d.location.name + " - " + d.location.city + ", "+ d.location.state + "</span> <br/>") : "<span style='color:red'>No location</span> for this batch. <br/>";
+			  msg += d.building ? ("Building:  <span style='color:gold'>" + d.building.name + "</span> <br/>") : "<span style='color:red'>No building</span> for this batch. <br/>";
+			  msg += d.room ? ("Room:  <span style='color:gold'>" + d.room.roomName + "</span> <br/>") : "<span style='color:red'>No room</span> for this batch. <br/>";
 			  
 			  return msg;
 		  });
