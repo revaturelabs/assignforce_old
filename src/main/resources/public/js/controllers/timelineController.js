@@ -137,7 +137,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		if (tlc.minDate >= tlc.maxDate)
 		{
 			tlc.minDate = new Date(tlc.oldMinDate);
-			tlc.showToast("Start date cannot be equal to or after the end date!");
+			tlc.showToast("Timeline:  Start date cannot be equal to or after the end date!");
 		}
 		else
 		{
@@ -151,7 +151,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		if (tlc.maxDate <= tlc.minDate)
 		{
 			tlc.maxDate = new Date(tlc.oldMaxDate);
-			tlc.showToast("End date cannot be equal to or before the start date!");
+			tlc.showToast("Timeline:  End date cannot be equal to or before the start date!");
 		}
 		else
 		{
@@ -215,7 +215,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	        tlc.getDateRange(false);
 	        resolve(1);
 	    }, function() {
-	    	tlc.showToast("Timeline Controller:  Could not fetch batches.");
+	    	tlc.showToast("Timeline:  Could not fetch batches.");
 	    	resolve(0);
 	    });
 	});
@@ -229,7 +229,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 
 			resolve(1);
 	    }, function() {
-	    	tlc.showToast("Timeline Controller:  Could not fetch trainers.");
+	    	tlc.showToast("Timeline:  Could not fetch trainers.");
 	    	resolve(0);
 	    });
 	});
@@ -246,29 +246,28 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
         	return !(t.core);
         });
     }, function() {
-    	tlc.showToast("Timeline Controller:  Could not fetch curricula.");
+    	tlc.showToast("Timeline:  Could not fetch curricula.");
     });
     
 	//Fetches all the locations for the controller.
     locationService.getAll( function(response) {
         tlc.locations = response;
     }, function() {
-    	tlc.showToast("Timeline Controller:  Could not fetch locations.");
+    	tlc.showToast("Timeline:  Could not fetch locations.");
     });
     
 	//Fetches all the buildings for the controller.
     buildingService.getAll( function(response) {
         tlc.buildings = response;
     }, function() {
-    	tlc.showToast("Timeline Controller:  Could not fetch buildings.");
+    	tlc.showToast("Timeline:  Could not fetch buildings.");
     });
 
     //Fetches the default value for trainers displayed per page.
     settingService.getById(5, function (response) {
         tlc.trainersPerPage = response.settingValue;
-        tlc.changeTrainersPerPage();
     }, function(){
-    	tlc.showToast("Timeline Controller:  Could not fetch setting for default trainers per page.");
+    	tlc.showToast("Timeline:  Could not fetch setting for default trainers per page.");
     });
 
 	//Watches for "repullTimeline" to be broadcast, such that the timeline is repulled.
