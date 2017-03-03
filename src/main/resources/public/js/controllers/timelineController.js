@@ -713,17 +713,17 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 			  var days = ["Sun.", "Mon.", "Tue.", "Wed.", "Thu.", "Fri.", "Sat."];
 			  var months = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec."];
 			  
-			  msg += d.curriculum ? ("<span style='color:orange'>" + d.curriculum.name + "</span> Batch <br/>") : "<span style='color:red'>No curriculum</span> for this batch. <br/>";
-			  msg += d.focus ? ("w/ focus on <span style='color:orange'>" + d.focus.name + "</span><br/>") : "w/ <span style='color:red'>no focus</span>. <br/>";
+			  msg += d.curriculum ? ("<span style='color:orange'>" + d.curriculum.name + "</span> Batch <br/>") : "<span style='color:tomato'>No curriculum</span> for this batch. <br/>";
+			  msg += d.focus ? ("w/ focus on <span style='color:orange'>" + d.focus.name + "</span><br/>") : "w/ <span style='color:tomato'>no focus</span>. <br/>";
 			  msg += "----------<br/>";
-			  msg += d.trainer ? ("Trainer:  <span style='color:gold'>" + d.trainer.firstName + " " + d.trainer.lastName + "</span> <br/>") : "<span style='color:red'>No trainer</span> for this batch. <br/>";
-			  msg += d.cotrainer ? ("Cotrainer:  <span style='color:gold'>" + d.cotrainer.firstName + " " + d.cotrainer.lastName + "</span> <br/>") : "<span style='color:red'>No cotrainer</span> for this batch. <br/>";
-			  msg += d.startDate ? ("Start Date:  <span style='color:gold'>" + days[startDate.getDay()] + ", " + months[startDate.getMonth()] + " " + startDate.getDate() + ", " + startDate.getFullYear() + "</span> <br/>") : "<span style='color:red'>No start date</span> for this batch. <br/>";
-			  msg += d.endDate ? ("End Date:  <span style='color:gold'>" + days[endDate.getDay()] + ", " + months[endDate.getMonth()] + " " + endDate.getDate() + ", " + endDate.getFullYear() + "</span> <br/>") : "<span style='color:red'>No end date</span> for this batch. <br/>";
+			  msg += d.trainer ? ("Trainer:  <span style='color:gold'>" + d.trainer.firstName + " " + d.trainer.lastName + "</span> <br/>") : "<span style='color:tomato'>No trainer</span> for this batch. <br/>";
+			  msg += d.cotrainer ? ("Cotrainer:  <span style='color:gold'>" + d.cotrainer.firstName + " " + d.cotrainer.lastName + "</span> <br/>") : "<span style='color:tomato'>No cotrainer</span> for this batch. <br/>";
+			  msg += d.startDate ? ("Start Date:  <span style='color:gold'>" + days[startDate.getDay()] + ", " + months[startDate.getMonth()] + " " + startDate.getDate() + ", " + startDate.getFullYear() + "</span> <br/>") : "<span style='color:tomato'>No start date</span> for this batch. <br/>";
+			  msg += d.endDate ? ("End Date:  <span style='color:gold'>" + days[endDate.getDay()] + ", " + months[endDate.getMonth()] + " " + endDate.getDate() + ", " + endDate.getFullYear() + "</span> <br/>") : "<span style='color:tomato'>No end date</span> for this batch. <br/>";
 			  msg += "----------<br/>";
-			  msg += d.location ? ("Location:  <span style='color:gold'>" + d.location.name + " - " + d.location.city + ", "+ d.location.state + "</span> <br/>") : "<span style='color:red'>No location</span> for this batch. <br/>";
-			  msg += d.building ? ("Building:  <span style='color:gold'>" + d.building.name + "</span> <br/>") : "<span style='color:red'>No building</span> for this batch. <br/>";
-			  msg += d.room ? ("Room:  <span style='color:gold'>" + d.room.roomName + "</span> <br/>") : "<span style='color:red'>No room</span> for this batch. <br/>";
+			  msg += d.location ? ("Location:  <span style='color:gold'>" + d.location.name + " - " + d.location.city + ", "+ d.location.state + "</span> <br/>") : "<span style='color:tomato'>No location</span> for this batch. <br/>";
+			  msg += d.building ? ("Building:  <span style='color:gold'>" + d.building.name + "</span> <br/>") : "<span style='color:tomato'>No building</span> for this batch. <br/>";
+			  msg += d.room ? ("Room:  <span style='color:gold'>" + d.room.roomName + "</span> <br/>") : "<span style='color:tomato'>No room</span> for this batch. <br/>";
 			  
 			  return msg;
 		  });
