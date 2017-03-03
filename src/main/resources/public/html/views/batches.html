@@ -318,7 +318,7 @@
                         
                         <md-input-container flex="none">
                         	<label> Location </label>
-                            <md-select ng-model="tlCtrl.selectedLocation" ng-change="tlCtrl.filterTimelineData(); tlCtrl.getDateRange(tlCtrl.useFilteredBatches()); tlCtrl.projectTimelineOnly()" ng-style="{'width': 160 + 'px'}" disabled>
+                            <md-select ng-model="tlCtrl.selectedLocation" ng-change="tlCtrl.selectedBuilding = 0; tlCtrl.filterTimelineData(); tlCtrl.getDateRange(tlCtrl.useFilteredBatches()); tlCtrl.projectTimelineOnly()" ng-style="{'width': 160 + 'px'}">
                             	<md-option ng-value = "0">Any</md-option>
                                 <md-option ng-value="location.id" ng-repeat="location in tlCtrl.locations"> {{ location.name }} {{ location.city }}, {{ location.state }}</md-option>
                             </md-select>
@@ -331,7 +331,7 @@
                        			<label> Building </label>
 	                            <md-select ng-model="tlCtrl.selectedBuilding" ng-change="tlCtrl.filterTimelineData(); tlCtrl.getDateRange(tlCtrl.useFilteredBatches()); tlCtrl.projectTimelineOnly()" ng-style="{'width': 160 + 'px'}">
 	                            	<md-option ng-value = "0">Any</md-option>
-	                                <md-option ng-value="building.id" ng-repeat="building in tlCtrl.buildings"> {{ building.name }} </md-option>
+	                                <md-option ng-value="building.id" ng-repeat="building in tlCtrl.locations[tlCtrl.selectedLocation].buildings"> {{ building.name }} </md-option>
 	                            </md-select>
                             </md-input-container>
                         </div>
