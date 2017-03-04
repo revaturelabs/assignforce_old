@@ -36,6 +36,10 @@
 
                 bc.batch.startDate = (incomingBatch.startDate) ? new Date(incomingBatch.startDate) : undefined;
                 bc.batch.endDate = (incomingBatch.endDate) ? new Date(incomingBatch.endDate) : undefined;
+                //We can't worry about rooms and buildings right now until we figure the solution for that.
+                //  I need to test my new feature.
+                
+                /*
                 bc.batch.room       = (incomingBatch.room)       ? incomingBatch.room.roomID         : undefined;
 
                 if(bc.batch.room){
@@ -43,13 +47,11 @@
                     bc.batch.location = incomingBatch.room.building.location;
                 		if (bc.batch.room.unavailability){
                 			bc.batch.room.unavailability.startDate = (incomingBatch.startDate) ? incomingBatch.room.unavailability.startDate : undefined;
-                			bc.batch.room.unavailability.endDate = (incomingBatch.endDate) ? incomingBatch.room.unavailability.endDate : undefined;
-                			unavailableService.update(bc.batch.room.unavailability, function () {
-                            }, function () {
-                            });
+                			bc.batch.room.unavailability.endDate = (incomingBatch.endDate) ? incomingBatch.room.unavailability.endDate : undefined;                			
                         }
                 }
-
+                 */
+                
                 bc.batch.trainer    = (incomingBatch.trainer)    ? incomingBatch.trainer.trainerId   : undefined;
                 bc.batch.cotrainer  = (incomingBatch.cotrainer)  ? incomingBatch.cotrainer.trainerId : undefined;
                 
@@ -70,10 +72,22 @@
         /*******************************************************************/
         
         //Filters trainers based on available dates by calling the trainerSelection filter
-        bc.updateTrainers = function(trainers, batchStart, batchEnd){
-        	bc.availableTrainers = $filter('trainerSelection')(trainers, batchStart, batchEnd);
-        };
-        
+        bc.updateTrainersAndRooms = function(trainers, rooms, batchStart, batchEnd){
+        	bc.availableRooms = $filter('availableSelection')(rooms, batchStart, batchEnd);
+        	
+        	//Should add time after batch end for which time a trainer is unavailable.
+        	//In the example we were given, a trainer will basically have
+        	//two weeks off after a batch ends.
+        	/*Might need a little polishing... Does this add time to trainer's unavailability time
+        	 * (which it should) or does this add time to the end of the batch??
+        	 */
+        	settingService.getById(1, function(response){
+            	batchEnd.setDate(batchEnd.getDate() + response.settingValue);
+            	bc.availableTrainers = $filter('availableSelection')(trainers, batchStart, batchEnd);            	
+            }, function(){
+            	bc.showToast("Building default not found");
+            });        	
+        };        
         
         //Updates list of selected skills.
         bc.updateSelectedSkills = function()
@@ -445,16 +459,53 @@
         
             // saves/updates batch
         bc.saveBatch = function(isValid){
-            
-            if (isValid) {
-                switch(bc.state) {
+        	if (isValid) {
+        		
+            	bc.unavailability = {
+            			startDate: new Date(bc.batch.startDate),
+            			endDate: new Date(bc.batch.endDate)
+            	};
+            	switch(bc.state) {
                     case "create":
                         batchService.create( bc.batch, function(){
                             bc.showToast("Batch saved.");
-                            bc.repull();
+                            //This will only work if bc.unavailability exists
+                            //Need to make a check to make sure duplicate unavailability is not saved in the db.
+                            //unavailableService.create(bc.unavailability, function () {
+                            	roomService.getById(bc.batch.room.roomID, function(room){
+                                	//These if/elses could probably be optimized.
+                            		//Just check if a room/trainer has an unavailabilities array
+                            		//even if empty.  That should clean this up a lot.
+                            		if (room.unavailabilities){
+                                		room.unavailabilities.push(bc.unavailability);
+                                	}
+                                	else {
+                                		room.unavailabilities = [];
+                                		room.unavailabilities.push(bc.unavailability);
+                                	}
+                            		roomService.update(room, function(){
+                            			if (bc.batch.trainer.unavailabilities){
+                            				bc.batch.trainer.unavailabilities.push(bc.unavailability);
+                            			}
+                            			else {
+                            				bc.batch.trainer.unavailabilities = [];
+                            				bc.batch.trainer.unavailabilities.push(bc.unavailability);
+                            			}
+                            			trainerService.update(bc.batch.trainer, function(){
+                            			}, function(){
+                            				
+                            			});
+                            			bc.repull();
+                            		}, function(){
+                            			
+                            		});
+                            	});
+                            //}, function () {
+                            //});
                         }, function(){
                             bc.showToast("Failed to save batch.");
                         });
+                        
                         break;
                     
                     case "edit":
@@ -463,6 +514,10 @@
                             bc.repull();
                         }, function(){
                             bc.showToast("Failed to update batch.");
+                        });
+                        //Not sure if this actually needs to be updated here...
+                        unavailableService.update(bc.batch.room.unavailability, function () {
+                        }, function () {
                         });
                         break;
                     
@@ -474,6 +529,7 @@
                         }, function(){
                             bc.showToast("Failed to clone batch.");
                         });
+                        //unavailability not entered here, but should match a new batch.
                         break;
                     
                     default:

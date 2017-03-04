@@ -25,13 +25,13 @@ public class Room implements Activatable {
 	@Column(name="BUILDING")
 	private int building;
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
 	@JoinTable(name = "ROOM_UNAVAILABILITY_JT",
 	joinColumns = @JoinColumn(name = "ROOM_ID"),
 	inverseJoinColumns = @JoinColumn(name = "UNAVAILABLE_ID"))
-	@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
+	//@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
 	private List<Unavailable> unavailabilities;
-
+	
 	@OneToMany(mappedBy = "room")
 	@JsonIgnoreProperties("room")//ignores properties of room in batches
 	private List<Batch> batches;
@@ -86,10 +86,10 @@ public class Room implements Activatable {
 		this.roomName = roomName;
 	}
 
-	public List<Unavailable> getUnavailability() {
+	public List<Unavailable> getUnavailabilities() {
 		return unavailabilities;
 	}
-	public void setUnavailability(List<Unavailable> unavailabilities) {
+	public void setUnavailabilities(List<Unavailable> unavailabilities) {
 		this.unavailabilities = unavailabilities;
 	}
 

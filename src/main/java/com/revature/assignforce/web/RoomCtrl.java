@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.revature.assignforce.domain.Building;
 import com.revature.assignforce.domain.Room;
 import com.revature.assignforce.domain.Unavailable;
 import com.revature.assignforce.domain.dto.ResponseErrorDTO;
@@ -53,13 +52,10 @@ public class RoomCtrl {
 		// retrieve room with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveRoom( @PathVariable("id") int ID ) {
-		System.out.println("trying to get one item");
 		Room out = roomService.getOneItem(ID);
 		if (out == null) {
-			System.out.println("Out was null");
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No room found of ID " + ID + "."), HttpStatus.NOT_FOUND);
 		} else {
-			System.out.println("Out was NOT null");
 			return new ResponseEntity<Room>(out, HttpStatus.OK);
 		}
 	}
@@ -72,7 +68,7 @@ public class RoomCtrl {
 		int ID = in.getRoomID();
 		String name = in.getRoomName();
 		int building = in.getBuilding();
-
+		
 		List<Unavailable> unavailabilities = in.getUnavailabilities();
 		Boolean active = in.getActive();
 		Room out = new Room( ID, name, building, unavailabilities, active);
@@ -98,7 +94,6 @@ public class RoomCtrl {
 		// retrieve all rooms
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveAllRooms() {
-		System.out.println("Made it in the pulling all rooms method");
 		List<Room> all = roomService.getAllItems();
 
 		if (all == null) {
