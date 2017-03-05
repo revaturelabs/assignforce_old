@@ -13,7 +13,7 @@ public class TrainerDTO {
 	private String lastName;
 	private List<Skill> skills;
 	private List<Certification> certifications;
-	private List<Unavailable> unavailability;
+	private List<Unavailable> unavailabilities;
 	private Boolean active;
 	private String resume;
 	
@@ -47,11 +47,11 @@ public class TrainerDTO {
 	public void setCertifications(List<Certification> certifications) {
 		this.certifications = certifications;
 	}
-	public List<Unavailable> getUnavailability() {
-		return unavailability;
+	public List<Unavailable> getUnavailabilities() {
+		return unavailabilities;
 	}
-	public void setUnavailability(List<Unavailable> unavailability) {
-		this.unavailability = unavailability;
+	public void setUnavailabilities(List<Unavailable> unavailabilities) {
+		this.unavailabilities = unavailabilities;
 	}
 	public Boolean getActive() {
 		return active;

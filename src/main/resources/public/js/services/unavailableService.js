@@ -1,7 +1,7 @@
 
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.service( "unavailableService", function($resource) {
+    assignforce.service( 'unavailableService', function($resource) {
         var Unavailable = $resource('/api/v2/unavailable/:ID',{ID: '@ID'},{update:{method:'PUT'}});
         var us = this;
 
@@ -23,7 +23,7 @@
         };
 
         us.update = function(unavailable, success, error){
-            unavailable.$update(success, error);
+            Unavailable.update(unavailable, success, error);
         };
 
         us.delete = function(unavailable, success, error){

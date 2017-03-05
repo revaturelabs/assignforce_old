@@ -10,7 +10,7 @@ public class RoomDTO {
 	private int roomID;
 	private String roomName;
 	private int building;
-	private List<Unavailable> unavailability;
+	private List<Unavailable> unavailabilities;
 	private Boolean active;
 	
 	public int getRoomID() {
@@ -34,11 +34,11 @@ public class RoomDTO {
 		return this.building;
 	}	
 
-	public List<Unavailable> getUnavailability() {
-		return unavailability;
+	public List<Unavailable> getUnavailabilities() {
+		return unavailabilities;
 	}
-	public void setUnavailability(List<Unavailable> unavailability) {
-		this.unavailability = unavailability;
+	public void setUnavailabilities(List<Unavailable> unavailabilities) {
+		this.unavailabilities = unavailabilities;
 	}
 
 	public Boolean getActive() {
