@@ -67,7 +67,6 @@
                 return;
             }
             var location = delList.shift();
-            console.log(location);
             
             deleteBuildings(location.buildings);
             locationService.delete(location);
@@ -78,7 +77,6 @@
         
         function deleteBuildings(arr){
         	arr.forEach(function(building){
-        		console.log(building);
         		deleteRooms(building.rooms);
         		building = buildingService.cloneBuilding(building);
         		buildingService.delete(building);
@@ -87,7 +85,6 @@
         
         function deleteRooms(arr){
         	arr.forEach(function(room){
-        		console.log(room);
         		room = roomService.cloneRoom(room);
             	roomService.delete(room);
         	});

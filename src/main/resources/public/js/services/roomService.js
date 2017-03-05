@@ -22,14 +22,10 @@ app.service( "roomService", function($resource, $http) {
     };
 
     rs.getById = function(id, success, error){
-    	console.log("This is the id being passed in:");
-    	console.log(id);
         Room.get({id: id}, success, error);
     };
 
     rs.update = function(room, success, error){
-        console.log("Room just before update");
-        console.log(room);
     	Room.update(room, success, error);
     };
 
