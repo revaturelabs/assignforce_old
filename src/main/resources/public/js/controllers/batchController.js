@@ -1,26 +1,27 @@
-    var assignforce = angular.module( "batchApp" );
+var assignforce = angular.module("batchApp");
 
     assignforce.controller( "batchCtrl", function($scope, batchService, unavailableService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, skillService, $filter, $window, $rootScope) {
 
-        var bc = this;
-        bc.trainerSkillRatios = [];
-        
-        bc.convertUnavailability = function(incoming){
-        	return new Date(incoming);
-        };
+    var bc = this;
+    bc.trainerSkillRatios = [];
+    bc.oldBatchEndDate;
 
-        /*******************************************************************/
-        
-          // functions
-        bc.showToast = function( message ){
-            $scope.$parent.aCtrl.showToast( message );
-        };
+    bc.convertUnavailability = function(incoming) {
+        return new Date(incoming);
+    };
 
-        /*******************************************************************/
+    bc.convertUnavailability = function(incoming) {
+        return new Date(incoming);
+    };
         
-            // changes form state and populates fields if need-be
-        bc.changeState = function( newState, incomingBatch ){ 
-            bc.state = newState;
+	//functions
+	bc.showToast = function(message) {
+    	$scope.$parent.aCtrl.showToast(message);
+	};
+
+    // changes form state and populates fields if need-be
+    bc.changeState = function( newState, incomingBatch ){ 
+    	bc.state = newState;
 
             if (newState == "create") {
                 bc.batch = batchService.getEmptyBatch();
@@ -63,13 +64,30 @@
                 		bc.selectedSkills.push(incomingBatch.skills[i].skillId);
                 	}
                 }
-                
+            }
 
+            bc.batch.trainer = (incomingBatch.trainer) ? incomingBatch.trainer.trainerId : undefined;
+            bc.batch.cotrainer = (incomingBatch.cotrainer) ? incomingBatch.cotrainer.trainerId : undefined;
+
+            bc.selectedSkills = [];
+            if (incomingBatch.skills) {
+                for (var i = 0; i < incomingBatch.skills.length; i += 1) {
+                    bc.selectedSkills.push(incomingBatch.skills[i].skillId);
+                }
+                bc.oldBatchEndDate = new Date(bc.batch.endDate);
                 bc.updateWeeks();
             }
         };
         
-        /*******************************************************************/
+        //Ensures the batch end date can't be set before the start date.
+        bc.validateBatchEndDate = function() {
+            if (bc.batch.startDate && bc.batch.endDate <= bc.batch.startDate) {
+                bc.batch.endDate = new Date(bc.oldBatchEndDate);
+                bc.showToast("Batch's end date cannot be less than or equal to the batch's start date!");
+            } else {
+                bc.oldBatchEndDate = new Date(bc.batch.endDate);
+            }
+        }
         
         //Filters trainers based on available dates by calling the trainerSelection filter
         bc.updateTrainersAndRooms = function(trainers, rooms, batchStart, batchEnd){
@@ -87,64 +105,48 @@
             }, function(){
             	bc.showToast("Building default not found");
             });        	
-        };        
+        };
         
         //Updates list of selected skills.
-        bc.updateSelectedSkills = function()
-        {
-        	bc.selectedSkills = [];
-        	var i;
-        	
-        	var cur = bc.curricula.find(function(a){
-        		return ((a.currId ? a.currId : -1) == bc.batch.curriculum);
-        	});
-    
-        	var foc = bc.foci.find(function(a){
-        		return ((a.currId ? a.currId : -1) == bc.batch.focus);
-        	});
-        	
-        	if (cur)
-        	{
-        		for (i = 0; i < cur.skills.length; i += 1)
-        		{
-        			bc.selectedSkills.push(cur.skills[i].skillId);
-        		}
-        	}
-        	
-        	if (foc)
-        	{
-        		for (i = 0; i < foc.skills.length; i += 1)
-        		{
-        			bc.selectedSkills.push(foc.skills[i].skillId);
-        		}
-        	}
-        	
-        	bc.updateBatchSkills();
+        bc.updateSelectedSkills = function() {
+            bc.selectedSkills = [];
+            var i;
+
+            var cur = bc.curricula.find(function(a) {
+                return ((a.currId ? a.currId : -1) == bc.batch.curriculum);
+            });
+
+            var foc = bc.foci.find(function(a) {
+                return ((a.currId ? a.currId : -1) == bc.batch.focus);
+            });
+
+            if (cur) {
+                for (i = 0; i < cur.skills.length; i += 1) {
+                    bc.selectedSkills.push(cur.skills[i].skillId);
+                }
+            }
+
+            if (foc) {
+                for (i = 0; i < foc.skills.length; i += 1) {
+                    bc.selectedSkills.push(foc.skills[i].skillId);
+                }
+            }
+
+            bc.updateBatchSkills();
         };
         
         //Updates the batch's skills to reflect the skills list, but with the actual objects.
-        bc.updateBatchSkills = function()
-        {
-        	var findFunction = function(a){
-    			return ((a.skillId ? a.skillId : -1) == bc.selectedSkills[i]);
-    		};
-        	
-        	bc.batch.skills = [];
-        	
-        	for (var i = 0; i < bc.selectedSkills.length; i += 1)
-        	{
-        		bc.batch.skills.push(bc.skills.find(findFunction))
-        	}
-        };
-        
-        //Recalculates skill ratios for trainers based on the selected curriculum.
-        bc.updateSkillRatios = function()
-        {
-            bc.trainers.forEach(function(t){
-            	bc.trainerSkillRatios[t.trainerId] = bc.calcTrainerSkillRatio(t);
-            });
-        };
-        
+        bc.updateBatchSkills = function() {
+            var findFunction = function(a) {
+                return ((a.skillId ? a.skillId : -1) == bc.selectedSkills[i]);
+            };
+
+            bc.batch.skills = [];
+
+            for (var i = 0; i < bc.selectedSkills.length; i += 1) {
+                bc.batch.skills.push(bc.skills.find(findFunction))
+            }
+        };        
         	// calculates the percentage to which a trainer's skills correspond
         	// to the batch's curriculum.
         bc.calcTrainerSkillRatio = function(trainer)
@@ -217,245 +219,135 @@
             bc.batch.endDate = new Date( startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 67 );
         };
 
-        /*******************************************************************/
-        
-            // disables all but Mondays in start datepickers
-        bc.enableMondays = function( date ){
-            return date.getDay() == 1;
-        };
+    // calculates the percentage to which a trainer's skills correspond
+    // to the batch's curriculum.
+    bc.calcTrainerSkillRatio = function(trainer) {
+        var cur = bc.selectedSkills;
 
-        /*******************************************************************/
-        
-            // disables all but Fridays in start datepickers
-        bc.enableFridays = function( date ){
-            return date.getDay() == 5;
-        };
+        if (angular.isUndefined(cur) || cur === null) {
+            return 0;
+        } else if (cur.length == 0) {
+            return 100;
+        }
 
-        /*******************************************************************/
-        
-            // filters rooms based on selected location SAM
-        // filterRooms should be filtered rooms based on selected building
-        // This exact function should be for buildings (if there is only one building at the location, 
-        // it should be automatically populated.
-        bc.filterRooms = function(buildingID){
-            if(buildingID != undefined){
-                return bc.buildings.filter(function(building){return building.id===buildingID})[0].rooms;
+        var matches = 0;
+        var total = 0;
+
+        for (var i = 0; i < cur.length; i += 1) {
+            for (var j = 0; j < trainer.skills.length; j += 1) {
+                if (cur[i] == (trainer.skills[j] ? trainer.skills[j].skillId : -1)) {
+                    matches++;
+                    break;
+                }
             }
-            else {
-                return [];
+            total++;
+        }
+
+        if (total > 0) {
+            return Math.floor((matches / total) * 100);
+        }
+
+        return 100;
+    };
+
+    // defaults location to Reston branch 
+    settingService.getById(3, function(response) {
+        bc.findHQ = response.settingValue;
+    }, function() {
+        bc.showToast("Location default not found");
+    });
+
+    //defaults building        
+    settingService.getById(9, function(response) {
+        bc.findHQBuilding = response.settingValue;
+        //may need to call resetForm on bc
+    }, function() {
+        bc.showToast("Building default not found");
+    });
+
+    //defaults batch naming convention
+    settingService.getById(23, function(response) {
+        bc.nameString = response.settingName;
+    }, function() {
+        bc.nameString = "$c ($m/$d)";
+        bc.showToast("Batch name default not found");
+    });
+
+
+
+    // select end date based on start date
+    bc.selectEndDate = function() {
+        var startDate = new Date(bc.batch.startDate);
+        bc.batch.endDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 67);
+
+        bc.oldBatchEndDate = new Date(bc.batch.endDate);
+    };
+
+    //Filters trainers based on available dates by calling the trainerSelection filter
+    bc.updateTrainers = function(trainers, batchStart, batchEnd) {
+        bc.availableTrainers = $filter('trainerSelection')(trainers, batchStart, batchEnd);
+    };
+
+
+    //Updates list of selected skills.
+    bc.updateSelectedSkills = function() {
+        bc.selectedSkills = [];
+        var i;
+
+        var cur = bc.curricula.find(function(a) {
+            return ((a.currId ? a.currId : -1) == bc.batch.curriculum);
+        });
+
+        var foc = bc.foci.find(function(a) {
+            return ((a.currId ? a.currId : -1) == bc.batch.focus);
+        });
+
+        if (cur) {
+            for (i = 0; i < cur.skills.length; i += 1) {
+                bc.selectedSkills.push(cur.skills[i].skillId);
             }
-        };
-        
-        bc.filterBuildings = function(locationID){
-        	if(locationID != undefined){
-        		return bc.locations.filter(function(location){return location.id===locationID})[0].buildings;
-        	}
-        };
+        }
 
-        /*******************************************************************/
-        
-            // counts the number of weeks between the start and end dates
-        bc.updateWeeks = function(){
-            var weeks = calendarService.countWeeks( bc.batch.startDate, bc.batch.endDate );
-            if (!weeks) {
-                bc.weeksSpan = "Spans 0 Weeks";
-            } else {
-                bc.weeksSpan = "Spans " + weeks + " Weeks";
+        if (foc) {
+            for (i = 0; i < foc.skills.length; i += 1) {
+                bc.selectedSkills.push(foc.skills[i].skillId);
             }
+        }
+
+        bc.updateBatchSkills();
+    };
+
+    //Updates the batch's skills to reflect the skills list, but with the actual objects.
+    bc.updateBatchSkills = function() {
+        var findFunction = function(a) {
+            return ((a.skillId ? a.skillId : -1) == bc.selectedSkills[i]);
         };
 
-        /*******************************************************************/
-        
-            // defaults name to _curriculum_ (_start date_) if both are chosen and name is not
-        bc.defaultName = function(){
-            if ( (bc.batch.curriculum != undefined) && (bc.batch.startDate != undefined) ) {
-                var start = new Date(bc.batch.startDate);
-                var currName;
-                bc.curricula.forEach( function(curr){
-                    if (curr.currId == bc.batch.curriculum) {
-                        currName = curr.name;
-                    }
-                });
-                //nameString needs to come from a stored string, selected in the settings
-                
-                bc.batch.name = bc.nameString.replace("$c", currName);
-                bc.batch.name = bc.batch.name.replace("$d", start.getDate());
-                bc.batch.name = bc.batch.name.replace("$m", (start.getMonth() + 1));
-                bc.batch.name = bc.batch.name.replace("$y", start.getFullYear());
-        	}
-        };
+        bc.batch.skills = [];
 
-        /*******************************************************************/
-        
-            // outputs progress as a percent
-        bc.calcProgress = function( paramLow, paramHigh ){
+        for (var i = 0; i < bc.selectedSkills.length; i += 1) {
+            bc.batch.skills.push(bc.skills.find(findFunction))
+        }
+    };
 
-            if (!paramLow || !paramHigh) {
-                return 0;
-            }
+    //Recalculates skill ratios for trainers based on the selected curriculum.
+    bc.updateSkillRatios = function() {
+        bc.trainers.forEach(function(t) {
+            bc.trainerSkillRatios[t.trainerId] = bc.calcTrainerSkillRatio(t);
+        });
+    };
+    
+    // disables all but Mondays in start datepickers
+    bc.enableMondays = function(date) {
+        return date.getDay() == 1;
+    };
 
-            var today = new Date().getTime();
-            var diff = paramHigh - paramLow;
 
-            today -= paramLow;
-            
-            var percent = (today * 100 / diff).toFixed(5);
-            if ( percent < 0 ) {
-                return 0;
-            } else if ( percent > 100 ) {
-                return 100;
-            } else {
-                return (today * 100 / diff).toFixed(5);
-            }
-        };
 
-        /*******************************************************************/
-        
-            // highlights batches clicked on timeline
-        bc.highlightBatch = function(batch){
-			if(bc.selectedBatch !== undefined){
-				d3.select('#id'+bc.selectedBatch.id)
-					.attr('filter',null);
-			}
-			bc.selectedBatch = batch;
-			d3.select('#id'+batch.id)
-				.attr('filter', 'url(#highlight)');
-		};
-
-		/*******************************************************************/
-		
-            // determines if input table row needs the selectedBatch class
-        bc.selectedBatchRow = function(batch){
-            if (bc.selectedBatch && batch.id == bc.selectedBatch.id) {
-                    return "selectedBatch";
-            }
-        };
-
-        /*******************************************************************/
-        
-            // resets form
-        bc.resetForm = function(){
-            bc.batchesSelected = [];
-            bc.changeState( "create", null );
-        };       
-        
-
-        /*******************************************************************/
-        
-            /* table checkbox functions*/
-              // toggle all
-        bc.toggleAll = function(){
-
-            if ( bc.batchesSelected.length == bc.batches.length ) {
-                bc.batchesSelected = [];
-            } else {
-                bc.batchesSelected = bc.batches;
-            }
-        };
-        
-        /*******************************************************************/
-        
-        // check if all are selected
-        bc.allSelected = function(){
-            return bc.batchesSelected.length == bc.batches.length;
-        };
-        
-        /*******************************************************************/
-
-              // checks box if batch is in batchesSelected list
-        bc.exists = function(batch){
-            return bc.batchesSelected.indexOf( batch ) > -1;
-        };
-
-        /*******************************************************************/
-        
-              // adds/removes batch from batchesSelected list
-        bc.toggle = function(batch){
-
-            var idx = bc.batchesSelected.indexOf(batch);
-            if (idx == -1) {
-                bc.batchesSelected.push(batch);
-            } else {
-                bc.batchesSelected.splice( idx, 1 );
-            }
-        };
-
-        /*******************************************************************/
-        
-            // repull batches
-        bc.repull = function(){
-            bc.batchesSelected = [];
-            bc.changeState( "create", null );
-            batchService.getAll( function(response) {
-                bc.batches = response;
-                $scope.$broadcast("repullTimeline");
-            }, function() {
-                bc.showToast( "Could not fetch batches.");
-            });
-        };
-
-        /*******************************************************************/
-        
-            /* batch table button functions*/
-        // edit batch
-        bc.edit = function( batch ){
-            bc.changeState( "edit", batch );
-            bc.updateTrainers(bc.trainers,bc.batch.startDate,bc.batch.endDate);
-            $window.scrollTo(0, 0);
-        };
-
-        /*******************************************************************/
-        
-              // clone batch
-        bc.clone = function( batch ){
-            bc.changeState( "clone", batch );
-            bc.updateTrainers(bc.trainers,bc.batch.startDate,bc.batch.endDate);
-            $window.scrollTo(0, 0);
-        };
-
-        /*******************************************************************/
-        
-              // delete single batch
-        bc.delete = function( batch ){
-            batchService.delete( batch, function(){
-                bc.showToast("Batch deleted.");
-                bc.repull();
-            }, function(){
-                bc.showToast("Failed to delete batch.");
-            });
-        };
-
-        /*******************************************************************/
-        
-              // delete multiple batches
-        bc.deleteMultiple = function(){
-            
-            bc.batches = undefined;
-            var delList = bc.batchesSelected;
-            bc.deleteMultipleHelper(delList);
-        };
-
-        /*******************************************************************/
-        
-            // recursively deletes the first entry in bc.batchesSelected until it is empty
-        bc.deleteMultipleHelper = function( delList ){
-            
-            if (delList.length == 0) {
-                bc.showToast("Batches deleted.");
-                bc.repull();
-                return true;
-            }
-
-            var first = delList.shift();
-            batchService.delete( first, function(){
-                return bc.deleteMultipleHelper(delList);
-            }, function(){
-                bc.showToast("Failed to delete batches.");
-                return false;
-            });
-        };
-
-        /*******************************************************************/
+    // disables all but Fridays in start datepickers
+    bc.enableFridays = function(date) {
+        return date.getDay() == 5;
+    };
         
             // saves/updates batch
         bc.saveBatch = function(isValid){
@@ -534,97 +426,278 @@
                     
                     default:
                         break;
+            	};
+        	}
+        }
+
+    // filters rooms based on selected location SAM
+    // filterRooms should be filtered rooms based on selected building
+    // This exact function should be for buildings (if there is only one building at the location,
+    // it should be automatically populated.
+    bc.filterRooms = function(buildingID) {
+        if (buildingID != undefined) {
+            return bc.buildings.filter(function(building) {
+                return building.id === buildingID })[0].rooms;
+        } else {
+            return [];
+        }
+    };
+
+    bc.filterBuildings = function(locationID) {
+        if (locationID != undefined) {
+            return bc.locations.filter(function(location) {
+                return location.id === locationID })[0].buildings;
+        }
+    };
+
+    // counts the number of weeks between the start and end dates
+    bc.updateWeeks = function() {
+        var weeks = calendarService.countWeeks(bc.batch.startDate, bc.batch.endDate);
+        if (!weeks) {
+            bc.weeksSpan = "Spans 0 Weeks";
+        } else {
+            bc.weeksSpan = "Spans " + weeks + " Weeks";
+        }
+    };
+
+    // defaults name to _curriculum_ (_start date_) if both are chosen and name is not
+    bc.defaultName = function() {
+        if ((bc.batch.curriculum != undefined) && (bc.batch.startDate != undefined)) {
+            var start = new Date(bc.batch.startDate);
+            var currName;
+            bc.curricula.forEach(function(curr) {
+                if (curr.currId == bc.batch.curriculum) {
+                    currName = curr.name;
                 }
-            } else {
-                bc.showToast("Batch form is incomplete.");
-            }
-        };
+            });
+            //nameString needs to come from a stored string, selected in the settings
 
-        /*******************************************************************/
-        
-          // data
-        bc.weeksSpan = "Spans 0 Weeks";
-        bc.batchOrder = "startDate";
+            bc.batch.name = bc.nameString.replace("$c", currName);
+            bc.batch.name = bc.batch.name.replace("$d", start.getDate());
+            bc.batch.name = bc.batch.name.replace("$m", (start.getMonth() + 1));
+            bc.batch.name = bc.batch.name.replace("$y", start.getFullYear());
+        }
+    };
 
-        bc.batch = batchService.getEmptyBatch();
-        
+    // outputs progress as a percent
+    bc.calcProgress = function(paramLow, paramHigh) {
+
+        if (!paramLow || !paramHigh) {
+            return 0;
+        }
+
+        var today = new Date().getTime();
+        var diff = paramHigh - paramLow;
+
+        today -= paramLow;
+
+        var percent = (today * 100 / diff).toFixed(5);
+        if (percent < 0) {
+            return 0;
+        } else if (percent > 100) {
+            return 100;
+        } else {
+            return (today * 100 / diff).toFixed(5);
+        }
+    };
+
+    // highlights batches clicked on timeline
+    bc.highlightBatch = function(batch) {
+        if (bc.selectedBatch !== undefined) {
+            d3.select('#id' + bc.selectedBatch.id)
+                .attr('filter', null);
+        }
+        bc.selectedBatch = batch;
+        d3.select('#id' + batch.id)
+            .attr('filter', 'url(#highlight)');
+    };
+
+    // determines if input table row needs the selectedBatch class
+    bc.selectedBatchRow = function(batch) {
+        if (bc.selectedBatch && batch.id == bc.selectedBatch.id) {
+            return "selectedBatch";
+        }
+    };
+
+    // resets form
+    bc.resetForm = function() {
         bc.batchesSelected = [];
-        
-        bc.selectedSkills = [];
+        bc.changeState("create", null);
+    };
 
-            // state information
-        bc.state = "create";
-        bc.stateMux = { "create": { "header": "Create New Batch",
-                                    "submit": "Create Batch" },
-                        "edit"  : { "header": "Edit Batch",
-                                    "submit": "Save Changes" },
-                        "clone" : { "header": "Create Clone",
-                                    "submit": "Save Clone" } };
+    /* table checkbox functions*/
+    // toggle all
+    bc.toggleAll = function() {
 
-        
-        /*******************************************************************/        
-        
-          // page initialization
-            // data gathering
-        batchService.getAll( function(response) {
+        if (bc.batchesSelected.length == bc.batches.length) {
+            bc.batchesSelected = [];
+        } else {
+            bc.batchesSelected = bc.batches;
+        }
+    };
+
+    // check if all are selected
+    bc.allSelected = function() {
+        return bc.batchesSelected.length == bc.batches.length;
+    };
+
+    // checks box if batch is in batchesSelected list
+    bc.exists = function(batch) {
+        return bc.batchesSelected.indexOf(batch) > -1;
+    };
+    
+    // adds/removes batch from batchesSelected list
+    bc.toggle = function(batch) {
+
+        var idx = bc.batchesSelected.indexOf(batch);
+        if (idx == -1) {
+            bc.batchesSelected.push(batch);
+        } else {
+            bc.batchesSelected.splice(idx, 1);
+        }
+    };
+
+    // repull batches
+    bc.repull = function() {
+        bc.batchesSelected = [];
+        bc.changeState("create", null);
+        batchService.getAll(function(response) {
             bc.batches = response;
+            $scope.$broadcast("repullTimeline");
         }, function() {
-            bc.showToast( "Could not fetch batches.");
+            bc.showToast("Could not fetch batches.");
         });
+    };
 
-        /*******************************************************************/
-        
-        skillService.getAll( function(response) {
-            bc.skills = response;
-        }, function() {
-            bc.showToast( "Could not fetch skills.");
-        });
-        
-        /*******************************************************************/
-        
-        curriculumService.getAll( function(response) {
-        	var temp = response;
-            bc.curricula = temp.filter(function(t){
-            	return (t.core);
-            });
-            bc.foci = temp.filter(function(t){
-            	return !(t.core);
-            });
-        }, function() {
-            bc.showToast( "Could not fetch curricula.");
-        });
+    /* batch table button functions*/
+    // edit batch
+    bc.edit = function(batch) {
+        bc.changeState("edit", batch);
+        bc.updateTrainers(bc.trainers, bc.batch.startDate, bc.batch.endDate);
+        $window.scrollTo(0, 0);
+    };
 
-        /*******************************************************************/
-        
-        trainerService.getAll( function(response) {
-            bc.trainers = response;
-        }, function() {
-            bc.showToast( "Could not fetch trainers.");
-        });
+    // clone batch
+    bc.clone = function(batch) {
+        bc.changeState("clone", batch);
+        bc.updateTrainers(bc.trainers, bc.batch.startDate, bc.batch.endDate);
+        $window.scrollTo(0, 0);
+    };
 
-        /*******************************************************************/
-        
-        locationService.getAll( function(response) {
-            bc.locations = response;
-            bc.batch.location = bc.findHQ;
+    // delete single batch
+    bc.delete = function(batch) {
+        batchService.delete(batch, function() {
+            bc.showToast("Batch deleted.");
+            bc.repull();
         }, function() {
-            bc.showToast( "Could not fetch locations.");
+            bc.showToast("Failed to delete batch.");
         });
-        
-        /*******************************************************************/
-        
-        buildingService.getAll( function(response) {
-            bc.buildings = response;
-            bc.batch.building = bc.findHQBuilding;
-            // was being set here..bc.batch.building = 1;
+    };
+
+    // delete multiple batches
+    bc.deleteMultiple = function() {
+
+        bc.batches = undefined;
+        var delList = bc.batchesSelected;
+        bc.deleteMultipleHelper(delList);
+    };
+
+    // recursively deletes the first entry in bc.batchesSelected until it is empty
+    bc.deleteMultipleHelper = function(delList) {
+
+        if (delList.length == 0) {
+            bc.showToast("Batches deleted.");
+            bc.repull();
+            return true;
+        }
+
+        var first = delList.shift();
+        batchService.delete(first, function() {
+            return bc.deleteMultipleHelper(delList);
         }, function() {
-            bc.showToast("Could not fetch buildings.");
+            bc.showToast("Failed to delete batches.");
+            return false;
         });
-        
-        roomService.getAll( function(response) {
-            bc.rooms = response;
-        }, function() {
-            bc.showToast("Could not fetch rooms.");
-        });
-        
+    };
+
+    // data
+    bc.weeksSpan = "Spans 0 Weeks";
+    bc.batchOrder = "startDate";
+
+    bc.batch = batchService.getEmptyBatch();
+
+    bc.batchesSelected = [];
+
+    bc.selectedSkills = [];
+
+    // state information
+    bc.state = "create";
+    bc.stateMux = {
+        "create": {
+            "header": "Create New Batch",
+            "submit": "Create Batch"
+        },
+        "edit": {
+            "header": "Edit Batch",
+            "submit": "Save Changes"
+        },
+        "clone": {
+            "header": "Create Clone",
+            "submit": "Save Clone"
+        }
+    };
+
+    // page initialization
+    // data gathering
+    batchService.getAll(function(response) {
+        bc.batches = response;
+    }, function() {
+        bc.showToast("Could not fetch batches.");
     });
+
+    skillService.getAll(function(response) {
+        bc.skills = response;
+    }, function() {
+        bc.showToast("Could not fetch skills.");
+    });
+
+    curriculumService.getAll(function(response) {
+        var temp = response;
+        bc.curricula = temp.filter(function(t) {
+            return (t.core);
+        });
+        bc.foci = temp.filter(function(t) {
+            return !(t.core);
+        });
+    }, function() {
+        bc.showToast("Could not fetch curricula.");
+    });
+
+    trainerService.getAll(function(response) {
+        bc.trainers = response;
+    }, function() {
+        bc.showToast("Could not fetch trainers.");
+    });
+
+    locationService.getAll(function(response) {
+        bc.locations = response;
+        bc.batch.location = bc.findHQ;
+    }, function() {
+        bc.showToast("Could not fetch locations.");
+    });
+
+    buildingService.getAll(function(response) {
+        bc.buildings = response;
+        bc.batch.building = bc.findHQBuilding;
+        // was being set here..bc.batch.building = 1;
+    }, function() {
+        bc.showToast("Could not fetch buildings.");
+    });
+
+    roomService.getAll(function(response) {
+        bc.rooms = response;
+    }, function() {
+        bc.showToast("Could not fetch rooms.");
+    });
+
+});

@@ -561,7 +561,9 @@ function mdEditDialog($compile, $controller, $document, $mdUtil, $q, $rootScope,
       var attrs = 'type="' + (options.type || 'text') + '"';
       
       for(var attr in options.validators) {
-        attrs += ' ' + attr + '="' + options.validators[attr] + '"';
+        if (object.hasOwnProperty(attr)) {
+          attrs += ' ' + attr + '="' + options.validators[attr] + '"';
+        }
       }
       
       return attrs;
@@ -656,8 +658,10 @@ function mdEditDialog($compile, $controller, $document, $mdUtil, $q, $rootScope,
     var promises = [promise];
     
     for(var prop in options.resolve) {
-      promise = options.resolve[prop];
+        if (object.hasOwnProperty(prop)) {
+            promise = options.resolve[prop];
       promises.push($q.when(angular.isFunction(promise) ? promise() : promise));
+        }
     }
     
     promise = $q.all(promises);
@@ -719,8 +723,12 @@ function mdHead($compile) {
   
   function postLink(scope, element, attrs, tableCtrl) {
     // because scope.$watch is unpredictable
-    var oldValue = new Array(2);
+    // var oldValue = new Array(2);
+    var oldValue = [0, 1];
+    // oldValue[0] = 0
     
+
+
     function addCheckboxColumn() {
       element.children().prepend('<th class="md-column md-checkbox-column">');
     }
