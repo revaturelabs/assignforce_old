@@ -52,19 +52,6 @@ var assignforce = angular.module("batchApp");
                         }
                 }
                  */
-                
-                bc.batch.trainer    = (incomingBatch.trainer)    ? incomingBatch.trainer.trainerId   : undefined;
-                bc.batch.cotrainer  = (incomingBatch.cotrainer)  ? incomingBatch.cotrainer.trainerId : undefined;
-                
-                bc.selectedSkills = [];
-                if (incomingBatch.skills)
-                {
-                	for (var i = 0; i < incomingBatch.skills.length; i += 1)
-                	{
-                		bc.selectedSkills.push(incomingBatch.skills[i].skillId);
-                	}
-                }
-            }
 
             bc.batch.trainer = (incomingBatch.trainer) ? incomingBatch.trainer.trainerId : undefined;
             bc.batch.cotrainer = (incomingBatch.cotrainer) ? incomingBatch.cotrainer.trainerId : undefined;
@@ -426,7 +413,7 @@ var assignforce = angular.module("batchApp");
                     
                     default:
                         break;
-            	};
+            	}
         	}
         }
 
