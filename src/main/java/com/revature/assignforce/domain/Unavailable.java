@@ -1,5 +1,6 @@
 package com.revature.assignforce.domain;
 
+import java.sql.Timestamp;
 import java.util.Calendar;
 
 import javax.persistence.Column;
@@ -23,21 +24,21 @@ public class Unavailable {
 	private int ID;
 
 	
-	@Temporal(TemporalType.TIMESTAMP)
+	//@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "START_DATE", nullable=false)
-	private Calendar startDate;
+	private Timestamp startDate;
 
 
-	@Temporal(TemporalType.TIMESTAMP)
+	//@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "END_DATE", nullable=false)
-	private Calendar endDate;
+	private Timestamp endDate;
 
 	
 	public Unavailable(){
 		//noarg constructor
 	}
 
-	public Unavailable(int iD, Calendar startDate, Calendar endDate) {
+	public Unavailable(int iD, Timestamp startDate, Timestamp endDate) {
 		super();
 		ID = iD;
 		this.startDate = startDate;
@@ -52,19 +53,19 @@ public class Unavailable {
 		ID = iD;
 	}
 
-	public Calendar getStartDate() {
+	public Timestamp getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(Calendar startDate) {
+	public void setStartDate(Timestamp startDate) {
 		this.startDate = startDate;
 	}
 
-	public Calendar getEndDate() {
+	public Timestamp getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(Calendar endDate) {
+	public void setEndDate(Timestamp endDate) {
 		this.endDate = endDate;
 	}
 

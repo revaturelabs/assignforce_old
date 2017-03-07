@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.revature.assignforce.domain.Building;
 import com.revature.assignforce.domain.Room;
 import com.revature.assignforce.domain.Unavailable;
 import com.revature.assignforce.domain.dto.ResponseErrorDTO;
@@ -36,9 +35,10 @@ public class RoomCtrl {
 		int ID = in.getRoomID();
 		String name = in.getRoomName();
 		int building = in.getBuilding();
-		List<Unavailable> unavailability = in.getUnavailability();
+
+		List<Unavailable> unavailabilities = in.getUnavailabilities();
 		
-		Room out = new Room( ID, name, building, unavailability );
+		Room out = new Room( ID, name, building, unavailabilities );
 		out = roomService.saveItem( out );
 		
 		if (out == null) {
@@ -52,9 +52,7 @@ public class RoomCtrl {
 		// retrieve room with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveRoom( @PathVariable("id") int ID ) {
-		
 		Room out = roomService.getOneItem(ID);
-
 		if (out == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No room found of ID " + ID + "."), HttpStatus.NOT_FOUND);
 		} else {
@@ -70,9 +68,10 @@ public class RoomCtrl {
 		int ID = in.getRoomID();
 		String name = in.getRoomName();
 		int building = in.getBuilding();
-		List<Unavailable> unavailability = in.getUnavailability();
+		
+		List<Unavailable> unavailabilities = in.getUnavailabilities();
 		Boolean active = in.getActive();
-		Room out = new Room( ID, name, building, unavailability, active);
+		Room out = new Room( ID, name, building, unavailabilities, active);
 		out = roomService.saveItem( out );
 		
 		if (out == null) {
@@ -95,7 +94,6 @@ public class RoomCtrl {
 		// retrieve all rooms
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveAllRooms() {
-		
 		List<Room> all = roomService.getAllItems();
 
 		if (all == null) {

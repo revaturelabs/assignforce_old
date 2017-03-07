@@ -23,11 +23,11 @@ public class Trainer implements Activatable{
 	@Column(name = "TRAINER_RESUME")
 	private String resume;
 
-	@ManyToMany(fetch=FetchType.LAZY)
+	@ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
 	@JoinTable(name="TRAINER_UNAVAILABILITY_JT", 
 	joinColumns=@JoinColumn(name="TRAINER"), 
 	inverseJoinColumns=@JoinColumn(name="UNAVAILABILITY"))
-	private List<Unavailable> unavailability;
+	private List<Unavailable> unavailabilities;
 
 	//@ManyToMany(mappedBy="trainer", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	@ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
@@ -53,7 +53,7 @@ public class Trainer implements Activatable{
 		this.trainerId = trainerId;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.unavailability = unavailability;
+		this.unavailabilities = unavailability;
 		this.skills = skills;
 		this.certifications = certifications;
 		this.resume = resume;
@@ -83,12 +83,12 @@ public class Trainer implements Activatable{
 		this.lastName = lastName;
 	}
 
-	public List<Unavailable> getUnavailability() {
-		return unavailability;
+	public List<Unavailable> getUnavailabilities() {
+		return unavailabilities;
 	}
 
-	public void setUnavailability(List<Unavailable> unavailability) {
-		this.unavailability = unavailability;
+	public void setUnavailabilities(List<Unavailable> unavailabilities) {
+		this.unavailabilities = unavailabilities;
 	}
 
 	public List<Skill> getSkills() {
