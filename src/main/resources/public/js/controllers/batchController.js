@@ -142,8 +142,6 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
                 unavailability.startDate = new Date(unavailability.startDate);
                 unavailability.endDate = new Date(unavailability.endDate);
 
-                var unStartTwo = unavailability.startDate;
-                var unEndTwo = unavailability.endDate;
                 var checkStarts = unavailability.startDate.getDate() == bc.batch.startDate.getDate() && unavailability.startDate.getMonth() == bc.batch.startDate.getMonth() && unavailability.startDate.getFullYear() == bc.batch.startDate.getFullYear();
                 var checkEnds = unavailability.endDate.getDate() == bc.batch.endDate.getDate() && unavailability.endDate.getMonth() == bc.batch.endDate.getMonth() && unavailability.endDate.getFullYear() == bc.batch.endDate.getFullYear();
 
@@ -170,9 +168,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
             unavailability.endDate += (day * -14); //subtracting 14 days in milliseconds to avoid number-to-date conversions
             unavailability.startDate = new Date(unavailability.startDate);
             unavailability.endDate = new Date(unavailability.endDate);
-            tempDateTwo = tempEndDate;
-            unStartTwo = unavailability.startDate;
-            unEndTwo = unavailability.endDate;
+            var tempDateTwo = tempEndDate;
 
             var checkStarts = unavailability.startDate.getDate() == bc.batch.startDate.getDate() && unavailability.startDate.getMonth() == bc.batch.startDate.getMonth() && unavailability.startDate.getFullYear() == bc.batch.startDate.getFullYear();
             var checkEndsOne = unavailability.endDate.getDate() == bc.batch.endDate.getDate() && unavailability.endDate.getMonth() == bc.batch.endDate.getMonth() && unavailability.endDate.getFullYear() == bc.batch.endDate.getFullYear();
