@@ -28,16 +28,16 @@
 
                 <md-button class="md-icon-button" ng-click="tCtrl.grabS3Resume(trainer)">
                     <md-tooltip class="md-title"> Download Resume </md-tooltip>
-                    <i class="material-icons" style="color: #FB8C00;">file_download</i>
+                    <i class="material-icons revOrange">file_download</i>
                 </md-button>
                 <md-button class="md-icon-button" ng-click="tCtrl.removeTrainer(trainer)">
                     <md-tooltip class="md-title"> Deactivate Trainer </md-tooltip>
-                    <i class="material-icons" style="color: #FB8C00;">remove_circle</i>
+                    <i class="material-icons revOrange">remove_circle</i>
                 </md-button>
             </md-list-item>
         </md-list>
     </md-content>
-
+    <!--displays a loading circle if trainers is undefined-->
     <div ng-if="tCtrl.trainers == undefined" layout="column" layout-wrap layout-align="center center">
         <div flex="100"> &nbsp; </div>
         <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
@@ -51,6 +51,7 @@
             <span flex> </span>
         </div>
     </md-toolbar>
+
     <!--shows a list of all inactive trainers-->
     <md-content class="md-padding" ng-if="tCtrl.trainers != undefined">
         <md-list>
@@ -62,13 +63,15 @@
                     <p ng-if="trainer.skills.length <= 0"> Skills: none </p>
                 </div>
                 <span flex> </span>
+                <!--button activates a Trainer-->
                 <md-button class="md-icon-button" ng-click="tCtrl.activateTrainer(trainer)">
                     <md-tooltip class="md-title"> Reactivate Trainer </md-tooltip>
-                    <i class="material-icons" style="color: #FB8C00;">add_circle</i>
+                    <i class="material-icons revOrange">add_circle</i>
                 </md-button>
             </md-list-item>
         </md-list>
     </md-content>
+    <!--shows a loading circle if trainers is undefined-->
     <div ng-if="tCtrl.trainers == undefined" layout="column" layout-wrap layout-align="center center">
         <div flex="100"> &nbsp; </div>
         <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
