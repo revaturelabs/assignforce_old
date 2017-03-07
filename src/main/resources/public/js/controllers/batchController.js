@@ -128,26 +128,6 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
             bc.showToast("Building default not found");
         });
     }
-
-    //Updates list of selected skills.
-    bc.updateSelectedSkills = function() {
-        bc.selectedSkills = [];
-        var i;
-
-        var cur = bc.curricula.find(function(a) {
-            return ((a.currId ? a.currId : -1) == bc.batch.curriculum);
-        });
-
-        var foc = bc.foci.find(function(a) {
-            return ((a.currId ? a.currId : -1) == bc.batch.focus);
-        });
-
-        if (cur) {
-            for (i = 0; i < cur.skills.length; i += 1) {
-                bc.selectedSkills.push(cur.skills[i].skillId);
-            }
-        }
-    }
     
     /*
      * Remove unavailability from bc.batch.room and bc.batch.trainer
@@ -319,37 +299,6 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
         bc.nameString = "$c ($m/$d)"; //This is used in case setting not found
         bc.showToast("Batch name default not found");
     });
-
-    // calculates the percentage to which a trainer's skills correspond
-    // to the batch's curriculum.
-    bc.calcTrainerSkillRatio = function(trainer) {
-        var cur = bc.selectedSkills;
-
-        if (angular.isUndefined(cur) || cur === null) {
-            return 0;
-        } else if (cur.length == 0) {
-            return 100;
-        }
-
-        var matches = 0;
-        var total = 0;
-
-        for (var i = 0; i < cur.length; i += 1) {
-            for (var j = 0; j < trainer.skills.length; j += 1) {
-                if (cur[i] == (trainer.skills[j] ? trainer.skills[j].skillId : -1)) {
-                    matches++;
-                    break;
-                }
-            }
-            total++;
-        }
-
-        if (total > 0) {
-            return Math.floor((matches / total) * 100);
-        }
-
-        return 100;
-    }
 
     // Select end date based on start date
     bc.selectEndDate = function() {
