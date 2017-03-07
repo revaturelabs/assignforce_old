@@ -101,16 +101,6 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
         }
     }
 
-    //Ensures the batch end date can't be set before the start date.
-    bc.validateBatchEndDate = function() {
-        if (bc.batch.startDate && bc.batch.endDate <= bc.batch.startDate) {
-            bc.batch.endDate = new Date(bc.oldBatchEndDate);
-            bc.showToast("Batch's end date cannot be less than or equal to the batch's start date!");
-        } else {
-            bc.oldBatchEndDate = new Date(bc.batch.endDate);
-        }
-    }
-
     //Filters trainers based on available dates by calling the trainerSelection filter
     bc.updateTrainersAndRooms = function(trainers, rooms, batchStart, batchEnd) {
         bc.availableRooms = $filter('availableSelection')(rooms, batchStart, batchEnd);
@@ -168,7 +158,6 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
             unavailability.endDate += (day * -14); //subtracting 14 days in milliseconds to avoid number-to-date conversions
             unavailability.startDate = new Date(unavailability.startDate);
             unavailability.endDate = new Date(unavailability.endDate);
-            var tempDateTwo = tempEndDate;
 
             var checkStarts = unavailability.startDate.getDate() == bc.batch.startDate.getDate() && unavailability.startDate.getMonth() == bc.batch.startDate.getMonth() && unavailability.startDate.getFullYear() == bc.batch.startDate.getFullYear();
             var checkEndsOne = unavailability.endDate.getDate() == bc.batch.endDate.getDate() && unavailability.endDate.getMonth() == bc.batch.endDate.getMonth() && unavailability.endDate.getFullYear() == bc.batch.endDate.getFullYear();
