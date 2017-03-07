@@ -123,8 +123,8 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 
 	        bc.selectedSkills = [];
 			if (incomingBatch.skills) {
-				for (var i = 0; i < incomingBatch.skills.length; i += 1) {
-					bc.selectedSkills.push(incomingBatch.skills[i].skillId);
+				for (var k = 0; i < incomingBatch.skills.length; k += 1) {
+					bc.selectedSkills.push(incomingBatch.skills[k].skillId);
 				}
 				bc.oldBatchEndDate = new Date(bc.batch.endDate);
 				bc.updateWeeks();
