@@ -1,7 +1,7 @@
 var assignforce = angular.module("batchApp");
 
-    assignforce.controller( "batchCtrl", function($scope, batchService, unavailableService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, skillService, $filter, $window, $rootScope) {
-    	
+assignforce.controller("batchCtrl", function($scope, batchService, unavailableService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, skillService, $filter, $window, $rootScope) {
+
     var bc = this;
     bc.trainerSkillRatios = [];
     bc.oldBatchEndDate; //used for start date validation - can probably go elsewhere
@@ -10,299 +10,299 @@ var assignforce = angular.module("batchApp");
     bc.convertUnavailability = function(incoming) {
         return new Date(incoming);
     };
-        
-	/*FUNCTIONS*/
-    
+
+    /*FUNCTIONS*/
+
     // This showToast is a function that comes from the parent
-	bc.showToast = function(message) {
-    	$scope.$parent.aCtrl.showToast(message);
-	};
+    bc.showToast = function(message) {
+        $scope.$parent.aCtrl.showToast(message);
+    };
 
-	/*comment out*/
+    /*comment out*/
 
-	
-	// Changes form state and populates many variables
-	bc.changeState = function(newState, incomingBatch) {
-		bc.state = newState;
-		if (newState == "create") {
-			bc.batch = batchService.getEmptyBatch();
-			bc.batch.location = bc.findHQ;
-			bc.batch.building = bc.findHQBuilding;
-		} else {
 
-			bc.batch.id = (bc.state == "edit") ? incomingBatch.id : undefined;
+    // Changes form state and populates many variables
+    bc.changeState = function(newState, incomingBatch) {
+        bc.state = newState;
+        if (newState == "create") {
+            bc.batch = batchService.getEmptyBatch();
+            bc.batch.location = bc.findHQ;
+            bc.batch.building = bc.findHQBuilding;
+        } else {
 
-			bc.batch.name = incomingBatch.name;
-			bc.batch.startDate = (incomingBatch.startDate) ? new Date(incomingBatch.startDate) : undefined;
-			bc.batch.endDate = (incomingBatch.endDate) ? new Date(incomingBatch.endDate) : undefined;
-			
-			// Many values below need to be saved as numbers here, so that the corresponding
-			// fields are actually populated
-			bc.batch.curriculum = (incomingBatch.curriculum) ? incomingBatch.curriculum.currId : undefined;
-			bc.batch.focus = (incomingBatch.focus) ? incomingBatch.focus.currId : undefined;
-			bc.batch.cotrainer = (incomingBatch.cotrainer) ? incomingBatch.cotrainer.trainerId : undefined;
-			
-			// Getting room object
-			bc.batch.room = (incomingBatch.room) ? incomingBatch.room : undefined;
-			if (bc.batch.room) {
-				// Getting building object
-				bc.batch.building = incomingBatch.room.building;
+            bc.batch.id = (bc.state == "edit") ? incomingBatch.id : undefined;
 
-				// Getting location based on building info
-				buildingService.getById(bc.batch.building, function(response) {
-					// Setting both to numbers, room is still an object
-					bc.batch.location = response.location;
-				}, function() {});
-			}
-			
-			// Getting trainer object
-			bc.batch.trainer = (incomingBatch.trainer) ? incomingBatch.trainer : undefined;
-			
-			
-			// Resetting to numbers to populate fields
-			//bc.batch.trainer = (incomingBatch.trainer) ? incomingBatch.trainer.trainerId : undefined;
-			//bc.batch.room = (incomingBatch.room) ? incomingBatch.room.roomID : undefined;
-			var position = -1;
-	        if(incomingBatch.trainer){
-	        	bc.trainers.forEach(function(trainer){
-	        		if(trainer.trainerId == incomingBatch.trainer.trainerId){
-	        			bc.batch.trainer = trainer;
-	        			position = bc.trainers.indexOf(trainer);
-	        		}
-	        	}, function(){});
-	        	bc.trainers.splice(position, 1);
-	        }
-	        position = -1;
-	        var tempBuilding;
-	        if(incomingBatch.room){
-	        	bc.buildings.forEach(function(building){
-	        		building.rooms.forEach(function(room){
-	        			if(room.roomID == incomingBatch.room.roomID){
-	        				tempBuilding = building;
-	        				bc.batch.room = room;
-	        				position = building.rooms.indexOf(room);
-	        			}
-	        		}, function(){});
-	        		
-	        	}, function(){});
-	        	tempBuilding.rooms.splice(position, 1);
-	        }
-	        bc.subtractUnavailabilities();
-	        bc.trainers.push(bc.batch.trainer);
-	        tempBuilding.rooms.push(bc.batch.room);
-	        bc.batch.room = bc.batch.room.roomID;
-	        bc.updateTrainersAndRooms(bc.trainers, bc.filterRooms(bc.batch.building), bc.batch.startDate, bc.batch.endDate);
-			bc.batch.trainer = bc.batch.trainer.trainerId;
-	        bc.selectedSkills = [];
-			if (incomingBatch.skills) {
-				for (var i = 0; i < incomingBatch.skills.length; i += 1) {
-					bc.selectedSkills.push(incomingBatch.skills[i].skillId);
-				}
-				bc.oldBatchEndDate = new Date(bc.batch.endDate);
-				bc.updateWeeks();
-			}
-		}
-	};
-	
-	/*
-	 * Remove unavailability from bc.batch.room and bc.batch.trainer
-	 * (non-persistent, until update)
-	 */
-	bc.subtractUnavailabilities = function(){
-		flagPos = -1;
-		if(bc.batch.room)
-		bc.batch.room.unavailabilities.forEach(function(unavailability) {
-			unavailability.startDate = new Date(unavailability.startDate);
-			unavailability.endDate = new Date(unavailability.endDate);
-			
-			unStartTwo = unavailability.startDate;
-			unEndTwo = unavailability.endDate;
-			var checkStarts = unavailability.startDate.getDate() == bc.batch.startDate.getDate() && unavailability.startDate.getMonth() == bc.batch.startDate.getMonth() && unavailability.startDate.getFullYear() == bc.batch.startDate.getFullYear();
-			var checkEnds = unavailability.endDate.getDate() == bc.batch.endDate.getDate() && unavailability.endDate.getMonth() == bc.batch.endDate.getMonth() && unavailability.endDate.getFullYear() == bc.batch.endDate.getFullYear();
+            bc.batch.name = incomingBatch.name;
+            bc.batch.startDate = (incomingBatch.startDate) ? new Date(incomingBatch.startDate) : undefined;
+            bc.batch.endDate = (incomingBatch.endDate) ? new Date(incomingBatch.endDate) : undefined;
 
-			if (checkStarts && checkEnds) {
-				flagPos = bc.batch.room.unavailabilities.indexOf(unavailability);
-			}
-		});
+            // Many values below need to be saved as numbers here, so that the corresponding
+            // fields are actually populated
+            bc.batch.curriculum = (incomingBatch.curriculum) ? incomingBatch.curriculum.currId : undefined;
+            bc.batch.focus = (incomingBatch.focus) ? incomingBatch.focus.currId : undefined;
+            bc.batch.cotrainer = (incomingBatch.cotrainer) ? incomingBatch.cotrainer.trainerId : undefined;
 
-		//Splice here removes 1 item at flagPos
-		//Removes unavailability from loaded room (non-persistent, only when updated again)
-		if (flagPos >= 0) {
-			bc.batch.room.unavailabilities.splice(flagPos, 1);
-			flagPos = -1;
-		}
-		
-		// seconds * minutes * hours * milliseconds = 1 day 
-		var day = 60 * 60 * 24 * 1000;
-		
-		bc.batch.trainer.unavailabilities.forEach(function(unavailability) {
-			//** ISSUE **\\
-			// Here, 14 is based on the arbitrary setting when the trainer's unavailability was saved
-			tempEndDate = new Date(unavailability.endDate);
-			unavailability.endDate += (day * -14); //subtracting 14 days in milliseconds to avoid number-to-date conversions
-			unavailability.startDate = new Date(unavailability.startDate);
-			unavailability.endDate = new Date(unavailability.endDate);
-			tempDateTwo = tempEndDate;
-			unStartTwo = unavailability.startDate;
-			unEndTwo = unavailability.endDate;
-			
-			checkStarts = unavailability.startDate.getDate() == bc.batch.startDate.getDate() && unavailability.startDate.getMonth() == bc.batch.startDate.getMonth() && unavailability.startDate.getFullYear() == bc.batch.startDate.getFullYear();
-			var checkEndsOne = unavailability.endDate.getDate() == bc.batch.endDate.getDate() && unavailability.endDate.getMonth() == bc.batch.endDate.getMonth() && unavailability.endDate.getFullYear() == bc.batch.endDate.getFullYear();
-			var checkEndsTwo = tempEndDate.getDate() == bc.batch.endDate.getDate() && tempEndDate.getMonth() == bc.batch.endDate.getMonth() && tempEndDate.getFullYear() == bc.batch.endDate.getFullYear();
-			
-			if (checkStarts && (checkEndsOne || checkEndsTwo)) {
-				flagPos = bc.batch.trainer.unavailabilities.indexOf(unavailability);
-			}
-		});
-		
-		if (flagPos >= 0) {
-			bc.batch.trainer.unavailabilities.splice(flagPos, 1);
-		}
-		
-		
-	}
+            // Getting room object
+            bc.batch.room = (incomingBatch.room) ? incomingBatch.room : undefined;
+            if (bc.batch.room) {
+                // Getting building object
+                bc.batch.building = incomingBatch.room.building;
 
-	// Ensures the batch end date can't be set before the start date.
-	bc.validateBatchEndDate = function() {
-		if (bc.batch.startDate && bc.batch.endDate <= bc.batch.startDate) {
-			bc.batch.endDate = new Date(bc.oldBatchEndDate);
-			bc.showToast("Batch's end date cannot be less than or equal to the batch's start date!");
-		} else {
-			bc.oldBatchEndDate = new Date(bc.batch.endDate);
-		}
-	}
+                // Getting location based on building info
+                buildingService.getById(bc.batch.building, function(response) {
+                    // Setting both to numbers, room is still an object
+                    bc.batch.location = response.location;
+                }, function() {});
+            }
 
-	// Filters trainers and rooms based on available dates
-	bc.updateTrainersAndRooms = function(trainers, rooms, batchStart, batchEnd) {
-		bc.availableRooms = $filter('availableSelection')(rooms, batchStart, batchEnd);
-		bc.availableTrainers = $filter('availableSelection')(trainers, batchStart, batchEnd);
-	};
+            // Getting trainer object
+            bc.batch.trainer = (incomingBatch.trainer) ? incomingBatch.trainer : undefined;
 
-	// Updates list of selected skills based on curriculum and focus.
-	bc.updateSelectedSkills = function() {
-		bc.selectedSkills = [];
-		var i;
 
-		var cur = bc.curricula.find(function(a) {
-			return ((a.currId ? a.currId : -1) == bc.batch.curriculum);
-		});
+            // Resetting to numbers to populate fields
+            //bc.batch.trainer = (incomingBatch.trainer) ? incomingBatch.trainer.trainerId : undefined;
+            //bc.batch.room = (incomingBatch.room) ? incomingBatch.room.roomID : undefined;
+            var position = -1;
+            if (incomingBatch.trainer) {
+                bc.trainers.forEach(function(trainer) {
+                    if (trainer.trainerId == incomingBatch.trainer.trainerId) {
+                        bc.batch.trainer = trainer;
+                        position = bc.trainers.indexOf(trainer);
+                    }
+                }, function() {});
+                bc.trainers.splice(position, 1);
+            }
+            position = -1;
+            var tempBuilding;
+            if (incomingBatch.room) {
+                bc.buildings.forEach(function(building) {
+                    building.rooms.forEach(function(room) {
+                        if (room.roomID == incomingBatch.room.roomID) {
+                            tempBuilding = building;
+                            bc.batch.room = room;
+                            position = building.rooms.indexOf(room);
+                        }
+                    }, function() {});
 
-		var foc = bc.foci.find(function(a) {
-			return ((a.currId ? a.currId : -1) == bc.batch.focus);
-		});
+                }, function() {});
+                tempBuilding.rooms.splice(position, 1);
+            }
+            bc.subtractUnavailabilities();
+            bc.trainers.push(bc.batch.trainer);
+            tempBuilding.rooms.push(bc.batch.room);
+            bc.batch.room = bc.batch.room.roomID;
+            bc.updateTrainersAndRooms(bc.trainers, bc.filterRooms(bc.batch.building), bc.batch.startDate, bc.batch.endDate);
+            bc.batch.trainer = bc.batch.trainer.trainerId;
+            bc.selectedSkills = [];
+            if (incomingBatch.skills) {
+                for (var i = 0; i < incomingBatch.skills.length; i += 1) {
+                    bc.selectedSkills.push(incomingBatch.skills[i].skillId);
+                }
+                bc.oldBatchEndDate = new Date(bc.batch.endDate);
+                bc.updateWeeks();
+            }
+        }
+    };
 
-		if (cur) {
-			for (i = 0; i < cur.skills.length; i += 1) {
-				bc.selectedSkills.push(cur.skills[i].skillId);
-			}
-		}
+    /*
+     * Remove unavailability from bc.batch.room and bc.batch.trainer
+     * (non-persistent, until update)
+     */
+    bc.subtractUnavailabilities = function() {
+        flagPos = -1;
+        if (bc.batch.room)
+            bc.batch.room.unavailabilities.forEach(function(unavailability) {
+                unavailability.startDate = new Date(unavailability.startDate);
+                unavailability.endDate = new Date(unavailability.endDate);
 
-		if (foc) {
-			for (i = 0; i < foc.skills.length; i += 1) {
-				bc.selectedSkills.push(foc.skills[i].skillId);
-			}
-		}
+                unStartTwo = unavailability.startDate;
+                unEndTwo = unavailability.endDate;
+                var checkStarts = unavailability.startDate.getDate() == bc.batch.startDate.getDate() && unavailability.startDate.getMonth() == bc.batch.startDate.getMonth() && unavailability.startDate.getFullYear() == bc.batch.startDate.getFullYear();
+                var checkEnds = unavailability.endDate.getDate() == bc.batch.endDate.getDate() && unavailability.endDate.getMonth() == bc.batch.endDate.getMonth() && unavailability.endDate.getFullYear() == bc.batch.endDate.getFullYear();
 
-		bc.updateBatchSkills();
-	};
+                if (checkStarts && checkEnds) {
+                    flagPos = bc.batch.room.unavailabilities.indexOf(unavailability);
+                }
+            });
 
-	// Updates the batch's skills to reflect the skills list, but with the actual objects.
-	bc.updateBatchSkills = function() {
-		var findFunction = function(a) {
-			return ((a.skillId ? a.skillId : -1) == bc.selectedSkills[i]);
-		};
+        //Splice here removes 1 item at flagPos
+        //Removes unavailability from loaded room (non-persistent, only when updated again)
+        if (flagPos >= 0) {
+            bc.batch.room.unavailabilities.splice(flagPos, 1);
+            flagPos = -1;
+        }
 
-		bc.batch.skills = [];
+        // seconds * minutes * hours * milliseconds = 1 day
+        var day = 60 * 60 * 24 * 1000;
 
-		for (var i = 0; i < bc.selectedSkills.length; i += 1) {
-			bc.batch.skills.push(bc.skills.find(findFunction))
-		}
-	};
+        bc.batch.trainer.unavailabilities.forEach(function(unavailability) {
+            //** ISSUE **\\
+            // Here, 14 is based on the arbitrary setting when the trainer's unavailability was saved
+            tempEndDate = new Date(unavailability.endDate);
+            unavailability.endDate += (day * -14); //subtracting 14 days in milliseconds to avoid number-to-date conversions
+            unavailability.startDate = new Date(unavailability.startDate);
+            unavailability.endDate = new Date(unavailability.endDate);
+            tempDateTwo = tempEndDate;
+            unStartTwo = unavailability.startDate;
+            unEndTwo = unavailability.endDate;
 
-	// Calculates the percentage to which a trainer's skills correspond
-	// to the batch's curriculum.
-	bc.calcTrainerSkillRatio = function(trainer) {
-		var cur = bc.selectedSkills;
+            checkStarts = unavailability.startDate.getDate() == bc.batch.startDate.getDate() && unavailability.startDate.getMonth() == bc.batch.startDate.getMonth() && unavailability.startDate.getFullYear() == bc.batch.startDate.getFullYear();
+            var checkEndsOne = unavailability.endDate.getDate() == bc.batch.endDate.getDate() && unavailability.endDate.getMonth() == bc.batch.endDate.getMonth() && unavailability.endDate.getFullYear() == bc.batch.endDate.getFullYear();
+            var checkEndsTwo = tempEndDate.getDate() == bc.batch.endDate.getDate() && tempEndDate.getMonth() == bc.batch.endDate.getMonth() && tempEndDate.getFullYear() == bc.batch.endDate.getFullYear();
 
-		if (angular.isUndefined(cur) || cur === null) {
-			return 0;
-		} else if (cur.length == 0) {
-			return 100;
-		}
+            if (checkStarts && (checkEndsOne || checkEndsTwo)) {
+                flagPos = bc.batch.trainer.unavailabilities.indexOf(unavailability);
+            }
+        });
 
-		var matches = 0;
-		var total = 0;
+        if (flagPos >= 0) {
+            bc.batch.trainer.unavailabilities.splice(flagPos, 1);
+        }
 
-		for (var i = 0; i < cur.length; i += 1) {
-			for (var j = 0; j < trainer.skills.length; j += 1) {
-				if (cur[i] == (trainer.skills[j] ? trainer.skills[j].skillId : -1)) {
-					matches++;
-					break;
-				}
-			}
-			
-			total++;
-		}
 
-		if (total > 0) {
-			return Math.floor((matches / total) * 100);
-		}
+    }
 
-		return 100;
-	};
+    // Ensures the batch end date can't be set before the start date.
+    bc.validateBatchEndDate = function() {
+        if (bc.batch.startDate && bc.batch.endDate <= bc.batch.startDate) {
+            bc.batch.endDate = new Date(bc.oldBatchEndDate);
+            bc.showToast("Batch's end date cannot be less than or equal to the batch's start date!");
+        } else {
+            bc.oldBatchEndDate = new Date(bc.batch.endDate);
+        }
+    }
 
-	// Defaults location based on setting 
-	settingService.getById(3, function(response) {
-		bc.findHQ = response.settingValue;
-	}, function() {
-		bc.showToast("Location default not found");
-	});
+    // Filters trainers and rooms based on available dates
+    bc.updateTrainersAndRooms = function(trainers, rooms, batchStart, batchEnd) {
+        bc.availableRooms = $filter('availableSelection')(rooms, batchStart, batchEnd);
+        bc.availableTrainers = $filter('availableSelection')(trainers, batchStart, batchEnd);
+    };
 
-	// Defaults building based on setting       
-	settingService.getById(9, function(response) {
-		bc.findHQBuilding = response.settingValue;
-	}, function() {
-		bc.showToast("Building default not found");
-	});
+    // Updates list of selected skills based on curriculum and focus.
+    bc.updateSelectedSkills = function() {
+        bc.selectedSkills = [];
+        var i;
 
-	// Defaults batch naming convention based on setting
-	settingService.getById(23, function(response) {
-		bc.nameString = response.settingName;
-	}, function() {
-		bc.nameString = "$c ($m/$d)"; //This is used in case setting not found
-		bc.showToast("Batch name default not found");
-	});
+        var cur = bc.curricula.find(function(a) {
+            return ((a.currId ? a.currId : -1) == bc.batch.curriculum);
+        });
 
-	// calculates the percentage to which a trainer's skills correspond
-	// to the batch's curriculum.
-	bc.calcTrainerSkillRatio = function(trainer) {
-		var cur = bc.selectedSkills;
+        var foc = bc.foci.find(function(a) {
+            return ((a.currId ? a.currId : -1) == bc.batch.focus);
+        });
 
-		if (angular.isUndefined(cur) || cur === null) {
-			return 0;
-		} else if (cur.length == 0) {
-			return 100;
-		}
+        if (cur) {
+            for (i = 0; i < cur.skills.length; i += 1) {
+                bc.selectedSkills.push(cur.skills[i].skillId);
+            }
+        }
 
-		var matches = 0;
-		var total = 0;
+        if (foc) {
+            for (i = 0; i < foc.skills.length; i += 1) {
+                bc.selectedSkills.push(foc.skills[i].skillId);
+            }
+        }
 
-		for (var i = 0; i < cur.length; i += 1) {
-			for (var j = 0; j < trainer.skills.length; j += 1) {
-				if (cur[i] == (trainer.skills[j] ? trainer.skills[j].skillId : -1)) {
-					matches++;
-					break;
-				}
-			}
-			total++;
-		}
+        bc.updateBatchSkills();
+    };
 
-		if (total > 0) {
-			return Math.floor((matches / total) * 100);
-		}
+    // Updates the batch's skills to reflect the skills list, but with the actual objects.
+    bc.updateBatchSkills = function() {
+        var findFunction = function(a) {
+            return ((a.skillId ? a.skillId : -1) == bc.selectedSkills[i]);
+        };
 
-		return 100;
-	};
+        bc.batch.skills = [];
+
+        for (var i = 0; i < bc.selectedSkills.length; i += 1) {
+            bc.batch.skills.push(bc.skills.find(findFunction))
+        }
+    };
+
+    // Calculates the percentage to which a trainer's skills correspond
+    // to the batch's curriculum.
+    bc.calcTrainerSkillRatio = function(trainer) {
+        var cur = bc.selectedSkills;
+
+        if (angular.isUndefined(cur) || cur === null) {
+            return 0;
+        } else if (cur.length == 0) {
+            return 100;
+        }
+
+        var matches = 0;
+        var total = 0;
+
+        for (var i = 0; i < cur.length; i += 1) {
+            for (var j = 0; j < trainer.skills.length; j += 1) {
+                if (cur[i] == (trainer.skills[j] ? trainer.skills[j].skillId : -1)) {
+                    matches++;
+                    break;
+                }
+            }
+
+            total++;
+        }
+
+        if (total > 0) {
+            return Math.floor((matches / total) * 100);
+        }
+
+        return 100;
+    };
+
+    // Defaults location based on setting
+    settingService.getById(3, function(response) {
+        bc.findHQ = response.settingValue;
+    }, function() {
+        bc.showToast("Location default not found");
+    });
+
+    // Defaults building based on setting
+    settingService.getById(9, function(response) {
+        bc.findHQBuilding = response.settingValue;
+    }, function() {
+        bc.showToast("Building default not found");
+    });
+
+    // Defaults batch naming convention based on setting
+    settingService.getById(23, function(response) {
+        bc.nameString = response.settingName;
+    }, function() {
+        bc.nameString = "$c ($m/$d)"; //This is used in case setting not found
+        bc.showToast("Batch name default not found");
+    });
+
+    // calculates the percentage to which a trainer's skills correspond
+    // to the batch's curriculum.
+    bc.calcTrainerSkillRatio = function(trainer) {
+        var cur = bc.selectedSkills;
+
+        if (angular.isUndefined(cur) || cur === null) {
+            return 0;
+        } else if (cur.length == 0) {
+            return 100;
+        }
+
+        var matches = 0;
+        var total = 0;
+
+        for (var i = 0; i < cur.length; i += 1) {
+            for (var j = 0; j < trainer.skills.length; j += 1) {
+                if (cur[i] == (trainer.skills[j] ? trainer.skills[j].skillId : -1)) {
+                    matches++;
+                    break;
+                }
+            }
+            total++;
+        }
+
+        if (total > 0) {
+            return Math.floor((matches / total) * 100);
+        }
+
+        return 100;
+    };
 
     // Select end date based on start date
     bc.selectEndDate = function() {
@@ -317,102 +317,104 @@ var assignforce = angular.module("batchApp");
             bc.trainerSkillRatios[t.trainerId] = bc.calcTrainerSkillRatio(t);
         });
     };
-    
+
     // Disables all but Mondays in start datepickers
     bc.enableMondays = function(date) {
         return date.getDay() == 1;
     };
 
-	// Disables all but Fridays in start datepickers
-	bc.enableFridays = function(date) {
-		return date.getDay() == 5;
-	};
+    // Disables all but Fridays in start datepickers
+    bc.enableFridays = function(date) {
+        return date.getDay() == 5;
+    };
 
-	// Saves/updates batch
-	bc.saveBatch = function(isValid) {
-		if (isValid) {
-			switch (bc.state) {
-			case "create":
-				batchService.create(bc.batch, function() {
-					bc.showToast("Batch saved.");
-					bc.saveUnavailabilities();
-				}, function() {
-					bc.showToast("Failed to save batch.");
-				});
-				
-				break;
+    // Saves/updates batch
+    bc.saveBatch = function(isValid) {
+        if (isValid) {
+            switch (bc.state) {
+                case "create":
+                    batchService.create(bc.batch, function() {
+                        bc.showToast("Batch saved.");
+                        bc.saveUnavailabilities();
+                    }, function() {
+                        bc.showToast("Failed to save batch.");
+                    });
 
-			case "edit":
-				batchService.update(bc.batch, function() {
-					bc.showToast("Batch updated.");
-					bc.saveUnavailabilities();
-				}, function() {
-					bc.showToast("Failed to update batch.");
-				});
-				break;
+                    break;
 
-			case "clone":
-				bc.batch.id = undefined;
-				batchService.create(bc.batch, function() {
-					bc.showToast("Batch cloned.");
-					bc.saveUnavailabilities();
-				}, function() {
-					bc.showToast("Failed to clone batch.");
-				});
-				break;
+                case "edit":
+                    batchService.update(bc.batch, function() {
+                        bc.showToast("Batch updated.");
+                        bc.saveUnavailabilities();
+                    }, function() {
+                        bc.showToast("Failed to update batch.");
+                    });
+                    break;
 
-			default:
-				break;
-			}
-		}
-	}
+                case "clone":
+                    bc.batch.id = undefined;
+                    batchService.create(bc.batch, function() {
+                        bc.showToast("Batch cloned.");
+                        bc.saveUnavailabilities();
+                    }, function() {
+                        bc.showToast("Failed to clone batch.");
+                    });
+                    break;
 
-	// Saves room and trainer unavailabilities based on batch start and end dates
-	bc.saveUnavailabilities = function() {
-		bc.unavailability = {
-				startDate : new Date(bc.batch.startDate),
-				endDate : new Date(bc.batch.endDate)
-			};
-		//****Do we already have room or need to get one here?****\\
-		// Gets the room
-		roomService.getById(bc.batch.room.roomID, function(room) {
-			// Adds unavailability to room
-			room.unavailabilities.push(bc.unavailability);
-			// Persists unavailability to room
-			roomService.update(room, function() {
-				// Gets the setting for days after batch end
-				// for which a trainer is unavailable
-				settingService.getById(1, function(response) {
-					//  Updates unavailability going into trainer
-					bc.unavailability.endDate.setDate(bc.unavailability.endDate.getDate() + response.settingValue);
-					bc.batch.trainer.unavailabilities.push(bc.unavailability);
-					//  Persists unavailability to trainer
-					trainerService.update(bc.batch.trainer, function() {
-						bc.repull();
-					}, function() {
-						
-					});
-				}, function() {
-					bc.showToast("Trainer unavailability addition not found.");
-				});
-				// Updates everything on-screen with newly persisted information.				
-			}, function() {});
-		});
-	}
-	
-	// Filters buildings based on selected location
+                default:
+                    break;
+            }
+        }
+    }
+
+    // Saves room and trainer unavailabilities based on batch start and end dates
+    bc.saveUnavailabilities = function() {
+        bc.unavailability = {
+            startDate: new Date(bc.batch.startDate),
+            endDate: new Date(bc.batch.endDate)
+        };
+        //****Do we already have room or need to get one here?****\\
+        // Gets the room
+        roomService.getById(bc.batch.room.roomID, function(room) {
+            // Adds unavailability to room
+            room.unavailabilities.push(bc.unavailability);
+            // Persists unavailability to room
+            roomService.update(room, function() {
+                // Gets the setting for days after batch end
+                // for which a trainer is unavailable
+                settingService.getById(1, function(response) {
+                    //  Updates unavailability going into trainer
+                    bc.unavailability.endDate.setDate(bc.unavailability.endDate.getDate() + response.settingValue);
+                    bc.batch.trainer.unavailabilities.push(bc.unavailability);
+                    //  Persists unavailability to trainer
+                    trainerService.update(bc.batch.trainer, function() {
+                        bc.repull();
+                    }, function() {
+
+                    });
+                }, function() {
+                    bc.showToast("Trainer unavailability addition not found.");
+                });
+                // Updates everything on-screen with newly persisted information.
+            }, function() {});
+        });
+    }
+
+    // Filters buildings based on selected location
     bc.filterBuildings = function(locationID) {
         if (locationID != undefined) {
             return bc.locations.filter(function(location) {
-                return location.id === locationID })[0].buildings;
+                return location.id === locationID
+            })[0].buildings;
         }
     };
-    
-	// Filters rooms based on selected building
-	bc.filterRooms = function(buildingID) {
+
+    // Filters rooms based on selected building
+    bc.filterRooms = function(buildingID) {
         if (buildingID != undefined) {
             return bc.buildings.filter(function(building) {
-                return building.id === buildingID })[0].rooms;
+                return building.id === buildingID
+            })[0].rooms;
         } else {
             return [];
         }
@@ -513,7 +515,7 @@ var assignforce = angular.module("batchApp");
     bc.exists = function(batch) {
         return bc.batchesSelected.indexOf(batch) > -1;
     };
-    
+
     // Adds/removes batch from batchesSelected list
     bc.toggle = function(batch) {
 
@@ -529,22 +531,22 @@ var assignforce = angular.module("batchApp");
     bc.repull = function() {
         bc.batchesSelected = [];
         bc.changeState("create", null);
-        
+
         batchService.getAll(function(response) {
             bc.batches = response;
             $scope.$broadcast("repullTimeline");
         }, function() {
             bc.showToast("Could not fetch batches.");
         });
-        roomService.getAll(function(response){
-        	bc.rooms = response;
+        roomService.getAll(function(response) {
+            bc.rooms = response;
         }, function() {
-        	bc.showToast("Could not fetch rooms.");
+            bc.showToast("Could not fetch rooms.");
         });
-        trainerService.getAll(function(response){
-        	bc.trainers = response;
+        trainerService.getAll(function(response) {
+            bc.trainers = response;
         }, function() {
-        	bc.showToast("Could not fetch trainers.");
+            bc.showToast("Could not fetch trainers.");
         });
     };
 
@@ -561,18 +563,18 @@ var assignforce = angular.module("batchApp");
         bc.updateTrainersAndRooms(bc.trainers, bc.filterRooms(bc.batch.building), bc.batch.startDate, bc.batch.endDate);
         $window.scrollTo(0, 0);
     };
-    
-    bc.deleteUnavailabilities = function(){
-    	bc.subtractUnavailabilities();
-    	roomService.update(bc.batch.room, function(){}, function(){});
-    	trainerService.update(bc.batch.trainer, function(){bc.repull();}, function(){});
+
+    bc.deleteUnavailabilities = function() {
+        bc.subtractUnavailabilities();
+        roomService.update(bc.batch.room, function() {}, function() {});
+        trainerService.update(bc.batch.trainer, function() { bc.repull(); }, function() {});
     }
 
     // Delete single batch
     bc.delete = function(batch) {
         batchService.delete(batch, function() {
-        	bc.batch = batch;
-        	bc.deleteUnavailabilities();
+            bc.batch = batch;
+            bc.deleteUnavailabilities();
             bc.showToast("Batch deleted.");
         }, function() {
             bc.showToast("Failed to delete batch.");
@@ -597,9 +599,9 @@ var assignforce = angular.module("batchApp");
 
         var first = delList.shift();
         batchService.delete(first, function() {
-        	bc.batch = first;
-        	bc.subtractUnavailabilities();
-        	bc.saveUnavailabilities(); // Repull is in here, probably needs to come out
+            bc.batch = first;
+            bc.subtractUnavailabilities();
+            bc.saveUnavailabilities(); // Repull is in here, probably needs to come out
             return bc.deleteMultipleHelper(delList);
         }, function() {
             bc.showToast("Failed to delete batches.");
@@ -612,7 +614,7 @@ var assignforce = angular.module("batchApp");
     bc.batchOrder = "startDate";
 
     bc.batch = batchService.getEmptyBatch();
-    
+
     bc.batchesSelected = [];
 
     bc.selectedSkills = [];
@@ -645,7 +647,7 @@ var assignforce = angular.module("batchApp");
 
     buildingService.getAll(function(response) {
         bc.buildings = response;
-        bc.batch.building = bc.findHQBuilding;   
+        bc.batch.building = bc.findHQBuilding;
     }, function() {
         bc.showToast("Could not fetch buildings.");
     });
@@ -655,7 +657,7 @@ var assignforce = angular.module("batchApp");
     }, function() {
         bc.showToast("Could not fetch rooms.");
     });
-    
+
     batchService.getAll(function(response) {
         bc.batches = response;
     }, function() {
