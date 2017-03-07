@@ -5,6 +5,8 @@ var assignforce = angular.module("batchApp");
     var bc = this;
     bc.trainerSkillRatios = [];
     bc.oldBatchEndDate; //used for start date validation - can probably go elsewhere
+    bc.oldRoom; // Needed to update room in db when editing a batch and room changes
+    bc.oldTrainer; // Needed to update room in db when editing a batch and trainer changes
 
     //*****Is this being used for anything?*****\\
     bc.convertUnavailability = function(incoming) {
@@ -19,7 +21,31 @@ var assignforce = angular.module("batchApp");
 	};
 
 	/*comment out*/
-
+	
+	console.logRoom = function(item){		
+		console.log("Room(s):");
+		console.log(item);
+	}
+	console.logBuilding = function(item){		
+		console.log("Building(s):");
+		console.log(item);
+	}
+	console.logLocation = function(item){		
+		console.log("Location(s):");
+		console.log(item);
+	}
+	console.logTrainer = function(item){		
+		console.log("Trainer(s):");
+		console.log(item);
+	}
+	console.logUna = function(item){		
+		console.log("Unavailability(ies):");
+		console.log(item);
+	}
+	console.logBatch = function(item){		
+		console.log("Batch(es):");
+		console.log(item);
+	}	
 	
 	// Changes form state and populates many variables
 	bc.changeState = function(newState, incomingBatch) {
@@ -28,7 +54,8 @@ var assignforce = angular.module("batchApp");
 			bc.batch = batchService.getEmptyBatch();
 			bc.batch.location = bc.findHQ;
 			bc.batch.building = bc.findHQBuilding;
-		} else {
+		} else if (newState == "edit"){
+			// Needs optimization
 
 			bc.batch.id = (bc.state == "edit") ? incomingBatch.id : undefined;
 
@@ -58,10 +85,6 @@ var assignforce = angular.module("batchApp");
 			// Getting trainer object
 			bc.batch.trainer = (incomingBatch.trainer) ? incomingBatch.trainer : undefined;
 			
-			
-			// Resetting to numbers to populate fields
-			//bc.batch.trainer = (incomingBatch.trainer) ? incomingBatch.trainer.trainerId : undefined;
-			//bc.batch.room = (incomingBatch.room) ? incomingBatch.room.roomID : undefined;
 			var position = -1;
 	        if(incomingBatch.trainer){
 	        	bc.trainers.forEach(function(trainer){
@@ -90,9 +113,46 @@ var assignforce = angular.module("batchApp");
 	        bc.subtractUnavailabilities();
 	        bc.trainers.push(bc.batch.trainer);
 	        tempBuilding.rooms.push(bc.batch.room);
+	        
+	        if (bc.state == "edit"){
+				bc.oldRoom = bc.batch.room;
+				bc.oldTrainer = bc.batch.trainer;
+			}
+	        
 	        bc.batch.room = bc.batch.room.roomID;
 	        bc.updateTrainersAndRooms(bc.trainers, bc.filterRooms(bc.batch.building), bc.batch.startDate, bc.batch.endDate);
-			bc.batch.trainer = bc.batch.trainer.trainerId;
+			bc.batch.trainer = bc.batch.trainer.trainerId;			
+			
+			console.logRoom(bc.oldRoom);
+			console.logTrainer(bc.oldTrainer);
+			console.log("WAS IT JUST IN THE WRONG SPOT?");
+			
+	        bc.selectedSkills = [];
+			if (incomingBatch.skills) {
+				for (var i = 0; i < incomingBatch.skills.length; i += 1) {
+					bc.selectedSkills.push(incomingBatch.skills[i].skillId);
+				}
+				bc.oldBatchEndDate = new Date(bc.batch.endDate);
+				bc.updateWeeks();
+			}
+		} else { // If Clone
+
+			bc.batch.name = incomingBatch.name;
+			bc.batch.startDate = (incomingBatch.startDate) ? new Date(incomingBatch.startDate) : undefined;
+			bc.batch.endDate = (incomingBatch.endDate) ? new Date(incomingBatch.endDate) : undefined;
+			
+			// Many values below need to be saved as numbers here, so that the corresponding
+			// fields are actually populated
+			bc.batch.curriculum = (incomingBatch.curriculum) ? incomingBatch.curriculum.currId : undefined;
+			bc.batch.focus = (incomingBatch.focus) ? incomingBatch.focus.currId : undefined;
+			bc.batch.cotrainer = (incomingBatch.cotrainer) ? incomingBatch.cotrainer.trainerId : undefined;
+			
+			// Resets these objects in case they were selected prior to choosing clone
+			bc.batch.trainer = undefined;
+			bc.batch.room = undefined;
+			
+	        bc.updateTrainersAndRooms(bc.trainers, bc.filterRooms(bc.batch.building), bc.batch.startDate, bc.batch.endDate);
+
 	        bc.selectedSkills = [];
 			if (incomingBatch.skills) {
 				for (var i = 0; i < incomingBatch.skills.length; i += 1) {
@@ -176,6 +236,10 @@ var assignforce = angular.module("batchApp");
 	bc.updateTrainersAndRooms = function(trainers, rooms, batchStart, batchEnd) {
 		bc.availableRooms = $filter('availableSelection')(rooms, batchStart, batchEnd);
 		bc.availableTrainers = $filter('availableSelection')(trainers, batchStart, batchEnd);
+	};
+	
+	bc.updateRooms = function(rooms, batchStart, batchEnd){
+		bc.availableRooms = $filter('availableSelection')(rooms, batchStart, batchEnd);
 	};
 
 	// Updates list of selected skills based on curriculum and focus.
@@ -373,6 +437,30 @@ var assignforce = angular.module("batchApp");
 				startDate : new Date(bc.batch.startDate),
 				endDate : new Date(bc.batch.endDate)
 			};
+		
+		// If was editing, bc.oldRoom is the original room, and its old
+		// unavailability has disappeared and needs to be saved again
+		// **  But do we need to get by id or use the room
+		
+		// Room is an object, trainer is a resource.  Does that matter?
+		console.log("I think it was");
+		console.logRoom(bc.oldRoom);
+		console.logTrainer(bc.oldTrainer);
+		
+		if (bc.oldRoom.roomID && bc.oldRoom.roomID != bc.batch.room.roomID){
+			roomService.update(bc.oldRoom, function(){
+					console.logRoom(bc.oldRoom);
+					console.log("room updated");
+			}, function(){});
+		}
+		
+		if (bc.oldTrainer.trainerId && bc.oldTrainer.trainerId != bc.batch.trainer.trainerId){
+			trainerService.update(bc.oldTrainer, function(){
+					console.logTrainer(bc.oldTrainer);
+					console.log("trainer updated");
+			}, function(){});
+		}
+		
 		//****Do we already have room or need to get one here?****\\
 		// Gets the room
 		roomService.getById(bc.batch.room.roomID, function(room) {
@@ -558,7 +646,7 @@ var assignforce = angular.module("batchApp");
     // Clone batch
     bc.clone = function(batch) {
         bc.changeState("clone", batch);
-        bc.updateTrainersAndRooms(bc.trainers, bc.filterRooms(bc.batch.building), bc.batch.startDate, bc.batch.endDate);
+        //bc.updateTrainersAndRooms(bc.trainers, bc.filterRooms(bc.batch.building), bc.batch.startDate, bc.batch.endDate);
         $window.scrollTo(0, 0);
     };
     

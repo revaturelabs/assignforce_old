@@ -42,10 +42,18 @@ assignforce.filter("availableSelection", function() {
 							}
 						}
 						
-						//If overlapped dates are 10 or greater, item is unavailable for this batch.
+						//If overlapped dates are 10 or greater, trainer is unavailable for this batch.
 						//This is a predetermined number set by the client, NOT a setting
 						//(although a setting may be considered for this)
-						if (dayCount == 10) {
+						
+						// If room is a building, unavailable if there are 5 days of overlap.
+						// Hard-coded at the moment.
+						if (item.building){
+							if (dayCount == 5){
+								break;
+							}
+						}
+						else if (dayCount == 10) {
 							break;
 						}
 					}
