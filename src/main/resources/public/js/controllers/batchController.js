@@ -79,9 +79,9 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
                             bc.batch.room = room;
                             position = building.rooms.indexOf(room);
                         }
-                    }, function() {});
+                    });
 
-                }, function() {});
+                });
                 tempBuilding.rooms.splice(position, 1);
             }
             bc.subtractUnavailabilities();
@@ -374,13 +374,15 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
                     trainerService.update(bc.batch.trainer, function() {
                         bc.repull();
                     }, function() {
-
+                    	bc.showToast("Failed to update trainer.");
                     });
                 }, function() {
                     bc.showToast("Trainer unavailability addition not found.");
                 });
                 // Updates everything on-screen with newly persisted information.
-            }, function() {});
+            }, function() {
+            	bc.showToast("Failed to update room.");
+            });
         });
     }
 
