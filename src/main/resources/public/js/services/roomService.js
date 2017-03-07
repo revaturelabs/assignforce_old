@@ -30,7 +30,6 @@ app.service( "roomService", function($resource, $http) {
     };
 
     rs.delete = function(room, success, error){
-        room.$remove(success, error);
+    	room.$remove(success, error);
     };
-
 });
