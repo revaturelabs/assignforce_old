@@ -49,7 +49,9 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
                 buildingService.getById(bc.batch.building, function(response) {
                     // Setting both to numbers, room is still an object
                     bc.batch.location = response.location;
-                }, function() {});
+                }, function(error) {
+                	bc.showToast("Failed to fatch batch's building.");
+                });
             }
 
             // Getting trainer object
@@ -57,8 +59,6 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 
 
             // Resetting to numbers to populate fields
-            //bc.batch.trainer = (incomingBatch.trainer) ? incomingBatch.trainer.trainerId : undefined;
-            //bc.batch.room = (incomingBatch.room) ? incomingBatch.room.roomID : undefined;
             var position = -1;
             if (incomingBatch.trainer) {
                 bc.trainers.forEach(function(trainer) {
@@ -241,7 +241,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 
         bc.batch.skills = [];
 
-        for (var i = 0; i < bc.selectedSkills.length; i += 1) {
+        for (i = 0; i < bc.selectedSkills.length; i += 1) {
             bc.batch.skills.push(bc.skills.find(findFunction))
         }
     }
