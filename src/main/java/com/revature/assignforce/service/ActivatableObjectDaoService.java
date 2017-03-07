@@ -5,11 +5,8 @@ import com.revature.assignforce.domain.dao.ActivatableObjectRepository;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.List;
 
 /**
  * Created by August Duet on 11/29/2016.
@@ -25,15 +22,13 @@ public class ActivatableObjectDaoService<T extends Activatable, ID extends Seria
     }
 
     @Override
-    //public List<T> getAllItems(){ return repo.findByActiveIsTrue();}
-
     public void deleteItem(ID id){
 
         try{
             repo.delete(id);
         }catch(Exception ex){
         	Logger.getRootLogger().error(ex);
-            Activatable item = (Activatable) repo.findOne(id);
+            Activatable item = repo.findOne(id);
             item.setActive(false);
 
             T saveItem = (T)item;

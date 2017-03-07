@@ -9,6 +9,10 @@ app.service( "locationService", function($resource) {
         return new Location();
     };
 
+    ls.getClone = function (loc) {
+        return new Location(loc);
+    };
+
     ls.create = function(location, success, error){
         location.$save(success, error);
     };
@@ -17,12 +21,12 @@ app.service( "locationService", function($resource) {
         Location.query(success, error);
     };
 
-    ls.getById = function(id, success){
+    ls.getById = function(id, success, error){
         Location.get({id: id}, success, error);
     };
 
     ls.update = function(location, success, error){
-        location.$update(success, error);
+    	Location.update(location, success, error);
     };
 
     //I am not really changing ls

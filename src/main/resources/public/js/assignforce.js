@@ -22,6 +22,10 @@
 					templateUrl : "html/views/batches.html",
 					controller  : "batchCtrl as bCtrl"
 				})
+				.when("/curriculum", {
+					templateUrl	: "html/views/curricula.html",
+					controller	: "curriculaCtrl as cCtrl"
+				})
 				.when("/trainers", {
 					templateUrl : "html/views/trainers.html",
 					controller  : "trainerCtrl as tCtrl"
@@ -34,31 +38,50 @@
 					templateUrl : "html/views/reports.html",
 					controller  : "reportCtrl as rCtrl"
 				})
+				.when("/profile", {
+					templateUrl : "html/views/profile.html",
+					controller  : "profileCtrl as pCtrl"
+				})
+				.when("/profile/:id", {
+					templateUrl	: "html/views/profile.html",
+					controller	: "profileCtrl as pCtrl"
+				})
+				.when("/settings", {
+					templateUrl : "html/views/settings.html",
+					controller  : "settingsCtrl as sCtrl"
+				})
 				.otherwise({"redirectTo": "/home"});
 			
 			$locationProvider.html5Mode(true);
 		});
 
           // theme config
-        assignforce.config( function($mdThemingProvider) {
+    assignforce.config( function($mdThemingProvider) {
 
-            var revOrangeMap = $mdThemingProvider.extendPalette("deep-orange", {
-                "800": "#D9510D",
-                "500": "#F26925"
-            });
+        var revOrangeMap = $mdThemingProvider.extendPalette("deep-orange", {
+            // "100": "#EF5407",
+            // "100": "#597482",
+            "100": "rgba(89, 116, 130, 0.2)",
+            "A200": "#FF7A1C"
 
-            var revBlueMap = $mdThemingProvider.extendPalette("blue-grey", {
-                "A200": "#72A4C2",
-                "100" : "#C9DCE8"
-            });
-
-            $mdThemingProvider.definePalette("revOrange", revOrangeMap);
-            $mdThemingProvider.definePalette("revBlue", revBlueMap);
-                
-            $mdThemingProvider.theme("default")
-                .primaryPalette("revOrange")
-                .accentPalette("revBlue");
-                // .primaryPalette("indigo")
-                // .accentPalette("pink");
         });
+
+        var revBlueMap = $mdThemingProvider.extendPalette("blue-grey", {
+            // "A200": "#374C61",
+            // "100" : "#C9DCE8"
+            "500": "#37474F",
+			"800": "#597482"
+            // "800" : "#607D8B"
+        });
+
+        $mdThemingProvider.definePalette("revOrange", revOrangeMap);
+        $mdThemingProvider.definePalette("revBlue", revBlueMap);
+
+        $mdThemingProvider.theme("default")
+        // .primaryPalette("revOrange")
+        // .accentPalette("revBlue")
+            .primaryPalette("revBlue")
+            .accentPalette("revOrange");
+    });
+
 

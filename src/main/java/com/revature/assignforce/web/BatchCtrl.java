@@ -19,6 +19,7 @@ import com.revature.assignforce.domain.BatchStatusLookup;
 import com.revature.assignforce.domain.Curriculum;
 import com.revature.assignforce.domain.Location;
 import com.revature.assignforce.domain.Room;
+import com.revature.assignforce.domain.Skill;
 import com.revature.assignforce.domain.Trainer;
 import com.revature.assignforce.domain.dto.BatchDTO;
 import com.revature.assignforce.domain.dto.ResponseErrorDTO;
@@ -52,15 +53,16 @@ public class BatchCtrl {
 		int ID = in.getID();
 		String name = in.getName();
 		Curriculum curriculum = currService.getOneItem(in.getCurriculum());
-		Location location = locationService.getOneItem(in.getLocation());
+		Curriculum focus = currService.getOneItem(in.getFocus());
 		Room room = roomService.getOneItem(in.getRoom());
 		Trainer trainer = trainerService.getOneItem(in.getTrainer());
 		Trainer cotrainer = trainerService.getOneItem(in.getCotrainer());
 		Timestamp startDate = in.getStartDate();
 		Timestamp endDate = in.getEndDate();
 		BatchStatusLookup status = new BatchStatusLookup(1, "Scheduled");
+		List<Skill> skills = in.getSkills();
 		
-		Batch out = new Batch( ID, name, curriculum, location, room, trainer, cotrainer, startDate, endDate, status );
+		Batch out = new Batch( ID, name, curriculum, room, trainer, cotrainer, startDate, endDate, status, skills, focus);
 		out = batchService.saveItem( out );
 
 		if (out == null) {
@@ -83,31 +85,6 @@ public class BatchCtrl {
 		}
 	}
 	
-	  // UPDATE
-		// updating an existing batch object with information passed from batch data transfer object
-/*	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object updateBatch( @RequestBody BatchDTO in ) {
-	
-		int ID = in.getBatchId();
-		String name = in.getName();
-		Curriculum curriculum = currService.getOneItem(in.getCurriculum());
-		Location location = locationService.getOneItem(in.getLocation());
-		Room room = roomService.getOneItem(in.getRoom());
-		Trainer trainer = trainerService.getOneItem(in.getTrainer());
-		Trainer cotrainer = trainerService.getOneItem(in.getCotrainer());
-		Timestamp startDate = in.getStartDate();
-		Timestamp endDate = in.getEndDate();
-		BatchStatusLookup status = new BatchStatusLookup(1, "Scheduled");
-		
-		Batch out = new Batch( ID, name, curriculum, location, room, trainer, cotrainer, startDate, endDate, status );
-		out = batchService.saveItem( out );
-		if (out == null) {
-			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Batch failed to update."), HttpStatus.NOT_MODIFIED);
-		} else {
-			return new ResponseEntity<Batch>(out, HttpStatus.OK);
-		}
-	}*/
-	
 	  // DELETE
 		// delete batch with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -125,7 +102,7 @@ public class BatchCtrl {
 		List<Batch> all = batchService.getAllItems();
 		if (all == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Fetching all batches failed."), HttpStatus.NOT_FOUND);
-		} else if (all.isEmpty() == true) {
+		} else if (all.isEmpty()) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No batches available."), HttpStatus.NOT_FOUND);
 		} else {
 			return new ResponseEntity< List<Batch> >(all, HttpStatus.OK);

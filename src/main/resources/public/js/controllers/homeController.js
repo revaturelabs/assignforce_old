@@ -1,8 +1,7 @@
 
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "homeCtrl", function( $scope, $filter, batchService, trainerService, locationService ) {
-        //console.log("Beginning overview controller.");
+    assignforce.controller( "homeCtrl", function( $scope, $filter, batchService, trainerService, locationService, buildingService ) {
         var hc = this;
 
           // functions
@@ -93,6 +92,7 @@
                 "Trainer",
                 "Cotrainer",
                 "Location",
+                "Building",
                 "Room",
                 "Start date",
                 "End date"
@@ -102,11 +102,12 @@
                 var curriculum = ( batch.curriculum ) ? batch.curriculum.name                                      : "";
                 var trainer    = ( batch.trainer    ) ? batch.trainer.firstName + " " + batch.trainer.lastName     : "";
                 var cotrainer  = ( batch.cotrainer  ) ? batch.cotrainer.firstName + " " + batch.cotrainer.lastName : "";
-                var location   = ( batch.location   ) ? batch.location.name                                        : "";
+                var location   = ( batch.room       ) ? batch.room.building.location.name				           : "";
+                var building   = ( batch.room       ) ? batch.room.building.name								   : "";
                 var room       = ( batch.room       ) ? batch.room.roomName                                        : "";
                 var startDate  = ( batch.startDate  ) ? $filter( "date" )( batch.startDate, "MM/dd/yyyy" )         : "";
                 var endDate    = ( batch.endDate    ) ? $filter( "date" )( batch.endDate, "MM/dd/yyyy" )           : "";
-                formatted.push( [ name, curriculum, trainer, cotrainer, location, room, startDate, endDate ] );
+                formatted.push( [ name, curriculum, trainer, cotrainer, location, building, room, startDate, endDate ] );
             });
             
             return formatted;
@@ -133,25 +134,24 @@
           // page initialization
             // data gathering
         batchService.getAll( function(response) {
-            //console.log("  (HC)  Retrieving all batches.");
             hc.batches = response;
-        }, function(error) {
-            //console.log("  (HC)  Failed to retrieve all batches with error", error.data.message);
+        }, function() {
             hc.showToast("Could not fetch batches.");
         });
 
         trainerService.getAll( function(response) {
-            //console.log("  (HC)  Retrieving all trainers.");
             hc.trainers = response;
-        }, function(error) {
-            //console.log("  (HC)  Failed to retrieve all trainers with error", error.data.message);
+        }, function() {
             hc.showToast("Could not fetch trainers.");
         });
         locationService.getAll( function(response) {
-            //console.log("  (HC)  Retrieving all locations.");
             hc.locations = response;
-        }, function(error) {
-            //console.log("  (HC)  Failed to retrieve all location with error", error.data.message);
+        }, function() {
             hc.showToast("Could not fetch locations.");
+        });
+        buildingService.getAll( function(response) {
+            hc.buildings = response;
+        }, function() {
+            hc.showToast("Could not fetch buildings.");
         });
     });

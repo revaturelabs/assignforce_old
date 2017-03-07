@@ -1,249 +1,336 @@
 
- var assignforce = angular.module( "batchApp" );
+var assignforce = angular.module("batchApp");
 
-    assignforce.controller( "locationCtrl", function( $scope, $filter, $mdDialog, locationService ) {
-        //console.log("Beginning location controller.");
-        var lc = this;
+assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, locationService, buildingService, roomService) {
+	var lc = this;
 
-          // functions
-            // calls showToast method of aCtrl
-        lc.showToast = function( message ) {
-            $scope.$parent.aCtrl.showToast( message );
-        };
+	// functions
+	// calls showToast method of aCtrl
+	lc.showToast = function(message) {
+		$scope.$parent.aCtrl.showToast(message);
+	};
 
-            // adds location
-        lc.addLocation = function() {
-            $mdDialog.show({
-                templateUrl: "html/templates/locationTemplate.html",
-                controller: "locationDialogCtrl",
-                controllerAs: "ldCtrl",
-                locals: { 
-                    location : locationService.getEmptyLocation(),
-                    state    : "create" },
-                bindToController: true,
-                clickOutsideToClose: true
-            }).then( function() {
-                lc.showToast("Location created.");
-                lc.repull();
-            }, function(){
-                lc.showToast("Failed to create location.");
-            });
-        };
+	// opens building list for locations
+	lc.openLocation = function(location) {
+		if ($filter("activeItem")(location.buildings).length > 0) {
+			var id = "#loc" + location.id;
+			$(id).slideToggle();
+		}
+	};
+	// opens room list for buildings
+	lc.openBuilding = function(building) {
+		if ($filter("activeItem")(building.rooms).length > 0) {
+			var id = "#bldg" + building.id;
+			$(id).slideToggle();
+		}
+	};
 
-            // opens room list for location
-        lc.openLocation = function(location) {
-            if ( $filter("activeItem")(location.rooms).length > 0 ) {
-                var id = "#loc" + location.id;
-                $(id).slideToggle( lc.removeRooms(location) );
-            }
-        };
+	// adds location
+	lc.addLocation = function() {
+		$mdDialog.show({
+			templateUrl : "html/templates/dialogs/locationDialog.html",
+			controller : "locationDialogCtrl", //locationDialogController.js
+			controllerAs : "ldCtrl",
+			locals : {
+				location : locationService.getEmptyLocation(),
+                title    : "Creating a Location",
+				state : "create"
+			},
+			bindToController : true,
+			clickOutsideToClose : true
+		}).then(function() {
+			lc.showToast("Location created.");
+			lc.repull();
+		}, function() {
+			lc.showToast("Failed to create location.");
+		});
+	};
 
-            // add room to location
-        lc.addRoom = function() {
-            if (lc.selectedList.length > 1) {
-                lc.showToast("Please select only a location.");
-            } 
-              // indicates that the list item is actually a room and not a location
-            else if (!Array.isArray(lc.selectedList[0].rooms)) {
-                lc.showToast("Please select a location.");
-            } else {
-                $mdDialog.show({
-                    templateUrl: "html/templates/roomTemplate.html",
-                    controller: "roomDialogCtrl",
-                    controllerAs: "ldCtrl",
-                    locals: { 
-                        location : lc.selectedList[0],
-                        room     : { roomName: "" },
-                        state    : "create" },
-                    bindToController: true,
-                    clickOutsideToClose: true
-                }).then( function() {
-                    lc.showToast("Room updated.");
-                    lc.repull();
-                }, function(){
-                    lc.showToast("Failed to update room.");
-                });
-            }
-        };
+	// add building
+	lc.addBuilding = function() {
+		if (lc.selectedList.length > 1) {
+			lc.showToast("Please select only one location.");
+		}
+		// indicates that the list item is actually a location and not something
+		else if (lc.selectedList.length == 0) {
+			lc.showToast("Please select a location.");
+		} else if(lc.selectedList[0].buildings == undefined) {
+            lc.showToast("Buildings can only be added to locations.");
+        } else {
+			$mdDialog.show({
+				templateUrl : "html/templates/dialogs/buildingDialog.html",
+				controller : "bldgDialogCtrl", //bldgDialogController.js
+				controllerAs : "bldgCtrl",
+				locals : {
+					location : lc.selectedList[0],
+					building : buildingService.getEmptyBuilding(),
+                    title    : "Creating a Building",
+					state : "create"
+				},
+				bindToController : true,
+				clickOutsideToClose : true
+			}).then(function() {
+				lc.showToast("Building added.");
+				lc.repull();
+			}, function() {
+				lc.showToast("Failed to add building.");
+			});
+		}
+	};
 
-            // removes rooms from selectedList on location menu close
-        lc.removeRooms = function( location ) {
-            if (location.rooms.length > 0) {
-                location.rooms.forEach( function(room) {
-                    var idx = lc.selectedList.indexOf(room);
-                    if (idx > -1) {
-                        lc.selectedList.splice( idx, 1 );
-                    }
-                });
-            }
-        };
+	// add room to location
+	lc.addRoom = function() {
+		if (lc.selectedList.length > 1) {
+			lc.showToast("Please select only one building.");
+		}
+		// indicates that the list item is actually a building and not a location
+		else if (lc.selectedList.length == 0) {
+			lc.showToast("Please select a building.");
+		} else if (lc.selectedList[0].rooms == undefined) {
+            lc.showToast("Rooms can only be added to Buildings.")
+		} else {
+			$mdDialog.show({
+				templateUrl : "html/templates/dialogs/roomDialog.html",
+				controller : "roomDialogCtrl", //roomDialogController.js
+				controllerAs : "rdCtrl",
+				locals : {
+					building : lc.selectedList[0], //just a building object
+                    room     : roomService.getEmptyRoom(),
+                    title    : "Creating a Room",
+					state    : "create"
+				},
+				bindToController : true,
+				clickOutsideToClose : true
+			}).then(function() {
+				lc.showToast("Room added.");
+				lc.repull();
+			}, function() {
+				lc.showToast("Failed to add room.");
+			});
+		}
+	};
 
-            // edit location
-        lc.editSelected = function() {
-            
-            if (lc.selectedList.length > 1) {
-                lc.showToast("Please select only one item.");
-            } else if (lc.selectedList.length == 0) {
-                lc.showToast("Please select an item.");
-            } else {
-                  // edit location
-                if (Array.isArray(lc.selectedList[0].rooms)) {
-                    $mdDialog.show({
-                        templateUrl: "html/templates/locationTemplate.html",
-                        controller: "locationDialogCtrl",
-                        controllerAs: "ldCtrl",
-                        locals: { 
-                            location : lc.selectedList[0],
-                            state    : "edit" },
-                        bindToController: true,
-                        clickOutsideToClose: true
-                    }).then( function() {
-                        lc.showToast("Location updated.");
-                        lc.repull();
-                    }, function(){
-                        lc.showToast("Failed to update location.");
-                    });
-                } 
-                  // edit room
-                else {
-                    $mdDialog.show({
-                        templateUrl: "html/templates/roomTemplate.html",
-                        controller: "roomDialogCtrl",
-                        controllerAs: "ldCtrl",
-                        locals: { 
-                            room  : lc.selectedList[0],
-                            state : "edit" },
-                        bindToController: true,
-                        clickOutsideToClose: true
-                    }).then( function() {
-                        lc.showToast("Room updated.");
-                        lc.repull();
-                    }, function(){
-                        lc.showToast("Failed to update room.");
-                    });
-                }
-            }
-        };
+	// removes buildings from selectedList on location menu close
+	lc.removeBuildings = function(location) {
+		if (location.buildings.length > 0) {
+			location.buildings.forEach(function(building) {
+				var idx = lc.selectedList.indexOf(building);
+				if (idx > -1) {
+					lc.selectedList.splice(idx, 1);
+				}
+			});
+		}
+	};
 
-            // delete location
-        lc.deleteSelected = function() {
+	// edit location
+	lc.editSelected = function() {
 
+		if (lc.selectedList.length > 1) {
+			lc.showToast("Please select only one item.");
+		} else if (lc.selectedList.length == 0) {
+			lc.showToast("Please select an item.");
+		} else {
+			// edit location
+			//if statement checks if the selected has a list of buildings (only locations gots those)
+			if (Array.isArray(lc.selectedList[0].buildings)) {
+				$mdDialog.show({
+					templateUrl : "html/templates/dialogs/locationDialog.html",
+					controller : "locationDialogCtrl",
+					controllerAs : "ldCtrl",
+					locals : {
+						location : lc.selectedList[0],
+                        title    : "Edit Location",
+						state : "edit"
+					},
+					bindToController : true,
+					clickOutsideToClose : true
+				}).then(function() {
+					lc.showToast("Location updated.");
+					lc.repull();
+				}, function() {
+					lc.showToast("Failed to update location.");
+				});
+			}
+			//Edit Building
+			else if(Array.isArray(lc.selectedList[0].rooms)){
+				$mdDialog.show({
+					templateUrl : "html/templates/dialogs/buildingDialog.html",
+					controller : "bldgDialogCtrl",
+					controllerAs : "bldgCtrl",
+					locals : {
+						building : lc.selectedList[0],
+                        title    : "Edit Building",
+						state : "edit"
+					},
+					bindToController : true,
+					clickOutsideToClose : true
+				}).then(function() {
+					lc.showToast("Building updated.");
+					lc.repull();
+				}, function() {
+					lc.showToast("Failed to update building.");
+				});
+			}
+			//Edit Room
+			else{
+				$mdDialog.show({
+					templateUrl : "html/templates/dialogs/roomDialog.html",
+					controller : "roomDialogCtrl",
+					controllerAs : "rdCtrl",
+					locals : {
+						room  : lc.selectedList[0],
+                        title : "Edit Room",
+						state : "edit"
+					},
+					bindToController : true,
+					clickOutsideToClose : true
+				}).then(function() {
+					lc.showToast("Room updated.");
+					lc.repull();
+				}, function() {
+					lc.showToast("Failed to update room.");
+				});
+			}
+		}
+	};
+
+	// delete Room/Building/Location
+	lc.deleteSelected = function() {
+        if (lc.selectedList.length == 0) {
+            lc.showToast("Please select an item.");
+        } else {
             var summary = lc.categorizeSelected();
-
             $mdDialog.show({
-                templateUrl: "html/templates/deleteTemplate.html",
-                controller: "deleteDialogCtrl",
+                templateUrl: "html/templates/dialogs/deleteDialog.html",
+                controller: "deleteDialogCtrl", //deleteDialogController.js
                 controllerAs: "dCtrl",
-                locals: { 
-                    list   : lc.selectedList,
+                locals: {
+                    location: lc.selectedList[0].location,
+                    list: lc.selectedList,
                     summary: summary
-                 },
+                },
                 bindToController: true,
                 clickOutsideToClose: true
-            }).then( function() {
-                lc.showToast( lc.formatMessage(summary) + " deleted.");
+            }).then(function () {
+                lc.showToast(lc.formatMessage(summary) + " inactivated.");
+                lc.showToast("Item inactivated.");
                 lc.repull();
-            }, function(){
-                lc.showToast("Failed to delete rooms/locations.");
+            }, function () {
+                lc.showToast("Failed to inactivate rooms/buildings/locations.");
             });
-        };
+        }
+	};
 
-            // formats toast message based on deletion summary
-        lc.formatMessage = function(summary){
+	// formats toast message based on deletion summary
+	lc.formatMessage = function(summary) {
 
-            var message = "";
-            if (summary.rooms == 1) {
-                message += "1 room";
-            } else if (summary.rooms > 1) {
-                message += summary.rooms + " rooms"; 
-            }
+		var message = "";
+		if (summary.rooms == 1) {
+			message += "1 room";
+		} else if (summary.rooms > 1) {
+			message += summary.rooms + " rooms";
+		}
+		
+		if(summary.buildings == 1) {
+			message += "1 building";
+		} else if (summary.buildings > 1){
+			message += summary.buildings + " buildings";
+		}
 
-            if (summary.locations == 1) {
-                if (summary.rooms > 0) {
-                    message += " and ";
-                }
-                message += "1 location";
-            } else if (summary.locations > 1) {
-                if (summary.rooms > 0) {
-                    message += " and ";
-                }
-                message += summary.locations + " locations";
-            }
-            return message;
-        };
+		if (summary.locations == 1) {
+			if (summary.rooms > 0) {
+				message += " and ";
+			}
+			message += "1 location";
+		} else if (summary.locations > 1) {
+			if (summary.rooms > 0) {
+				message += " and ";
+			}
+			message += summary.locations + " locations";
+		}
+		return message;
+	};
 
-            // counts the number of rooms and locations selected
-        lc.categorizeSelected = function() {
-            
-            var summary = { rooms: 0, locations: 0};
-            if (lc.selectedList.length > 0) {
-                lc.selectedList.forEach( function(item) {
-                    if (Array.isArray(item.rooms)) {
-                        summary.locations++;
-                    } else {
-                        summary.rooms++;
-                    }
-                });
-            }
-            return summary;
-        };
+	// counts the number of rooms/buildings/locations selected
+	lc.categorizeSelected = function() {
 
-            // checks box if location/room is in selectedList
-        lc.exists = function(obj) {
-            return lc.selectedList.indexOf( obj ) > -1;
-        };
+		var summary = {
+			rooms : 0,
+			buildings: 0,
+			locations : 0
+		};
 
-            // adds/removes location/room from selectedList
-        lc.toggle = function(obj) {
+		if (lc.selectedList.length > 0) {
+			lc.selectedList.forEach(function(item) {
+				if (Array.isArray(item.rooms)) {
+					item.rooms.forEach(function(){
+						summary.rooms++;
+					});
+					summary.buildings++;
+				}
+				else if (Array.isArray(item.buildings)){
+					item.buildings.forEach(function(){
+						summary.buildings++;
+					});
+					summary.locations++;
+				}
+				else{
+					summary.locations++;
+				}
+			});
+		}
 
-            var idx = lc.selectedList.indexOf(obj);
-            if (idx == -1) {
-                lc.selectedList.push(obj);
-            } else {
-                lc.selectedList.splice( idx, 1 );
-            }
-        };
+		return summary;
+	};
 
-            // tests whether room list of given location is visible
-        lc.visible = function(location) {
-            
-            var element = $("#loc" + location.id)[0];
-            if (!element) {
-                return false;
-            } else {
-                var style = window.getComputedStyle(element);
-                if (style.display == "none") {
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-        };
+	// checks box if location/room is in selectedList
+	lc.exists = function(obj) {
+		return lc.selectedList.indexOf(obj) > -1;
+	};
 
-            // repulls all locations
-        lc.repull = function() {
-            lc.locations = undefined;
-            lc.selectedList = [];
-            locationService.getAll( function(response) {
-                //console.log("  (LC)  Retrieving all locations.")
-                lc.locations = response;
-            }, function(error) {
-                //console.log("  (LC)  Failed to retrieve all locations with error:", error.data.message);
-                lc.showToast("Could not fetch locations.");
-            });
-        };
+	// adds/removes location/room from selectedList
+	lc.toggle = function(obj) {
 
-          // data
-        lc.selectedList = [];
+		var idx = lc.selectedList.indexOf(obj);
+		if (idx == -1) {
+			lc.selectedList.push(obj);
+		} else {
+			lc.selectedList.splice(idx, 1);
+		}
+	};
 
-          // page initialization
-            // data gathering
-        locationService.getAll( function(response) {
-            //console.log("  (LC)  Retrieving all locations.")
-            lc.locations = response;
-        }, function(error) {
-            //console.log("  (LC)  Failed to retrieve all locations with error:", error.data.message);
-            lc.showToast("Could not fetch locations.");
-        });
+	// tests whether room list of given location is visible
+	lc.visible = function(location) {
 
-    });
+		var element = $("#loc" + location.id)[0];
+		if (!element) {
+			return false;
+		} else {
+			var style = window.getComputedStyle(element);
+			return style.display == "none";
+		}
+	};
+
+	// repulls all locations
+	lc.repull = function() {
+		lc.locations = undefined;
+		lc.selectedList = [];
+		locationService.getAll(function(response) {
+			lc.locations = response;
+		}, function() {
+			lc.showToast("Could not fetch locations.");
+		});
+	};
+
+	// data
+	lc.selectedList = [];
+
+	// page initialization
+	// data gathering
+	locationService.getAll(function(response) {
+		lc.locations = response;
+	}, function() {
+		lc.showToast("Could not fetch locations.");
+	});
+
+});

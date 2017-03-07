@@ -21,14 +21,14 @@ public class BatchStatusLookup {
 	@Column(name = "BS_NAME", unique=true, nullable=false)
 	private String batchStatusName;
 
-	public BatchStatusLookup(){}
+	public BatchStatusLookup(){
+		//noarg constructor
+	}
 	public BatchStatusLookup(int batchStatusID, String batchStatusName) {
 		super();
 		this.batchStatusID = batchStatusID;
 		this.batchStatusName = batchStatusName;
 	}
-
-	
 	
 	public int getBatchStatusID() {
 		return batchStatusID;
@@ -44,9 +44,5 @@ public class BatchStatusLookup {
 
 	public void setBatchStatusName(String batchStatusName) {
 		this.batchStatusName = batchStatusName;
-	}
-
-
-	
-	
+	}	
 }

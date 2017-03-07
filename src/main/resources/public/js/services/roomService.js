@@ -1,8 +1,8 @@
 
 var app = angular.module("batchApp");
 
-app.service( "roomService", function($resource) {
-    var Room = $resource('api/v2/room/:roomID',{roomID: '@roomID'},{update:{method:'PUT', url:'api/v2/room'}});
+app.service( "roomService", function($resource, $http) {
+    var Room = $resource('api/v2/room/:id',{id: '@id'},{update:{method:'PUT', url:'api/v2/room'}});
     var rs = this;
 
     rs.getEmptyRoom = function(){
@@ -26,7 +26,7 @@ app.service( "roomService", function($resource) {
     };
 
     rs.update = function(room, success, error){
-        room.$update(success, error);
+    	Room.update(room, success, error);
     };
 
     rs.delete = function(room, success, error){

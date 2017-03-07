@@ -31,6 +31,8 @@
                         break;
                     case "none":
                         break;
+                      //maybe no default
+                    default: break;
                     }
                 });
                 if (flag) {

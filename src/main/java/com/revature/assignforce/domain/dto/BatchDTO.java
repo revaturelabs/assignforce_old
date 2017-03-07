@@ -1,18 +1,23 @@
 package com.revature.assignforce.domain.dto;
 
 import java.sql.Timestamp;
+import java.util.List;
+
+import com.revature.assignforce.domain.Skill;
 
 public class BatchDTO {
 
 	private int ID;
 	private String name;
 	private int curriculum;
+	private int focus;
 	private int trainer;
 	private int cotrainer;
 	private int location;
 	private int room;
 	private Timestamp startDate;
 	private Timestamp endDate;
+	private List<Skill> skills;
 
 	  // ID
 	public int getID() {
@@ -36,6 +41,14 @@ public class BatchDTO {
 	}
 	public void setCurriculum(int curr) {
 		this.curriculum = curr;
+	}
+	
+	  // focus
+	public int getFocus() {
+		return focus;
+	}
+	public void setFocus(int focus) {
+		this.focus = focus;
 	}
 	
 	  // trainer
@@ -86,10 +99,19 @@ public class BatchDTO {
 		this.endDate = endDate;
 	}
 	
+	//skills
+	public List<Skill> getSkills() {
+		return skills;
+	}
+	public void setSkills(List<Skill> skills) {
+		this.skills = skills;
+	}
+	
 	@Override
 	public String toString() {
-		return "BatchDTO [batchName=" + name + ", curr=" + curriculum + ", trainer=" + trainer + 
-				", cotrainer=" + cotrainer + ", room=" + room + ", date=" + startDate + ", date2=" + endDate + "]";
+		return "BatchDTO [batchName = " + name + ", curr = " + curriculum + ", focus = " + focus
+				+ ", trainer = " + trainer + ", cotrainer = " + cotrainer + ", room = " + room
+				+ ", date = " + startDate + ", date2 = " + endDate + "]";
 	}
 	
 	

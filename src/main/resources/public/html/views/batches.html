@@ -6,125 +6,181 @@
                 <span> Batches </span>
             </div>
         </md-toolbar>
-
-          <!-- Create/edit batch -->
+        <!-- Create/edit batch -->
+        <!--  bCtrl is Batch Controller -->
         <md-content>
-
             <form class="batchForm" name="batchForm" ng-submit="bCtrl.saveBatch(batchForm.$valid)" novalidate>
-
-                <md-toolbar class="md-primary md-hue-2" layout="columns" layout-align="center center">
+		<div flex layout="columns">
+                          
+                    <!-- Location, Room -->
+                    <md-input-container>                       
+                    	<label> Location </label>
+                        <md-select ng-model="bCtrl.batch.location" required>
+                        	<md-option ng-value="location.id" ng-repeat="location in bCtrl.locations | activeItem"> {{ location.name }} - {{ location.city }}, {{ location.state }} </md-option>
+                        </md-select>
+                    </md-input-container>
                     
-                    <div class="md-toolbar-tools">
+                    <md-input-container>
+                    	<label> Building </label>
+                    	<md-select ng-model="bCtrl.batch.building">
+                    		<md-option ng-value="building.id" ng-repeat="building in bCtrl.filterBuildings(bCtrl.batch.location) | activeItem"> {{building.name}}</md-option>
+                    		</md-select>
+                    </md-input-container>
+
+                    <md-input-container>                       
+                    	<label> Room </label>
+                            <md-select ng-model="bCtrl.batch.room">
+                                <md-option ng-value="room.roomID" ng-repeat="room in bCtrl.availableRooms | activeItem | orderBy:roomName"> {{ room.roomName }} </md-option>
+                            </md-select>
+                        </md-input-container>
+                        
+                    </div>
+                <md-toolbar class="md-primary md-hue-2" layout="columns" layout-align="center center">
+                    <div class="md-toolbar-tools" id="batchInfoDiv">
                         <span> {{ bCtrl.stateMux[bCtrl.state].header }} </span>
                     </div>
 
                     <div flex> </div>
 
                     <md-button type="submit" class="md-icon-button">
-                        <md-tooltip> {{ bCtrl.stateMux[bCtrl.state].submit }} </md-tooltip>
+                        <md-tooltip class="md-title"> {{ bCtrl.stateMux[bCtrl.state].submit }} </md-tooltip>
                         <md-icon md-svg-src="img/ic_done_white_24px.svg"></md-icon>
                     </md-button>
 
                     <md-button class="md-icon-button" ng-click="bCtrl.resetForm()">
-                        <md-tooltip> Cancel </md-tooltip>
+                        <md-tooltip class="md-title"> Cancel </md-tooltip>
                         <md-icon md-svg-src="img/ic_cancel_white_24px.svg"></md-icon>
                     </md-button>
 
                 </md-toolbar>
 
-                <div layout="columns" layout-xl="rows">
+                <div layout="columns" layout-xl="rows"  class="md-title">
 
-                      <!-- Name, curriculum -->
-                    <div flex layout="columns">
+                    <!-- Curriculum, Focus, Skills -->
+                    <div flex layout="columns">                    
+                    	<md-input-container flex>                       
+                            <label> Curriculum </label>
+                            <md-select ng-model="bCtrl.batch.curriculum" ng-change="bCtrl.defaultName(); bCtrl.updateSelectedSkills(); bCtrl.updateSkillRatios()">
+                                <md-option ng-value="curriculum.currId" ng-repeat="curriculum in bCtrl.curricula"> {{ curriculum.name }} </md-option>
+                            </md-select>
+                        </md-input-container>
+                        
+                     	<md-input-container flex>                       
+                            <label> Focus </label>
+                            <md-select ng-model="bCtrl.batch.focus" ng-change="bCtrl.updateSelectedSkills(); bCtrl.updateSkillRatios()">
+                            	<div ng-if="bCtrl.batch.curriculum">
+                            		<md-option ng-value="null">No Focus</md-option>
+                                	<md-option ng-value="focus.currId" ng-repeat="focus in bCtrl.foci"> {{ focus.name }} </md-option>
+                            	</div>
+                            	<div ng-if="!bCtrl.batch.curriculum">
+                            		<md-option ng-value="null" disabled>Select a curriculum first.</md-option>
+                            	</div>
+                            </md-select>
+                        </md-input-container>
 
+                        
+                     	<md-input-container flex>                       
+	                        <label> Skills </label>
+	                        <md-select ng-model="bCtrl.selectedSkills" ng-change="bCtrl.updateBatchSkills(); bCtrl.updateSkillRatios()" multiple>
+	                        	<div ng-if="bCtrl.batch.curriculum">
+	                            	<md-option ng-repeat="skill in bCtrl.skills" value="{{skill.skillId}}">{{skill.name}}</md-option>
+	                        	</div>
+	                        	<div ng-if="!bCtrl.batch.curriculum">
+	                        		<md-option ng-value="null" disabled>Select a curriculum first.</md-option>
+	                        	</div>
+	                        </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+                        
+                <div layout="columns" layout-xl="rows"  class="md-title">
+
+                    <!-- Start Date, End Date, Week Span, Name -->
+                    <div flex layout="columns">              
                         <md-input-container flex>
+                            <label> Start Date </label>
+                            <md-datepicker ng-value="batch.startDate" ng-model="bCtrl.batch.startDate" md-date-filter="bCtrl.enableMondays" md-open-on-focus md-hide-icons="calendar" ng-change="bCtrl.selectEndDate(); bCtrl.updateWeeks(); bCtrl.defaultName(); bCtrl.updateTrainersAndRooms(bCtrl.trainers, bCtrl.filterRooms(bCtrl.batch.building), bCtrl.batch.startDate,bCtrl.batch.endDate)"> </md-datepicker>
+                        </md-input-container>
+                        
+                        <md-input-container flex>
+                            <label> End Date </label>
+                            <md-datepicker ng-value="batch.endDate" ng-model="bCtrl.batch.endDate" md-date-filter="bCtrl.enableFridays" md-open-on-focus md-hide-icons="calendar" ng-change="bCtrl.updateWeeks(); bCtrl.updateTrainersAndRooms(bCtrl.trainers, bCtrl.filterRooms(bCtrl.batch.building), bCtrl.batch.startDate,bCtrl.batch.endDate)"> </md-datepicker>
+                        </md-input-container>  
+                        
+                        <md-input-container flex>
+                            <input ng-model="bCtrl.weeksSpan" aria-label="weeks span" disabled>
+                        </md-input-container>
+                    </div>
+
+                    <!-- Name -->
+                    <div flex layout="columns">                    
+						<md-input-container flex>
                             <label> Name </label>
                             <input ng-model="bCtrl.batch.name" required>
                         </md-input-container>
-
-                        <md-input-container flex>                       
-                            <label> Curriculum </label>
-                            <md-select ng-model="bCtrl.batch.curriculum" ng-change="bCtrl.defaultName()">
-                                <md-option ng-value="curriculum.id" ng-repeat="curriculum in bCtrl.curricula"> {{ curriculum.name }} </md-option>
-                            </md-select>
-                        </md-input-container>
-
                     </div>
+                </div>
+                
+                <div layout="columns" layout-xl="rows"  class="md-title">
 
-                    <!-- Skills -->
-                    <!--<div class="md-padding">
-                        <label> Skill search </label>
-                        <md-chips ng-model="bCtrl.skillSet"> </md-chips> 
-                    </div>-->
-
-                      <!-- Trainer, cotrainer -->
+                    <!-- Trainer, Cotrainer -->
                     <div flex layout="columns">
-
-                        <md-input-container flex>                       
+                    
+                    	<md-input-container flex>                       
                             <label> Trainer </label>
                             <md-select ng-model="bCtrl.batch.trainer">
-                                <md-option ng-value="trainer.trainerID" ng-repeat="trainer in bCtrl.trainers"> {{ trainer.firstName }}  {{ trainer.lastName }} </md-option>
+                            	<div ng-if="bCtrl.batch.curriculum">
+                            		<div ng-if="bCtrl.availableTrainers.length > 0">
+		                                <div ng-repeat="trainer in bCtrl.availableTrainers">
+		                                    <md-option ng-value="trainer.trainerId"> {{ trainer.firstName }}  {{ trainer.lastName }} ({{ bCtrl.trainerSkillRatios[trainer.trainerId] }} % skill match to required skills.)</md-option>
+		                                    <td colspan="9" class="progressBar">
+		                                        <md-progress-linear class="md-accent" style="height: 2px" md-mode="determinate" value="{{ bCtrl.trainerSkillRatios[trainer.trainerId] }}"> </md-progress-linear>
+		                                    </td>
+		                                </div>
+	                                </div>
+	                                <div ng-if="bCtrl.availableTrainers.length <= 0">
+	                                	<md-option ng-value="null" disabled>No available trainers.</md-option>
+	                                </div>
+                                </div>
+                                <div ng-if="!bCtrl.batch.curriculum">
+                                	<md-option ng-value="null" disabled>Select a curriculum first.</md-option>
+                                </div>
                             </md-select>
-                        </md-input-container>
+                    	</md-input-container>
 
-                        <md-input-container flex>                       
-                            <label> Cotrainer </label>
+                    	<md-input-container flex>                       
+                            <label> Co-Trainer </label>
                             <md-select ng-model="bCtrl.batch.cotrainer">
-                                <md-option ng-value="cotrainer.trainerID" ng-repeat="cotrainer in bCtrl.trainers"> {{ cotrainer.firstName }}  {{ cotrainer.lastName }} </md-option>
+                            	<div ng-if="bCtrl.batch.trainer">
+	                                <div ng-repeat="cotrainer in bCtrl.trainers">
+	                                	<div ng-if="cotrainer.trainerId != bCtrl.batch.trainer">
+		                                    <md-option ng-value="cotrainer.trainerId"> {{ cotrainer.firstName }}  {{ cotrainer.lastName }} ({{ bCtrl.trainerSkillRatios[cotrainer.trainerId] }} % skill match to required skills.)</md-option>
+		                                    <td colspan="9" class="progressBar">
+		                                        <md-progress-linear class="md-accent" style="height: 2px" md-mode="determinate" value="{{ bCtrl.trainerSkillRatios[trainer.trainerId] }}"> </md-progress-linear>
+		                                    </td>
+	                                    </div>
+	                                </div>
+                                </div>
+                                <div ng-if="!bCtrl.batch.trainer">
+                                	<md-option ng-value="null" disabled>Select a trainer first.</md-option>
+                                </div>
                             </md-select>
-                        </md-input-container>
-
-                    </div>
-
-                </div>
-
-                <div layout="columns" layout-xl="rows">
-
-                      <!-- Location, room -->
-                    <div flex layout="columns">
-
-                        <md-input-container flex>                       
-                            <label> Location </label>
-                            <md-select ng-model="bCtrl.batch.location" required>
-                                <md-option ng-value="location.id" ng-repeat="location in bCtrl.locations | activeItem"> {{ location.name }} - {{ location.city }}, {{ location.state }} </md-option>
-                            </md-select>
-                        </md-input-container>
-
-                        <md-input-container flex>                       
-                            <label> Room </label>
-                            <md-select ng-model="bCtrl.batch.room">
-                                <md-option ng-value="room.roomID" ng-repeat="room in bCtrl.filterRooms(bCtrl.batch.location) | activeItem | orderBy:roomName"> {{ room.roomName }} </md-option>
-                            </md-select>
-                        </md-input-container>
-
-                    </div>
-
-                      <!-- Start/end dates -->
-                    <div flex layout="columns" layout-align="space-between center">
-
-                        <md-input-container flex="none">
-                            <label> Start Date </label>
-                            <md-datepicker ng-model="bCtrl.batch.startDate" md-date-filter="bCtrl.enableMondays" md-open-on-focus md-hide-icons="calendar" ng-change="bCtrl.selectEndDate(); bCtrl.updateWeeks(); bCtrl.defaultName()"> </md-datepicker>
-                        </md-input-container>
+                    	</md-input-container>
                         
-                        <md-input-container flex class="weekSpan">
-                            <input ng-model="bCtrl.weeksSpan" aria-label="weeks span" disabled>
-                        </md-input-container>
-
-                        <md-input-container flex="none">
-                            <label> End Date </label>
-                            <md-datepicker ng-model="bCtrl.batch.endDate" md-date-filter="bCtrl.enableFridays" md-open-on-focus md-hide-icons="calendar" ng-change="bCtrl.updateWeeks()"> </md-datepicker>
-                        </md-input-container>
-
                     </div>
+                        
+                    
 
                 </div>
 
-            </form>
+               	<!-- Start/end dates -->
+                <!-- <div flick layout="columns" layout-align="space-between center"> -->
+
+        	</form>
 
         </md-content>
 
-          <!-- All batches -->
+        <!-- All batches -->
         <md-content>
 
             <md-toolbar class="md-primary md-hue-2" layout="columns" layout-align="center center">
@@ -136,7 +192,7 @@
                 <span flex> </span>
 
                 <md-button class="md-icon-button" ng-click="bCtrl.deleteMultiple()" ng-show="bCtrl.batchesSelected.length >= 2"> 
-                    <md-tooltip> Delete selected </md-tooltip>
+                    <md-tooltip class="md-title"> Delete selected </md-tooltip>
                     <md-icon md-svg-src="img/ic_delete_white_24px.svg"></md-icon>
                 </md-button>
                 
@@ -145,17 +201,18 @@
             <div ng-if="bCtrl.batches != undefined">
 
                 <md-table-container>
-                    <table md-table ng-model="batchSelected">
+                	<table md-table ng-model="batchSelected">
                         
                         <thead md-head md-order="bCtrl.batchOrder">
                             <tr md-row>
-                                <th md-column md-checkbox-column> 
-                                    <md-checkbox ng-click="bCtrl.toggleAll()" ng-checked="bCtrl.allSelected()" aria-label="batches select all"> </md-checkbox> 
+                                <th md-column md-checkbox-column>
+                                	<!-- Select All Batches --> 
+                                    <!-- <md-checkbox ng-click="bCtrl.toggleAll()" ng-checked="bCtrl.allSelected()" aria-label="batches select all"> </md-checkbox>  -->
                                 </th>
-                                <th md-column md-order-by="name"> Name </th>
+                                <th md-column md-order-by="name"><b> Name </b></th>
                                 <th md-column md-order-by="curriculum.name"> Curriculum </th>
                                 <th md-column md-order-by="trainer.firstName"> Trainer / Cotrainer </th>
-                                <th md-column md-order-by="location.name"> Location </th>
+                                <th md-column md-order-by="building.name"> Building </th>
                                 <th md-column md-order-by="room.roomName"> Room </th>
                                 <th md-column md-order-by="startDate"> Start date </th>
                                 <th md-column md-order-by="endDate"> End date </th>
@@ -165,7 +222,8 @@
 
                         <tbody md-body>
                             <tr md-row class="batchRow" ng-repeat-start="batch in (bCtrl.batches | orderBy:bCtrl.batchOrder) track by batch.id" ng-click="bCtrl.highlightBatch(batch)" ng-class="bCtrl.selectedBatchRow(batch)">
-                                <td md-cell> 
+                                <td md-cell>
+                                	<!-- Select Individual Batches -->
                                     <md-checkbox md-no-ink ng-checked="bCtrl.exists(batch)" ng-click="bCtrl.toggle(batch)" aria-label="batch check"> </md-checkbox> 
                                 </td>
                                 <td md-cell> {{ batch.name | limitTo:20 }} </td>
@@ -173,21 +231,21 @@
                                 <td md-cell ng-if="batch.cotrainer == null"> {{ batch.trainer.firstName | limitTo:20 }} {{ batch.trainer.lastName | limitTo:20 }} </td>
                                 <td md-cell ng-if="batch.cotrainer != null"> {{ batch.trainer.firstName | limitTo:20 }} {{ batch.trainer.lastName | limitTo:20 }} / 
                                                                              {{ batch.cotrainer.firstName | limitTo:20 }} {{ batch.cotrainer.lastName | limitTo:20 }} </td>
-                                <td md-cell> {{ batch.location.name | limitTo:20 }} </td>
+                                <td md-cell> {{ batch.room.building.name }} </td>
                                 <td md-cell> {{ batch.room.roomName | limitTo:20 }} </td>
                                 <td md-cell> {{ batch.startDate | date:'MMM. d, yyyy' }} </td>
                                 <td md-cell> {{ batch.endDate | date:'MMM. d, yyyy' }} </td>
                                 <td md-cell layout layout-align="end center"> 
                                     <md-button class="md-fab md-mini" ng-click="bCtrl.edit(batch)"> 
-                                        <md-tooltip> Edit </md-tooltip>
+                                        <md-tooltip class="md-title"> Edit </md-tooltip>
                                         <md-icon md-svg-src="img/ic_edit_white_24px.svg"></md-icon>
                                     </md-button>
                                     <md-button class="md-fab md-mini" ng-click="bCtrl.clone(batch)"> 
-                                        <md-tooltip> Clone </md-tooltip>
+                                        <md-tooltip class="md-title"> Clone </md-tooltip>
                                         <md-icon md-svg-src="img/ic_content_copy_white_24px.svg"></md-icon>
                                     </md-button>
                                     <md-button class="md-fab md-mini" ng-click="bCtrl.delete(batch)"> 
-                                        <md-tooltip> Delete </md-tooltip>
+                                        <md-tooltip class="md-title"> Delete </md-tooltip>
                                         <md-icon md-svg-src="img/ic_delete_white_24px.svg"></md-icon>
                                     </md-button>
                                 </td>
@@ -197,7 +255,6 @@
                                     <md-progress-linear class="md-accent" style="height: 2px" md-mode="determinate" value="{{ bCtrl.calcProgress(batch.startDate, batch.endDate) }}"> </md-progress-linear>
                                 </td>
                             </tr>
-                        </tr>
                         </tbody>
                         
                     </table>
@@ -212,12 +269,12 @@
             </div>
 
         </md-content>
-
+ 
         <md-content>
 
             <md-toolbar class="md-primary md-hue-2" layout="columns" layout-align="center center">
                 <div class="md-toolbar-tools">
-                    <span> Batch timeline </span>
+                    <span> Batch Timeline </span>
                 </div>
             </md-toolbar>
 
@@ -227,16 +284,141 @@
                     <div class="md-padding" layout="columns">
                         <md-input-container flex="none">
                             <label> Start Date </label>
-                            <md-datepicker ng-model="tlCtrl.minDate" md-current-view="year" md-open-on-focus md-hide-icons="calendar" ng-change="tlCtrl.updateTimeline()"> </md-datepicker>
+                            <md-datepicker ng-model="tlCtrl.minDate" md-current-view="year" md-open-on-focus md-hide-icons="calendar" ng-change="tlCtrl.validateStartDate(); tlCtrl.filterTimelineData(false); tlCtrl.changeTrainersPerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.projectTimelineOnly()"> </md-datepicker>
                         </md-input-container>
                         
                         <div flex> </div>
 
                         <md-input-container flex="none">
                             <label> End Date </label>
-                            <md-datepicker ng-model="tlCtrl.maxDate" md-current-view="year" md-open-on-focus md-hide-icons="calendar" ng-change="tlCtrl.updateTimeline()"> </md-datepicker>
+                            <md-datepicker ng-model="tlCtrl.maxDate" md-current-view="year" md-open-on-focus md-hide-icons="calendar" ng-change="tlCtrl.validateEndDate(); tlCtrl.filterTimelineData(false); tlCtrl.changeTrainersPerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.projectTimelineOnly()"> </md-datepicker>
                         </md-input-container>
+                        
+                        <div flex> </div>
+                        
+                        <md-input-container flex="none">
+                        	<label> Curriculum </label>
+                            <md-select ng-model="tlCtrl.selectedCurriculum" ng-change="tlCtrl.filterTimelineData(false); tlCtrl.changeTrainersPerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.getDateRange(tlCtrl.useFilteredBatches()); tlCtrl.projectTimelineOnly()" ng-style="{'width': 160 + 'px'}">
+                            	<md-option ng-value = "0">Any</md-option>
+                                <md-option ng-value="curriculum.currId" ng-repeat="curriculum in tlCtrl.curricula"> {{ curriculum.name }} </md-option>
+                            </md-select>
+                        </md-input-container>
+                        
+                        <div flex> </div>
+                        
+                        <md-input-container flex="none">
+                        	<label> Focus </label>
+                            <md-select ng-model="tlCtrl.selectedFocus" ng-change="tlCtrl.filterTimelineData(false); tlCtrl.changeTrainersPerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.getDateRange(tlCtrl.useFilteredBatches()); tlCtrl.projectTimelineOnly()" ng-style="{'width': 160 + 'px'}">
+                            	<md-option ng-value = "0">Any</md-option>
+                                <md-option ng-value="focus.currId" ng-repeat="focus in tlCtrl.foci"> {{ focus.name }} </md-option>
+                            </md-select>
+                        </md-input-container>
+                  
+                        <div flex> </div>
+                        
+                        <md-input-container flex="none">
+                        	<label> Location </label>
+                            <md-select ng-model="tlCtrl.selectedLocation" ng-change="tlCtrl.selectedBuilding = 0; tlCtrl.filterTimelineData(false); tlCtrl.changeTrainersPerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.getDateRange(tlCtrl.useFilteredBatches()); tlCtrl.projectTimelineOnly()" ng-style="{'width': 160 + 'px'}">
+                            	<md-option ng-value = "0">Any</md-option>
+                                <md-option ng-value="location.id" ng-repeat="location in tlCtrl.locations"> {{ location.name }} - {{ location.city }}, {{ location.state }}</md-option>
+                            </md-select>
+                        </md-input-container>
+                  
+                        <div flex> </div>
+                        
+                       	<div ng-if = "tlCtrl.selectedLocation != 0">
+                       		<md-input-container flex="none">
+                       			<label> Building </label>
+	                            <md-select ng-model="tlCtrl.selectedBuilding" ng-change="tlCtrl.filterTimelineData(false); tlCtrl.changeTrainersPerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.getDateRange(tlCtrl.useFilteredBatches()); tlCtrl.projectTimelineOnly()" ng-style="{'width': 160 + 'px'}">
+	                            	<md-option ng-value = "0">Any</md-option>
+	                                <md-option ng-value="building.id" ng-repeat="building in tlCtrl.getSelectedLocation().buildings"> {{ building.name }} </md-option>
+	                            </md-select>
+                            </md-input-container>
+                        </div>
+                        
+                        <div ng-if = "tlCtrl.selectedLocation == 0">
+                           	<md-input-container flex="none">
+                           		<label> Building </label>
+	                            <md-select ng-model="tlCtrl.selectedBuilding" ng-style="{'width': 160 + 'px'}" disabled>
+	                            	<md-option ng-value = "0" selected>Any</md-option>
+	                            </md-select>
+                            </md-input-container>
+                        </div>
+                        
+                        <div flex> </div>
+                        
+                        <div class="md-padding" layout="columns">
+	                        <md-checkbox aria-label="Hide Concluded Batches?" ng-model="tlCtrl.hideConcludedBatches" ng-change="tlCtrl.filterTimelineData(true); tlCtrl.getDateRange(tlCtrl.useFilteredBatches()); tlCtrl.projectTimelineOnly()">
+	                        	Hide Concluded Batches?
+	                        </md-checkbox>
+	                        
+	                        <div ng-if="tlCtrl.realTrainersPerPage <= 0">
+		                        <md-checkbox aria-label="Hide Batchless Trainers?" ng-model="tlCtrl.hideBatchlessTrainers" ng-change="tlCtrl.filterTimelineData(false); tlCtrl.changeTrainersPerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.projectTimelineOnly()">
+		                        	Hide Batchless Trainers?
+		                        </md-checkbox>
+	                        </div>
+	                        
+	                        <div ng-if="tlCtrl.realTrainersPerPage > 0">
+		                        <md-checkbox aria-label="Hide Batchless Trainers?" ng-model="tlCtrl.hideBatchlessTrainers" disabled>
+		                        	Hide Batchless Trainers?
+		                        </md-checkbox>
+	                        </div>
+                        </div>
                     </div>
+                    
+	                <div class="md-padding" layout="columns">
+                        <md-input-container flex="none">
+                        	<label> Trainers Per Page (0 to see All) </label>
+                            <input type = "number" min = "0" max = "tlCtrl.maxTrainerPages" ng-model="tlCtrl.trainersPerPage" ng-change="tlCtrl.filterTimelineData(false); tlCtrl.changeTrainersPerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.projectTimelineOnly()" ng-style="{'width': 320 + 'px'}"/>
+                        </md-input-container>
+                        
+                        <div class="md-padding" layout="columns">
+	                        <md-button id = "firstTrainerPageButton" class="md-fab md-mini" ng-click="tlCtrl.firstTrainerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.projectTimelineOnly()" ng-disabled = "tlCtrl.previousPageButtonDisabled"> 
+	                            <md-tooltip class="md-title"> Jump to First Page </md-tooltip>
+	                            <md-icon md-svg-src="img/ic_skip_previous_white_24px.svg"></md-icon>
+	                        </md-button>
+	                        
+	                        <div flex> </div>
+                        
+	                        <md-button id = "previousTrainerPageButton" class="md-fab md-mini" ng-click="tlCtrl.previousTrainerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.projectTimelineOnly()" ng-disabled = "tlCtrl.previousPageButtonDisabled"> 
+	                            <md-tooltip class="md-title"> Previous Page </md-tooltip>
+	                            <md-icon md-svg-src="img/ic_arrow_back_white_24px.svg"></md-icon>
+	                        </md-button>
+	                        
+	                        <div flex> </div>
+	                        
+	                        <div>
+	                        	<div ng-if = "tlCtrl.realTrainersPerPage > 0 && tlCtrl.maxTrainerPages > 1">
+	                        		<div>
+	                        			Viewing Page:  <b>{{tlCtrl.realTrainerPage}}</b> / {{tlCtrl.maxTrainerPages}}
+	                        		</div>
+			                        <md-input-container flex="none">
+			                        	<label> Go To Page </label>
+			                            <input type = "number" min = "1" max = "tlCtrl.maxTrainerPages" ng-model="tlCtrl.trainerPage" ng-change="tlCtrl.goToTrainerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.projectTimelineOnly()" ng-style="{'width': 160 + 'px'}"/>
+			                        </md-input-container>
+	                        	</div>
+	                        	<div ng-if = "tlCtrl.realTrainersPerPage <= 0 || tlCtrl.maxTrainerPages <= 1">
+	                        		<div>
+	                        			Viewing All Trainers' Batches
+	                        		</div>
+	                        	</div>
+	                        </div>
+	                        
+	                        <div flex> </div>
+	                        
+	                        <md-button id = "nextTrainerPageButton"  class="md-fab md-mini" ng-click="tlCtrl.nextTrainerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.projectTimelineOnly()" ng-disabled = "tlCtrl.nextPageButtonDisabled"> 
+	                            <md-tooltip class="md-title"> Next Page </md-tooltip>
+	                            <md-icon md-svg-src="img/ic_arrow_forward_white_24px.svg"></md-icon>
+	                        </md-button>
+	                      
+	                        <div flex> </div>
+	                        
+	                        <md-button id = "lastTrainerPageButton"  class="md-fab md-mini" ng-click="tlCtrl.lastTrainerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.projectTimelineOnly()" ng-disabled = "tlCtrl.nextPageButtonDisabled"> 
+	                            <md-tooltip class="md-title"> Jump to Last Page </md-tooltip>
+	                            <md-icon md-svg-src="img/ic_skip_next_white_24px.svg"></md-icon>
+	                        </md-button>
+                        </div>
+	                </div>
                 </div>
                 <br ng-show="(tlCtrl.batches != undefined) && (tlCtrl.trainers != undefined)">
                 <div id="timeline" ng-show="(tlCtrl.batches != undefined) && (tlCtrl.trainers != undefined)"> </div>
@@ -250,5 +432,5 @@
             </div>
 
         </md-content>
-    
+     
     </md-card>

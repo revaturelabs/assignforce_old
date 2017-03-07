@@ -2,7 +2,6 @@
     var assignforce = angular.module( "batchApp" );
 
     assignforce.controller( "locationDialogCtrl", function ( $scope, $mdDialog, USstates, locationService ){
-        //console.log("Beginning location dialog controller.");
         var ldc = this;
 
           // functions
@@ -13,7 +12,6 @@
 
             // save changes/new
         ldc.save = function(isValid) {
-
             if (isValid) {
                 if (ldc.state == "edit") {
                     locationService.update( ldc.location, function(){

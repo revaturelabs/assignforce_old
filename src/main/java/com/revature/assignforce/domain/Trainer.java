@@ -2,21 +2,7 @@ package com.revature.assignforce.domain;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "TRAINER")
@@ -26,7 +12,7 @@ public class Trainer implements Activatable{
 	@Column(name = "ID")
 	@SequenceGenerator(allocationSize = 1, name = "trainerSeq", sequenceName = "TRAINER_SEQ")
 	@GeneratedValue(generator = "trainerSeq", strategy = GenerationType.SEQUENCE)
-	private int trainerID;
+	private int trainerId;
 
 	@Column(name = "FIRST_NAME", nullable = false)
 	private String firstName;
@@ -34,41 +20,51 @@ public class Trainer implements Activatable{
 	@Column(name = "LAST_NAME", nullable = false)
 	private String lastName;
 
-	@ManyToMany(fetch=FetchType.LAZY)
+	@Column(name = "TRAINER_RESUME")
+	private String resume;
+
+	@ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
 	@JoinTable(name="TRAINER_UNAVAILABILITY_JT", 
 	joinColumns=@JoinColumn(name="TRAINER"), 
 	inverseJoinColumns=@JoinColumn(name="UNAVAILABILITY"))
-	private List<Unavailable> unavailable;
+	private List<Unavailable> unavailabilities;
 
 	//@ManyToMany(mappedBy="trainer", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	@ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
 	@JoinTable(name="TRAINER_SKILL_JT",
     joinColumns=@JoinColumn(name="TRAINER"),
     inverseJoinColumns=@JoinColumn(name="SKILL"))
-	@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")						// ADDED this to fix serialization/infinite loop issues
-	private List<Skill> skill;
+	//@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")						// ADDED this to fix serialization/infinite loop issues
+	private List<Skill> skills;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+	@JoinColumn(name="Trainer")
+	private List<Certification> certifications;
 
 	@Column(name="active", insertable = false)
 	private Boolean active;
 
-	public int getTrainerID() {
-		return trainerID;
+	public Trainer(){
+		//no-arg constructor
 	}
-	
-	public Trainer(){}
 
-	public Trainer(int trainerID, String firstName, String lastName, List<Unavailable> unavailable, List<Skill> skill) {
+	public Trainer(int trainerId, String firstName, String lastName, String resume, List<Unavailable> unavailability, List<Skill> skills, List<Certification> certifications) {
 		super();
-		this.trainerID = trainerID;
+		this.trainerId = trainerId;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.unavailable = unavailable;
-		this.skill = skill;
+		this.unavailabilities = unavailability;
+		this.skills = skills;
+		this.certifications = certifications;
+		this.resume = resume;
 	}
 
+    public int getTrainerId() {
+        return trainerId;
+    }
 
-	public void setTrainerID(int trainerID) {
-		this.trainerID = trainerID;
+	public void setTrainerId(int trainerId) {
+		this.trainerId = trainerId;
 	}
 
 	public String getFirstName() {
@@ -87,20 +83,20 @@ public class Trainer implements Activatable{
 		this.lastName = lastName;
 	}
 
-	public List<Unavailable> getUnavailable() {
-		return unavailable;
+	public List<Unavailable> getUnavailabilities() {
+		return unavailabilities;
 	}
 
-	public void setUnavailable(List<Unavailable> unavailable) {
-		this.unavailable = unavailable;
+	public void setUnavailabilities(List<Unavailable> unavailabilities) {
+		this.unavailabilities = unavailabilities;
 	}
 
-	public List<Skill> getSkill() {
-		return skill;
+	public List<Skill> getSkills() {
+		return skills;
 	}
 
-	public void setSkill(List<Skill> skill) {
-		this.skill = skill;
+	public void setSkills(List<Skill> skills) {
+		this.skills = skills;
 	}
 
 	public Boolean getActive() {
@@ -109,5 +105,21 @@ public class Trainer implements Activatable{
 
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	public List<Certification> getCertifications() {
+		return certifications;
+	}
+
+	public void setCertifications(List<Certification> certifications) {
+		this.certifications = certifications;
+	}
+
+	public String getResume() {
+		return resume;
+	}
+
+	public void setResume(String resume) {
+		this.resume = resume;
 	}
 }
