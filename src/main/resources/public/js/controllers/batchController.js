@@ -379,15 +379,11 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 		
 		if (bc.oldRoom.roomID && bc.oldRoom.roomID != bc.batch.room.roomID){
 			roomService.update(bc.oldRoom, function(){
-					console.logRoom(bc.oldRoom);
-					console.log("room updated");
 			}, function(){});
 		}
 		
 		if (bc.oldTrainer.trainerId && bc.oldTrainer.trainerId != bc.batch.trainer.trainerId){
 			trainerService.update(bc.oldTrainer, function(){
-					console.logTrainer(bc.oldTrainer);
-					console.log("trainer updated");
 			}, function(){});
 		}
 		
