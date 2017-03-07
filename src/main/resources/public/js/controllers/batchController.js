@@ -40,19 +40,6 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
             //We can't worry about rooms and buildings right now until we figure the solution for that.
             //  I need to test my new feature.
 
-            /*
-            bc.batch.room       = (incomingBatch.room)       ? incomingBatch.room.roomID         : undefined;
-
-            if(bc.batch.room){
-                bc.batch.building = incomingBatch.room.building.id;
-                bc.batch.location = incomingBatch.room.building.location;
-                    if (bc.batch.room.unavailability){
-                        bc.batch.room.unavailability.startDate = (incomingBatch.startDate) ? incomingBatch.room.unavailability.startDate : undefined;
-                        bc.batch.room.unavailability.endDate = (incomingBatch.endDate) ? incomingBatch.room.unavailability.endDate : undefined;                         
-                    }
-            }
-             */
-
             bc.batch.trainer = (incomingBatch.trainer) ? incomingBatch.trainer.trainerId : undefined;
             bc.batch.cotrainer = (incomingBatch.cotrainer) ? incomingBatch.cotrainer.trainerId : undefined;
 
@@ -125,16 +112,19 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 
     //Updates the batch's skills to reflect the skills list, but with the actual objects.
     bc.updateBatchSkills = function() {
+    	var i;
+    	
         var findFunction = function(a) {
             return ((a.skillId ? a.skillId : -1) == bc.selectedSkills[i]);
         };
 
         bc.batch.skills = [];
 
-        for (var i = 0; i < bc.selectedSkills.length; i += 1) {
+        for (i = 0; i < bc.selectedSkills.length; i += 1) {
             bc.batch.skills.push(bc.skills.find(findFunction))
         }
     };
+    
     // calculates the percentage to which a trainer's skills correspond
     // to the batch's curriculum.
     bc.calcTrainerSkillRatio = function(trainer) {
@@ -200,37 +190,6 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
         bc.batch.endDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 67);
     };
 
-    // calculates the percentage to which a trainer's skills correspond
-    // to the batch's curriculum.
-    bc.calcTrainerSkillRatio = function(trainer) {
-        var cur = bc.selectedSkills;
-
-        if (angular.isUndefined(cur) || cur === null) {
-            return 0;
-        } else if (cur.length == 0) {
-            return 100;
-        }
-
-        var matches = 0;
-        var total = 0;
-
-        for (var i = 0; i < cur.length; i += 1) {
-            for (var j = 0; j < trainer.skills.length; j += 1) {
-                if (cur[i] == (trainer.skills[j] ? trainer.skills[j].skillId : -1)) {
-                    matches++;
-                    break;
-                }
-            }
-            total++;
-        }
-
-        if (total > 0) {
-            return Math.floor((matches / total) * 100);
-        }
-
-        return 100;
-    };
-
     // defaults location to Reston branch 
     settingService.getById(3, function(response) {
         bc.findHQ = response.settingValue;
@@ -253,8 +212,6 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
         bc.nameString = "$c ($m/$d)";
         bc.showToast("Batch name default not found");
     });
-
-
 
     // select end date based on start date
     bc.selectEndDate = function() {
@@ -267,48 +224,6 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
     //Filters trainers based on available dates by calling the trainerSelection filter
     bc.updateTrainers = function(trainers, batchStart, batchEnd) {
         bc.availableTrainers = $filter('trainerSelection')(trainers, batchStart, batchEnd);
-    };
-
-
-    //Updates list of selected skills.
-    bc.updateSelectedSkills = function() {
-        bc.selectedSkills = [];
-        var i;
-
-        var cur = bc.curricula.find(function(a) {
-            return ((a.currId ? a.currId : -1) == bc.batch.curriculum);
-        });
-
-        var foc = bc.foci.find(function(a) {
-            return ((a.currId ? a.currId : -1) == bc.batch.focus);
-        });
-
-        if (cur) {
-            for (i = 0; i < cur.skills.length; i += 1) {
-                bc.selectedSkills.push(cur.skills[i].skillId);
-            }
-        }
-
-        if (foc) {
-            for (i = 0; i < foc.skills.length; i += 1) {
-                bc.selectedSkills.push(foc.skills[i].skillId);
-            }
-        }
-
-        bc.updateBatchSkills();
-    };
-
-    //Updates the batch's skills to reflect the skills list, but with the actual objects.
-    bc.updateBatchSkills = function() {
-        var findFunction = function(a) {
-            return ((a.skillId ? a.skillId : -1) == bc.selectedSkills[i]);
-        };
-
-        bc.batch.skills = [];
-
-        for (var i = 0; i < bc.selectedSkills.length; i += 1) {
-            bc.batch.skills.push(bc.skills.find(findFunction))
-        }
     };
 
     //Recalculates skill ratios for trainers based on the selected curriculum.
