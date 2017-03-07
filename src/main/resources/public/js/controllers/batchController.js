@@ -19,35 +19,11 @@ var assignforce = angular.module("batchApp");
 	};
 
 	/*comment out*/
-	console.logRoom = function(item){		
-		console.log("Room(s):");
-		console.log(item);
-	}
-	console.logBuilding = function(item){		
-		console.log("Building(s):");
-		console.log(item);
-	}
-	console.logLocation = function(item){		
-		console.log("Location(s):");
-		console.log(item);
-	}
-	console.logTrainer = function(item){		
-		console.log("Trainer(s):");
-		console.log(item);
-	}
-	console.logUna = function(item){		
-		console.log("Unavailability(ies):");
-		console.log(item);
-	}
-	console.logBatch = function(item){		
-		console.log("Batch(es):");
-		console.log(item);
-	}
+
 	
 	// Changes form state and populates many variables
 	bc.changeState = function(newState, incomingBatch) {
 		bc.state = newState;
-console.logBatch(incomingBatch);
 		if (newState == "create") {
 			bc.batch = batchService.getEmptyBatch();
 			bc.batch.location = bc.findHQ;
@@ -75,7 +51,6 @@ console.logBatch(incomingBatch);
 				// Getting location based on building info
 				buildingService.getById(bc.batch.building, function(response) {
 					// Setting both to numbers, room is still an object
-					console.log("Service happens here");
 					bc.batch.location = response.location;
 				}, function() {});
 			}
@@ -136,7 +111,6 @@ console.logBatch(incomingBatch);
 	bc.subtractUnavailabilities = function(){
 		flagPos = -1;
 		if(bc.batch.room)
-			console.logRoom(bc.batch.room);
 		bc.batch.room.unavailabilities.forEach(function(unavailability) {
 			unavailability.startDate = new Date(unavailability.startDate);
 			unavailability.endDate = new Date(unavailability.endDate);
@@ -145,10 +119,7 @@ console.logBatch(incomingBatch);
 			unEndTwo = unavailability.endDate;
 			var checkStarts = unavailability.startDate.getDate() == bc.batch.startDate.getDate() && unavailability.startDate.getMonth() == bc.batch.startDate.getMonth() && unavailability.startDate.getFullYear() == bc.batch.startDate.getFullYear();
 			var checkEnds = unavailability.endDate.getDate() == bc.batch.endDate.getDate() && unavailability.endDate.getMonth() == bc.batch.endDate.getMonth() && unavailability.endDate.getFullYear() == bc.batch.endDate.getFullYear();
-			
-			console.log(checkStarts);
-			console.log(checkEnds);
-			
+
 			if (checkStarts && checkEnds) {
 				flagPos = bc.batch.room.unavailabilities.indexOf(unavailability);
 			}
@@ -165,7 +136,6 @@ console.logBatch(incomingBatch);
 		var day = 60 * 60 * 24 * 1000;
 		
 		bc.batch.trainer.unavailabilities.forEach(function(unavailability) {
-			console.log("Better be here 3 times");
 			//** ISSUE **\\
 			// Here, 14 is based on the arbitrary setting when the trainer's unavailability was saved
 			tempEndDate = new Date(unavailability.endDate);
@@ -179,19 +149,13 @@ console.logBatch(incomingBatch);
 			checkStarts = unavailability.startDate.getDate() == bc.batch.startDate.getDate() && unavailability.startDate.getMonth() == bc.batch.startDate.getMonth() && unavailability.startDate.getFullYear() == bc.batch.startDate.getFullYear();
 			var checkEndsOne = unavailability.endDate.getDate() == bc.batch.endDate.getDate() && unavailability.endDate.getMonth() == bc.batch.endDate.getMonth() && unavailability.endDate.getFullYear() == bc.batch.endDate.getFullYear();
 			var checkEndsTwo = tempEndDate.getDate() == bc.batch.endDate.getDate() && tempEndDate.getMonth() == bc.batch.endDate.getMonth() && tempEndDate.getFullYear() == bc.batch.endDate.getFullYear();
-			console.log(checkStarts);
-			console.log(checkEndsOne);
-			console.log(checkEndsTwo);
 			
 			if (checkStarts && (checkEndsOne || checkEndsTwo)) {
-				console.logUna(unavailability);
 				flagPos = bc.batch.trainer.unavailabilities.indexOf(unavailability);
-				console.log(flagPos);
 			}
 		});
 		
 		if (flagPos >= 0) {
-			console.log("Taking out the trainer unavailability");
 			bc.batch.trainer.unavailabilities.splice(flagPos, 1);
 		}
 		
