@@ -26,7 +26,7 @@ app.service( "roomService", function($resource) {
     };
 
     rs.update = function(room, success, error){
-        Room.update(room, success, error);
+    	Room.update(room, success, error);
     };
 
     rs.delete = function(room, success, error){

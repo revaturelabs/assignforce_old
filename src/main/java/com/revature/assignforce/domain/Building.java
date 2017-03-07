@@ -31,7 +31,7 @@ public class Building implements Activatable {
 	@Column(name = "active", insertable = false)
 	private Boolean active;
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany
 	@JoinColumn(name = "BUILDING")
 	private List<Room> rooms;
 
