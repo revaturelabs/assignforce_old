@@ -1,11 +1,12 @@
 /**
- * Created by lazar on 2/22/2017.
+ * Created by lazaro on 2/22/2017.
  */
 
 var assignforce = angular.module( "batchApp" );
 
 assignforce.controller("curriculaCtrl", function ($scope, curriculumService, skillService) {
     var cc = this;
+    // $scope.skillToggle = false;
 
     //functions
 
@@ -132,6 +133,7 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
         })
     };
 
+    //started the code for editing a focus. to be finished at a later time
     cc.editFocus = function (focus) {
         cc.focusName = focus.name;
         cc.selectedSkills = focus.skills;
@@ -145,7 +147,7 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
 
     //retrieving data
 
-    //Grabs all Curriculums
+    //Grabs all Curricula
     curriculumService.getAll(function (response) {
         cc.curricula = response;
     }, function () {
@@ -160,8 +162,8 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
     });
 
     //variables
-    cc.curricula;
-    cc.skills;
+    // cc.curricula;
+    // cc.skills;
     cc.selectedSkills = [];
     cc.focusName = undefined;
     cc.skillName = undefined;
