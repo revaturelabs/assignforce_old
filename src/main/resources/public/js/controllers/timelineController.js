@@ -219,6 +219,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		tlc.oldMaxDate = new Date(tlc.maxDate);
 	}
 
+
 	//Fetches all the batches for the controller  Also attaches their location and building information if possible.
 	tlc.getAllBatches = new Promise(function(resolve)
 	{
@@ -229,24 +230,32 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	        tlc.batches.forEach(function(b){
 	        	if (!tlc.isUndefinedOrNull(b.room))
 	        	{
-	        		buildingService.getById(b.room.building, function(response)
+	        		var building = tlc.buildings.find(function(building){
+	        			return (building.id == b.room.building);
+	        		});
+	        		
+	        		if (building)
 	        		{
-	        			b.building = response;
+	        			b.building = building;
 	        			
-	        			locationService.getById(b.building.location, function(response)
-	        			{
-	        				b.location = response;
-	        			},function(error)
-		        		{
-		        			tlc.showToast("Timeline:  Could not fetch batch's location.");
-			        		b.location = undefined;
+		        		var location = tlc.locations.find(function(location){
+		        			return (location.id == b.building.location);
 		        		});
-	        		},function(error)
+	        			
+	        			if (location)
+	        			{
+	        				b.location = location;
+	        			}
+	        			else
+		        		{
+			        		b.location = undefined;
+		        		}
+	        		}
+	        		else
 	        		{
-	        			tlc.showToast("Timeline:  Could not fetch batch's building.");
 		        		b.building = undefined;
 		        		b.location = undefined;
-	        		});
+	        		}
 	        	}
 	        	else
 	        	{
@@ -261,6 +270,16 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	    	resolve(0);
 	    });
 	});
+	
+	//Returns the location object selected in the filter dropdown.
+	tlc.getSelectedLocation = function()
+	{
+		var location = tlc.locations.find(function(l){
+			return (l.id == tlc.selectedLocation);
+		});
+		
+		return location;
+	}
 
 
 	//Fetches all the trainers for the controller.
@@ -296,6 +315,13 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
         tlc.locations = response;
     }, function() {
     	tlc.showToast("Timeline:  Could not fetch locations.");
+    });
+    
+	//Fetches all the buildings for the controller.
+    buildingService.getAll( function(response) {
+        tlc.buildings = response;
+    }, function() {
+    	tlc.showToast("Timeline:  Could not fetch buildings.");
     });
 
     //Fetches the default value for trainers displayed per page.
@@ -425,9 +451,20 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     }
     
     //Function to change how many trainers are displayed per page.
-	tlc.changeTrainersPerPage = function()
+	tlc.changeTrainersPerPage = function(useFilteredTrainers)
 	{
-		var numTrainers = (tlc.trainers ? tlc.trainers.length : 0);
+		var trainerList;
+		
+		if (useFilteredTrainers)
+		{
+			trainerList = tlc.filteredTrainers;
+		}
+		else
+		{
+			trainerList = tlc.trainers;
+		}
+		
+		var numTrainers = (trainerList ? trainerList.length : 0);
 		
 		tlc.realTrainersPerPage = Math.floor(tlc.trainersPerPage);
 		
@@ -445,12 +482,17 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		tlc.trainerPage = tlc.realTrainerPage;
 		tlc.maxTrainerPages = Math.ceil(numTrainers / tlc.realTrainersPerPage); 
 		
-		tlc.previousPageButtonStatus();
-		tlc.nextPageButtonStatus();
+		if (tlc.realTrainersPerPage > 0)
+		{
+			tlc.hideBatchlessTrainers = false;
+		}
+		
+		tlc.previousPageButtonStatus(useFilteredTrainers);
+		tlc.nextPageButtonStatus(useFilteredTrainers);
 	};
 	
 	//Function to go to the previous trainer page.
-	tlc.previousTrainerPage = function()
+	tlc.previousTrainerPage = function(useFilteredTrainers)
 	{
 		tlc.trainerListStartIndex -= tlc.realTrainersPerPage;
 		tlc.trainerListEndIndex -= tlc.realTrainersPerPage;
@@ -458,12 +500,12 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		tlc.realTrainerPage -= 1;
 		tlc.trainerPage = tlc.realTrainerPage;
 		
-		tlc.previousPageButtonStatus();
-		tlc.nextPageButtonStatus();
+		tlc.previousPageButtonStatus(useFilteredTrainers);
+		tlc.nextPageButtonStatus(useFilteredTrainers);
 	};
 	
 	//Function to go to the next trainer page.
-	tlc.nextTrainerPage = function()
+	tlc.nextTrainerPage = function(useFilteredTrainers)
 	{
 		tlc.trainerListStartIndex += tlc.realTrainersPerPage;
 		tlc.trainerListEndIndex += tlc.realTrainersPerPage;
@@ -471,12 +513,12 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		tlc.realTrainerPage += 1;
 		tlc.trainerPage = tlc.realTrainerPage;
 		
-		tlc.previousPageButtonStatus();
-		tlc.nextPageButtonStatus();
+		tlc.previousPageButtonStatus(useFilteredTrainers);
+		tlc.nextPageButtonStatus(useFilteredTrainers);
 	};
 	
 	//Function to jump to the first trainer page.
-	tlc.firstTrainerPage = function()
+	tlc.firstTrainerPage = function(useFilteredTrainers)
 	{
 		tlc.realTrainerPage = 1;
 		tlc.trainerPage = tlc.realTrainerPage;
@@ -484,12 +526,12 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		tlc.trainerListStartIndex = 0;
 		tlc.trainerListEndIndex = tlc.realTrainersPerPage;
 		
-		tlc.previousPageButtonStatus();
-		tlc.nextPageButtonStatus();
+		tlc.previousPageButtonStatus(useFilteredTrainers);
+		tlc.nextPageButtonStatus(useFilteredTrainers);
 	};
 	
 	//Function to jump to the last trainer page.
-	tlc.lastTrainerPage = function()
+	tlc.lastTrainerPage = function(useFilteredTrainers)
 	{
 		tlc.realTrainerPage = tlc.maxTrainerPages;
 		tlc.trainerPage = tlc.realTrainerPage;
@@ -497,12 +539,12 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		tlc.trainerListStartIndex = tlc.realTrainersPerPage * (tlc.realTrainerPage - 1);
 		tlc.trainerListEndIndex = tlc.trainerListStartIndex + tlc.realTrainersPerPage;
 		
-		tlc.previousPageButtonStatus();
-		tlc.nextPageButtonStatus();
+		tlc.previousPageButtonStatus(useFilteredTrainers);
+		tlc.nextPageButtonStatus(useFilteredTrainers);
 	};
 	
 	//Function for going to a specific page based on user input.
-	tlc.goToTrainerPage = function()
+	tlc.goToTrainerPage = function(useFilteredTrainers)
 	{
 		tlc.realTrainerPage = Math.floor(tlc.trainerPage);
 		
@@ -517,12 +559,12 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		tlc.trainerListStartIndex = tlc.realTrainersPerPage * (tlc.realTrainerPage - 1);
 		tlc.trainerListEndIndex = tlc.trainerListStartIndex + tlc.realTrainersPerPage;
 		
-		tlc.previousPageButtonStatus();
-		tlc.nextPageButtonStatus();
+		tlc.previousPageButtonStatus(useFilteredTrainers);
+		tlc.nextPageButtonStatus(useFilteredTrainers);
 	};
 	
 	//Status of the previous page button.  Enabled/Disabled.
-	tlc.previousPageButtonStatus = function()
+	tlc.previousPageButtonStatus = function(useFilteredTrainers)
 	{
 		//True = disabled, false = enabled.
 		if (tlc.trainerListStartIndex == 0 || tlc.realTrainersPerPage == 0) { 
@@ -535,9 +577,20 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	
 	
 	//Status of the next page button.  Enabled/Disabled.
-	tlc.nextPageButtonStatus = function()
+	tlc.nextPageButtonStatus = function(useFilteredTrainers)
 	{
-		var numTrainers = (tlc.trainers ? tlc.trainers.length : 0);
+		var trainerList;
+		
+		if (useFilteredTrainers)
+		{
+			trainerList = tlc.filteredTrainers;
+		}
+		else
+		{
+			trainerList = tlc.trainers;
+		}
+		
+		var numTrainers = (trainerList ? trainerList.length : 0);
 		
 		//True = disabled, false = enabled.
 		if (tlc.trainerListStartIndex + tlc.realTrainersPerPage >= numTrainers || tlc.realTrainersPerPage == 0) { 
@@ -548,7 +601,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	
 	
 	//Calls for an update to the trainers per page upon loading the page.
-	tlc.changeTrainersPerPage();
+	tlc.changeTrainersPerPage(false);
 	
 	//Conditions on which to use the filtered list of batches, for requisite functions.
 	tlc.useFilteredBatches = function()
@@ -557,11 +610,10 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	}
 	
 	//Refilters the data for the timeline.
-	tlc.filterTimelineData = function()
+	tlc.filterTimelineData = function(worryAboutPagination)
 	{
-		tlc.filteredTrainers = tlc.trainers.filter(tlc.removeTrainersOutOfPage);
-		
-		tlc.filteredBatches = tlc.batches.filter(tlc.removeNoTrainer).filter(tlc.removeIrrelevantBatches).filter(tlc.removeDateless).filter(tlc.removeOutOfDateRange).filter(tlc.removeUnmatchingCurriculum).filter(tlc.removeUnmatchingFocus).filter(tlc.removeUnmatchingLocation).filter(tlc.removeUnmatchingBuilding);
+		tlc.filteredTrainers = tlc.trainers;
+		tlc.filteredBatches = tlc.batches.filter(tlc.removeNoTrainer).filter(tlc.removeDateless).filter(tlc.removeOutOfDateRange).filter(tlc.removeUnmatchingCurriculum).filter(tlc.removeUnmatchingFocus).filter(tlc.removeUnmatchingLocation).filter(tlc.removeUnmatchingBuilding);
 		
 		if (tlc.hideConcludedBatches)
 		{
@@ -577,6 +629,13 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		{
 			tlc.filteredTrainers = tlc.filteredTrainers.filter(tlc.removeBatchlessTrainers);
 		}
+		
+		if (worryAboutPagination)
+		{
+			tlc.filteredTrainers = tlc.filteredTrainers.filter(tlc.removeTrainersOutOfPage);
+		}
+			
+		tlc.filteredBatches = tlc.filteredBatches.filter(tlc.removeIrrelevantBatches);
 		
 		//Sorts the trainer column names based on id.
 		tlc.filteredTrainers.sort(function(a,b)
@@ -713,17 +772,17 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 			  var days = ["Sun.", "Mon.", "Tue.", "Wed.", "Thu.", "Fri.", "Sat."];
 			  var months = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec."];
 			  
-			  msg += d.curriculum ? ("<span style='color:orange'>" + d.curriculum.name + "</span> Batch <br/>") : "<span style='color:red'>No curriculum</span> for this batch. <br/>";
-			  msg += d.focus ? ("w/ focus on <span style='color:orange'>" + d.focus.name + "</span><br/>") : "w/ <span style='color:red'>no focus</span>. <br/>";
+			  msg += d.curriculum ? ("<span style='color:orange'>" + d.curriculum.name + "</span> Batch <br/>") : "<span style='color:tomato'>No curriculum</span> for this batch. <br/>";
+			  msg += d.focus ? ("w/ focus on <span style='color:orange'>" + d.focus.name + "</span><br/>") : "w/ <span style='color:tomato'>no focus</span>. <br/>";
 			  msg += "----------<br/>";
-			  msg += d.trainer ? ("Trainer:  <span style='color:gold'>" + d.trainer.firstName + " " + d.trainer.lastName + "</span> <br/>") : "<span style='color:red'>No trainer</span> for this batch. <br/>";
-			  msg += d.cotrainer ? ("Cotrainer:  <span style='color:gold'>" + d.cotrainer.firstName + " " + d.cotrainer.lastName + "</span> <br/>") : "<span style='color:red'>No cotrainer</span> for this batch. <br/>";
-			  msg += d.startDate ? ("Start Date:  <span style='color:gold'>" + days[startDate.getDay()] + ", " + months[startDate.getMonth()] + " " + startDate.getDate() + ", " + startDate.getFullYear() + "</span> <br/>") : "<span style='color:red'>No start date</span> for this batch. <br/>";
-			  msg += d.endDate ? ("End Date:  <span style='color:gold'>" + days[endDate.getDay()] + ", " + months[endDate.getMonth()] + " " + endDate.getDate() + ", " + endDate.getFullYear() + "</span> <br/>") : "<span style='color:red'>No end date</span> for this batch. <br/>";
+			  msg += d.trainer ? ("Trainer:  <span style='color:gold'>" + d.trainer.firstName + " " + d.trainer.lastName + "</span> <br/>") : "<span style='color:tomato'>No trainer</span> for this batch. <br/>";
+			  msg += d.cotrainer ? ("Cotrainer:  <span style='color:gold'>" + d.cotrainer.firstName + " " + d.cotrainer.lastName + "</span> <br/>") : "<span style='color:tomato'>No cotrainer</span> for this batch. <br/>";
+			  msg += d.startDate ? ("Start Date:  <span style='color:gold'>" + days[startDate.getDay()] + ", " + months[startDate.getMonth()] + " " + startDate.getDate() + ", " + startDate.getFullYear() + "</span> <br/>") : "<span style='color:tomato'>No start date</span> for this batch. <br/>";
+			  msg += d.endDate ? ("End Date:  <span style='color:gold'>" + days[endDate.getDay()] + ", " + months[endDate.getMonth()] + " " + endDate.getDate() + ", " + endDate.getFullYear() + "</span> <br/>") : "<span style='color:tomato'>No end date</span> for this batch. <br/>";
 			  msg += "----------<br/>";
-			  msg += d.location ? ("Location:  <span style='color:gold'>" + d.location.name + " - " + d.location.city + ", "+ d.location.state + "</span> <br/>") : "<span style='color:red'>No location</span> for this batch. <br/>";
-			  msg += d.building ? ("Building:  <span style='color:gold'>" + d.building.name + "</span> <br/>") : "<span style='color:red'>No building</span> for this batch. <br/>";
-			  msg += d.room ? ("Room:  <span style='color:gold'>" + d.room.roomName + "</span> <br/>") : "<span style='color:red'>No room</span> for this batch. <br/>";
+			  msg += d.location ? ("Location:  <span style='color:gold'>" + d.location.name + " - " + d.location.city + ", "+ d.location.state + "</span> <br/>") : "<span style='color:tomato'>No location</span> for this batch. <br/>";
+			  msg += d.building ? ("Building:  <span style='color:gold'>" + d.building.name + "</span> <br/>") : "<span style='color:tomato'>No building</span> for this batch. <br/>";
+			  msg += d.room ? ("Room:  <span style='color:gold'>" + d.room.roomName + "</span> <br/>") : "<span style='color:tomato'>No room</span> for this batch. <br/>";
 			  
 			  return msg;
 		  });
