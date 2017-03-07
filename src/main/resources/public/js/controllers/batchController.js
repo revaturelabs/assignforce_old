@@ -685,8 +685,23 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
         bc.showToast("Could not fetch rooms.");
     });
 
+    // In this funky format because of time constraints and
+    // we had to scrap the bi-directional relationships for the
+    // POJO's due to problems in another sector
     batchService.getAll(function(response) {
         bc.batches = response;
+        bc.batches.forEach(function(batchIn){
+        	bc.buildings.forEach(function(buildingIn){
+        		buildingIn.rooms.forEach(function(roomIn){
+        			if (batchIn.room && roomIn.roomID == batchIn.room.roomID){
+        				batchIn.building = buildingIn;
+        			}
+        			if (batchIn.building) return;
+        		});
+        		if (batchIn.building) return;
+        	});
+        	if (batchIn.building) return;
+        });
     }, function() {
         bc.showToast("Could not fetch batches.");
     });

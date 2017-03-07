@@ -173,10 +173,12 @@
 									batchIn.building = buildingIn;
 									return;
 								}
+								if (batchIn.building) return;
 							});
 							if (batchIn.building) return;
 						});
-                	})
+						if (batchIn.building) return;
+                	});
 				}, function() {
                     hc.showToast("Could not fetch batches.");
                 });
