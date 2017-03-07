@@ -49,7 +49,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
                 buildingService.getById(bc.batch.building, function(response) {
                     // Setting both to numbers, room is still an object
                     bc.batch.location = response.location;
-                }, function(error) {
+                }, function() {
                 	bc.showToast("Failed to fatch batch's building.");
                 });
             }
@@ -66,7 +66,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
                         bc.batch.trainer = trainer;
                         position = bc.trainers.indexOf(trainer);
                     }
-                }, function() {});
+                });
                 bc.trainers.splice(position, 1);
             }
             position = -1;
@@ -134,14 +134,14 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
      * (non-persistent, until update)
      */
     bc.subtractUnavailabilities = function() {
-        flagPos = -1;
+        var flagPos = -1;
         if (bc.batch.room)
             bc.batch.room.unavailabilities.forEach(function(unavailability) {
                 unavailability.startDate = new Date(unavailability.startDate);
                 unavailability.endDate = new Date(unavailability.endDate);
 
-                unStartTwo = unavailability.startDate;
-                unEndTwo = unavailability.endDate;
+                var unStartTwo = unavailability.startDate;
+                var unEndTwo = unavailability.endDate;
                 var checkStarts = unavailability.startDate.getDate() == bc.batch.startDate.getDate() && unavailability.startDate.getMonth() == bc.batch.startDate.getMonth() && unavailability.startDate.getFullYear() == bc.batch.startDate.getFullYear();
                 var checkEnds = unavailability.endDate.getDate() == bc.batch.endDate.getDate() && unavailability.endDate.getMonth() == bc.batch.endDate.getMonth() && unavailability.endDate.getFullYear() == bc.batch.endDate.getFullYear();
 
@@ -163,7 +163,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
         bc.batch.trainer.unavailabilities.forEach(function(unavailability) {
             //** ISSUE **\\
             // Here, 14 is based on the arbitrary setting when the trainer's unavailability was saved
-            tempEndDate = new Date(unavailability.endDate);
+            var tempEndDate = new Date(unavailability.endDate);
             unavailability.endDate += (day * -14); //subtracting 14 days in milliseconds to avoid number-to-date conversions
             unavailability.startDate = new Date(unavailability.startDate);
             unavailability.endDate = new Date(unavailability.endDate);
@@ -171,7 +171,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
             unStartTwo = unavailability.startDate;
             unEndTwo = unavailability.endDate;
 
-            checkStarts = unavailability.startDate.getDate() == bc.batch.startDate.getDate() && unavailability.startDate.getMonth() == bc.batch.startDate.getMonth() && unavailability.startDate.getFullYear() == bc.batch.startDate.getFullYear();
+            var checkStarts = unavailability.startDate.getDate() == bc.batch.startDate.getDate() && unavailability.startDate.getMonth() == bc.batch.startDate.getMonth() && unavailability.startDate.getFullYear() == bc.batch.startDate.getFullYear();
             var checkEndsOne = unavailability.endDate.getDate() == bc.batch.endDate.getDate() && unavailability.endDate.getMonth() == bc.batch.endDate.getMonth() && unavailability.endDate.getFullYear() == bc.batch.endDate.getFullYear();
             var checkEndsTwo = tempEndDate.getDate() == bc.batch.endDate.getDate() && tempEndDate.getMonth() == bc.batch.endDate.getMonth() && tempEndDate.getFullYear() == bc.batch.endDate.getFullYear();
 
@@ -530,7 +530,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 
         batchService.getAll(function(response) {
             bc.batches = response;
-            $scope.$broadcast("repullTimeline");
+            $rootScope.$broadcast("repullTimeline");
         }, function() {
             bc.showToast("Could not fetch batches.");
         });
@@ -562,8 +562,8 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 
     bc.deleteUnavailabilities = function() {
         bc.subtractUnavailabilities();
-        roomService.update(bc.batch.room, function() {}, function() {});
-        trainerService.update(bc.batch.trainer, function() { bc.repull(); }, function() {});
+        roomService.update(bc.batch.room, function() { bc.showToast("Updated room."); }, function() { bc.showToast("Failed to update room."); });
+        trainerService.update(bc.batch.trainer, function(success) { bc.showToast("Updated trainer."); bc.repull(); }, function() { bc.showToast("Failed to update trainer."); });
     }
 
     // Delete single batch
