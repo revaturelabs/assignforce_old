@@ -135,7 +135,9 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
      */
     bc.subtractUnavailabilities = function() {
         var flagPos = -1;
+        
         if (bc.batch.room)
+        {
             bc.batch.room.unavailabilities.forEach(function(unavailability) {
                 unavailability.startDate = new Date(unavailability.startDate);
                 unavailability.endDate = new Date(unavailability.endDate);
@@ -149,6 +151,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
                     flagPos = bc.batch.room.unavailabilities.indexOf(unavailability);
                 }
             });
+        }
 
         //Splice here removes 1 item at flagPos
         //Removes unavailability from loaded room (non-persistent, only when updated again)
@@ -562,8 +565,17 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 
     bc.deleteUnavailabilities = function() {
         bc.subtractUnavailabilities();
-        roomService.update(bc.batch.room, function() { bc.showToast("Updated room."); }, function() { bc.showToast("Failed to update room."); });
-        trainerService.update(bc.batch.trainer, function(success) { bc.showToast("Updated trainer."); bc.repull(); }, function() { bc.showToast("Failed to update trainer."); });
+        roomService.update(bc.batch.room, function() {
+        	bc.showToast("Updated room.");
+        }, function() {
+        	bc.showToast("Failed to update room.");
+        });
+        trainerService.update(bc.batch.trainer, function() {
+        	bc.showToast("Updated trainer.");
+        	bc.repull();
+        }, function() {
+        	bc.showToast("Failed to update trainer.");
+        });
     }
 
     // Delete single batch
