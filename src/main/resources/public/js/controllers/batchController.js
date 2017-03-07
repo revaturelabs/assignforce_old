@@ -376,13 +376,14 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 		// **  But do we need to get by id or use the room
 		
 		// Room is an object, trainer is a resource.  Does that matter?
-		
-		if (bc.oldRoom.roomID && bc.oldRoom.roomID != bc.batch.room.roomID){
+		// Making sure the room exists, and an object as opposed to a number
+		if (bc.oldRoom && bc.oldRoom.roomID && bc.oldRoom.roomID != bc.batch.room.roomID){
 			roomService.update(bc.oldRoom, function(){
 			}, function(){});
 		}
 		
-		if (bc.oldTrainer.trainerId && bc.oldTrainer.trainerId != bc.batch.trainer.trainerId){
+		// Making sure the trainer exists, and an object as opposed to a number
+		if (bc.oldTrainer && bc.oldTrainer.trainerId && bc.oldTrainer.trainerId != bc.batch.trainer.trainerId){
 			trainerService.update(bc.oldTrainer, function(){
 			}, function(){});
 		}
@@ -598,6 +599,8 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
     bc.delete = function(batch) {
         batchService.delete(batch, function() {
             bc.batch = batch;
+            bc.batch.startDate = new Date(bc.batch.startDate);
+            bc.batch.endDate = new Date(bc.batch.endDate);
             bc.deleteUnavailabilities();
             bc.showToast("Batch deleted.");
         }, function() {
