@@ -16,17 +16,13 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
      *                                                              FUNCTIONS
      *************************************************************************/
 
-    /** FUNCTION:
-     * Calls showToast method of aCtrl
-     */
+    /* FUNCTION - Calls showToast method of aCtrl */
     rc.showToast = function(message) {
         $scope.$parent.aCtrl.showToast(message);
     };
 
 
-    /** FUNCTION:
-     * Formats data to be exported as .csv file
-     */
+    /* FUNCTION - Formats data to be exported as .csv file */
     rc.export = function() {
         var formatted = [];
         formatted.push([
@@ -116,9 +112,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
 
 
-    /**
-     * Summarizes graduate output of given curriculum for chosen year
-     */
+    /* FUNCTION - Summarizes graduate output of given curriculum for chosen year */
     rc.currSummary = function(curriculum) {
 
         var summary = [];
@@ -187,6 +181,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     /**
      * Sums months for given curriculum in chosen year
      */
+    /* FUNCTION -  */
     rc.sumCurrYear = function(total, num) {
         return total + num;
     };
@@ -222,6 +217,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     /**
      * Sums monthly total over all curricula
      */
+    /* FUNCTION -  */
     rc.sumMonth = function (month) {
 
         if (rc.batches) {
@@ -262,6 +258,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
      * @param requiredDate
      * @return nothing
      */
+    /* FUNCTION -  */
     rc.calcStartDate = function(requiredDate, index){
 
         var tempDate = new Date(requiredDate);
@@ -326,6 +323,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
      * @param requiredTrainees
      * @return neededBatches
      */
+    /* FUNCTION -  */
     rc.calcReqBatch = function(requiredTrainees, index){
 
         //Compute the total number of Batches estimated.
@@ -362,6 +360,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
      * @param
      * @return
      */
+    /* FUNCTION -  */
     rc.assignCurr = function(bType, index){
 
         rc.cardArr[index].batchType = bType;
@@ -384,6 +383,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
      * @param
      * @return
      */
+    /* FUNCTION -  */
     rc.genCard = function(){
 
         var temp = {};
@@ -411,14 +411,10 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
      * @param index
      * @return
      */
+    /* FUNCTION -  */
     rc.removeCardClick = function(index){
-
-        //Removes a card object from the array at a specifically designated index.
-        rc.cardArr.splice(index, 1);
-
-        //Re-evaluates the cumulative batches.
-        rc.cumulativeBatches();
-
+        rc.cardArr.splice(index, 1);  // Removes a card object from the array index
+        rc.cumulativeBatches();       // Re-evaluates the cumulative batches.
     };
 
 
@@ -433,6 +429,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
      * @return
      */
     //  GOING TO HAVE TO CHANGE THIS BECAUSE IT DOESN'T ALLOW FOR NEW CURRICULA IN THE FUTURE.
+    /* FUNCTION -  */
     rc.cumulativeBatches = function(){
 
         rc.totalJavaBatch = 0;
@@ -478,6 +475,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
      * @param index
      * @return canSubmit
      */
+    /* FUNCTION -  */
     rc.submittionValidityAssertion = function( index ){
         var flagArr = [ 0, 0, 0 ];
         var count = 0;
@@ -487,7 +485,6 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
             canSubmit = 0;
             rc.errMsg = "";
         }else{
-
             if( rc.cardArr[index].requiredGrads == undefined ){
                 rc.errMsg = "Requires Trainee's.";
                 flagArr[0] = 1;
@@ -514,7 +511,6 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         //Checks if multiple inputs are missing or invalid.
         //Sets the error message to the appropriate phrase, if multiple inputs are missing.
         for ( var x in flagArr ){
-
             if( flagArr[x] == 1 ){
                 count = count + 1;
                 if ( count > 1 ){
@@ -535,6 +531,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
      * @param index
      * @return
      */
+    /* FUNCTION -  */
     rc.createBatchClick = function( index ) {
 
         // Create 'can submit' flag here.  '0' implies successful submit, '1' implies submission failure. Default to 1 value.
@@ -569,13 +566,8 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
                 batchService.create(rc.newBatch, success, error);
             }
         }
-        function success (){
-            rc.showToast("Successfully created batch.");
-        }
-
-        function error(){
-            rc.showToast("Failed to create batch.");
-        }
+        function success(){ rc.showToast("Successfully Created Batch");}
+        function error()  { rc.showToast("Failed to Create Batch");}
     };
 
 
@@ -588,12 +580,11 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
      * @param
      * @return
      */
+    /* FUNCTION -  */
     rc.createAllBatchClick = function(){
 
         // Create 'can submit' flag here.  '0' implies successful submit, '1' implies submission failure. Default to 1 value.
-
         for ( var index in rc.cardArr ) {
-
             if( rc.cardArr.hasOwnProperty(index) ) {
                 // Determines whether or not the user is allowed to create batches.
                 canSubmit = rc.submittionValidityAssertion( index );
@@ -620,26 +611,19 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
                         rc.newBatch.curriculum = rc.cardArr[index].batchType.currId;
 
                         //Create batch method called here...
-                        batchService.create(rc.newBatch, createSuccess, error);
+                        batchService.create(rc.newBatch, success, error);
                     }
-
                 }
-
             }
-
         }
-        function createSuccess(){rc.showToast("All Batches Created")}
-
-
-
-        function error(){ /*failure toast here eventually...*/ }
+        function success(){rc.showToast("All Batches Created");}
+        function error()  {rc.showToast("Failed to Create Batches");}
     };
 
-    /************************************************************/
-    /************************************************************/
 
 
     //toggle the Grads table and graph on and off
+    /* FUNCTION -  */
     rc.toggleGradToolbar = function () {
         rc.initGrad = true;
 
@@ -653,7 +637,6 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
         $('#gradTable').slideToggle();
     };
-
     rc.toggleIncomingToolbar = function () {
         rc.initIncoming = true;
 
@@ -705,7 +688,6 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     rc.initGrad = false;
 
 
-    // data gathering
     settingService.getById(6, function(response) {
         rc.graduates = response.settingValue;
     });
@@ -763,12 +745,11 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
 
     // Create second var for graph tat defaults to tables default.
+    /* FUNCTION -  */
     rc.graphData = function() {
         var series = [];
 
-        var curricula = rc.curricula;
-
-        angular.forEach(curricula, function (curr) {
+        angular.forEach(rc.curricula, function (curr) {
             var empty = {};
             var data = [];
             empty.name = curr.name;
@@ -782,14 +763,10 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
         return series;
     };
-
-
     rc.graphData2 = function() {
         var series = [];
 
-        var curricula = rc.curricula;
-
-        angular.forEach(curricula, function(curr) {
+        angular.forEach(rc.curricula, function(curr) {
             var empty = {};
             var data = [];
             empty.name = curr.name;
@@ -804,8 +781,8 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         return series;
     };
 
-    /**/
 
+    /* FUNCTION -  */
     $scope.myGraph = function() {
         chart1 = new Highcharts.chart('container', {
             chart: {
@@ -839,7 +816,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
             tooltip: {
                 headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
                 pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                '<td style="padding:0; font-size: 18px;"><b>{point.y}</b></td></tr>',
                 footerFormat: '</table>',
                 shared: true,
                 useHTML: true
@@ -853,8 +830,6 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
             series: rc.graphData()
         });
     };
-
-
     $scope.myGraph2 = function() {
         chart2 = new Highcharts.chart('container2', {
             chart: {
@@ -907,5 +882,3 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     };
 
 });
-
-
