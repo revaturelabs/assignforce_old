@@ -41,8 +41,6 @@ assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeou
             return;
         }
 
-        //for(var i = 0; i < delList.length; i++){
-            //var obj = delList.shift();
         delList.forEach(function(obj){
 
             if(obj.buildings != undefined){ //location
@@ -81,7 +79,6 @@ assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeou
                 });
             }
         })
-        // this.deleteHelper(delList);
         $mdDialog.hide();
     };
 
