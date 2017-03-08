@@ -5,49 +5,12 @@
 
 var assignforce = angular.module( "batchApp" );
 
-assignforce.directive("fileModel", ['$parse', function ($parse) {
-    return {
-        restrict: 'A', //restricts this directive to be only invoked by attributes
-        link: function(scope, element, attrs) {
-            var model = $parse(attrs.fileModel);
-            var modelSetter = model.assign;
-
-            element.bind('change', function(){
-                scope.$apply(function(){
-                    modelSetter(scope, element[0].files[0]);
-                });
-            });
-        }
-    };
-}]);
-
-// assignforce.filter('skillFilter', function(){
-//     return function(input, check){
-//         var out = [];
-//         var insertSkill = true;
-//
-//         if (input != undefined && check != undefined){
-//             for (var i = 0; i < input.length; i++) {
-//                 for (var j = 0; j < check.length; j++) {
-//                     if(input[i].skillId == check[j].skillId){
-//                         insertSkill = false;
-//                     }
-//                 }
-//                 if (insertSkill){
-//                     out.push(input[i]);
-//                 }
-//                 insertSkill = true;
-//             }
-//         }
-//         return out;
-//     }
-// });
-
-assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, trainerService, skillService, s3Service, $routeParams) {
+assignforce.controller( "profileCtrl", function( $scope,$resource, $http, $mdDialog, $mdToast, trainerService, roomService, skillService, s3Service, $routeParams) {
     var pc = this;
-    pc.tId = $routeParams.id;
+    pc.tId = $routeParams.id; //grabs the trainer id from the url to load the page with the trainer specified
 
     // functions
+
     // calls showToast method of aCtrl
     pc.showToast = function( message ) {
         $scope.$parent.aCtrl.showToast( message );
@@ -62,11 +25,11 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
             accessKeyId: pc.creds.ID,
             secretAccessKey: pc.creds.SecretKey,
             region: 'us-east-1',
-            sslEnabled: false,
             httpOptions:{
                 proxy: 'http://dev.assignforce.revature.pro/'
             }
         });
+
         //set the parameters needed to put an object in the aws s3 bucket
         var params = {
             Bucket: pc.creds.BucketName,
@@ -78,12 +41,11 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         bucket.putObject(params, function (err) {
             if (err){
                 pc.showToast("could not upload file.");
-
+                return;
             }
         });
 
-        //set the trainer to the file name which is the s3 file key in order to grab that object
-        pc.trainer.resume = pc.myFile.name;
+        pc.trainer.resume = pc.myFile.name;//set the trainer resume to the file name(s3 file key to grab that object)
 
         //save the modified trainer resume field
         trainerService.update(pc.trainer, function () {
@@ -97,6 +59,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         pc.myFile = undefined;
     };
 
+    //called to save the current state of the trainers skills
     pc.saveTSkills = function () {
         trainerService.update(pc.trainer, function () {
             pc.showToast("Skills have been saved!");
@@ -107,6 +70,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
 
     //add a skill to the current trainer
     pc.addSkill = function (skill) {
+        //add the skill to the trainer skill array
         for(var i = 0; i < pc.skills.length; i++){
             if(pc.skills[i].name == skill){
                 pc.trainer.skills.push(pc.skills[i]);
@@ -114,6 +78,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
             }
         }
 
+        //remove the same skill from the skill list array
         for(var index = 0; index < pc.skillsList.length; index++){
             if(pc.skillsList[index] == skill){
                 pc.skillsList.splice(index, 1);
@@ -135,15 +100,19 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
 
     //func to upload a resume to the s3 bucket
     pc.uploadCertification = function () {
+        //set the path to certifications folder and use trainer id with the file name
         var path = "Certifications/" + pc.trainer.trainerId + "_" + pc.certFile.name;
 
+        //create a certification object to save in the database
         var certification = {
             file: path,
             name: pc.certName,
             trainer: pc.trainer.trainerId
         };
 
-        pc.trainer.certifications.push(certification);
+        pc.trainer.certifications.push(certification); //add the certification to the trainer
+
+        //update trainer
         trainerService.update(pc.trainer, function () {
             pc.showToast("Certification has been saved.");
         }, function () {
@@ -151,6 +120,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
 
         });
 
+        //create a aws s3 bucket
         var bucket = new AWS.S3({
             apiVersion: '2006-03-01',
             accessKeyId: pc.creds.ID,
@@ -172,8 +142,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         //putting an object in the s3 bucket
         bucket.putObject(params, function (err) {
             if (err) {
-                pc.showToast("File could not be uploaded.");
-
+                pc.showToast("File could not be uploaded.")
             }
         });
 
@@ -217,7 +186,7 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
 
     // data gathering
 
-    // id is hard coded for testing. fix this later
+    // id is hard coded for testing. unless you click on a trainer in the trainer page.
     if(pc.tId){
         trainerService.getById(pc.tId, function (response) {
             pc.trainer = response;
@@ -234,12 +203,14 @@ assignforce.controller( "profileCtrl", function( $scope, $mdDialog, $mdToast, tr
         });
     }
 
+    //grab credentials for s3
     s3Service.getCreds(function (response) {
         pc.creds = response;
     }, function () {
         pc.showToast("Failed to fetch Credentials")
     });
 
+    //grab all the skills and create a skill list
     pc.getAllSkills = function(){
         skillService.getAll( function(response) {
             pc.skills = response;
