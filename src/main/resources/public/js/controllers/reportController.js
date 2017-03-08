@@ -214,10 +214,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
 
 
-    /**
-     * Sums monthly total over all curricula
-     */
-    /* FUNCTION -  */
+    /* FUNCTION - Sums monthly total over all curricula */
     rc.sumMonth = function (month) {
 
         if (rc.batches) {
@@ -352,15 +349,8 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
 
 
-    /**
-     * @Author: Jaina L. Brehm
-     * This method will assign the particular card objects 'btchType' variable
-     *      to the selected value.
-     *
-     * @param
-     * @return
-     */
-    /* FUNCTION -  */
+    /* FUNCTION - This method will assign the particular card objects
+     *            'btchType' variable to the selected value. */
     rc.assignCurr = function(bType, index){
 
         rc.cardArr[index].batchType = bType;
@@ -374,16 +364,9 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
 
 
-    /**
-     * @Author: Jaina L. Brehm
-     * Description:  This method will add another card to the cardArr object,
-     *                  ultimately generating another card in the 'required Trainee's' tab
-     *                  in the Reports tab.
-     *
-     * @param
-     * @return
-     */
-    /* FUNCTION -  */
+    /* FUNCTION - This method will add another card to the cardArr object,
+     *            ultimately generating another card in the 'required Trainee's'
+     *            tab in the Reports tab. */
     rc.genCard = function(){
 
         var temp = {};
@@ -402,16 +385,9 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
 
 
-    /**
-     * @Author:  Jaina L. Brehm
-     * Description:  This method will delete/remove a 'card' in the cardArr object,
-     *                  at a given index.  The deleted 'card' will no longer
-     *                  be displayed on the reports tab.
-     *
-     * @param index
-     * @return
-     */
-    /* FUNCTION -  */
+    /* FUNCTION - This method will delete/remove a 'card' in the cardArr
+     *            object, at a given index.  The deleted 'card' will no
+     *            longer be displayed on the reports tab. */
     rc.removeCardClick = function(index){
         rc.cardArr.splice(index, 1);  // Removes a card object from the array index
         rc.cumulativeBatches();       // Re-evaluates the cumulative batches.
@@ -419,17 +395,14 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
 
 
-    /**
-     * @Author:  Jaina L. Brehm
-     * Description:  This method will generate the sum of all batch types held
-     *                  within the 'cardArr' variable, ultimately displaying them
-     *                  in the 'master card' on the reports tab.
+
+    /* GOING TO HAVE TO CHANGE THIS BECAUSE IT DOESN'T
+     * ALLOW FOR NEW CURRICULA IN THE FUTURE.
      *
-     * @param
-     * @return
-     */
-    //  GOING TO HAVE TO CHANGE THIS BECAUSE IT DOESN'T ALLOW FOR NEW CURRICULA IN THE FUTURE.
-    /* FUNCTION -  */
+     *
+     * FUNCTION - This method will generate the sum of all batch types held
+     *            within the 'cardArr' variable, ultimately displaying them
+     *            in the 'master card' on the reports tab. */
     rc.cumulativeBatches = function(){
 
         rc.totalJavaBatch = 0;
@@ -438,24 +411,23 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         rc.totalCumulativeBatches = 0;
 
         for (var x in rc.cardArr){
-            // rc.cardArr.hasOwnProperty(x) &&
             if(!(angular.isUndefined(rc.cardArr[x].batchType))){
+
                 batchVal = rc.cardArr[x].batchType.currId;
 
                 switch(batchVal){
-
-                    //Switch case for Java Batches
-                    case 1 :    rc.totalJavaBatch += rc.cardArr[x].requiredBatches;
+                    case 1 :   //Switch case for Java Batches
+                        rc.totalJavaBatch += rc.cardArr[x].requiredBatches;
                         rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
                         break;
 
-                    //Switch case for .Net Batches
-                    case 2 :    rc.totalNetBatch += rc.cardArr[x].requiredBatches;
+                    case 2 :   //Switch case for .Net Batches
+                        rc.totalNetBatch += rc.cardArr[x].requiredBatches;
                         rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
                         break;
 
-                    //Switch case for SDET Batches
-                    case 3 :    rc.totalSDETBatch += rc.cardArr[x].requiredBatches;
+                    case 3 :   //Switch case for SDET Batches
+                        rc.totalSDETBatch += rc.cardArr[x].requiredBatches;
                         rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
                         break;
 
@@ -706,7 +678,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     settingService.getById(10, function(response){
         rc.minBatchSize = response.settingValue;
     }, function(){
-        rc.showToast("failure")
+        rc.showToast("Failed to set ")
     });
 
 
