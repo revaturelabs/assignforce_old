@@ -108,11 +108,6 @@
                             </md-card>
                         </div>
                     </md-content>
-                    <div ng-if="rCtrl.batches == undefined" layout="column" layout-wrap layout-align="center center">
-                        <div flex="100"> &nbsp; </div>
-                        <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
-                        <div flex="100"> &nbsp; </div>
-                    </div>
                 </div>
             </md-content>
         </md-card><br><br>
@@ -161,7 +156,7 @@
                     <get-grad-table-template></get-grad-table-template>
                 </md-card>
                 <md-card>
-                    <get-Grad-Data></get-Grad-Data>
+                    <get-Grad-Graph></get-Grad-Graph>
                 </md-card>
             </md-card-content>
         </md-card><br><br>
@@ -170,50 +165,21 @@
 
         <!--Incoming Trainee Table and Graph Accordion -->
         <md-card ng-if="rCtrl.batches != undefined">
-            <md-toolbar layout="columns" class="md-primary md-hue-2">
-                <div class="md-toolbar-tools">
-                    <span> Incoming Trainee Summary for {{ rCtrl.year }} </span>
-                </div>
-                <span flex> </span>
-                <md-button ng-click="null" ng-csv="rCtrl.export2()" style="margin: 12px 6px;" filename="{{rCtrl.year}}report.csv" class="md-icon-button">
-                    <md-tooltip> Export to CSV </md-tooltip>
-                    <md-icon md-menu-origin class="material-icons"> file_download </md-icon>
-                </md-button>
-                <md-menu md-position-mode="target-right target">
-                    <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button">
-                        <md-tooltip class="md-title"> Settings </md-tooltip>
-                        <md-icon md-menu-origin md-svg-icon="img/ic_settings_white_24px.svg"> </md-icon>
-                    </md-button>
-                    <md-menu-content width="4" class="md-padding">
-                        <md-menu-item>
-                            <md-input-container>
-                                <label> Year </label>
-                                <input ng-model="rCtrl.year" type="number">
-                            </md-input-container>
-                        </md-menu-item>
-                        <md-menu-item>
-                            <md-input-container>
-                                <label> Trainees per batch </label>
-                                <input ng-model="rCtrl.incoming" type="number">
-                            </md-input-container>
-                        </md-menu-item>
-                    </md-menu-content>
-                </md-menu>
-                <md-button class="md-icon-button" style="margin: 12px 6px;" ng-click="rCtrl.toggleIncomingToolbar()">
-                    <md-tooltip class="md-title"> Toggle Content </md-tooltip>
-                    <i id="incArrow" class="material-icons">keyboard_arrow_up</i>
-                </md-button>
-            </md-toolbar>
+                <get-Report-Toolbar></get-Report-Toolbar>
             <md-card-content id="incomingTable" ng-show="rCtrl.initIncoming">
                 <md-card>
                     <get-incoming-table-template></get-incoming-table-template>
                 </md-card>
                 <md-card>
-                    <get-Train-Data></get-Train-Data>
+                    <get-Train-Graph></get-Train-Graph>
                 </md-card>
             </md-card-content>
         </md-card>
     </md-content>
+    <div ng-if="rCtrl.batches == undefined" layout="column" layout-wrap layout-align="center center">
+
+    <get-Reports-Loader></get-Reports-Loader>
+    </div>
     <div ng-if="rCtrl.batches == undefined" layout="column" layout-wrap layout-align="center center">
         <div flex="100"> &nbsp; </div>
         <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
