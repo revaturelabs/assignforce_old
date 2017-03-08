@@ -1,0 +1,32 @@
+Jasmine + Karma
+
+link to install Karma test runner
+https://www.jetbrains.com/help/idea/2016.3/preparing-to-use-karma-test-runner.html
+
+link to run unit test with karma and jasmine
+https://www.jetbrains.com/help/idea/2016.3/running-unit-tests-on-karma.html
+
+link to jasmine unit testing in angular
+https://docs.angularjs.org/guide/unit-testing
+
+Download NodeJS
+
+Install Globally using npm(in the intellij terminal)
+	karma
+	jasmine + jamine-core
+	chrome
+	karma-chrome-launcher
+
+Install intellij plugin(settings[alt-ctrl-s] > plugins > Browse repositories and search) 
+	-NodeJS
+	-Karma
+
+Generate the karma.conf.js file (in the intellij terminal) 
+	karma init
+	modify the karma.conf.js file to include all the angulat modules and the project js files(in order)
+		-jquery
+		-angular
+		-angular_modules(animate, aria, material, mocks, resource, route, sanitize, ng-csv)
+		-js/*.js (javascript files in js folder)
+		-js/**/*.js (javascript files in all folders under js)
+		-specs/*.js (javascript jasmine tests under the testing folder)
