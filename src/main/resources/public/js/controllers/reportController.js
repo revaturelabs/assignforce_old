@@ -3,12 +3,9 @@ var assignforce = angular.module("batchApp");
 assignforce.controller("reportCtrl", function($scope, skillService, trainerService, settingService, batchService, curriculumService, monthList) {
 
     var rc = this;
+    var chart1, chart2, canSubmit;
     rc.data = [];
     rc.newTable = [];
-
-
-    var chart1, chart2;
-    var canSubmit;
 
 
 
@@ -135,7 +132,6 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
                     (rc.batches[x]['curriculum'].currId == curriculum.currId)
                 );
 
-
                 if (sonarSeparationOfComplexity && testToPassSonarQubeAndThisIfStatement) {
                     total += rc.graduates;
                 }
@@ -177,20 +173,13 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     };
 
 
-
-    /**
-     * Sums months for given curriculum in chosen year
-     */
-    /* FUNCTION -  */
+    /* FUNCTION - Sums months for given curriculum in chosen year */
     rc.sumCurrYear = function(total, num) {
         return total + num;
     };
 
 
-
-    /**
-     * Sums all curricula for the year
-     */
+    /* FUNCTION - Sums all curricula for the year */
     rc.sumYear = function() {
 
         var total = 0;
@@ -246,50 +235,26 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     };
 
 
-
-    /**
-     * @Author:  Jaina L. Brehm
-     * This method will compute the required batch start date,
-     *      given a required hire date.
-     *
-     * @param requiredDate
-     * @return nothing
-     */
-    /* FUNCTION -  */
+    /* FUNCTION - This method will compute the required batch start date, given a required hire date */
     rc.calcStartDate = function(requiredDate, index){
 
         var tempDate = new Date(requiredDate);
 
-        //Initializes a start date variable and assigns it the value in 'requiredDate'.
+        // Initializes a start date variable and assigns it the value in 'requiredDate'.
         var sDate = ( requiredDate == undefined ) ? (new Date()) : requiredDate;
 
-        //Subtract 10 weeks from the 'requiredDate' to determine the 'startDate'.  **Using 11 week default.
+        // Subtract 10 weeks from the 'requiredDate' to determine the 'startDate'.  **Using 11 week default.
         sDate.setDate( sDate.getDate() - ( 7 * (rc.batchLength)));
 
         // This code segment allows for the batch start date to be pushed to the closest Monday.
         switch(sDate.getDay()){
-
-            case 0 :    sDate.setDate( sDate.getDate() + 1 );
-                break;
-
-            case 1 :    sDate.setDate( sDate.getDate() );
-                break;
-
-            case 2 :    sDate.setDate( sDate.getDate() - 1 );
-                break;
-
-            case 3 :    sDate.setDate( sDate.getDate() - 2 );
-                break;
-
-            case 4 :    sDate.setDate( sDate.getDate() - 3 );
-                break;
-
-            case 5 :    sDate.setDate( sDate.getDate() - 4 );
-                break;
-
-            case 6 :    sDate.setDate( sDate.getDate() - 5 );
-                break;
-
+            case 0 :    sDate.setDate( sDate.getDate() + 1 ); break;
+            case 1 :    sDate.setDate( sDate.getDate() + 0 ); break;
+            case 2 :    sDate.setDate( sDate.getDate() - 1 ); break;
+            case 3 :    sDate.setDate( sDate.getDate() - 2 ); break;
+            case 4 :    sDate.setDate( sDate.getDate() - 3 ); break;
+            case 5 :    sDate.setDate( sDate.getDate() - 4 ); break;
+            case 6 :    sDate.setDate( sDate.getDate() - 5 ); break;
             default:    break;
         }
 
@@ -307,44 +272,22 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
         //Sets the 'startdate' within 'cardArr', @ the 'index' value, equal to the formatted Date.
         rc.cardArr[index].formattedStartDate = formattedDate;
-
     };
 
 
-
-    /**
-     * @Author: Jaina L. Brehm
-     * This method will compute the number of batches needed to be made,
-     *      given the number of required Trainee's.
-     *
-     * @param requiredTrainees
-     * @return neededBatches
-     */
-    /* FUNCTION -  */
+    /* FUNCTION - This method will compute the number of batches needed 
+     *            to be made, given the number of required Trainee's. */
     rc.calcReqBatch = function(requiredTrainees, index){
 
         //Compute the total number of Batches estimated.
-        var neededBatches = requiredTrainees/15;
+        var neededBatches = Math.ceil(requiredTrainees/15);
 
-        /**
-         *  Ensures the correct number of batches are created, regardless of any remainder of trainee's required.
-         *      Example:  If the total number of required trainee's is 40 and the average batch
-         *                  size is 15, the resulting number of batches is '2.666666'.
-         *                  This result should be rounded up to accommodate for the remainder.
-         */
-
-        if ( ( neededBatches > Math.floor( neededBatches ) ) && ( neededBatches < Math.ceil(neededBatches ) ) ) {
-            neededBatches = Math.ceil( neededBatches );
-        }
-
-        /**  Sets the reportsController's 'requiredBatches' data value in each index
-         *      of the 'cardArr' to the computed 'neededBatches' values.
-         */
+        /*  Sets the reportsController's 'requiredBatches' data value in each index
+         *  of the 'cardArr' to the computed 'neededBatches' values. */
         rc.cardArr[index].requiredBatches = neededBatches;
 
         //Calculates the total number of desired batches, across all sections.
         rc.cumulativeBatches();
-
     };
 
 
@@ -438,16 +381,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     };
 
 
-
-    /**
-     * @Author:  Jaina L. Brehm
-     * Description:  This method will assert that batches have valid credentials
-     *                  for submission.
-     *
-     * @param index
-     * @return canSubmit
-     */
-    /* FUNCTION -  */
+    /* FUNCTION - This method will assert that batches have valid credentials for submission. */
     rc.submittionValidityAssertion = function( index ){
         var flagArr = [ 0, 0, 0 ];
         var count = 0;
