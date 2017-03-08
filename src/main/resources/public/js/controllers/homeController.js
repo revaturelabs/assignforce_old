@@ -102,11 +102,29 @@
                 var curriculum = ( batch.curriculum ) ? batch.curriculum.name                                      : "";
                 var trainer    = ( batch.trainer    ) ? batch.trainer.firstName + " " + batch.trainer.lastName     : "";
                 var cotrainer  = ( batch.cotrainer  ) ? batch.cotrainer.firstName + " " + batch.cotrainer.lastName : "";
-                var location   = ( batch.room       ) ? batch.room.building.location.name				           : "";
-                var building   = ( batch.room       ) ? batch.room.building.name								   : "";
-                var room       = ( batch.room       ) ? batch.room.roomName                                        : "";
                 var startDate  = ( batch.startDate  ) ? $filter( "date" )( batch.startDate, "MM/dd/yyyy" )         : "";
                 var endDate    = ( batch.endDate    ) ? $filter( "date" )( batch.endDate, "MM/dd/yyyy" )           : "";
+                var room       = ( batch.room       ) ? batch.room.roomName : "";
+                var building = "";
+                var location = "";
+                hc.buildings.forEach(function(buildingIn){
+                	buildingIn.rooms.forEach(function(roomIn){
+                		if (batch.room && roomIn.roomID == batch.room.roomID){
+                    		building = buildingIn;
+                    		return;
+                    	}                		
+                	});
+                	if (building) return;                	
+                });
+                hc.locations.forEach(function(locationIn){
+                	locationIn.buildings.forEach(function(buildingIn){
+                		if(building && buildingIn.id == building.id){
+                			location = locationIn.name;
+                		}
+                	})
+                })
+                building = (building) ? building.name : "";                
+
                 formatted.push( [ name, curriculum, trainer, cotrainer, location, building, room, startDate, endDate ] );
             });
             
@@ -133,25 +151,42 @@
 
           // page initialization
             // data gathering
-        batchService.getAll( function(response) {
-            hc.batches = response;
-        }, function() {
-            hc.showToast("Could not fetch batches.");
-        });
-
         trainerService.getAll( function(response) {
             hc.trainers = response;
         }, function() {
             hc.showToast("Could not fetch trainers.");
         });
+        
+        // In this funky format because of time constraints and
+        // we had to scrap the bi-directional relationships for the
+        // POJO's due to problems in another sector
         locationService.getAll( function(response) {
             hc.locations = response;
+            buildingService.getAll( function(response) {
+				hc.buildings = response;
+				batchService.getAll(function(response) {
+					hc.batches = response;
+					hc.batches.forEach(function(batchIn) {
+						hc.buildings.forEach(function(buildingIn) {
+							buildingIn.rooms.forEach(function(roomIn) {
+								if (batchIn.room && roomIn.roomID == batchIn.room.roomID) {
+									batchIn.building = buildingIn;
+									return;
+								}
+								if (batchIn.building) return;
+							});
+							if (batchIn.building) return;
+						});
+						if (batchIn.building) return;
+                	});
+				}, function() {
+                    hc.showToast("Could not fetch batches.");
+                });
+            }, function() {
+                hc.showToast("Could not fetch buildings.");
+            });
         }, function() {
             hc.showToast("Could not fetch locations.");
         });
-        buildingService.getAll( function(response) {
-            hc.buildings = response;
-        }, function() {
-            hc.showToast("Could not fetch buildings.");
-        });
+        
     });
