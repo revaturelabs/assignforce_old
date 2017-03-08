@@ -8,12 +8,6 @@ assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeou
         // format text
     function formatText() {
         var title = "Delete ";
-        var success = function(){
-        	//success
-        }
-        var error = function(){
-        	//failure
-        }
 
         if(dc.summary.locations > 0){
             title += dc.summary.locations + " Location(s), ";
@@ -47,8 +41,9 @@ assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeou
             return;
         }
 
-        for(var i = 0; i < delList.length; i++){
-            var obj = delList.shift();
+        //for(var i = 0; i < delList.length; i++){
+            //var obj = delList.shift();
+        delList.forEach(function(obj){
 
             if(obj.buildings != undefined){ //location
                 for(var j = 0; j < obj.buildings.length; j++){
@@ -56,7 +51,11 @@ assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeou
                 }
                 obj = locationService.getClone(obj);
                 obj.active = false;
-                locationService.update(obj, success, error);
+                locationService.update(obj, function(){
+                	//Location inactivated
+                }, function(){
+                	//Unable to inactivate location
+                });
                 
             } else if(obj.rooms != undefined){ //building
                 for(var k = 0; k < obj.rooms.length; k++){
@@ -81,7 +80,7 @@ assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeou
                 	//Could not inactivate room
                 });
             }
-        }
+        })
         // this.deleteHelper(delList);
         $mdDialog.hide();
     };
@@ -94,7 +93,7 @@ assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeou
             buildingService.update(building, function(){
             	//Inactivation successful
             }, function(){
-            	//Inactivation unseccessful
+            	//Inactivation unsuccessful
             });
         })
 
@@ -105,9 +104,9 @@ assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeou
             room = roomService.cloneRoom(room);
             room.active = false;
             roomService.update(room, function(){
-            	dc.showToast("Inactivation successful.");
+            	//Inactivation successful
             }, function(){
-            	dc.showToast("Inactivation unseccessful.");
+            	//Inactivation unsuccessful
             });
         })
     }
