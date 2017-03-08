@@ -8,6 +8,12 @@ assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeou
         // format text
     function formatText() {
         var title = "Delete ";
+        var success = function(){
+        	//success
+        }
+        var error = function(){
+        	//failure
+        }
 
         if(dc.summary.locations > 0){
             title += dc.summary.locations + " Location(s), ";
@@ -50,11 +56,7 @@ assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeou
                 }
                 obj = locationService.getClone(obj);
                 obj.active = false;
-                locationService.update(obj, function(){
-                	//Location updated
-                }, function(){
-                	//Error during inactivation
-                });
+                locationService.update(obj, success, error);
                 
             } else if(obj.rooms != undefined){ //building
                 for(var k = 0; k < obj.rooms.length; k++){
