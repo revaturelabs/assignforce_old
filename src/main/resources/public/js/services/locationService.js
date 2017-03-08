@@ -29,7 +29,7 @@ app.service( "locationService", function($resource) {
     	Location.update(location, success, error);
     };
 
-    //I am not really changing ls
+    //I am not really changing location
     ls.delete = function(location, success, error){
         location.$remove(success, error);
     };

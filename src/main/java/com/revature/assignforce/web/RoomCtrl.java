@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.assignforce.domain.Room;
@@ -63,7 +64,7 @@ public class RoomCtrl {
 	  // UPDATE
 		// updating an existing room object with information passed from room data transfer object
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object updateRoom( @RequestBody RoomDTO in ) {
+	public Object updateRoom( @RequestBody(required=false) RoomDTO in ) {
 		
 		int ID = in.getRoomID();
 		String name = in.getRoomName();
@@ -72,7 +73,7 @@ public class RoomCtrl {
 		List<Unavailable> unavailabilities = in.getUnavailabilities();
 		Boolean active = in.getActive();
 		Room out = new Room( ID, name, building, unavailabilities, active);
-		out = roomService.saveItem( out );
+		out = roomService.saveItem( out );		
 		
 		if (out == null) {
 			return new ResponseEntity<ResponseErrorDTO>( new ResponseErrorDTO("Room failed to update."), HttpStatus.NOT_MODIFIED);
@@ -85,7 +86,6 @@ public class RoomCtrl {
 		// delete room with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object deleteRoom( @PathVariable("id") int ID ) {
-		
 		roomService.deleteItem(ID);
 		return new ResponseEntity<Object>(null, HttpStatus.OK);
 	}

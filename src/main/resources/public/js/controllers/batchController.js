@@ -326,10 +326,18 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
     }
 
 	// Saves/updates batch
+    // The stack for this is:
+    /*
+     * bc.saveBatch, 
+     */
 	bc.saveBatch = function(isValid) {
 		if (isValid) {
 			switch (bc.state) {
 			case "create":
+				// The stack for this is:
+			    /*
+			     * bc.saveBatch, bc.saveUnavailabilities, 
+			     */
 				batchService.create(bc.batch, function() {
 					bc.showToast("Batch saved.");
 					bc.saveUnavailabilities();
@@ -409,8 +417,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 					});
 				}, function() {
 					bc.showToast("Trainer unavailability addition not found.");
-				});
-				// Updates everything on-screen with newly persisted information.				
+				});				
 			}, function() {
                 bc.showToast("Failed to update room.");
             });
@@ -421,8 +428,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
     bc.filterBuildings = function(locationID) {
         if (locationID != undefined) {
             return bc.locations.filter(function(location) {
-                return location.id === locationID
-            })[0].buildings;
+                return location.id === locationID})[0].buildings;
         }
     }
 
@@ -430,8 +436,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
     bc.filterRooms = function(buildingID) {
         if (buildingID != undefined) {
             return bc.buildings.filter(function(building) {
-                return building.id === buildingID
-            })[0].rooms;
+                return building.id === buildingID})[0].rooms;
         } else {
             return [];
         }
