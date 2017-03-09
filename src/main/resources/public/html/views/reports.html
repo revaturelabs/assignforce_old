@@ -1,13 +1,24 @@
 <md-card md-whiteframe="8" ng-cloak>
 
 
+    <!--Main Toolbar -->
+    <md-toolbar layout="columns" class="md-primary">
+        <div class="md-toolbar-tools">
+            <span> Reports </span>
+            <span flex> </span>
+        </div>
+    </md-toolbar>
+
+
+
+
     <!--  Required Trainee's Tab  -->
     <md-card ng-if="rCtrl.batches != undefined">
         <get-Batch-Gen-Table-Toolbar></get-Batch-Gen-Table-Toolbar>
         <md-card-content id="batchCreate" ng-show="rCtrl.initBatchCreate">
-            <md-card>
+            <!--<md-card>-->
                 <get-Batch-Gen-Template></get-Batch-Gen-Template>
-            </md-card>
+            <!--</md-card>-->
         </md-card-content>
     </md-card>
 
