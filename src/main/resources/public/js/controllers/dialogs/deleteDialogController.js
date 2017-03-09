@@ -9,16 +9,34 @@ assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeou
     function formatText() {
         var title = "Delete ";
 
+		// locations alone
         if(dc.summary.locations > 0){
-            title += dc.summary.locations + " Location(s), ";
+            title += dc.summary.locations + " Location(s)";
+        }
+        
+        // 1 location, 1 building, and 1 room
+        if(dc.summary.locations > 0 && dc.summary.buildings > 0 && dc.summary.rooms > 0){
+        	title += ", ";
+        }
+        
+        // 1 location and 1 room || 1 location and 1 building
+        if (dc.summary.locations > 0 && ((dc.summary.buildings == 0 && dc.summary.rooms > 0) || (dc.summary.buildings > 0 && dc.summary.rooms == 0))){
+        	title += " and ";
         }
 
+        // + Buildings
         if(dc.summary.buildings > 0){
-            title += dc.summary.buildings + " Building(s), ";
+            title += dc.summary.buildings + " Building(s)";
+        }
+        
+        // 1 building and 1 room
+        if(dc.summary.buildings > 0 && dc.summary.rooms > 0){
+        	title += " and ";
         }
 
+        // + rooms
         if(dc.summary.rooms > 0){
-            title += "and " + dc.summary.rooms + " Room(s).";
+            title += dc.summary.rooms + " Room(s)";
         }
 
         title += "?";

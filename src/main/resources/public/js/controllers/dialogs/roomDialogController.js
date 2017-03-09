@@ -16,6 +16,8 @@ assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationS
             if (roomForm.$valid) { //check if the room dialog form is valid
                 
                 if (rdc.state == "edit") { //edit an existing room
+                	console.log("room inside of edit");
+                	console.log(rdc.room);
                     roomService.update( rdc.room, function(){
                         $mdDialog.hide();
                     }, function(){
