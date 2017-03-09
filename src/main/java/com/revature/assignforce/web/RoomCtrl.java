@@ -64,7 +64,7 @@ public class RoomCtrl {
 	  // UPDATE
 		// updating an existing room object with information passed from room data transfer object
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object updateRoom( @RequestBody(required=false) RoomDTO in ) {
+	public Object updateRoom( @RequestBody RoomDTO in ) {
 		
 		int ID = in.getRoomID();
 		String name = in.getRoomName();
