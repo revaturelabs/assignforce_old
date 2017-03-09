@@ -16,8 +16,6 @@ assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
 		if (isValid) {
 
 			if (bdc.state == "edit") {
-				console.log("building inside of edit");
-				console.log(bdc.building);
 				buildingService.update( bdc.building, function () {
                     $mdDialog.hide();
                 }, function () {
