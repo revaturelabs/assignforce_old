@@ -530,6 +530,19 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
     //toggle the Grads table and graph on and off
     /* FUNCTION -  */
+    rc.toggleCrateBatchToolbar = function () {
+        rc.initBatchCreate = true;
+
+        if(rc.toggleBatch){
+            rc.toggleBatch = false;
+            $("#batchArrow").text("keyboard_arrow_down");
+        } else {
+            rc.toggleBatch = true;
+            $("#batchArrow").text("keyboard_arrow_up");
+        }
+
+        $('#batchCreate').slideToggle();
+    };
     rc.toggleGradToolbar = function () {
         rc.initGrad = true;
 
@@ -587,9 +600,9 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
     rc.monthList = monthList;
 
-
-    rc.toggleIncoming = true; //used to hide and show incoming card
+    rc.toggleBatch = true; //used to hide and show graduates card
     rc.toggleGrad = true; //used to hide and show graduates card
+    rc.toggleIncoming = true; //used to hide and show incoming card
     rc.initIncoming = false;
     rc.initGrad = false;
 
@@ -720,9 +733,9 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
                 }
             },
             tooltip: {
-                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0; font-size: 18px;"><b>{point.y}</b></td></tr>',
+                headerFormat: '<span style="font-size:15px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0; font-size: 14px;">{series.name}: </td>' +
+                '<td style="padding:0; font-size: 14px;"><b>{point.y}</b></td></tr>',
                 footerFormat: '</table>',
                 shared: true,
                 useHTML: true
@@ -739,6 +752,10 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     $scope.myGraph2 = function() {
         chart2 = new Highcharts.chart('container2', {
             chart: {
+                animation: true,
+                backgroundColor: "#555",
+                borderColor: '#EBBA95',
+                borderWidth: 2,
                 type: 'column',
                 events: {
                     load: function () {
@@ -763,13 +780,14 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
             yAxis: {
                 min: 0,
                 title: {
-                    text: 'Trainees'
+                    text: 'Trainees',
+                    style:{ "fontSize": "13px", "fontWeight":"bold" }
                 }
             },
             tooltip: {
                 headerFormat: "<span style='font-size:15px'>{point.key}</span><table>",
-                pointFormat: "<tr><td style='color:{series.color};padding:0'>{series.name}: </td>" +
-                "<td style='padding:0'><b>{point.y}</b></td></tr>",
+                pointFormat: "<tr><td style='color:{series.color};padding:0; font-size: 14px;'>{series.name}: </td>" +
+                "<td style='padding:0; font-size: 14px;'><b>{point.y}</b></td></tr>",
                 footerFormat: '</table>',
                 shared: true,
                 useHTML: true
