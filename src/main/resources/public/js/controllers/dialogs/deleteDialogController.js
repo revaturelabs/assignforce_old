@@ -8,6 +8,7 @@ assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeou
         // format text
     function formatText() {
         var title = "Delete ";
+        // This could be optimized
 
 		// locations alone
         if(dc.summary.locations > 0){
