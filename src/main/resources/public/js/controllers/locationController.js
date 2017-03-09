@@ -262,20 +262,32 @@ assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, loca
 
 		if (lc.selectedList.length > 0) {
 			lc.selectedList.forEach(function(item) {
+				// Building was selected
 				if (Array.isArray(item.rooms)) {
-					item.rooms.forEach(function(){
-						summary.rooms++;
+					item.rooms.forEach(function(room){
+						if(room.active){
+							summary.rooms++;
+						}
 					});
 					summary.buildings++;
 				}
+				// Location was selected
 				else if (Array.isArray(item.buildings)){
-					item.buildings.forEach(function(){
-						summary.buildings++;
+					item.buildings.forEach(function(building){
+						if(building.active){
+							summary.buildings++;
+						}						
+						building.rooms.forEach(function(room){
+							if (room.active){
+								summary.rooms++;
+							}
+						})
 					});
 					summary.locations++;
 				}
+				// Else item is a room
 				else{
-					summary.locations++;
+					summary.rooms++;
 				}
 			});
 		}

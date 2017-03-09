@@ -30,7 +30,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 		} else if (newState == "edit"){
 			// Needs optimization
 
-			bc.batch.id = (bc.state == "edit") ? incomingBatch.id : undefined;
+			bc.batch.id = incomingBatch.id;
 
 			bc.batch.name = incomingBatch.name;
 			bc.batch.startDate = (incomingBatch.startDate) ? new Date(incomingBatch.startDate) : undefined;
@@ -86,11 +86,9 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 	        bc.trainers.push(bc.batch.trainer);
 	        tempBuilding.rooms.push(bc.batch.room);
 	        
-	        if (bc.state == "edit"){
-				bc.oldRoom = bc.batch.room;
-				bc.oldTrainer = bc.batch.trainer;
-			}
-	        
+	        bc.oldRoom = bc.batch.room;
+			bc.oldTrainer = bc.batch.trainer;
+				        
 	        bc.batch.room = bc.batch.room.roomID;
 	        bc.updateTrainersAndRooms(bc.trainers, bc.filterRooms(bc.batch.building), bc.batch.startDate, bc.batch.endDate);
 			bc.batch.trainer = bc.batch.trainer.trainerId;
@@ -134,7 +132,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 	
 	/*
 	 * Remove unavailability from bc.batch.room and bc.batch.trainer
-	 * (non-persistent, until update)
+	 * (non-persistent, until update).  //** ISSUE **\\ -*Could be optimized*-
 	 */
 	bc.subtractUnavailabilities = function(){
 		var flagPos = -1;
@@ -150,38 +148,40 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 			    	flagPos = bc.batch.room.unavailabilities.indexOf(unavailability);
 			    }
 		    });
+		    
+			//Splice here removes 1 item at flagPos
+			//Removes unavailability from loaded room (non-persistent, only when updated again)
+			if (flagPos >= 0) {
+				bc.batch.room.unavailabilities.splice(flagPos, 1);
+				flagPos = -1;
+			}
         }
 
-		//Splice here removes 1 item at flagPos
-		//Removes unavailability from loaded room (non-persistent, only when updated again)
-		if (flagPos >= 0) {
-			bc.batch.room.unavailabilities.splice(flagPos, 1);
-			flagPos = -1;
-		}
-		
-		// seconds * minutes * hours * milliseconds = 1 day 
-		var day = 60 * 60 * 24 * 1000;
-		
-		bc.batch.trainer.unavailabilities.forEach(function(unavailability) {
-			//** ISSUE **\\
-			// Here, 14 is based on the arbitrary setting when the trainer's unavailability was saved
-			var tempEndDate = new Date(unavailability.endDate);
-			unavailability.endDate += (day * -14); //subtracting 14 days in milliseconds to avoid number-to-date conversions
-			unavailability.startDate = new Date(unavailability.startDate);
-			unavailability.endDate = new Date(unavailability.endDate);
-			
-			checkStarts = unavailability.startDate.getDate() == bc.batch.startDate.getDate() && unavailability.startDate.getMonth() == bc.batch.startDate.getMonth() && unavailability.startDate.getFullYear() == bc.batch.startDate.getFullYear();
-			var checkEndsOne = unavailability.endDate.getDate() == bc.batch.endDate.getDate() && unavailability.endDate.getMonth() == bc.batch.endDate.getMonth() && unavailability.endDate.getFullYear() == bc.batch.endDate.getFullYear();
-			var checkEndsTwo = tempEndDate.getDate() == bc.batch.endDate.getDate() && tempEndDate.getMonth() == bc.batch.endDate.getMonth() && tempEndDate.getFullYear() == bc.batch.endDate.getFullYear();
-			
-			if (checkStarts && (checkEndsOne || checkEndsTwo)) {
-				flagPos = bc.batch.trainer.unavailabilities.indexOf(unavailability);
+		if (bc.batch.trainer) {
+			// seconds * minutes * hours * milliseconds = 1 day 
+			var day = 60 * 60 * 24 * 1000;
+
+			bc.batch.trainer.unavailabilities.forEach(function(unavailability) {
+				//** ISSUE **\\
+				// Here, 14 is based on the arbitrary setting when the trainer's unavailability was saved
+				var tempEndDate = new Date(unavailability.endDate);
+				unavailability.endDate += (day * -14); //subtracting 14 days in milliseconds to avoid number-to-date conversions
+				unavailability.startDate = new Date(unavailability.startDate);
+				unavailability.endDate = new Date(unavailability.endDate);
+
+				checkStarts = unavailability.startDate.getDate() == bc.batch.startDate.getDate() && unavailability.startDate.getMonth() == bc.batch.startDate.getMonth() && unavailability.startDate.getFullYear() == bc.batch.startDate.getFullYear();
+				var checkEndsOne = unavailability.endDate.getDate() == bc.batch.endDate.getDate() && unavailability.endDate.getMonth() == bc.batch.endDate.getMonth() && unavailability.endDate.getFullYear() == bc.batch.endDate.getFullYear();
+				var checkEndsTwo = tempEndDate.getDate() == bc.batch.endDate.getDate() && tempEndDate.getMonth() == bc.batch.endDate.getMonth() && tempEndDate.getFullYear() == bc.batch.endDate.getFullYear();
+
+				if (checkStarts && (checkEndsOne || checkEndsTwo)) {
+					flagPos = bc.batch.trainer.unavailabilities.indexOf(unavailability);
+				}
+			});
+
+			if (flagPos >= 0) {
+				bc.batch.trainer.unavailabilities.splice(flagPos, 1);
 			}
-		});
-		
-		if (flagPos >= 0) {
-			bc.batch.trainer.unavailabilities.splice(flagPos, 1);
-		}	
+		}
 	}
 
 	// Ensures the batch end date can't be set before the start date.
@@ -330,6 +330,10 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 		if (isValid) {
 			switch (bc.state) {
 			case "create":
+				// The stack for this is:
+			    /*
+			     * bc.saveBatch, bc.saveUnavailabilities 
+			     */
 				batchService.create(bc.batch, function() {
 					bc.showToast("Batch saved.");
 					bc.saveUnavailabilities();
@@ -403,14 +407,17 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 					bc.batch.trainer.unavailabilities.push(bc.unavailability);
 					//  Persists unavailability to trainer
 					trainerService.update(bc.batch.trainer, function() {
+						//** ISSUE **\\-*Even though repull is called here, trainer and room list
+						/* are showing just-saved batch trainers and rooms with overlapping unavailabilities.
+						*  Probably has to do with how those fields are updated*-
+						*/
 						bc.repull();
 					}, function() {
 						bc.showToast("Failed to update trainer.");
 					});
 				}, function() {
 					bc.showToast("Trainer unavailability addition not found.");
-				});
-				// Updates everything on-screen with newly persisted information.				
+				});				
 			}, function() {
                 bc.showToast("Failed to update room.");
             });
@@ -421,8 +428,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
     bc.filterBuildings = function(locationID) {
         if (locationID != undefined) {
             return bc.locations.filter(function(location) {
-                return location.id === locationID
-            })[0].buildings;
+                return location.id === locationID})[0].buildings;
         }
     }
 
@@ -430,8 +436,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
     bc.filterRooms = function(buildingID) {
         if (buildingID != undefined) {
             return bc.buildings.filter(function(building) {
-                return building.id === buildingID
-            })[0].rooms;
+                return building.id === buildingID})[0].rooms;
         } else {
             return [];
         }
@@ -578,26 +583,33 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
     bc.clone = function(batch) {
         bc.changeState("clone", batch);        
         $window.scrollTo(0, 0);
-    }
+	}
 
-    bc.deleteUnavailabilities = function() {
-        bc.subtractUnavailabilities();
-        roomService.update(bc.batch.room, function() {
-        	bc.showToast("Updated room.");
-        }, function() {
-        	bc.showToast("Failed to update room.");
-        });
-        trainerService.update(bc.batch.trainer, function() {
-        	bc.showToast("Updated trainer.");
-        	bc.repull();
-        }, function() {
-        	bc.showToast("Failed to update trainer.");
-        });
-    }
+    // Subtracts unavailabilities, then persists them
+    //** ISSUE **\\ -*When  both exist, repull is run twice.  Look into promises in Angular, maybe.*-
+	bc.deleteUnavailabilities = function() {
+		bc.subtractUnavailabilities();
+		if (bc.batch.room) {
+			roomService.update(bc.batch.room, function() {
+				bc.showToast("Updated room.");
+				bc.repull();
+			}, function() {
+				bc.showToast("Failed to update room.");
+			});
+		}
+		if (bc.batch.trainer) {
+			trainerService.update(bc.batch.trainer, function() {
+				bc.showToast("Updated trainer.");
+				bc.repull();
+			}, function() {
+				bc.showToast("Failed to update trainer.");
+			});
+		}
+	}
 
-    // Delete single batch
-    bc.delete = function(batch) {
-        batchService.delete(batch, function() {
+	// Delete single batch
+	bc.delete = function(batch) {
+        batchService.delete(batch, function() {            
             bc.batch = batch;
             bc.batch.startDate = new Date(bc.batch.startDate);
             bc.batch.endDate = new Date(bc.batch.endDate);
@@ -608,7 +620,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
         });
     }
 
-    // Delete multiple batches
+    // Delete multiple batches /** ISSUE **\ -*Untested*-
     bc.deleteMultiple = function() {
         bc.batches = undefined;
         var delList = bc.batchesSelected;

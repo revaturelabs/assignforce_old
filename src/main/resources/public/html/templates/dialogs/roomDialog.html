@@ -1,7 +1,7 @@
 <!-- rdCtrl is roomDialogController.js -->
     <md-dialog aria-label="Add Room">
 
-        <form name="roomForm">
+        <form name="roomForm" ng-submit="rdCtrl.save(roomForm)" novalidate>
 
             <div>
                 
@@ -27,7 +27,7 @@
 
                 <md-dialog-actions>
 
-                    <md-button class="md-primary" ng-click="rdCtrl.save(roomForm)"> Save </md-button>
+                    <md-button class="md-primary" type="submit"> Save </md-button>
                     <md-button class="md-primary" ng-click="rdCtrl.cancel()"> Cancel </md-button>
                 
                 </md-dialog-actions>
