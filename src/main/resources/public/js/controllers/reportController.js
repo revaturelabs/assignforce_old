@@ -705,6 +705,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     $scope.myGraph = function() {
         chart1 = new Highcharts.chart('container', {
             chart: {
+                animation: true,
                 type: 'column',
                 events: {
                     load: function () {
@@ -753,9 +754,6 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         chart2 = new Highcharts.chart('container2', {
             chart: {
                 animation: true,
-                backgroundColor: "#555",
-                borderColor: '#EBBA95',
-                borderWidth: 2,
                 type: 'column',
                 events: {
                     load: function () {
