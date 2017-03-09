@@ -59,7 +59,7 @@ assignforce.directive('getGradTableTemplate', function() {
 
 
 
-assignforce.directive('getIncomingTableTemplate', function() {
+assignforce.directive('getTrainTableTemplate', function() {
     return {
         restrict: 'ACE',
         scope: true,
@@ -70,21 +70,41 @@ assignforce.directive('getIncomingTableTemplate', function() {
 
 
 
-assignforce.directive('getReportToolbar', function() {
+assignforce.directive('getTrainTableToolbar', function() {
     return {
         restrict: 'ACE',
         scope: true,
-        templateUrl: "html/templates/reportToolbar.html",
+        templateUrl: "html/templates/toolbars/traineeTableToolbar.html",
         bindToController: true
     };
 });
 
 
-assignforce.directive('getReportsLoader', function() {
+assignforce.directive('getGradTableToolbar', function() {
     return {
         restrict: 'ACE',
         scope: true,
-        templateUrl: "html/templates/loaders/reportsLoader.html",
+        templateUrl: "html/templates/toolbars/gradTableToolbar.html",
+        bindToController: true
+    };
+});
+
+
+assignforce.directive('getBatchGenTableToolbar', function() {
+    return {
+        restrict: 'ACE',
+        scope: true,
+        templateUrl: "html/templates/toolbars/batchGenToolbar.html",
+        bindToController: true
+    };
+});
+
+
+assignforce.directive('getBatchGenTemplate', function() {
+    return {
+        restrict: 'ACE',
+        scope: true,
+        templateUrl: "html/templates/batchGenTemplate.html",
         bindToController: true
     };
 });
