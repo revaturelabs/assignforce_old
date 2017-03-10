@@ -691,7 +691,8 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
             yAxis: {
                 min: 0,
                 title: {
-                    text: 'Graduates'
+                    text: 'Graduates',
+                    style:{ "fontSize": "13px", "fontWeight":"bold" }
                 }
             },
             tooltip: {
