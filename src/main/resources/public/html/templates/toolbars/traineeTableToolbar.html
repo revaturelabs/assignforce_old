@@ -1,4 +1,4 @@
-<md-toolbar layout="columns" class="md-primary md-hue-2">
+<md-toolbar layout="columns" class="md-primary md-hue-2" ng-click="rCtrl.toggleIncomingToolbar()">
     <div class="md-toolbar-tools">
         <span> Incoming Trainee Summary for {{ rCtrl.year }} </span>
     </div>
@@ -27,7 +27,7 @@
             </md-menu-item>
         </md-menu-content>
     </md-menu>
-    <md-button class="md-icon-button" style="margin: 12px 6px;" ng-click="rCtrl.toggleIncomingToolbar()">
+    <md-button class="md-icon-button" style="margin: 12px 6px;">
         <md-tooltip class="md-title"> Toggle Content </md-tooltip>
         <i id="incArrow" class="material-icons">keyboard_arrow_up</i>
     </md-button>
