@@ -2,16 +2,19 @@ package com.revature.assignforce.domain.dto;
 
 import java.util.List;
 
-import com.revature.assignforce.domain.Building;
+import com.revature.assignforce.domain.Batch;
 import com.revature.assignforce.domain.Unavailable;
 
 public class RoomDTO {
 
+	// batches list may be unrequired.
+	// currently, update room is broken, just trying to figure out why.
 	private int roomID;
 	private String roomName;
 	private int building;
 	private List<Unavailable> unavailabilities;
-	private Boolean active;
+	private List<Batch> batches;
+	private boolean active;
 	
 	public int getRoomID() {
 		return roomID;
@@ -46,6 +49,12 @@ public class RoomDTO {
 	}
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+	public List<Batch> getBatches() {
+		return batches;
+	}
+	public void setBatches(List<Batch> batches) {
+		this.batches = batches;
 	}
 	
 }

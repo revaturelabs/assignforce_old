@@ -45,9 +45,11 @@
                 <md-divider></md-divider>
             
             </md-list-item>
-            <md-button class="md-primary nonwhite" ng-click="sCtrl.updateSettings()" >Save</md-button>
-            <md-button class="md-secondary nonwhite" ng-click="sCtrl.resetSettings()">Reset</md-button>
-        </md-list>
+            <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+                <md-button layout-align="center center" class="md-primary md-raised md-warn" ng-click="sCtrl.updateSettings()" >Save</md-button>
+                <md-button layout-align="center center" class="md-secondary md-raised white" ng-click="sCtrl.resetSettings()">Reset</md-button>
+            </section>
+            </md-list>
 
         <div ng-if="sCtrl.locations == undefined" layout="column" layout-wrap layout-align="center center">
             <div flex="100"> &nbsp; </div>

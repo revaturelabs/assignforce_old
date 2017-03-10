@@ -3,22 +3,41 @@ var assignforce = angular.module( "batchApp" );
 assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeout, locationService, buildingService, roomService ){
 
     var dc = this;
-
-      // functions
+    
+      // functions	
         // format text
     function formatText() {
         var title = "Delete ";
+        // This could be optimized
 
+		// locations alone
         if(dc.summary.locations > 0){
-            title += dc.summary.locations + " Location(s), ";
+            title += dc.summary.locations + " Location(s)";
+        }
+        
+        // 1 location, 1 building, and 1 room
+        if(dc.summary.locations > 0 && dc.summary.buildings > 0 && dc.summary.rooms > 0){
+        	title += ", ";
+        }
+        
+        // 1 location and 1 room || 1 location and 1 building
+        if (dc.summary.locations > 0 && ((dc.summary.buildings == 0 && dc.summary.rooms > 0) || (dc.summary.buildings > 0 && dc.summary.rooms == 0))){
+        	title += " and ";
         }
 
+        // + Buildings
         if(dc.summary.buildings > 0){
-            title += dc.summary.buildings + " Building(s), ";
+            title += dc.summary.buildings + " Building(s)";
+        }
+        
+        // 1 building and 1 room
+        if(dc.summary.buildings > 0 && dc.summary.rooms > 0){
+        	title += " and ";
         }
 
+        // + rooms
         if(dc.summary.rooms > 0){
-            title += "and " + dc.summary.rooms + " Room(s).";
+            title += dc.summary.rooms + " Room(s)";
         }
 
         title += "?";
@@ -41,27 +60,44 @@ assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeou
             return;
         }
 
-        for(var i = 0; i < delList.length; i++){
-            var obj = delList.shift();
+        delList.forEach(function(obj){
 
             if(obj.buildings != undefined){ //location
                 for(var j = 0; j < obj.buildings.length; j++){
                     deleteBuildings(obj.buildings);
                 }
                 obj = locationService.getClone(obj);
-                locationService.delete(obj);
+                obj.active = false;
+                locationService.update(obj, function(){
+                	//Location inactivated
+                }, function(){
+                	//Unable to inactivate location
+                });
+                
             } else if(obj.rooms != undefined){ //building
                 for(var k = 0; k < obj.rooms.length; k++){
                     deleteRooms(obj.rooms);
                 }
                 obj = buildingService.cloneBuilding(obj);
-                buildingService.delete(obj);
+                obj.active = false;
+                
+                buildingService.update(obj, function(){
+                	//Building, room(s) inactivated
+                }, function(){
+                	//Error while inactivating building, room(s)
+                });
+                
             } else { //room
                 obj = roomService.cloneRoom(obj);
-                roomService.delete(obj);
+            	obj.active = false;
+            	
+                roomService.update(obj, function(){
+                	//Room inactivated
+                }, function(){
+                	//Could not inactivate room
+                });
             }
-        }
-        // this.deleteHelper(delList);
+        })
         $mdDialog.hide();
     };
 
@@ -69,7 +105,12 @@ assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeou
         arr.forEach(function(building){
             deleteRooms(building.rooms);
             building = buildingService.cloneBuilding(building);
-            buildingService.delete(building);
+            building.active = false;
+            buildingService.update(building, function(){
+            	//Inactivation successful
+            }, function(){
+            	//Inactivation unsuccessful
+            });
         })
 
     }
@@ -77,7 +118,12 @@ assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeou
     function deleteRooms(arr){
         arr.forEach(function(room){
             room = roomService.cloneRoom(room);
-            roomService.delete(room);
+            room.active = false;
+            roomService.update(room, function(){
+            	//Inactivation successful
+            }, function(){
+            	//Inactivation unsuccessful
+            });
         })
     }
 });

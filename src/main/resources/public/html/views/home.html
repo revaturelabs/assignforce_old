@@ -60,7 +60,7 @@
                                 <td md-cell ng-if="batch.cotrainer == null"> {{ batch.trainer.firstName | limitTo:20 }} {{ batch.trainer.lastName | limitTo:20 }} </td>
                                 <td md-cell ng-if="batch.cotrainer != null"> {{ batch.trainer.firstName | limitTo:20 }} {{ batch.trainer.lastName | limitTo:20 }} / 
                                                                              {{ batch.cotrainer.firstName | limitTo:20 }} {{ batch.cotrainer.lastName | limitTo:20 }} </td>
-                                <td md-cell> {{ batch.room.building.name }} </td>
+                                <td md-cell> {{ batch.building.name }} </td>
                                 <td md-cell> {{ batch.room.roomName | limitTo:20 }} </td>
                                 <td md-cell> {{ batch.startDate | date:'MMM. d, yyyy' }} </td>
                                 <td md-cell> {{ batch.endDate | date:'MMM. d, yyyy' }} </td>

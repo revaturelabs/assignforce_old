@@ -3,19 +3,95 @@ var assignforce = angular.module("batchApp");
 assignforce.controller("reportCtrl", function($scope, skillService, trainerService, settingService, batchService, curriculumService, monthList) {
 
     var rc = this;
+    var chart1, chart2, canSubmit;
     rc.data = [];
     rc.newTable = [];
 
 
-    var chart1, chart2;
-    var canSubmit;
+
+    /**************************************************************************
+     *                                            RETRIEVE DATA & SET VALUES
+     *************************************************************************/
+    rc.year = new Date().getFullYear(); // Gets current year
+    rc.today = new Date();              // The current date.
+    rc.reqDate = new Date();            // The date Trainee's are needed by.
+    rc.startDate = new Date();          // Batch(s) StartDate variable.
+    rc.totalNetBatch = 0;               // Total number of .NET batches within 'cardArr'.
+    rc.totalSDETBatch = 0;              // Total number of SDET batches within 'cardArr'.
+    rc.totalJavaBatch = 0;              // Total number of Java batches within 'cardArr'.
+    rc.totalCumulativeBatches = 0;      // Total number of required batches within 'cardArr'.
+
+    // The 'newObj' object, and it's assignments, are used to generate
+    // new objects to be placed within the 'cardArr' array object.
+    rc.newObj = {};
+    rc.newObj.requiredGrads = rc.requiredGrads;
+    rc.newObj.reqDate = rc.reqDate;
+    rc.newObj.requiredBatches = rc.requiredBatches;
+    rc.newObj.startDate = rc.startDate;
+    rc.newObj.formattedStartDate = rc.formattedStartDate;
+    rc.newObj.batchType = rc.batchType;
+
+    rc.cardArr = [rc.newObj];   // Array of Required Trainee batch generation objects.
+
+    rc.currOrder = "name";
+
+    rc.monthList = monthList;
+
+    rc.toggleBatch = true;    // Used to hide and show batch gen card
+    rc.toggleGrad = true;     // Used to hide and show graduates card
+    rc.toggleIncoming = true; // Used to hide and show trainees card
+    // rc.initIncoming = false;
+    // rc.initGrad = false;
+
+    /* DATA - Grabs all of the default settings from the DB */
+    settingService.getById(6, function(response) {  // Default Grads per batch
+        rc.graduates = response.settingValue;
+    });
+    settingService.getById(7, function(response) {  // Default length of batches
+        rc.batchLength = response.settingValue;
+    });
+    settingService.getById(8, function(response) {  // Default trainees per batch
+        rc.incoming = response.settingValue;
+    });
+    settingService.getById(10, function(response){  // Default minimum size for a batch
+        rc.minBatchSize = response.settingValue;
+    });
+    settingService.getById(11, function(response){  // Default max size for a batch
+        rc.maxBatchSize = response.settingValue;
+    });
+
+    /* DATA - Gets all of the batches from the DB */
+    batchService.getAll(function(response) {
+        rc.batches = response;
+    }, function() {
+        rc.showToast("Could not fetch batches.");
+    });
+
+    /* DATA - Gets all of the curriculum from the DB */
+    curriculumService.getAll(function(response) {
+        var temp = response;
+        rc.curricula = temp.filter(function(t){
+            return (t.core);
+        });
+        rc.focuses = temp.filter(function(t){
+            return !(t.core);
+        });
+    }, function() {
+        rc.showToast("Could not fetch curricula.");
+    });
+
+    /* DATA - Gets all of the trainers from the DB */
+    trainerService.getAll(function(response) {
+        rc.trainers = response;
+    }, function() {
+        rc.showToast("Could not fetch trainers.");
+    });
 
 
 
     /**************************************************************************
      *                                                              FUNCTIONS
      *************************************************************************/
-
     /* FUNCTION - Calls showToast method of aCtrl */
     rc.showToast = function(message) {
         $scope.$parent.aCtrl.showToast(message);
@@ -111,7 +187,6 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     };
 
 
-
     /* FUNCTION - Summarizes graduate output of given curriculum for chosen year */
     rc.currSummary = function(curriculum) {
 
@@ -134,7 +209,6 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
                     (date.getFullYear() == rc.year) &&
                     (rc.batches[x]['curriculum'].currId == curriculum.currId)
                 );
-
 
                 if (sonarSeparationOfComplexity && testToPassSonarQubeAndThisIfStatement) {
                     total += rc.graduates;
@@ -177,20 +251,13 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     };
 
 
-
-    /**
-     * Sums months for given curriculum in chosen year
-     */
-    /* FUNCTION -  */
+    /* FUNCTION - Sums months for given curriculum in chosen year */
     rc.sumCurrYear = function(total, num) {
         return total + num;
     };
 
 
-
-    /**
-     * Sums all curricula for the year
-     */
+    /* FUNCTION - Sums all curricula for the year */
     rc.sumYear = function() {
 
         var total = 0;
@@ -214,10 +281,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
 
 
-    /**
-     * Sums monthly total over all curricula
-     */
-    /* FUNCTION -  */
+    /* FUNCTION - Sums monthly total over all curricula */
     rc.sumMonth = function (month) {
 
         if (rc.batches) {
@@ -249,50 +313,26 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     };
 
 
-
-    /**
-     * @Author:  Jaina L. Brehm
-     * This method will compute the required batch start date,
-     *      given a required hire date.
-     *
-     * @param requiredDate
-     * @return nothing
-     */
-    /* FUNCTION -  */
+    /* FUNCTION - This method will compute the required batch start date, given a required hire date */
     rc.calcStartDate = function(requiredDate, index){
 
         var tempDate = new Date(requiredDate);
 
-        //Initializes a start date variable and assigns it the value in 'requiredDate'.
+        // Initializes a start date variable and assigns it the value in 'requiredDate'.
         var sDate = ( requiredDate == undefined ) ? (new Date()) : requiredDate;
 
-        //Subtract 10 weeks from the 'requiredDate' to determine the 'startDate'.  **Using 11 week default.
+        // Subtract 10 weeks from the 'requiredDate' to determine the 'startDate'.  **Using 11 week default.
         sDate.setDate( sDate.getDate() - ( 7 * (rc.batchLength)));
 
         // This code segment allows for the batch start date to be pushed to the closest Monday.
         switch(sDate.getDay()){
-
-            case 0 :    sDate.setDate( sDate.getDate() + 1 );
-                break;
-
-            case 1 :    sDate.setDate( sDate.getDate() );
-                break;
-
-            case 2 :    sDate.setDate( sDate.getDate() - 1 );
-                break;
-
-            case 3 :    sDate.setDate( sDate.getDate() - 2 );
-                break;
-
-            case 4 :    sDate.setDate( sDate.getDate() - 3 );
-                break;
-
-            case 5 :    sDate.setDate( sDate.getDate() - 4 );
-                break;
-
-            case 6 :    sDate.setDate( sDate.getDate() - 5 );
-                break;
-
+            case 0 :    sDate.setDate( sDate.getDate() + 1 ); break;
+            case 1 :    sDate.setDate( sDate.getDate() + 0 ); break;
+            case 2 :    sDate.setDate( sDate.getDate() - 1 ); break;
+            case 3 :    sDate.setDate( sDate.getDate() - 2 ); break;
+            case 4 :    sDate.setDate( sDate.getDate() - 3 ); break;
+            case 5 :    sDate.setDate( sDate.getDate() - 4 ); break;
+            case 6 :    sDate.setDate( sDate.getDate() - 5 ); break;
             default:    break;
         }
 
@@ -310,57 +350,28 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
         //Sets the 'startdate' within 'cardArr', @ the 'index' value, equal to the formatted Date.
         rc.cardArr[index].formattedStartDate = formattedDate;
-
     };
 
 
-
-    /**
-     * @Author: Jaina L. Brehm
-     * This method will compute the number of batches needed to be made,
-     *      given the number of required Trainee's.
-     *
-     * @param requiredTrainees
-     * @return neededBatches
-     */
-    /* FUNCTION -  */
+    /* FUNCTION - This method will compute the number of batches needed
+     *            to be made, given the number of required Trainee's. */
     rc.calcReqBatch = function(requiredTrainees, index){
 
         //Compute the total number of Batches estimated.
-        var neededBatches = requiredTrainees/15;
+        var neededBatches = Math.ceil(requiredTrainees/15);
 
-        /**
-         *  Ensures the correct number of batches are created, regardless of any remainder of trainee's required.
-         *      Example:  If the total number of required trainee's is 40 and the average batch
-         *                  size is 15, the resulting number of batches is '2.666666'.
-         *                  This result should be rounded up to accommodate for the remainder.
-         */
-
-        if ( ( neededBatches > Math.floor( neededBatches ) ) && ( neededBatches < Math.ceil(neededBatches ) ) ) {
-            neededBatches = Math.ceil( neededBatches );
-        }
-
-        /**  Sets the reportsController's 'requiredBatches' data value in each index
-         *      of the 'cardArr' to the computed 'neededBatches' values.
-         */
+        /*  Sets the reportsController's 'requiredBatches' data value in each index
+         *  of the 'cardArr' to the computed 'neededBatches' values. */
         rc.cardArr[index].requiredBatches = neededBatches;
 
         //Calculates the total number of desired batches, across all sections.
         rc.cumulativeBatches();
-
     };
 
 
 
-    /**
-     * @Author: Jaina L. Brehm
-     * This method will assign the particular card objects 'btchType' variable
-     *      to the selected value.
-     *
-     * @param
-     * @return
-     */
-    /* FUNCTION -  */
+    /* FUNCTION - This method will assign the particular card objects
+     *            'btchType' variable to the selected value. */
     rc.assignCurr = function(bType, index){
 
         rc.cardArr[index].batchType = bType;
@@ -374,16 +385,9 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
 
 
-    /**
-     * @Author: Jaina L. Brehm
-     * Description:  This method will add another card to the cardArr object,
-     *                  ultimately generating another card in the 'required Trainee's' tab
-     *                  in the Reports tab.
-     *
-     * @param
-     * @return
-     */
-    /* FUNCTION -  */
+    /* FUNCTION - This method will add another card to the cardArr object,
+     *            ultimately generating another card in the 'required Trainee's'
+     *            tab in the Reports tab. */
     rc.genCard = function(){
 
         var temp = {};
@@ -402,16 +406,9 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
 
 
-    /**
-     * @Author:  Jaina L. Brehm
-     * Description:  This method will delete/remove a 'card' in the cardArr object,
-     *                  at a given index.  The deleted 'card' will no longer
-     *                  be displayed on the reports tab.
-     *
-     * @param index
-     * @return
-     */
-    /* FUNCTION -  */
+    /* FUNCTION - This method will delete/remove a 'card' in the cardArr
+     *            object, at a given index.  The deleted 'card' will no
+     *            longer be displayed on the reports tab. */
     rc.removeCardClick = function(index){
         rc.cardArr.splice(index, 1);  // Removes a card object from the array index
         rc.cumulativeBatches();       // Re-evaluates the cumulative batches.
@@ -419,17 +416,14 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
 
 
-    /**
-     * @Author:  Jaina L. Brehm
-     * Description:  This method will generate the sum of all batch types held
-     *                  within the 'cardArr' variable, ultimately displaying them
-     *                  in the 'master card' on the reports tab.
+
+    /* GOING TO HAVE TO CHANGE THIS BECAUSE IT DOESN'T
+     * ALLOW FOR NEW CURRICULA IN THE FUTURE.
      *
-     * @param
-     * @return
-     */
-    //  GOING TO HAVE TO CHANGE THIS BECAUSE IT DOESN'T ALLOW FOR NEW CURRICULA IN THE FUTURE.
-    /* FUNCTION -  */
+     *
+     * FUNCTION - This method will generate the sum of all batch types held
+     *            within the 'cardArr' variable, ultimately displaying them
+     *            in the 'master card' on the reports tab. */
     rc.cumulativeBatches = function(){
 
         rc.totalJavaBatch = 0;
@@ -438,24 +432,23 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         rc.totalCumulativeBatches = 0;
 
         for (var x in rc.cardArr){
-            // rc.cardArr.hasOwnProperty(x) &&
             if(!(angular.isUndefined(rc.cardArr[x].batchType))){
+
                 batchVal = rc.cardArr[x].batchType.currId;
 
                 switch(batchVal){
-
-                    //Switch case for Java Batches
-                    case 1 :    rc.totalJavaBatch += rc.cardArr[x].requiredBatches;
+                    case 1 :   //Switch case for Java Batches
+                        rc.totalJavaBatch += rc.cardArr[x].requiredBatches;
                         rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
                         break;
 
-                    //Switch case for .Net Batches
-                    case 2 :    rc.totalNetBatch += rc.cardArr[x].requiredBatches;
+                    case 2 :   //Switch case for .Net Batches
+                        rc.totalNetBatch += rc.cardArr[x].requiredBatches;
                         rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
                         break;
 
-                    //Switch case for SDET Batches
-                    case 3 :    rc.totalSDETBatch += rc.cardArr[x].requiredBatches;
+                    case 3 :   //Switch case for SDET Batches
+                        rc.totalSDETBatch += rc.cardArr[x].requiredBatches;
                         rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
                         break;
 
@@ -466,22 +459,12 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     };
 
 
-
-    /**
-     * @Author:  Jaina L. Brehm
-     * Description:  This method will assert that batches have valid credentials
-     *                  for submission.
-     *
-     * @param index
-     * @return canSubmit
-     */
-    /* FUNCTION -  */
+    /* FUNCTION - This method will assert that batches have valid credentials for submission. */
     rc.submittionValidityAssertion = function( index ){
         var flagArr = [ 0, 0, 0 ];
         var count = 0;
 
         if  ( !( rc.cardArr[index].requiredGrads == undefined ) && !( rc.cardArr[index].reqDate == undefined ) && !( rc.cardArr[index].batchType == undefined ) ) {
-
             canSubmit = 0;
             rc.errMsg = "";
         }else{
@@ -502,7 +485,6 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
             if( rc.cardArr[index].batchType == undefined ) {
                 rc.errMsg = "Invalid Batch Type.";
                 flagArr[2] = 1;
-
             }
 
             canSubmit = 1;
@@ -522,25 +504,13 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     };
 
 
-
-    /**
-     * @Author:  Jaina L. Brehm
-     * Description:  This method will generate a new 'card' in the cardArr object,
-     *                  which will be displayed to the user on the reports tab.
-     *
-     * @param index
-     * @return
-     */
-    /* FUNCTION -  */
+    /* FUNCTION - This method will generate a new 'card' in the cardArr object,
+     *            which will be displayed to the user on the reports tab. */
     rc.createBatchClick = function( index ) {
-
-        // Create 'can submit' flag here.  '0' implies successful submit, '1' implies submission failure. Default to 1 value.
-
         // Determines whether or not the user is allowed to create batches.
         var canSubmit = rc.submittionValidityAssertion( index );
 
         if ( canSubmit == 0 ) {
-
             //Create a batch object in the Reports Controller, using the batchService.
             rc.newBatch = batchService.getEmptyBatch();
 
@@ -558,8 +528,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
                 //Assigns the 'end date' to the batch object.
                 rc.newBatch.endDate = rc.cardArr[index].reqDate;
 
-                //Assigns the 'id' value of the Curriculum ('batch type' variable) to
-                //  to the batch object.
+                //Assigns the 'id' value of the Curriculum ('batch type' variable) to the batch object.
                 rc.newBatch.curriculum = rc.cardArr[index].batchType.currId;
 
                 //Create batch method called here...
@@ -571,16 +540,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     };
 
 
-
-    /**
-     * @Author:  Jaina L. Brehm
-     * Description:  This method will generate all batches contained within all cards,
-     *                  in the 'cardArr' array object.  All
-     *
-     * @param
-     * @return
-     */
-    /* FUNCTION -  */
+    /* FUNCTION - This method will generate all batches contained within all cards, in the 'cardArr' array object. */
     rc.createAllBatchClick = function(){
 
         // Create 'can submit' flag here.  '0' implies successful submit, '1' implies submission failure. Default to 1 value.
@@ -622,8 +582,20 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
 
 
-    //toggle the Grads table and graph on and off
-    /* FUNCTION -  */
+    /* FUNCTION - Toggle sections on page up and down */
+    rc.toggleCrateBatchToolbar = function () {
+        rc.initBatchCreate = true;
+
+        if(rc.toggleBatch){
+            rc.toggleBatch = false;
+            $("#batchArrow").text("keyboard_arrow_down");
+        } else {
+            rc.toggleBatch = true;
+            $("#batchArrow").text("keyboard_arrow_up");
+        }
+
+        $('#batchCreate').slideToggle();
+    };
     rc.toggleGradToolbar = function () {
         rc.initGrad = true;
 
@@ -652,100 +624,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     };
 
 
-
-    /**************************************************************************
-     *                                            RETRIEVE DATA & SET VALUES
-     *************************************************************************/
-    rc.year = new Date().getFullYear(); // Gets current year
-    rc.today = new Date();              // The current date.
-    rc.reqDate = new Date();            // The date Trainee's are needed by.
-    rc.startDate = new Date();          // Batch(s) StartDate variable.
-    rc.totalNetBatch = 0;               // Total number of .NET batches within 'cardArr'.
-    rc.totalSDETBatch = 0;              // Total number of SDET batches within 'cardArr'.
-    rc.totalJavaBatch = 0;              // Total number of Java batches within 'cardArr'.
-    rc.totalCumulativeBatches = 0;      // Total number of required batches within 'cardArr'.
-
-    // The 'newObj' object, and it's assignments, are used to generate
-    // new objects to be placed within the 'cardArr' array object.
-    rc.newObj = {};
-    rc.newObj.requiredGrads = rc.requiredGrads;
-    rc.newObj.reqDate = rc.reqDate;
-    rc.newObj.requiredBatches = rc.requiredBatches;
-    rc.newObj.startDate = rc.startDate;
-    rc.newObj.formattedStartDate = rc.formattedStartDate;
-    rc.newObj.batchType = rc.batchType;
-
-    rc.cardArr = [rc.newObj];   // Array of Required Trainee batch generation objects.
-
-    rc.currOrder = "name";
-
-    rc.monthList = monthList;
-
-
-    rc.toggleIncoming = true; //used to hide and show incoming card
-    rc.toggleGrad = true; //used to hide and show graduates card
-    rc.initIncoming = false;
-    rc.initGrad = false;
-
-
-    settingService.getById(6, function(response) {
-        rc.graduates = response.settingValue;
-    });
-
-
-    settingService.getById(7, function(response) {
-        rc.batchLength = response.settingValue;
-    });
-
-
-    settingService.getById(8, function(response) {
-        rc.incoming = response.settingValue;
-    });
-
-
-    settingService.getById(10, function(response){
-        rc.minBatchSize = response.settingValue;
-    }, function(){
-        rc.showToast("failure")
-    });
-
-
-    settingService.getById(11, function(response){
-        rc.maxBatchSize = response.settingValue;
-    }, function(){
-        rc.showToast("failure")
-    });
-
-
-    batchService.getAll(function(response) {
-        rc.batches = response;
-    }, function() {
-        rc.showToast("Could not fetch batches.");
-    });
-
-
-    curriculumService.getAll(function(response) {
-        var temp = response;
-        rc.curricula = temp.filter(function(t){
-            return (t.core);
-        });
-        rc.focuses = temp.filter(function(t){
-            return !(t.core);
-        });
-    }, function() {
-        rc.showToast("Could not fetch curricula.");
-    });
-
-    // gets all trainers and stores them in variable trainers
-    trainerService.getAll(function(response) {
-        rc.trainers = response;
-    }, function() {
-        rc.showToast("Could not fetch trainers.");
-    });
-
-
-    // Create second var for graph tat defaults to tables default.
-    /* FUNCTION -  */
+    /* FUNCTION - Generates JSON object containing the info contained inside grad graph */
     rc.graphData = function() {
         var series = [];
 
@@ -760,9 +639,11 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
             empty.data = data;
             series.push(empty);
         });
-
         return series;
     };
+
+
+    /* FUNCTION - Generates JSON object containing the info contained inside incoming/trainee graph */
     rc.graphData2 = function() {
         var series = [];
 
@@ -777,15 +658,15 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
             empty.data = data;
             series.push(empty);
         });
-
         return series;
     };
 
 
-    /* FUNCTION -  */
+    /* FUNCTION - Displays the grad graph */
     $scope.myGraph = function() {
         chart1 = new Highcharts.chart('container', {
             chart: {
+                animation: true,
                 type: 'column',
                 events: {
                     load: function () {
@@ -810,13 +691,14 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
             yAxis: {
                 min: 0,
                 title: {
-                    text: 'Graduates'
+                    text: 'Graduates',
+                    style:{ "fontSize": "13px", "fontWeight":"bold" }
                 }
             },
             tooltip: {
-                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0; font-size: 18px;"><b>{point.y}</b></td></tr>',
+                headerFormat: '<span style="font-size:15px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0; font-size: 14px;">{series.name}: </td>' +
+                '<td style="padding:0; font-size: 14px;"><b>{point.y}</b></td></tr>',
                 footerFormat: '</table>',
                 shared: true,
                 useHTML: true
@@ -830,9 +712,13 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
             series: rc.graphData()
         });
     };
+
+
+    /* FUNCTION - Displays the incoming graph */
     $scope.myGraph2 = function() {
         chart2 = new Highcharts.chart('container2', {
             chart: {
+                animation: true,
                 type: 'column',
                 events: {
                     load: function () {
@@ -857,13 +743,14 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
             yAxis: {
                 min: 0,
                 title: {
-                    text: 'Trainees'
+                    text: 'Trainees',
+                    style:{ "fontSize": "13px", "fontWeight":"bold" }
                 }
             },
             tooltip: {
                 headerFormat: "<span style='font-size:15px'>{point.key}</span><table>",
-                pointFormat: "<tr><td style='color:{series.color};padding:0'>{series.name}: </td>" +
-                "<td style='padding:0'><b>{point.y}</b></td></tr>",
+                pointFormat: "<tr><td style='color:{series.color};padding:0; font-size: 14px;'>{series.name}: </td>" +
+                "<td style='padding:0; font-size: 14px;'><b>{point.y}</b></td></tr>",
                 footerFormat: '</table>',
                 shared: true,
                 useHTML: true
@@ -880,5 +767,4 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
             series: rc.graphData2()
         });
     };
-
 });
