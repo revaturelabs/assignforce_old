@@ -120,3 +120,8 @@ md-nav-bar.md-default-theme .md-button._md-nav-button.md-active, md-nav-bar .md-
 md-toolbar * {
     font-weight: bold;
 }
+
+
+*:focus {
+    outline: none;
+}

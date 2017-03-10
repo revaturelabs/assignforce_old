@@ -59,27 +59,20 @@
     assignforce.config( function($mdThemingProvider) {
 
         var revOrangeMap = $mdThemingProvider.extendPalette("deep-orange", {
+            "A200": "#FF7A1C",
+            "100": "rgba(89, 116, 130, 0.2)"
             // "100": "#EF5407",
-            // "100": "#597482",
-            "100": "rgba(89, 116, 130, 0.2)",
-            "A200": "#FF7A1C"
-
         });
 
         var revBlueMap = $mdThemingProvider.extendPalette("blue-grey", {
-            // "A200": "#374C61",
-            // "100" : "#C9DCE8"
             "500": "#37474F",
-			"800": "#597482"
-            // "800" : "#607D8B"
+			"800": "#3E5360"
         });
 
         $mdThemingProvider.definePalette("revOrange", revOrangeMap);
         $mdThemingProvider.definePalette("revBlue", revBlueMap);
 
         $mdThemingProvider.theme("default")
-        // .primaryPalette("revOrange")
-        // .accentPalette("revBlue")
             .primaryPalette("revBlue")
             .accentPalette("revOrange");
     });
