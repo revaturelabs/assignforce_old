@@ -10,14 +10,14 @@
         <form class="form-revature" role="form" ng-submit="login()">
             <div class="row">
                 <label class="sr-only" for="input-username">username</label>
-                <input id="input-username" class="col-xs-12 col-md-12" type="text" placeholder="username" ng-model="username" required autofocus>
+                <input id="input-username" class="col-xs-12 col-md-12" type="text" placeholder="username" ng-model="aCtrl.username" required autofocus>
             </div>
             <div class="row">
                 <label class="sr-only" for="input-password">password</label>
-                <input id="input-password" class="col-xs-12 col-md-12" type="password" placeholder="password" ng-model="password" required>
+                <input id="input-password" class="col-xs-12 col-md-12" type="password" placeholder="password" ng-model="aCtrl.password" required>
             </div>
             <div class="row">
-                <input class="btn-revature" type="submit" value="login">
+                <input class="btn-revature" type="submit" value="login" ng-click="aCtrl.login()">
             </div>
         </form>
         <span ng-show="aCtrl.loginError" class="span-creds">!!! invalid username and/or password !!!</span>

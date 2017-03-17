@@ -13,15 +13,18 @@ import java.io.IOException;
 @RequestMapping(value = "/api/v2")
 public class AuthController {
 
+	//probably switch to @RequestBody for params, using an array of strings
 	//temporary authentication until Parasol is up and running
 	@RequestMapping(value="/auth", method=RequestMethod.POST)
-	public void login(String username, String password, HttpSession session, HttpServletResponse response){
+	public void login(@RequestParam String username, @RequestParam String password, HttpServletResponse response) throws IOException {
 		String user = System.getenv("AF_USERNAME");
 		String pass = System.getenv("AF_PASSWORD");
 
 		if (username.equals(user) && password.equals(pass)){
 			//go to home
-			
+			response.sendRedirect("/home");
+		} else {
+			response.sendError(400, "Invalid login credentials");
 		}
 	}
 
