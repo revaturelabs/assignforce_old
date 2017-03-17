@@ -13,7 +13,20 @@ import java.io.IOException;
 @RequestMapping(value = "/api/v2")
 public class AuthController {
 
-	@RequestMapping(value="/authorize",method=RequestMethod.GET)
+	//temporary authentication until Parasol is up and running
+	@RequestMapping(value="/auth", method=RequestMethod.POST)
+	public void login(String username, String password, HttpSession session, HttpServletResponse response){
+		String user = System.getenv("AF_USERNAME");
+		String pass = System.getenv("AF_PASSWORD");
+
+		if (username.equals(user) && password.equals(pass)){
+			//go to home
+			
+		}
+	}
+
+	//used for Parasol. Temporarily out of order. Sorry for the inconvenience
+	/*@RequestMapping(value="/authorize",method=RequestMethod.GET)
 	public void initSetup(@RequestParam String redirect_url, HttpSession session, HttpServletResponse response) throws IOException{
 		String sToken = (String) session.getAttribute("token");
 		String authServiceRedirectUrl = System.getenv("AUTH_SERVICE_REDIRECT");
@@ -29,12 +42,12 @@ public class AuthController {
 			response.sendRedirect(String.format("%s?token=%s", redirect_url, sToken));
 		}
 	}
-	
+
 	@RequestMapping(value="/token")
 	public void getToken(@RequestParam(required = false) String token, HttpSession session, HttpServletResponse response) throws IOException {
 
 		session.setAttribute("token", token);
 		String redirect = (String) session.getAttribute("redirect");
 		response.sendRedirect(String.format("%s?token=%s", redirect, token));
-	}
+	}*/
 }

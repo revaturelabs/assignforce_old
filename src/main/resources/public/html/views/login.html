@@ -1,0 +1,25 @@
+
+<center>
+    <div class="container logo">
+        <a href="index.html">
+            <img src="img/revature_logo_250.png" alt="Revature" height="75px">
+        </a>
+    </div>
+    <h1 class="suh">AssignForce</h1>
+    <div class="container">
+        <form class="form-revature" role="form" ng-submit="login()">
+            <div class="row">
+                <label class="sr-only" for="input-username">username</label>
+                <input id="input-username" class="col-xs-12 col-md-12" type="text" placeholder="username" ng-model="username" required autofocus>
+            </div>
+            <div class="row">
+                <label class="sr-only" for="input-password">password</label>
+                <input id="input-password" class="col-xs-12 col-md-12" type="password" placeholder="password" ng-model="password" required>
+            </div>
+            <div class="row">
+                <input class="btn-revature" type="submit" value="login">
+            </div>
+        </form>
+        <span ng-show="aCtrl.loginError" class="span-creds">!!! invalid username and/or password !!!</span>
+    </div>
+</center>
