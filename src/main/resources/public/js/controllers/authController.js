@@ -4,7 +4,7 @@
 
 var app = angular.module("batchApp");
 app.constant("ADAPTER_URL", 'api/v2/authorize?redirect_url=');
-app.controller("AuthCtrl", function($scope, $location, $window, $mdToast, $http){
+app.controller("AuthCtrl", function($scope, $location, $window, $mdToast, $http, $rootScope){
 
     var ac = this;
 
@@ -18,6 +18,7 @@ app.controller("AuthCtrl", function($scope, $location, $window, $mdToast, $http)
         $mdToast.show( $mdToast.simple().textContent( message ).action("OKAY").position("top right").highlightAction(true) );
     }
 
+    $rootScope.location = $location;
 
     ac.login = function(){
 

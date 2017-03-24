@@ -31,8 +31,8 @@
 <body ng-app="batchApp" ng-controller="AuthCtrl as aCtrl" layout-fill>
 
     <div class="toastContainer">
-        <div id="menuDiv">
-            <ng-include id="menu" src="'html/views/menu.html'" />
+        <div>
+            <ng-include src="'html/views/menu.html'" ng-if="location.path() !== '/login'"/>
         </div>
         <div>
             <div id="view" ng-view></div>
