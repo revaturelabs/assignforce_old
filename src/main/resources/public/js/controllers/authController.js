@@ -18,9 +18,6 @@ app.controller("AuthCtrl", function($scope, $location, $window, $mdToast, $http)
         $mdToast.show( $mdToast.simple().textContent( message ).action("OKAY").position("top right").highlightAction(true) );
     }
 
-    var menu = angular.element(document.querySelector('#menu'));
-    menu.remove();
-
 
     ac.login = function(){
 
@@ -35,8 +32,6 @@ app.controller("AuthCtrl", function($scope, $location, $window, $mdToast, $http)
             .success(function(){
                 ac.loggedIn = true;
                 window.location = "home";
-                var menuDiv = angular.element(document.querySelector('#menuDiv'));
-                menuDiv.append(menu);
             })
             .error(function(){
                 ac.loginError = true;
