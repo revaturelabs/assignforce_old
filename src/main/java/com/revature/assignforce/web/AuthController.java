@@ -21,13 +21,7 @@ public class AuthController {
 		String user = System.getenv("AF_USERNAME");
 		String pass = System.getenv("AF_PASSWORD");
 
-		System.out.println(login.getUsername());
-		System.out.println(login.getPassword());
-
-		if (login.getUsername().equals(user) && login.getPassword().equals(pass)){
-			//go to home
-			response.sendRedirect("/home");
-		} else {
+		if (!login.getUsername().equals(user) || !login.getPassword().equals(pass)){
 			response.sendError(400, "Invalid login credentials");
 		}
 	}
