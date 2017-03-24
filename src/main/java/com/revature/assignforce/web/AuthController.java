@@ -1,26 +1,30 @@
 package com.revature.assignforce.web;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.revature.assignforce.domain.dto.LoginDTO;
+import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @RestController
 @RequestMapping(value = "/api/v2")
 public class AuthController {
 
-	//probably switch to @RequestBody for params, using an array of strings
 	//temporary authentication until Parasol is up and running
 	@RequestMapping(value="/auth", method=RequestMethod.POST)
-	public void login(@RequestParam String username, @RequestParam String password, HttpServletResponse response) throws IOException {
+	public void authenticate(@RequestBody LoginDTO login, HttpServletResponse response) throws IOException {
 		String user = System.getenv("AF_USERNAME");
 		String pass = System.getenv("AF_PASSWORD");
 
-		if (username.equals(user) && password.equals(pass)){
+		System.out.println(login.getUsername());
+		System.out.println(login.getPassword());
+
+		if (login.getUsername().equals(user) && login.getPassword().equals(pass)){
 			//go to home
 			response.sendRedirect("/home");
 		} else {
@@ -29,6 +33,7 @@ public class AuthController {
 	}
 
 	//used for Parasol. Temporarily out of order. Sorry for the inconvenience
+
 	/*@RequestMapping(value="/authorize",method=RequestMethod.GET)
 	public void initSetup(@RequestParam String redirect_url, HttpSession session, HttpServletResponse response) throws IOException{
 		String sToken = (String) session.getAttribute("token");

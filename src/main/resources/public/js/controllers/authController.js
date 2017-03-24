@@ -19,6 +19,7 @@ app.controller("AuthCtrl", function($scope, $location, $window, $mdToast, $http)
     }
 
     ac.login = function(){
+
         $http({
             method :  "POST",
             url    :  "api/v2/auth",
@@ -29,6 +30,7 @@ app.controller("AuthCtrl", function($scope, $location, $window, $mdToast, $http)
         })
             .success(function(){
                 ac.loggedIn = true;
+                window.location = "home";
             })
             .error(function(){
                 ac.loginError = true;
