@@ -47,7 +47,6 @@ public class Setting{
     private Integer defaultBuilding;
 
     @Column(name="SETTING_DFT_NAME_PTRN")
-    @Formula("(select batch_name_pattern.PATTERN from batch_name_pattern where SETTING_DFT_NAME_PTRN = batch_name_pattern.ID)")
     private String defaultNamePattern;
 
     public Setting() {

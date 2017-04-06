@@ -11,37 +11,9 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
     };
 
     sc.resetSettings = function () {
-        for(var i = 0; i < sc.settings.length; i++){
-            switch(sc.settings[i].settingId){
-                case 1:
-                    sc.settings[i].settingValue = 5;
-                    break;
-                case 2:
-                    sc.settings[i].settingValue = 12;
-                    break;
-                case 5:
-                    sc.settings[i].settingValue = 0;
-                    break;
-                case 6:
-                    sc.settings[i].settingValue = 15;
-                    break;
-                case 7:
-                    sc.settings[i].settingValue = 11;
-                    break;
-                case 8:
-                    sc.settings[i].settingValue = 18;
-                    break;
-                default:
-                    sc.settings[i].settingValue = 1;
-                    break;
-            }
-            //add the rest of the settings
-
-            //save each setting
-            settingService.update(sc.settings[i]);
-        }
-
-        sc.showToast("Settings updated!");
+        settingService.getAll(function(response){
+            sc.settings = response;
+        })
     };
 
     sc.updateSettings = function () {
@@ -62,12 +34,6 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
 
         sc.showToast("Settings updated!");
     };
-    
-    settingService.getById(3, function(response){
-    	sc.defLoc = response;
-    }, function(){
-    	sc.showToast("Unable to find default location");
-    });
     
     //Get all Settings
     settingService.getAll( function (response) {
