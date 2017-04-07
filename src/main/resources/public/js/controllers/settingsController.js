@@ -17,38 +17,13 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
     };
 
     sc.updateSettings = function () {
-
-        for(var i = 0; i < sc.settings.length; i++){
-            if(sc.settings[i].settingId == 3){
-                sc.settings[i].settingValue = sc.defaultLocation.id;
-            }
-            else if (sc.settings[i].settingId == 23){
-            	sc.settings[i].settingName = sc.defaultPattern;
-            }
-            else if (sc.settings[i].settingId == 9){
-            	sc.settings[i].settingValue = sc.defaultBuilding.id;
-            }
-            //save each setting
-            settingService.update(sc.settings[i]);
-        }
-
-        sc.showToast("Settings updated!");
+        console.log(sc.settings);
     };
     
     //Get all Settings
     settingService.getAll( function (response) {
         sc.settings = response;
         sc.getLocations();//this will initialize the Locations variable after the settings are loaded in.
-        
-        sc.patterns = [];
-        angular.forEach(sc.settings, function(pattern){
-        	if (pattern.settingId > 14 && pattern.settingId < 23){
-        		sc.patterns.push(pattern);
-        	}
-        	else if (pattern.settingId == 23){
-        		sc.defaultPattern = pattern.settingName;
-        	}
-        })
         
     }, function () {
         sc.showToast("Could not fetch settings.");
@@ -74,8 +49,10 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
     };
     
     sc.getBuildings = function(){
+        console.log("getting buildings")
     	sc.buildings = [];
     	angular.forEach(sc.defaultLocation.buildings, function(building){
+    	    console.log(building);
     		sc.buildings.push(building);
     	})
     };
