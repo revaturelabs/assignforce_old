@@ -12,13 +12,101 @@
                 </div>
                 <span flex></span>
                 <md-input-container>
-                    <input type="number" min="0" step="1">
+                    <input type="number" min="0" step="1" ng-model="sCtrl.settings.trainersPerPage">
+                </md-input-container>
+            </md-list-item>
+
+            <md-list-item>
+                <div class="md-list-item-text">
+                    <h3>Reports Outgoing Grads</h3>
+                </div>
+                <span flex></span>
+                <md-input-container>
+                    <input type="number" min="0" step="1" ng-model="sCtrl.settings.reportGrads">
+                </md-input-container>
+            </md-list-item>
+
+            <md-list-item>
+                <div class="md-list-item-text">
+                    <h3>Reports Candidates Incoming</h3>
+                </div>
+                <span flex></span>
+                <md-input-container>
+                    <input type="number" min="0" step="1" ng-model="sCtrl.settings.reportIncomingGrads">
+                </md-input-container>
+            </md-list-item>
+
+            <md-list-item>
+                <div class="md-list-item-text">
+                    <h3>Default Batch Location</h3>
+                </div>
+                <span flex></span>
+                <md-input-container>
+                    <md-select ng-model="sCtrl.settings.defaultLocation" placeholder="No Default Location" ng-change="sCtrl.getBuildings()">
+                        <md-option ng-value="location.id" ng-repeat="location in sCtrl.locations" ng-selected="location.id == sCtrl.settings.defaultLocation">{{ location.name }}</md-option>
+                    </md-select>
+                </md-input-container>
+            </md-list-item>
+
+            <md-list-item>
+                <div class="md-list-item-text">
+                    <h3>Default Batch Building</h3>
+                </div>
+                <span flex></span>
+                <md-input-container>
+                    <md-select ng-model="sCtrl.settings.defaultBuilding" placeholder="No Default Building">
+                        <md-option ng-value="building.id" ng-repeat="building in sCtrl.buildings" ng-selected="building.id == sCtrl.settings.defaultBuilding">{{ building.name }}</md-option>
+                    </md-select>
+                </md-input-container>
+            </md-list-item>
+
+            <md-list-item>
+                <div class="md-list-item-text">
+                    <h3>Minimum Batch Size</h3>
+                </div>
+                <span flex></span>
+                <md-input-container>
+                    <input type="number" min="0" step="1" ng-model="sCtrl.settings.minBatchSize">
+                </md-input-container>
+            </md-list-item>
+
+            <md-list-item>
+                <div class="md-list-item-text">
+                    <h3>Maximum Batch Size</h3>
+                </div>
+                <span flex></span>
+                <md-input-container>
+                    <input type="number" min="0" step="1" ng-model="sCtrl.settings.maxBatchSize">
+                </md-input-container>
+            </md-list-item>
+
+            <md-list-item>
+                <div class="md-list-item-text">
+                    <h3>Default Batch Length</h3>
+                </div>
+                <span flex></span>
+                <md-input-container>
+                    <input type="number" min="0" step="1" ng-model="sCtrl.settings.batchLength">
+                </md-input-container>
+            </md-list-item>
+
+            <md-list-item>
+                <div class="md-list-item-text">
+                    <h3>Minimum Day Between Trainer Batches</h3>
+                </div>
+                <span flex></span>
+                <md-input-container>
+                    <input type="number" min="0" step="1" ng-model="sCtrl.settings.trainerBreakDays">
                 </md-input-container>
             </md-list-item>
 
             <md-list-item>
                 <div class="md-list-item-text">
                     <h3>Default Batch Name Pattern</h3>
+                    <span>$c = curriculum name</span><br/>
+                    <span>$m = month</span><br/>
+                    <span>$d = day of week</span><br/>
+                    <span>$y = year</span>
                 </div>
                 <span flex></span>
                 <md-input-container>

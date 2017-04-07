@@ -57,10 +57,10 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
     //get all locations
     sc.getLocations = function() {
         locationService.getAll(function (response) {
-            sc.locations = response;       
-            
+            sc.locations = response;
+
             angular.forEach(sc.locations, function (location) {
-                if (sc.defLoc.settingValue == location.id) {
+                if (sc.settings.defaultLocation == location.id) {
                     sc.defaultLocation = location;
                     sc.buildings = [];
                 	angular.forEach(location.buildings, function (building){
