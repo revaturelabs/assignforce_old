@@ -3,19 +3,7 @@ package com.revature.assignforce.domain;
 import java.sql.Timestamp;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -23,7 +11,9 @@ import org.hibernate.annotations.FetchMode;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "BATCH")
+@Table(name = "BATCH", uniqueConstraints = {
+		@UniqueConstraint(columnNames = "BATCH_LOCATION")
+})
 public class Batch {
 
 	@Id
@@ -51,11 +41,6 @@ public class Batch {
 	@Fetch(FetchMode.JOIN)
 	private Curriculum focus;
 
-	@OneToOne
-	@JoinColumn(name = "ROOM") // one batch only belongs to one room
-	@Fetch(FetchMode.JOIN)
-	@JsonIgnoreProperties("batches")
-	private Room room;
 
 	@ManyToOne
 	@JoinColumn(name = "STATUS")
@@ -79,31 +64,17 @@ public class Batch {
 	//@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")					// ADDED this to fix serialization/infinite loop issues
 	private List<Skill> skills;
 
+	@OneToOne
+	@JoinColumn(name = "BATCH_LOCATION")
+	BatchLocation batchLocation;
+
 	public Batch() {
 		// noarg constructor
 	}
 
-	public Batch(int iD, String name, Curriculum curriculum, Room room, Trainer trainer,
-			Trainer cotrainer, Timestamp startDate, Timestamp endDate, BatchStatusLookup status, List<Skill> skills,
-			Curriculum focus
-		) {
-		super();
-		ID = iD;
-		this.name = name;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.curriculum = curriculum;
-		this.room = room;
-		this.batchStatus = status;
-		this.trainer = trainer;
-		this.cotrainer = cotrainer;
-		this.skills = skills;
-		this.focus = focus;
-	}
-
-	public Batch(int iD, String name, Timestamp startDate, Timestamp endDate, Curriculum curriculum, Room room,
+	public Batch(int iD, String name, Timestamp startDate, Timestamp endDate, Curriculum curriculum,
 			BatchStatusLookup batchStatus, Trainer trainer, Trainer coTrainer, List<Skill> skills,
-			Curriculum focus
+			Curriculum focus, BatchLocation batchLocation
 		) {
 		super();
 		ID = iD;
@@ -111,12 +82,12 @@ public class Batch {
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.curriculum = curriculum;
-		this.room = room;
 		this.batchStatus = batchStatus;
 		this.trainer = trainer;
 		this.cotrainer = coTrainer;
 		this.skills = skills;
 		this.focus = focus;
+		this.batchLocation = batchLocation;
 	}
 
 	public int getID() {
@@ -167,14 +138,6 @@ public class Batch {
 		this.focus = focus;
 	}
 
-	public Room getRoom() {
-		return room;
-	}
-
-	public void setRoom(Room room) {
-		this.room = room;
-	}
-
 	public BatchStatusLookup getBatchStatus() {
 		return batchStatus;
 	}
@@ -199,11 +162,18 @@ public class Batch {
 		this.skills = skills;
 	}
 
+	public BatchLocation getBatchLocation() {
+		return batchLocation;
+	}
+
+	public void setBatchLocation(BatchLocation batchLocation) {
+		this.batchLocation = batchLocation;
+	}
+
 	@Override
 	public String toString() {
 		return "Batch [ID=" + ID + ", Name = " + name + ", startDate = " + startDate + ", endDate = " + endDate
-				+ ", curriculum = " + curriculum + ", focus = " + focus + ", room = " + room
-				+ ",batchStatus = " + batchStatus + ", trainer = "+ trainer + ", cotrainer = " + cotrainer + "]";
+				+ ", curriculum = " + curriculum + ", focus = " + focus + ", batchStatus = " + batchStatus + ", trainer = "+ trainer + ", cotrainer = " + cotrainer + "]";
 	}
 
 	public Trainer getCotrainer() {

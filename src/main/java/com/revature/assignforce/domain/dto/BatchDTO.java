@@ -14,6 +14,7 @@ public class BatchDTO {
 	private int trainer;
 	private int cotrainer;
 	private int location;
+	private int building;
 	private int room;
 	private Timestamp startDate;
 	private Timestamp endDate;
@@ -106,7 +107,11 @@ public class BatchDTO {
 	public void setSkills(List<Skill> skills) {
 		this.skills = skills;
 	}
-	
+
+	//building
+	public int getBuilding() {return building;}
+	public void setBuilding(int building) {this.building = building;}
+
 	@Override
 	public String toString() {
 		return "BatchDTO [batchName = " + name + ", curr = " + curriculum + ", focus = " + focus

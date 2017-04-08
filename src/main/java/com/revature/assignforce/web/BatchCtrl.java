@@ -3,6 +3,7 @@ package com.revature.assignforce.web;
 import java.sql.Timestamp;
 import java.util.List;
 
+import com.revature.assignforce.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
@@ -14,13 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.revature.assignforce.domain.Batch;
-import com.revature.assignforce.domain.BatchStatusLookup;
-import com.revature.assignforce.domain.Curriculum;
-import com.revature.assignforce.domain.Location;
-import com.revature.assignforce.domain.Room;
-import com.revature.assignforce.domain.Skill;
-import com.revature.assignforce.domain.Trainer;
 import com.revature.assignforce.domain.dto.BatchDTO;
 import com.revature.assignforce.domain.dto.ResponseErrorDTO;
 import com.revature.assignforce.service.DaoService;
@@ -44,6 +38,9 @@ public class BatchCtrl {
 	
 	@Autowired
 	DaoService<Trainer, Integer> trainerService;
+
+	@Autowired
+	DaoService<BatchLocation, Integer> batchLocationService;
 	
 	  // CREATE
 		// creating new batch object from information passed from batch data transfer object
@@ -54,15 +51,29 @@ public class BatchCtrl {
 		String name = in.getName();
 		Curriculum curriculum = currService.getOneItem(in.getCurriculum());
 		Curriculum focus = currService.getOneItem(in.getFocus());
-		Room room = roomService.getOneItem(in.getRoom());
 		Trainer trainer = trainerService.getOneItem(in.getTrainer());
 		Trainer cotrainer = trainerService.getOneItem(in.getCotrainer());
 		Timestamp startDate = in.getStartDate();
 		Timestamp endDate = in.getEndDate();
 		BatchStatusLookup status = new BatchStatusLookup(1, "Scheduled");
 		List<Skill> skills = in.getSkills();
+
+		Integer tempBuilding = in.getBuilding();
+		Integer tempRoom = in.getRoom();
+
+		if(tempBuilding < 1){ tempBuilding = null;}
+		if(tempRoom < 1) { tempRoom = null; }
+
+		BatchLocation bl = new BatchLocation();
+		bl.setLocationId(in.getLocation());
+		bl.setBuildingId(tempBuilding);
+		bl.setRoomId(tempRoom);
+
+		System.out.println(bl);
+
+		bl = batchLocationService.saveItem(bl);
 		
-		Batch out = new Batch( ID, name, curriculum, room, trainer, cotrainer, startDate, endDate, status, skills, focus);
+		Batch out = new Batch( ID, name, startDate, endDate, curriculum, status, trainer, cotrainer,   skills, focus, bl);
 		out = batchService.saveItem( out );
 
 		if (out == null) {
