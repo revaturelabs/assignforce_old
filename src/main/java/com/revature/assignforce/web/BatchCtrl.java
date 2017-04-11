@@ -4,25 +4,29 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import com.revature.assignforce.domain.*;
+import com.revature.assignforce.domain.dto.BatchLocationDTO;
+import com.revature.assignforce.service.BatchLocationDaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.revature.assignforce.domain.dto.BatchDTO;
 import com.revature.assignforce.domain.dto.ResponseErrorDTO;
 import com.revature.assignforce.service.DaoService;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 @RestController
 @RequestMapping("/api/v2/batch")
 @ComponentScan(basePackages="com.revature.assignforce.service")
 public class BatchCtrl {
+
+	@PersistenceContext
+	private EntityManager em;
 
 	@Autowired
 	DaoService<Batch, Integer> batchService;
@@ -44,7 +48,7 @@ public class BatchCtrl {
 	
 	  // CREATE
 		// creating new batch object from information passed from batch data transfer object
-	@RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT}, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createBatch( @RequestBody BatchDTO in ) {
 		
 		int ID = in.getID();
@@ -118,6 +122,55 @@ public class BatchCtrl {
 		} else {
 			return new ResponseEntity< List<Batch> >(all, HttpStatus.OK);
 		}
+	}
+
+	@RequestMapping(method=RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object updateBatch(@RequestBody BatchDTO in){
+
+		//try to get batch from database
+		Batch b = batchService.getOneItem(in.getID());
+
+		if(b == null){
+			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No batch with id '" + in.getID() + "' could be found to update"), HttpStatus.NOT_FOUND);
+		}
+
+		b.setName(in.getName());
+		b.setSkills(in.getSkills());
+		b.setStartDate(in.getStartDate());
+		b.setEndDate(in.getEndDate());
+
+		if(in.getCurriculum() < 1){
+			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Curriculum cannot be null"), HttpStatus.BAD_REQUEST);
+		}
+		Curriculum c = currService.getOneItem(in.getCurriculum());
+		Curriculum f = currService.getOneItem(in.getFocus());
+
+		b.setCurriculum(c);
+		b.setFocus(f);
+
+		Trainer t = trainerService.getOneItem(in.getTrainer());
+		Trainer ct = trainerService.getOneItem(in.getCotrainer());
+
+		BatchLocation bl = batchLocationService.getOneItem(b.getBatchLocation().getId());
+		Integer tempLocationId = (in.getLocation() > 0 ? in.getLocation() : null);
+		Integer tempBuildingId = (in.getBuilding() > 0 ? in.getBuilding() : null);
+		Integer tempRoomId = (in.getRoom() > 0 ? in.getRoom() : null);
+		bl.setLocationId(tempLocationId);
+		bl.setBuildingId(tempBuildingId);
+		bl.setRoomId(tempRoomId);
+
+		batchLocationService.saveItem(bl);
+		bl = ((BatchLocationDaoService)batchLocationService).refresh(bl);
+		b.setBatchLocation(bl);
+
+
+		try{
+			batchService.saveItem(b);
+		}catch (Exception ex){
+			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO(ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		return new ResponseEntity<Batch>(b, HttpStatus.OK);
 	}
 	
 }
