@@ -613,7 +613,10 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	tlc.filterTimelineData = function(worryAboutPagination)
 	{
 		tlc.filteredTrainers = tlc.trainers;
-		tlc.filteredBatches = tlc.batches.filter(tlc.removeNoTrainer).filter(tlc.removeDateless).filter(tlc.removeOutOfDateRange).filter(tlc.removeUnmatchingCurriculum).filter(tlc.removeUnmatchingFocus).filter(tlc.removeUnmatchingLocation).filter(tlc.removeUnmatchingBuilding);
+
+		if(tlc.batches) {
+            tlc.filteredBatches = tlc.batches.filter(tlc.removeNoTrainer).filter(tlc.removeDateless).filter(tlc.removeOutOfDateRange).filter(tlc.removeUnmatchingCurriculum).filter(tlc.removeUnmatchingFocus).filter(tlc.removeUnmatchingLocation).filter(tlc.removeUnmatchingBuilding);
+        }
 		
 		if (tlc.hideConcludedBatches)
 		{
@@ -635,7 +638,9 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 			tlc.filteredTrainers = tlc.filteredTrainers.filter(tlc.removeTrainersOutOfPage);
 		}
 			
-		tlc.filteredBatches = tlc.filteredBatches.filter(tlc.removeIrrelevantBatches);
+		if(tlc.filteredBatches){
+            tlc.filteredBatches = tlc.filteredBatches.filter(tlc.removeIrrelevantBatches);
+		}
 		
 		//Sorts the trainer column names based on id.
 		tlc.filteredTrainers.sort(function(a,b)
@@ -771,7 +776,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 			  var endDate = new Date(d.endDate);
 			  var days = ["Sun.", "Mon.", "Tue.", "Wed.", "Thu.", "Fri.", "Sat."];
 			  var months = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec."];
-			  
+
 			  msg += d.curriculum ? ("<span style='color:orange'>" + d.curriculum.name + "</span> Batch <br/>") : "<span style='color:tomato'>No curriculum</span> for this batch. <br/>";
 			  msg += d.focus ? ("w/ focus on <span style='color:orange'>" + d.focus.name + "</span><br/>") : "w/ <span style='color:tomato'>no focus</span>. <br/>";
 			  msg += "----------<br/>";
