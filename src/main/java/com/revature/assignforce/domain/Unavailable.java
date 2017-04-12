@@ -38,9 +38,15 @@ public class Unavailable {
 		//noarg constructor
 	}
 
-	public Unavailable(int iD, Timestamp startDate, Timestamp endDate) {
+	public Unavailable(Timestamp startDate, Timestamp endDate) {
 		super();
-		ID = iD;
+		this.startDate = startDate;
+		this.endDate = endDate;
+	}
+	
+	public Unavailable(int id, Timestamp startDate, Timestamp endDate) {
+		super();
+		this.ID = id;
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
