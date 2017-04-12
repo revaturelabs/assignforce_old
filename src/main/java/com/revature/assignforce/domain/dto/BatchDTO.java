@@ -3,6 +3,7 @@ package com.revature.assignforce.domain.dto;
 import java.sql.Timestamp;
 import java.util.List;
 
+import com.revature.assignforce.domain.BatchLocation;
 import com.revature.assignforce.domain.Skill;
 
 public class BatchDTO {
@@ -14,10 +15,13 @@ public class BatchDTO {
 	private int trainer;
 	private int cotrainer;
 	private int location;
+	private int building;
 	private int room;
 	private Timestamp startDate;
 	private Timestamp endDate;
 	private List<Skill> skills;
+
+	public BatchDTO(){}
 
 	  // ID
 	public int getID() {
@@ -106,18 +110,15 @@ public class BatchDTO {
 	public void setSkills(List<Skill> skills) {
 		this.skills = skills;
 	}
-	
+
+	//building
+	public int getBuilding() {return building;}
+	public void setBuilding(int building) {this.building = building;}
+
 	@Override
 	public String toString() {
 		return "BatchDTO [batchName = " + name + ", curr = " + curriculum + ", focus = " + focus
 				+ ", trainer = " + trainer + ", cotrainer = " + cotrainer + ", room = " + room
 				+ ", date = " + startDate + ", date2 = " + endDate + "]";
 	}
-	
-	
-	
-	
-	
-	
-	
 }

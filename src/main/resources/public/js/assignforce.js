@@ -14,6 +14,9 @@
 		  // url routing
 		assignforce.config( function($routeProvider, $locationProvider){
 			$routeProvider
+				.when("/login", {
+					templateUrl : "html/views/login.html"
+				})
 				.when("/home", {
 					templateUrl : "html/views/home.html",
 					controller  : "homeCtrl as hCtrl"
@@ -50,7 +53,7 @@
 					templateUrl : "html/views/settings.html",
 					controller  : "settingsCtrl as sCtrl"
 				})
-				.otherwise({"redirectTo": "/home"});
+				.otherwise({"redirectTo": "/login"});
 			
 			$locationProvider.html5Mode(true);
 		});

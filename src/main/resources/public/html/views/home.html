@@ -46,8 +46,9 @@
                                 <th md-column md-order-by="name"> Name </th>
                                 <th md-column md-order-by="curriculum.name"> Curriculum </th>
                                 <th md-column md-order-by="trainer.firstName"> Trainer / Co-Trainer </th>
-                                <th md-column md-order-by="building.name"> Building </th>
-                                <th md-column md-order-by="room.roomName"> Room </th>
+                                <th md-column md-order-by="batchLocation.locationName"> Location </th>
+                                <th md-column md-order-by="batchLocation.buildingName"> Building </th>
+                                <th md-column md-order-by="batchLocation.roomName"> Room </th>
                                 <th md-column md-order-by="startDate"> Start Date </th>
                                 <th md-column md-order-by="endDate"> End Date </th>
                             </tr>
@@ -60,8 +61,9 @@
                                 <td md-cell ng-if="batch.cotrainer == null"> {{ batch.trainer.firstName | limitTo:20 }} {{ batch.trainer.lastName | limitTo:20 }} </td>
                                 <td md-cell ng-if="batch.cotrainer != null"> {{ batch.trainer.firstName | limitTo:20 }} {{ batch.trainer.lastName | limitTo:20 }} / 
                                                                              {{ batch.cotrainer.firstName | limitTo:20 }} {{ batch.cotrainer.lastName | limitTo:20 }} </td>
-                                <td md-cell> {{ batch.building.name }} </td>
-                                <td md-cell> {{ batch.room.roomName | limitTo:20 }} </td>
+                                <td md-cell> {{ batch.batchLocation.locationName | limitTo:20 }}</td>
+                                <td md-cell> {{ batch.batchLocation.buildingName | limitTo:20 }} </td>
+                                <td md-cell> {{ batch.batchLocation.roomName | limitTo:20 }} </td>
                                 <td md-cell> {{ batch.startDate | date:'MMM. d, yyyy' }} </td>
                                 <td md-cell> {{ batch.endDate | date:'MMM. d, yyyy' }} </td>
                             </tr>

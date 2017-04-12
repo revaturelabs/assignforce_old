@@ -10,7 +10,8 @@ import com.fasterxml.jackson.annotation.*;
 @Table(name = "ROOM")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Room implements Activatable {
+public class
+Room implements Activatable {
 
 	@Id
 	@Column(name = "ID")
@@ -31,10 +32,6 @@ public class Room implements Activatable {
 	inverseJoinColumns = @JoinColumn(name = "UNAVAILABLE_ID"))
 	//@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
 	private List<Unavailable> unavailabilities;
-	
-	@OneToMany(mappedBy = "room")
-	@JsonIgnoreProperties("room")//ignores properties of room in batches
-	private List<Batch> batches;
 
 	@Column(name = "active", insertable = false)
 	private Boolean active;
@@ -93,13 +90,6 @@ public class Room implements Activatable {
 		this.unavailabilities = unavailabilities;
 	}
 
-	public List<Batch> getBatches() {
-		return batches;
-	}
-	public void setBatches(List<Batch> batches) {
-		this.batches = batches;
-	}
-
 	public Boolean getActive() {
 		return active;
 	}
@@ -110,6 +100,6 @@ public class Room implements Activatable {
 	@Override
 	public String toString() {
 		return "Room [roomID = " + roomID + ", roomName = " + roomName + ", building = " + building + ", unavailabilities = "
-				+ unavailabilities + ", batches = " + batches + ", active = " + active + "]";
+				+ unavailabilities + ", active = " + active + "]";
 	}
 }

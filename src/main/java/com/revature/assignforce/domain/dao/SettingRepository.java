@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface SettingRepository extends BaseRepository<Setting, Integer>{
+    public Setting findByAlias(String alias);
 }
