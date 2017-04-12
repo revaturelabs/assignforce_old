@@ -1,11 +1,10 @@
 package com.revature.assignforce.web;
 
-import java.sql.Timestamp;
-import java.util.List;
-
 import com.revature.assignforce.domain.*;
-import com.revature.assignforce.domain.dto.BatchLocationDTO;
+import com.revature.assignforce.domain.dto.BatchDTO;
+import com.revature.assignforce.domain.dto.ResponseErrorDTO;
 import com.revature.assignforce.service.BatchLocationDaoService;
+import com.revature.assignforce.service.DaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
@@ -13,12 +12,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.revature.assignforce.domain.dto.BatchDTO;
-import com.revature.assignforce.domain.dto.ResponseErrorDTO;
-import com.revature.assignforce.service.DaoService;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.sql.Timestamp;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/batch")
