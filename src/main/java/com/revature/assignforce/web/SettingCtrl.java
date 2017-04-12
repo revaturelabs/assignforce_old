@@ -43,7 +43,7 @@ public class SettingCtrl {
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object retriveAllSettings(){
+    public Object getGlobalSettings(){
 
         List<Setting> settings = settingService.getAllItems();
 
@@ -60,18 +60,7 @@ public class SettingCtrl {
     @RequestMapping( method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object updateSetting(@RequestBody SettingDTO in ){
 
-        int settingId = in.getSettingId();
-        String name = in.getSettingName();
-        double value = in.getSettingValue();
-
-        Setting setting = new Setting(settingId, name, value);
-        setting = settingService.saveItem(setting);
-
-        if (setting == null) {
-            return new ResponseEntity<ResponseErrorDTO>( new ResponseErrorDTO("Setting failed to update."), HttpStatus.NOT_MODIFIED);
-        } else {
-            return new ResponseEntity<Setting>(setting, HttpStatus.OK);
-        }
+        return null;
     }
 
     //Delete

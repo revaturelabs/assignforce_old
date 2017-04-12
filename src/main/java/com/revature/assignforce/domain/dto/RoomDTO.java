@@ -13,7 +13,6 @@ public class RoomDTO {
 	private String roomName;
 	private int building;
 	private List<Unavailable> unavailabilities;
-	private List<Batch> batches;
 	private boolean active;
 	
 	public int getRoomID() {
@@ -50,11 +49,4 @@ public class RoomDTO {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-	public List<Batch> getBatches() {
-		return batches;
-	}
-	public void setBatches(List<Batch> batches) {
-		this.batches = batches;
-	}
-	
 }

@@ -1,7 +1,12 @@
 package com.revature.assignforce.web;
 
+
 import java.sql.Timestamp;
 import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
@@ -15,98 +20,293 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.assignforce.domain.Batch;
+import com.revature.assignforce.domain.BatchLocation;
 import com.revature.assignforce.domain.BatchStatusLookup;
 import com.revature.assignforce.domain.Curriculum;
 import com.revature.assignforce.domain.Location;
 import com.revature.assignforce.domain.Room;
 import com.revature.assignforce.domain.Skill;
 import com.revature.assignforce.domain.Trainer;
+import com.revature.assignforce.domain.Unavailable;
 import com.revature.assignforce.domain.dto.BatchDTO;
 import com.revature.assignforce.domain.dto.ResponseErrorDTO;
 import com.revature.assignforce.service.DaoService;
 
+
 @RestController
 @RequestMapping("/api/v2/batch")
-@ComponentScan(basePackages="com.revature.assignforce.service")
+@ComponentScan(basePackages = "com.revature.assignforce.service")
 public class BatchCtrl {
+
+	@PersistenceContext
+	private EntityManager em;
 
 	@Autowired
 	DaoService<Batch, Integer> batchService;
-	
+
 	@Autowired
 	DaoService<Curriculum, Integer> currService;
-	
+
 	@Autowired
 	DaoService<Location, Integer> locationService;
-	
+
 	@Autowired
 	DaoService<Room, Integer> roomService;
-	
+
 	@Autowired
 	DaoService<Trainer, Integer> trainerService;
-	
-	  // CREATE
-		// creating new batch object from information passed from batch data transfer object
-	@RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT}, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object createBatch( @RequestBody BatchDTO in ) {
-		
+
+	@Autowired
+	DaoService<BatchLocation, Integer> batchLocationService;
+
+	@Autowired
+	DaoService<Unavailable, Integer> unavailableService;
+
+	// CREATE
+	// creating new batch object from information passed from batch data
+	// transfer object
+	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Transactional
+	public Object createBatch(@RequestBody BatchDTO in) {
+
 		int ID = in.getID();
 		String name = in.getName();
 		Curriculum curriculum = currService.getOneItem(in.getCurriculum());
 		Curriculum focus = currService.getOneItem(in.getFocus());
-		Room room = roomService.getOneItem(in.getRoom());
 		Trainer trainer = trainerService.getOneItem(in.getTrainer());
 		Trainer cotrainer = trainerService.getOneItem(in.getCotrainer());
 		Timestamp startDate = in.getStartDate();
 		Timestamp endDate = in.getEndDate();
 		BatchStatusLookup status = new BatchStatusLookup(1, "Scheduled");
 		List<Skill> skills = in.getSkills();
-		
-		Batch out = new Batch( ID, name, curriculum, room, trainer, cotrainer, startDate, endDate, status, skills, focus);
-		out = batchService.saveItem( out );
+
+		// Save Batch Location
+		Integer tempBuilding = in.getBuilding();
+		Integer tempRoom = in.getRoom();
+
+		if (tempBuilding < 1) {
+			tempBuilding = null;
+		}
+		if (tempRoom < 1) {
+			tempRoom = null;
+		}
+
+		BatchLocation bl = new BatchLocation();
+		bl.setLocationId(in.getLocation());
+		bl.setBuildingId(tempBuilding);
+		bl.setRoomId(tempRoom);
+
+		bl = batchLocationService.saveItem(bl);
+
+		// Save Unavailable
+		Room room;
+		if (tempRoom != null) {
+			room = roomService.getOneItem(tempRoom);
+		} else {
+			room = null;
+		}
+		createUnavailabilities(trainer, room, startDate, endDate);
+
+		Batch out = new Batch(ID, name, startDate, endDate, curriculum, status, trainer, cotrainer, skills, focus, bl);
+		out = batchService.saveItem(out);
 
 		if (out == null) {
-			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Batch failed to save."), HttpStatus.NOT_IMPLEMENTED);
+			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Batch failed to save."),
+					HttpStatus.NOT_IMPLEMENTED);
 		} else {
 			return new ResponseEntity<Batch>(out, HttpStatus.OK);
 		}
 	}
-	
-	  // RETRIEVE
-		// retrieve batch with given ID
+
+	// RETRIEVE
+	// retrieve batch with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object retrieveBatch( @PathVariable("id") Integer ID ) {
-		
+	public Object retrieveBatch(@PathVariable("id") Integer ID) {
+
 		Batch out = batchService.getOneItem(ID);
 		if (out == null) {
-			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No batch found of ID " + ID + "."), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No batch found of ID " + ID + "."),
+					HttpStatus.NOT_FOUND);
 		} else {
 			return new ResponseEntity<Batch>(out, HttpStatus.OK);
 		}
 	}
-	
-	  // DELETE
-		// delete batch with given ID
+
+	// DELETE
+	// delete batch with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object deleteBatch( @PathVariable("id") int ID ) {
-		
+	@Transactional
+	public Object deleteBatch(@PathVariable("id") int ID) {
+		Batch batch = batchService.getOneItem(ID);
+		Timestamp startDate = batch.getStartDate();
+		Timestamp endDate = batch.getEndDate();
+		Trainer trainer = batch.getTrainer();
+		BatchLocation batchLocation = batch.getBatchLocation();
+		Integer roomId = batchLocation.getRoomId();
+		Room room;
+		if (roomId != null) {
+			room = roomService.getOneItem(roomId);
+		} else {
+			room = null;
+		}
+
+		// Remove unavailabilities from trainer and room
+		removeUnavailabilities(trainer, room, startDate, endDate);
+
 		batchService.deleteItem(ID);
+
 		return new ResponseEntity<Object>(null, HttpStatus.OK);
 	}
-	
-	  // GET ALL
-		// retrieve all batches
+
+	// GET ALL
+	// retrieve all batches
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveAllBatches() {
-		
+
 		List<Batch> all = batchService.getAllItems();
 		if (all == null) {
-			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Fetching all batches failed."), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Fetching all batches failed."),
+					HttpStatus.NOT_FOUND);
 		} else if (all.isEmpty()) {
-			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No batches available."), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No batches available."),
+					HttpStatus.NOT_FOUND);
 		} else {
-			return new ResponseEntity< List<Batch> >(all, HttpStatus.OK);
+			return new ResponseEntity<List<Batch>>(all, HttpStatus.OK);
 		}
 	}
-	
+
+	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Transactional
+	public Object updateBatch(@RequestBody BatchDTO in) {
+
+		// try to get batch from database
+		Batch b = batchService.getOneItem(in.getID());
+
+		if (b == null) {
+			return new ResponseEntity<ResponseErrorDTO>(
+					new ResponseErrorDTO("No batch with id '" + in.getID() + "' could be found to update"),
+					HttpStatus.NOT_FOUND);
+		}
+
+		Integer oldRoomId = b.getBatchLocation().getRoomId();
+		Trainer oldTrainer = b.getTrainer();
+		Timestamp oldStartDate = b.getStartDate();
+		Timestamp oldEndDate = b.getEndDate();
+
+		b.setName(in.getName());
+		b.setSkills(in.getSkills());
+		b.setStartDate(in.getStartDate());
+		b.setEndDate(in.getEndDate());
+
+		if (in.getCurriculum() < 1) {
+			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Curriculum cannot be null"),
+					HttpStatus.BAD_REQUEST);
+		}
+		Curriculum c = currService.getOneItem(in.getCurriculum());
+		Curriculum f = currService.getOneItem(in.getFocus());
+
+		b.setCurriculum(c);
+		b.setFocus(f);
+
+		Trainer t = trainerService.getOneItem(in.getTrainer());
+		Trainer ct = trainerService.getOneItem(in.getCotrainer());
+
+		b.setTrainer(t);
+		b.setCotrainer(ct);
+
+		BatchLocation bl = b.getBatchLocation();
+		Integer tempLocationId = (in.getLocation() > 0 ? in.getLocation() : null);
+		Integer tempBuildingId = (in.getBuilding() > 0 ? in.getBuilding() : null);
+		Integer tempRoomId = (in.getRoom() > 0 ? in.getRoom() : null);
+
+		bl.setLocationId(tempLocationId);
+		bl.setBuildingId(tempBuildingId);
+		bl.setRoomId(tempRoomId);
+		b.setBatchLocation(bl);
+
+		// Update unavailabilities for room and trainer
+		Room oldRoom;
+		if (oldRoomId != null) {
+			oldRoom = roomService.getOneItem(oldRoomId);
+		} else {
+			oldRoom = null;
+		}
+		removeUnavailabilities(oldTrainer, oldRoom, oldStartDate, oldEndDate);
+
+		Room room;
+		if (tempRoomId != null) {
+			room = roomService.getOneItem(tempRoomId);
+		} else {
+			room = null;
+		}
+		createUnavailabilities(t, room, b.getStartDate(), b.getEndDate());
+
+		try {
+			batchService.saveItem(b);
+		} catch (Exception ex) {
+			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO(ex.getMessage()),
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		return new ResponseEntity<Batch>(b, HttpStatus.OK);
+	}
+
+	@Transactional
+	private void createUnavailabilities(Trainer trainer, Room room, Timestamp startDate, Timestamp endDate) {
+		Unavailable unavailable = new Unavailable(startDate, endDate);
+		List<Unavailable> unavailabilities;
+
+		if (trainer != null) {
+			unavailabilities = trainer.getUnavailabilities();
+			unavailabilities.add(unavailable);
+			trainer.setUnavailabilities(unavailabilities);
+			trainerService.saveItem(trainer);
+		}
+
+		if (room != null) {
+			unavailabilities = room.getUnavailabilities();
+			unavailabilities.add(unavailable);
+			room.setUnavailabilities(unavailabilities);
+			roomService.saveItem(room);
+		}
+	}
+
+	@Transactional
+	private void removeUnavailabilities(Trainer trainer, Room room, Timestamp startDate, Timestamp endDate) {
+		Unavailable unavailableToRemove;
+		List<Unavailable> unavailabilities;
+
+		if (trainer != null) {
+			int index = -1;
+			unavailabilities = trainer.getUnavailabilities();
+			for (int x = 0; x < unavailabilities.size(); x++) {
+				Unavailable unavailable = unavailabilities.get(x);
+				if (unavailable.getStartDate().equals(startDate) && unavailable.getEndDate().equals(endDate)) {
+					index = x;
+					break;
+				}
+			}
+			unavailableToRemove = unavailabilities.remove(index);
+			unavailableService.deleteItem(unavailableToRemove.getID());
+			trainer.setUnavailabilities(unavailabilities);
+			trainerService.saveItem(trainer);
+		}
+
+		if (room != null) {
+			int index = -1;
+			unavailabilities = room.getUnavailabilities();
+			for (int x = 0; x < unavailabilities.size(); x++) {
+				Unavailable unavailable = unavailabilities.get(x);
+				if (unavailable.getStartDate().equals(startDate) && unavailable.getEndDate().equals(endDate)) {
+					index = x;
+					break;
+				}
+			}
+			unavailableToRemove = unavailabilities.remove(index);
+			unavailableService.deleteItem(unavailableToRemove.getID());
+			room.setUnavailabilities(unavailabilities);
+			roomService.saveItem(room);
+		}
+	}
+
 }
