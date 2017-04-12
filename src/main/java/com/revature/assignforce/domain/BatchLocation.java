@@ -24,7 +24,7 @@ public class BatchLocation {
 
     @Column(name="BUILDING_ID")
     private Integer buildingId = null;
-    
+
     @Formula("(select BUILDING.NAME from BUILDING where BUILDING_ID = BUILDING.ID)")
     private String buildingName;
 
