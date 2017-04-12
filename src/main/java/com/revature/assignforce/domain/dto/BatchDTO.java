@@ -121,11 +121,4 @@ public class BatchDTO {
 				+ ", trainer = " + trainer + ", cotrainer = " + cotrainer + ", room = " + room
 				+ ", date = " + startDate + ", date2 = " + endDate + "]";
 	}
-	
-	
-	
-	
-	
-	
-	
 }

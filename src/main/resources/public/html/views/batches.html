@@ -54,7 +54,7 @@
                         
                      	<md-input-container flex>                       
 	                        <label> Skills </label>
-	                        <md-select ng-model="bCtrl.batch.skills" ng-change="bCtrl.updateSkillRatios()" multiple>
+	                        <md-select ng-model="bCtrl.selectedSkills" ng-change="bCtrl.updateSkillRatios()" multiple>
 	                        	<div ng-if="bCtrl.batch.curriculum">
 	                            	<md-option ng-repeat="skill in bCtrl.skills" ng-value="skill.skillId">{{skill.name}}</md-option>
 	                        	</div>
@@ -109,15 +109,15 @@
 		                                    </td>
 		                                </div>		                                
 	                                </div>
-	                                <div ng-if="bCtrl.availableTrainers.length">
-	                                	<md-option ng-value="null" disabled>No available trainers.</md-option>
+	                                <div ng-if="!bCtrl.availableTrainers.length">
+	                                	<md-option disabled>No available trainers.</md-option>
 	                                </div>
 	                                <div ng-if="!(bCtrl.batch.startDate && bCtrl.batch.endDate)">
-	                                	<md-option ng-value="null" disabled>Please select a date range.</md-option>
+	                                	<md-option disabled>Please select a date range.</md-option>
 	                               	</div>	                                
                                 </div>
                                 <div ng-if="!bCtrl.batch.curriculum">
-                                	<md-option ng-value="null" disabled>Select a curriculum first.</md-option>
+                                	<md-option disabled>Select a curriculum first.</md-option>
                                 </div>
                             </md-select>
                     	</md-input-container>
