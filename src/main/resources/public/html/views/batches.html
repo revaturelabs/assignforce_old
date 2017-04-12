@@ -72,12 +72,12 @@
                     <div flex layout="columns">              
                         <md-input-container flex>
                             <label> Start Date </label>
-                            <md-datepicker ng-value="batch.startDate" ng-model="bCtrl.batch.startDate" md-date-filter="bCtrl.enableMondays" md-open-on-focus md-hide-icons="calendar" ng-change="bCtrl.selectEndDate(); bCtrl.updateWeeks(); bCtrl.defaultName(); bCtrl.updateTrainersAndRooms(bCtrl.trainers, bCtrl.filterRooms(bCtrl.batch.building), bCtrl.batch.startDate, bCtrl.batch.endDate)"> </md-datepicker>
+                            <md-datepicker ng-value="batch.startDate" ng-model="bCtrl.batch.startDate" md-date-filter="bCtrl.enableMondays" md-open-on-focus md-hide-icons="calendar" ng-change="bCtrl.selectEndDate(); bCtrl.updateWeeks(); bCtrl.defaultName();"> </md-datepicker>
                         </md-input-container>
                         
                         <md-input-container flex>
                             <label> End Date </label>
-                            <md-datepicker ng-value="batch.endDate" ng-model="bCtrl.batch.endDate" md-date-filter="bCtrl.enableFridays" md-open-on-focus md-hide-icons="calendar" ng-change="bCtrl.updateWeeks(); bCtrl.updateTrainersAndRooms(bCtrl.trainers, bCtrl.filterRooms(bCtrl.batch.building), bCtrl.batch.startDate, bCtrl.batch.endDate)"> </md-datepicker>
+                            <md-datepicker ng-value="batch.endDate" ng-model="bCtrl.batch.endDate" md-date-filter="bCtrl.enableFridays" md-open-on-focus md-hide-icons="calendar" ng-change="bCtrl.updateWeeks();"> </md-datepicker>
                         </md-input-container>  
                         
                         <md-input-container flex>
@@ -101,15 +101,15 @@
                             <label> Trainer </label>
                             <md-select ng-model="bCtrl.batch.trainer">
                             	<div ng-if="bCtrl.batch.curriculum">
-                            		<div ng-if="bCtrl.availableTrainers && (bCtrl.batch.startDate && bCtrl.batch.endDate)">
-		                                <div ng-repeat="trainer in bCtrl.availableTrainers">
+                            		<div ng-if="bCtrl.trainers.length && (bCtrl.batch.startDate && bCtrl.batch.endDate)">
+		                                <div ng-repeat="trainer in bCtrl.trainers">
 		                                    <md-option ng-value="trainer.trainerId"> {{ trainer.firstName }}  {{ trainer.lastName }} ({{ bCtrl.trainerSkillRatios[trainer.trainerId] }} % skill match to required skills.)</md-option>
 		                                    <td colspan="9" class="progressBar">
 		                                        <md-progress-linear class="md-accent" style="height: 2px" md-mode="determinate" value="{{ bCtrl.trainerSkillRatios[trainer.trainerId] }}"> </md-progress-linear>
 		                                    </td>
 		                                </div>		                                
 	                                </div>
-	                                <div ng-if="!bCtrl.availableTrainers.length">
+	                                <div ng-if="!bCtrl.trainers.length">
 	                                	<md-option disabled>No available trainers.</md-option>
 	                                </div>
 	                                <div ng-if="!(bCtrl.batch.startDate && bCtrl.batch.endDate)">
@@ -149,14 +149,14 @@
                 	<div flex layout="columns">
                     	<md-input-container flex>                       
                     		<label> Location </label>
-                        	<md-select ng-model="bCtrl.batch.location" required>
+                        	<md-select ng-model="bCtrl.batch.location" ng-change="bCtrl.batch.building = undefined; bCtrl.batch.room = undefined;" required>
                         		<md-option ng-value="location.id" ng-repeat="location in bCtrl.locations | activeItem"> {{ location.name }} - {{ location.city }}, {{ location.state }} </md-option>
                         	</md-select>
                     	</md-input-container>
                     
                     	<md-input-container flex>
                     		<label> Building </label>
-                    		<md-select ng-model="bCtrl.batch.building" ng-change="bCtrl.updateRooms(bCtrl.filterRooms(bCtrl.batch.building), bCtrl.batchStart, bCtrl.batchEnd)">
+                    		<md-select ng-model="bCtrl.batch.building" ng-change="bCtrl.batch.room = undefined;">
                                 <div ng-if="bCtrl.batch.location">
                                     <md-option ng-value="building.id" ng-repeat="building in bCtrl.filterBuildings(bCtrl.batch.location) | activeItem"> {{building.name}}</md-option>
                                 </div>
@@ -170,7 +170,7 @@
                     		<label> Room </label>
                             <md-select ng-model="bCtrl.batch.room">
                                 <div ng-if="bCtrl.batch.building">
-                                    <md-option ng-value="room.roomID" ng-repeat="room in bCtrl.availableRooms | activeItem | orderBy : 'roomName'"> {{ room.roomName }} </md-option>
+                                    <md-option ng-value="room.roomID" ng-repeat="room in bCtrl.filterRooms(bCtrl.batch.location, bCtrl.batch.building) | activeItem | orderBy : 'roomName'"> {{ room.roomName }} </md-option>
                                 </div>
                                 <div ng-if="!bCtrl.batch.building">
                                     <md-option disabled>Select a building first</md-option>
