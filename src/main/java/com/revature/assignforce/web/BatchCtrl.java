@@ -286,10 +286,12 @@ public class BatchCtrl {
 					break;
 				}
 			}
-			unavailableToRemove = unavailabilities.remove(index);
-			unavailableService.deleteItem(unavailableToRemove.getID());
-			trainer.setUnavailabilities(unavailabilities);
-			trainerService.saveItem(trainer);
+			if(index != -1){
+				unavailableToRemove = unavailabilities.remove(index);
+				unavailableService.deleteItem(unavailableToRemove.getID());
+				trainer.setUnavailabilities(unavailabilities);
+				trainerService.saveItem(trainer);
+			}
 		}
 
 		if (room != null) {
@@ -302,10 +304,12 @@ public class BatchCtrl {
 					break;
 				}
 			}
-			unavailableToRemove = unavailabilities.remove(index);
-			unavailableService.deleteItem(unavailableToRemove.getID());
-			room.setUnavailabilities(unavailabilities);
-			roomService.saveItem(room);
+			if(index != -1){
+				unavailableToRemove = unavailabilities.remove(index);
+				unavailableService.deleteItem(unavailableToRemove.getID());
+				room.setUnavailabilities(unavailabilities);
+				roomService.saveItem(room);
+			}
 		}
 	}
 
