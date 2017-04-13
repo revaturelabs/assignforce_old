@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class BatchLocation {
     @Id
     @Column(name = "ID")
-    @SequenceGenerator(allocationSize = 1, name = "batchLocSeq", initialValue=42, sequenceName = "BATCH_LOC_SEQ")
+    @SequenceGenerator(allocationSize = 1, name = "batchLocSeq", sequenceName = "BATCH_LOC_SEQ")
     @GeneratedValue(generator = "batchLocSeq", strategy = GenerationType.SEQUENCE)
     private Integer id;
 
