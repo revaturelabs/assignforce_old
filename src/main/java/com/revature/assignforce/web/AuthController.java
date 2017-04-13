@@ -1,19 +1,34 @@
 package com.revature.assignforce.web;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.revature.assignforce.domain.dto.LoginDTO;
+import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @RestController
 @RequestMapping(value = "/api/v2")
 public class AuthController {
 
-	@RequestMapping(value="/authorize",method=RequestMethod.GET)
+	//temporary authentication until Parasol is up and running
+	@RequestMapping(value="/auth", method=RequestMethod.POST)
+	public void authenticate(@RequestBody LoginDTO login, HttpServletResponse response) throws IOException {
+		String user = System.getenv("AF_USERNAME");
+		String pass = System.getenv("AF_PASSWORD");
+
+		if (!login.getUsername().equals(user) || !login.getPassword().equals(pass)){
+			response.sendError(400, "Invalid login credentials");
+		}
+	}
+
+	//used for Parasol. Temporarily out of order. Sorry for the inconvenience
+
+	/*@RequestMapping(value="/authorize",method=RequestMethod.GET)
 	public void initSetup(@RequestParam String redirect_url, HttpSession session, HttpServletResponse response) throws IOException{
 		String sToken = (String) session.getAttribute("token");
 		String authServiceRedirectUrl = System.getenv("AUTH_SERVICE_REDIRECT");
@@ -29,12 +44,12 @@ public class AuthController {
 			response.sendRedirect(String.format("%s?token=%s", redirect_url, sToken));
 		}
 	}
-	
+
 	@RequestMapping(value="/token")
 	public void getToken(@RequestParam(required = false) String token, HttpSession session, HttpServletResponse response) throws IOException {
 
 		session.setAttribute("token", token);
 		String redirect = (String) session.getAttribute("redirect");
 		response.sendRedirect(String.format("%s?token=%s", redirect, token));
-	}
+	}*/
 }
