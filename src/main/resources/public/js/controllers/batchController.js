@@ -58,21 +58,24 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 			// fields are actually populated
 			bc.batch.curriculum = (incomingBatch.curriculum) ? incomingBatch.curriculum.currId : undefined;
 			bc.batch.focus = (incomingBatch.focus) ? incomingBatch.focus.currId : undefined;
+			bc.batch.trainer = incomingBatch.trainer ? incomingBatch.trainer.trainerId : undefined;
 			bc.batch.cotrainer = (incomingBatch.cotrainer) ? incomingBatch.cotrainer.trainerId : undefined;
 
-			bc.batch.trainer = incomingBatch.trainer ? incomingBatch.trainer.trainerId : undefined;
-			bc.batch.location = incomingBatch.location ? incomingBatch.location.id : undefined;
-			bc.batch.building = incomingBatch.location ? incomingBatch.building.id : undefined;
-            bc.batch.room = incomingBatch.room ? incomingBatch.room.roomID : undefined;
+			bc.batch.location = incomingBatch.batchLocation ? incomingBatch.batchLocation.locationId : undefined;
+			bc.batch.building = incomingBatch.batchLocation ? incomingBatch.batchLocation.buildingId : undefined;
+            bc.batch.room = incomingBatch.batchLocation ? incomingBatch.batchLocation.roomId : undefined;
 
-	        bc.selectedSkills = [];
-			if (incomingBatch.skills) {
-				for (var k = 0; k < incomingBatch.skills.length; k += 1) {
-					bc.selectedSkills.push(incomingBatch.skills[k].skillId);
-				}
-				bc.oldBatchEndDate = new Date(bc.batch.endDate);
-				bc.updateWeeks();
-			}
+            if(incomingBatch.skills){
+            	bc.selectedSkills = incomingBatch.skills.map(function(skill){
+                    return skill.skillId;
+                });
+            }
+            else {
+            	bc.selectedSkills = [];
+            }
+            
+            bc.updateSkillRatios();
+            bc.updateWeeks()
 		}
 	};
 
@@ -206,10 +209,10 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 				break;
 
 			case "clone":
-				bc.batch.id = undefined;
 				batchService.create(bc.batch, function() {
+					bc.repull();
+					bc.resetForm();
 					bc.showToast("Batch cloned.");
-					bc.saveUnavailabilities();
 				}, function() {
 					bc.showToast("Failed to clone batch.");
 				});
