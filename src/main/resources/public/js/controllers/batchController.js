@@ -4,6 +4,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 
     var bc = this;
     bc.trainerSkillRatios = {};
+    bc.settings = {};
 
     /*FUNCTIONS*/
 
@@ -18,6 +19,8 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 		if (newState == "create") {
 
 			bc.batch = batchService.getEmptyBatch();
+            bc.batch.location = bc.settings.defaultLocation;
+            bc.batch.building = bc.settings.defaultBuilding;
 
 		} else if (newState == "edit"){
 
@@ -223,7 +226,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 	
 	// Filters buildings based on selected location
     bc.filterBuildings = function(locationId) {
-        if (locationId) {
+        if (locationId && bc.locations) {
             return bc.locations.find(function(location) {
                 return location.id === locationId;
             }).buildings;
@@ -498,4 +501,12 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
     }, function() {
         bc.showToast("Could not fetch trainers.");
     });
+
+    settingService.getGlobal(function(response){
+        bc.settings = response;
+        bc.changeState("create")
+
+    }, function(){
+        bc.showToast("Could not load settings")
+    })
 });

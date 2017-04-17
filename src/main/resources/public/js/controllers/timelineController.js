@@ -325,8 +325,8 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     });
 
     //Fetches the default value for trainers displayed per page.
-    settingService.getById(5, function (response) {
-        tlc.trainersPerPage = response.settingValue;
+    settingService.getSettingByName("trainersPerPage", function (response) {
+        tlc.trainersPerPage = response;
     }, function(){
     	tlc.showToast("Timeline:  Could not fetch setting for default trainers per page.");
     });

@@ -58,9 +58,15 @@ public class SettingCtrl {
 
     //Update
     @RequestMapping( method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object updateSetting(@RequestBody SettingDTO in ){
+    public Object updateSetting(@RequestBody Setting in ){
 
-        return null;
+        try{
+            settingService.saveItem(in);
+        }catch (Exception ex){
+            return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("An error has occured while updating system settings"),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<Object>(null, HttpStatus.NO_CONTENT);
     }
 
     //Delete
