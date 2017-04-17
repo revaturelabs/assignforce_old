@@ -17,7 +17,9 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
     };
 
     sc.updateSettings = function () {
-        console.log(sc.settings);
+        settingService.update(sc.settings, function(){
+            sc.showToast("All settings have been updated")
+        }, null);
     };
 
     //get all locations
