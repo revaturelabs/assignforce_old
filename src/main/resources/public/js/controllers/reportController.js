@@ -44,20 +44,35 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     // rc.initGrad = false;
 
     /* DATA - Grabs all of the default settings from the DB */
-    settingService.getById(6, function(response) {  // Default Grads per batch
-        rc.graduates = response.settingValue;
+    settingService.getSettingByName("reportGrads", function(response) {  // Default Grads per batch
+        console.log("default grads value" + response)
+        rc.graduates = response
+    }, function(){
+        console.log("error-")
     });
-    settingService.getById(7, function(response) {  // Default length of batches
-        rc.batchLength = response.settingValue;
+    settingService.getSettingByName("batchLength", function(response) {  // Default length of batches
+        console.log("default batch length" + response)
+        rc.batchLength = response
+    }, function(){
+        console.log("error-")
     });
-    settingService.getById(8, function(response) {  // Default trainees per batch
-        rc.incoming = response.settingValue;
+    settingService.getSettingByName("reportIncomingGrads", function(response) {  // Default trainees per batch
+        console.log("default incoming trainees value" + response)
+        rc.incoming = response
+    }, function(){
+        console.log("error-")
     });
-    settingService.getById(10, function(response){  // Default minimum size for a batch
-        rc.minBatchSize = response.settingValue;
+    settingService.getSettingByName("minBatchSize", function(response){  // Default minimum size for a batch
+        console.log("default minimum batch size" + response)
+        rc.minBatchSize = response
+    }, function(){
+        console.log("error-")
     });
-    settingService.getById(11, function(response){  // Default max size for a batch
-        rc.maxBatchSize = response.settingValue;
+    settingService.getSettingByName("maxBatchSize", function(response){  // Default max size for a batch
+        console.log("default maximum batch size" + response)
+        rc.maxBatchSize = response
+    }, function(){
+        console.log("error-")
     });
 
     /* DATA - Gets all of the batches from the DB */

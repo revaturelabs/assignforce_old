@@ -10,7 +10,7 @@ app.service('settingService', function ($resource) {
     var ss = this;
     ss.settings = null;
 
-    ss.getAll = function (success, error) {
+    ss.getGlobal = function (success, error) {
         if(ss.settings){
             success(ss.settings);
             return;
@@ -21,9 +21,16 @@ app.service('settingService', function ($resource) {
         }, error);
     };
 
-    ss.getById = function (settingId, success, error) {
-        Setting.get({settingId: settingId}, success, error);
-    };
+    ss.getSettingByName = function(name, success, error){
+        if(ss.settings && ss.settings[name]){
+            success(ss.settings[name])
+            return;
+        }
+
+        ss.getGlobal(function(settings){
+            success(ss.settings[name])
+        }, error)
+    }
 
     ss.update = function (setting, success, error) {
         setting.$update(success, error);
