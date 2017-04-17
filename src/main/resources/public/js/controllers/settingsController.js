@@ -19,15 +19,6 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
     sc.updateSettings = function () {
         console.log(sc.settings);
     };
-    
-    //Get all Settings
-    settingService.getAll( function (response) {
-        sc.settings = response;
-        sc.getLocations();//this will initialize the Locations variable after the settings are loaded in.
-        
-    }, function () {
-        sc.showToast("Could not fetch settings.");
-    });
 
     //get all locations
     sc.getLocations = function() {
@@ -56,6 +47,15 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
     		sc.buildings.push(building);
     	})
     };
+
+    //Get all Settings
+    settingService.getGlobal( function (response) {
+        sc.settings = response;
+        sc.getLocations();//this will initialize the Locations variable after the settings are loaded in.
+
+    }, function () {
+        sc.showToast("Could not fetch settings.");
+    });
 
     //data
     sc.defaultLocation;
