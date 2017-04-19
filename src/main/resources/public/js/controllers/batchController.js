@@ -270,11 +270,29 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
                     currName = curr.name;
                 }
             });
-            bc.batch.name = '$c ($m/$d)';
-            bc.batch.name = bc.batch.name.replace("$c", currName);
-            bc.batch.name = bc.batch.name.replace("$d", start.getDate());
-            bc.batch.name = bc.batch.name.replace("$m", (start.getMonth() + 1));
-            bc.batch.name = bc.batch.name.replace("$y", start.getFullYear());
+
+            settingService.getSettingByName('defaultNamePattern', function(setting){
+                bc.batch.name = setting;
+
+                bc.batch.name = bc.batch.name.replace("$c", currName);
+
+                var day = start.getDate();
+                if(day < 10){
+                    day = "0" + day;
+                }
+                bc.batch.name = bc.batch.name.replace("$d", day);
+
+                var month = start.getMonth() + 1;
+                if(month < 10){
+                    month = "0" + month;
+                }
+                bc.batch.name = bc.batch.name.replace("$m", month);
+
+                bc.batch.name = bc.batch.name.replace("$y", start.getFullYear().toString().substr(-2));
+                bc.batch.name = bc.batch.name.replace("$mmm", start.toLocaleString("en-us", {month: "short"}));
+
+            }, null)
+
         }
     };
 
