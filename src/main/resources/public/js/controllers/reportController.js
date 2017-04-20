@@ -546,6 +546,11 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
                 //Assigns the 'id' value of the Curriculum ('batch type' variable) to the batch object.
                 rc.newBatch.curriculum = rc.cardArr[index].batchType.currId;
 
+                //add the default location
+                settingService.getSettingByName("defaultLocation", function(setting){
+                    rc.newBatch.location = setting;
+                }, null)
+
                 //Create batch method called here...
                 batchService.create(rc.newBatch, success, error);
             }
