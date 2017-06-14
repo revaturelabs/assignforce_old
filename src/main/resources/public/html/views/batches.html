@@ -217,6 +217,7 @@
                                 </th>
                                 <th md-column md-order-by="name"><b> Name </b></th>
                                 <th md-column md-order-by="curriculum.name"> Curriculum </th>
+                                <th md-column md-order-by="focus.name">Focus</th>
                                 <th md-column md-order-by="trainer.firstName"> Trainer / Cotrainer </th>
                                 <th md-column md-order-by="batchLocation.locationName"> Location </th>
                                 <th md-column md-order-by="batchLocation.buildingName"> Building </th>
@@ -235,6 +236,7 @@
                                 </td>
                                 <td md-cell> {{ batch.name | limitTo:20 }} </td>
                                 <td md-cell> {{ batch.curriculum.name }} </td>
+                                <td md-cell>{{batch.focus.name || 'None'}}</td>
                                 <td md-cell ng-if="batch.cotrainer == null"> {{ batch.trainer.firstName | limitTo:20 }} {{ batch.trainer.lastName | limitTo:20 }} </td>
                                 <td md-cell ng-if="batch.cotrainer != null"> {{ batch.trainer.firstName | limitTo:20 }} {{ batch.trainer.lastName | limitTo:20 }} / 
                                                                              {{ batch.cotrainer.firstName | limitTo:20 }} {{ batch.cotrainer.lastName | limitTo:20 }} </td>
