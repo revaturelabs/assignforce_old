@@ -27,7 +27,7 @@ public class TrainerCtrl {
 		// creating new trainer object from information passed from trainer data transfer object
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createTrainer( @RequestBody TrainerDTO in ) {
-	
+		//Maybe use a factory or builder?
 		int ID = in.getTrainerId();
 		String firstName = in.getFirstName();
 		String lastName = in.getLastName();
