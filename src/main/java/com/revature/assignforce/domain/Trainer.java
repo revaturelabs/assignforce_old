@@ -57,6 +57,7 @@ public class Trainer implements Activatable{
 		this.skills = skills;
 		this.certifications = certifications;
 		this.resume = resume;
+		this.active = false;
 	}
 
     public int getTrainerId() {

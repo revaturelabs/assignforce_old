@@ -28,21 +28,26 @@ public class TrainerCtrl {
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createTrainer( @RequestBody TrainerDTO in ) {
 		//Maybe use a factory or builder?
-		int ID = in.getTrainerId();
-		String firstName = in.getFirstName();
-		String lastName = in.getLastName();
-		String resume = in.getResume();
-		List<Skill> skills = in.getSkills();
-		List<Certification> certifications = in.getCertifications();
-		List<Unavailable> unavailabilities = in.getUnavailabilities();
+		Trainer out = null;
+		try {
+			int ID = in.getTrainerId();
+			String firstName = in.getFirstName();
+			String lastName = in.getLastName();
+			String resume = in.getResume();
+			List<Skill> skills = in.getSkills();
+			List<Certification> certifications = in.getCertifications();
+			List<Unavailable> unavailabilities = in.getUnavailabilities();
 
-		Trainer out = new Trainer( ID, firstName, lastName, resume, unavailabilities, skills, certifications );
-		out = trainerService.saveItem( out );
-		
-		if (out == null) {
-			return new ResponseEntity<ResponseErrorDTO>( new ResponseErrorDTO("Trainer failed to save."), HttpStatus.NOT_IMPLEMENTED);
-		} else {
-			return new ResponseEntity<Trainer>(out, HttpStatus.OK);
+		 	out = new Trainer(ID, firstName, lastName, resume, unavailabilities, skills, certifications);
+			out = trainerService.saveItem(out);
+		}finally {
+			if (out == null) {
+				//Changed status code to 500 since this is implemented but if here just broken gdittric 7/11/12
+				return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Trainer failed to save."),
+						HttpStatus.INTERNAL_SERVER_ERROR);
+			} else {
+				return new ResponseEntity<Trainer>(out, HttpStatus.OK);
+			}
 		}
 	}
 	
