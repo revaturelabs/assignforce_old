@@ -30,9 +30,8 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.mockito.Mockito.doNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -177,13 +176,11 @@ public class TrainerCtrlTest {
     }
 
     @Test
-    public void deleteTrainer(){
-
+    public void deleteTrainer() throws Exception{
+        doNothing().when(trainerService).deleteItem(any(Integer.class));
+        mvc.perform(delete("/api/v2/trainer/42"))
+                .andExpect(status().isOk());
     }
 
-    @Test
-    public void retrieveAllTrainers(){
-
-    }
-
+    
 }
