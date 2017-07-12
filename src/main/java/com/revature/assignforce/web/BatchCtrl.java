@@ -102,13 +102,17 @@ public class BatchCtrl {
 //		bl = batchLocationService.saveItem(bl);
 
 		// Save Unavailable
-		Room room;
-		if (tempRoom != null) {
-			room = roomService.getOneItem(tempRoom);
-		} else {
-			room = null;
-		}
-		createUnavailabilities(trainer, room, startDate, endDate);
+        //edited by Roger 7/12/2017; created saveUnavailable method
+        saveUnavailable(trainer, tempRoom, startDate, endDate);
+
+        //Roger moved this code into the saveUnavailable method
+//		Room room;
+//		if (tempRoom != null) {
+//			room = roomService.getOneItem(tempRoom);
+//		} else {
+//			room = null;
+//		}
+//		createUnavailabilities(trainer, room, startDate, endDate);
 
 		Batch out = new Batch(ID, name, startDate, endDate, curriculum, status, trainer, cotrainer, skills, focus, bl);
 		out = batchService.saveItem(out);
@@ -125,7 +129,7 @@ public class BatchCtrl {
 	//save batch location
 	///Roger edited 7/12/2017; created method
 	@Transactional
-	public BatchLocation saveBatchLocation(Integer building, Integer location, Integer room){
+	private BatchLocation saveBatchLocation(Integer building, Integer location, Integer room){
 
         if (building < 1) {
             building = null;
@@ -276,6 +280,20 @@ public class BatchCtrl {
 
 		return new ResponseEntity<Batch>(b, HttpStatus.OK);
 	}
+
+    //SAVE
+    //save unavailable
+    ///Roger edited 7/12/2017; created method
+	@Transactional
+    private void saveUnavailable(Trainer trainer, Integer tempRoom, Timestamp startDate, Timestamp endDate){
+        Room room;
+        if (tempRoom != null) {
+            room = roomService.getOneItem(tempRoom);
+        } else {
+            room = null;
+        }
+        createUnavailabilities(trainer, room, startDate, endDate);
+    }
 
 	@Transactional
 	private void createUnavailabilities(Trainer trainer, Room room, Timestamp startDate, Timestamp endDate) {
