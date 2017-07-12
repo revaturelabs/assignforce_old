@@ -182,5 +182,27 @@ public class TrainerCtrlTest {
                 .andExpect(status().isOk());
     }
 
-    
+    @Test
+    public void retrieveAllTrainers() throws Exception{
+        List<Trainer> trainers = new ArrayList<Trainer>();
+        trainers.add(testTrainer);
+        given(trainerService.getAllItems()).willReturn(trainers);
+        mvc.perform(get("/api/v2/trainer"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void retrieveAllTrainersReturnEmptyList() throws Exception{
+        List<Trainer> trainers = new ArrayList<Trainer>();
+        given(trainerService.getAllItems()).willReturn(trainers);
+        mvc.perform(get("/api/v2/trainer"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void retrieveAllTrainersReturnNull() throws Exception{
+        given(trainerService.getAllItems()).willReturn(null);
+        mvc.perform(get("/api/v2/trainer"))
+                .andExpect(status().isNotFound());
+    }
 }
