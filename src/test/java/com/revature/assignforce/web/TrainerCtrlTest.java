@@ -25,10 +25,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -93,6 +98,7 @@ public class TrainerCtrlTest {
         testTrainer = null;
     }
 
+    // tests happy path
     @Test
     public void createTrainer() throws Exception{
         given(trainerService.saveItem(any(Trainer.class))).willReturn(testTrainer);
@@ -102,37 +108,72 @@ public class TrainerCtrlTest {
                 .andExpect(status().isOk());
     }
 
+    //tests trainer creation using a trainerDTO that contains uninitialized values
     @Test
     public void createTrainerWithEmptyDTO() throws Exception{
         given(trainerService.saveItem(any(Trainer.class))).willReturn(null);
         testTrainer = new Trainer();
         mvc.perform(post("/api/v2/trainer")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(testTrainer.toJsonString()))
                 .andExpect(status().isInternalServerError());
     }
 
+    //tests trainer creation call where no DTO is passed in
     @Test
     public void createTrainerWithNullDTO() throws Exception{
         given(trainerService.saveItem(any(Trainer.class))).willReturn(null);
         mvc.perform(post("/api/v2/trainer")
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void retrieveTrainer(){
-
+    public void retrieveTrainer() throws Exception{
+        given(trainerService.getOneItem(any(Integer.class))).willReturn(testTrainer);
+        mvc.perform(get("/api/v2/trainer/42")
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName", is(testTrainer.getFirstName())))
+                .andExpect(jsonPath("$.lastName", is(testTrainer.getLastName())))
+                .andExpect(jsonPath("$.certifications", is(testTrainer.getCertifications())));
     }
 
     @Test
-    public void retrieveTrainerWithNullDTO(){
-
+    public void retrieveTrainerWithBadId() throws Exception{
+        given(trainerService.getOneItem(any(Integer.class))).willReturn(null);
+        mvc.perform(get("/api/v2/trainer/42")
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isNotFound());
     }
 
     @Test
-    public void updateTrainer(){
+    public void updateTrainer() throws Exception{
+        given(trainerService.saveItem(any(Trainer.class))).willReturn(testTrainer);
+        mvc.perform(put("/api/v2/trainer")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(testTrainer.toJsonString()))
+                .andExpect(status().isOk());
+    }
 
+    @Test
+    public void updateTrainerWithEmptyDTO() throws Exception{
+        testTrainer = new Trainer();
+        given(trainerService.saveItem(any(Trainer.class))).willReturn(null);
+        mvc.perform(put("/api/v2/trainer")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(testTrainer.toJsonString()))
+                .andExpect(status().isNotModified());
+    }
+
+    @Test
+    public void updateTrainerWithNullDTO() throws Exception{
+        testTrainer = new Trainer();
+        given(trainerService.saveItem(any(Trainer.class))).willReturn(null);
+        mvc.perform(put("/api/v2/trainer")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(""))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
