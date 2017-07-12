@@ -29,25 +29,21 @@ public class TrainerCtrl {
 	public Object createTrainer( @RequestBody TrainerDTO in ) {
 		//Maybe use a factory or builder?
 		Trainer out = null;
-		try {
-			int ID = in.getTrainerId();
-			String firstName = in.getFirstName();
-			String lastName = in.getLastName();
-			String resume = in.getResume();
-			List<Skill> skills = in.getSkills();
-			List<Certification> certifications = in.getCertifications();
-			List<Unavailable> unavailabilities = in.getUnavailabilities();
-
-		 	out = new Trainer(ID, firstName, lastName, resume, unavailabilities, skills, certifications);
-			out = trainerService.saveItem(out);
-		}finally {
-			if (out == null) {
-				//Changed status code to 500 since this is implemented but if here just broken gdittric 7/11/12
-				return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Trainer failed to save."),
-						HttpStatus.INTERNAL_SERVER_ERROR);
-			} else {
-				return new ResponseEntity<Trainer>(out, HttpStatus.OK);
-			}
+		int ID = in.getTrainerId();
+		String firstName = in.getFirstName();
+		String lastName = in.getLastName();
+		String resume = in.getResume();
+		List<Skill> skills = in.getSkills();
+		List<Certification> certifications = in.getCertifications();
+		List<Unavailable> unavailabilities = in.getUnavailabilities();
+		out = new Trainer(ID, firstName, lastName, resume, unavailabilities, skills, certifications);
+		out = trainerService.saveItem(out);
+		if (out == null) {
+			//Changed status code to 500 since this is implemented but if here just broken gdittric 7/11/12
+			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Trainer failed to save."),
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		} else {
+			return new ResponseEntity<Trainer>(out, HttpStatus.OK);
 		}
 	}
 	
