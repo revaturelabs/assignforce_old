@@ -80,23 +80,26 @@ public class BatchCtrl {
 		BatchStatusLookup status = new BatchStatusLookup(1, "Scheduled");
 		List<Skill> skills = in.getSkills();
 
-		// Save Batch Location
+        // Save Batch Location
 		Integer tempBuilding = in.getBuilding();
 		Integer tempRoom = in.getRoom();
+        Integer tempLocation = in.getLocation();
+        BatchLocation bl = saveBatchLocation(tempBuilding, tempLocation, tempRoom);
 
-		if (tempBuilding < 1) {
-			tempBuilding = null;
-		}
-		if (tempRoom < 1) {
-			tempRoom = null;
-		}
-
-		BatchLocation bl = new BatchLocation();
-		bl.setLocationId(in.getLocation());
-		bl.setBuildingId(tempBuilding);
-		bl.setRoomId(tempRoom);
-
-		bl = batchLocationService.saveItem(bl);
+        //Roger moved this code into the saveBatchLocation method
+//		if (tempBuilding < 1) {
+//			tempBuilding = null;
+//		}
+//		if (tempRoom < 1) {
+//			tempRoom = null;
+//		}
+//
+//		BatchLocation bl = new BatchLocation();
+//		bl.setLocationId(in.getLocation());
+//		bl.setBuildingId(tempBuilding);
+//		bl.setRoomId(tempRoom);
+//
+//		bl = batchLocationService.saveItem(bl);
 
 		// Save Unavailable
 		Room room;
@@ -116,6 +119,29 @@ public class BatchCtrl {
 		} else {
 			return new ResponseEntity<Batch>(out, HttpStatus.OK);
 		}
+	}
+
+	//SAVE
+	//save batch location
+	///Roger edited 7/12/2017; created method
+	@Transactional
+	public BatchLocation saveBatchLocation(Integer building, Integer location, Integer room){
+
+        if (building < 1) {
+            building = null;
+        }
+        if (room < 1) {
+            room = null;
+        }
+
+        BatchLocation bl = new BatchLocation();
+        bl.setLocationId(location);
+        bl.setBuildingId(building);
+        bl.setRoomId(room);
+
+        bl = batchLocationService.saveItem(bl);
+
+		return bl;
 	}
 
 	// RETRIEVE
