@@ -89,8 +89,7 @@ public class BuildingCtrlTest {
         buildingDTO = null;
         buildingTest = null;
     }
-
-    //Happy Trail test case
+    
     @Test
     public void createBuildingTest() throws Exception {
         given(buildingService.saveItem(any(Building.class))).willReturn(buildingTest);
