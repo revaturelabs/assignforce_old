@@ -9,6 +9,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -27,6 +28,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -45,17 +47,20 @@ public class BatchCtrlTest {
 
     private BatchLocation batchLocation = new BatchLocation();
 
-    private List<Skill> skills = new ArrayList<>();
+    private Curriculum curriculum;
 
-    private List<Unavailable> unavailables = new ArrayList<>();
+    private Curriculum focus;
 
-    private List<Certification> certifications = new ArrayList<>();
+    private Trainer trainer;
+
+    private Trainer cotrainer;
 
     private Batch batchTest = null;
 
     private Timestamp sTimestamp = new Timestamp(Timestamp.valueOf(LocalDateTime.now().minusMonths(3)).getTime());
 
     private Timestamp eTimestamp = new Timestamp(Timestamp.valueOf(LocalDateTime.now()).getTime());
+
 
     @Autowired
     private MockMvc mvc;
@@ -67,39 +72,39 @@ public class BatchCtrlTest {
     ActivatableObjectDaoService<Curriculum, Integer> currService;
 
     @MockBean
-    ActivatableObjectDaoService<Location, Integer> locationService;
-
-    @MockBean
-    ActivatableObjectDaoService<Room, Integer> roomService;
-
-    @MockBean
     ActivatableObjectDaoService<Trainer, Integer> trainerService;
 
     @MockBean
     DaoService<BatchLocation, Integer> batchLocationService;
 
-    @MockBean
-    DaoService<Unavailable, Integer> unavailableService;
-
     @Before
     public void setUp() {
 
-        Curriculum curriculum = new Curriculum(1, "Test", skills);
-        Curriculum focus = new Curriculum(2,"Test", skills);
-        Trainer trainer = new Trainer(1, "Test", "Tester", "resume", unavailables, skills, certifications);
-        Trainer cotrainer = new Trainer(2, "Test", "Tester", "resume", unavailables, skills, certifications);
+        List<Unavailable> unavailables = new ArrayList<>();
+
+        List<Certification> certifications = new ArrayList<>();
+
+        List<Skill> skills = new ArrayList<>();
 
         batchDTO = new BatchDTO();
         batchDTO.setID(1);
         batchDTO.setName("Roger");
-//        batchDTO.setCurriculum(1);
-//        batchDTO.setFocus(1);
-//        batchDTO.setTrainer(1);
-//        batchDTO.setCotrainer(1);
+        batchDTO.setCurriculum(1);
+        batchDTO.setFocus(1);
+        batchDTO.setTrainer(1);
+        batchDTO.setCotrainer(1);
         batchDTO.setLocation(1);
+        batchDTO.setBuilding(1);
         batchDTO.setRoom(1);
         batchDTO.setStartDate(sTimestamp);
         batchDTO.setEndDate(eTimestamp);
+
+        batchLocation.setId(1);
+        batchLocation.setLocationId(1);
+        batchLocation.setBuildingId(1);
+        batchLocation.setRoomId(1);
+
+        BatchStatusLookup bsl = new BatchStatusLookup(1, "Scheduled");;
 
         Skill aSkill = new Skill();
         aSkill.setName("skill");
@@ -113,7 +118,6 @@ public class BatchCtrlTest {
         unavailable.setEndDate(eTimestamp);
         unavailables.add(unavailable);
 
-
         Certification certification = new Certification();
         certification.setId(1);
         certification.setFile("file");
@@ -121,13 +125,11 @@ public class BatchCtrlTest {
         certification.setTrainer(1);
         certifications.add(certification);
 
+        curriculum = new Curriculum(1, "Test", skills);
+        focus = new Curriculum(2,"Test", skills);
+        trainer = new Trainer(1, "Test", "Tester", "resume", unavailables, skills, certifications);
+        cotrainer = new Trainer(2, "Test", "Tester", "resume", unavailables, skills, certifications);
 
-        batchLocation.setId(1);
-        batchLocation.setLocationId(1);
-        batchLocation.setBuildingId(1);
-        batchLocation.setRoomId(1);
-
-        BatchStatusLookup bsl = new BatchStatusLookup(1, "Scheduled");
 
         batchTest = new Batch(batchDTO.getID(), batchDTO.getName(), batchDTO.getStartDate(), batchDTO.getEndDate(),
                 curriculum, bsl, trainer, cotrainer, batchDTO.getSkills(),
@@ -143,12 +145,6 @@ public class BatchCtrlTest {
     @Test
     public void createBatch() throws Exception {
 
-        Curriculum curriculum = new Curriculum(1, "Test", skills);
-        Curriculum focus = new Curriculum(2,"Test", skills);
-        Trainer trainer = new Trainer(1, "Test", "Tester", "resume", unavailables, skills, certifications);
-        Trainer cotrainer = new Trainer(2, "Test", "Tester", "resume", unavailables, skills, certifications);
-
-
         given(currService.getOneItem(batchDTO.getCurriculum())).willReturn(curriculum);
         given(currService.getOneItem(batchDTO.getFocus())).willReturn(focus);
         given(trainerService.getOneItem(batchDTO.getTrainer())).willReturn(trainer);
@@ -160,6 +156,8 @@ public class BatchCtrlTest {
         trainer = trainerService.getOneItem(batchDTO.getTrainer());
         cotrainer = trainerService.getOneItem(batchDTO.getCotrainer());
 
+        given(batchService.saveItem(any(Batch.class))).willReturn(batchTest);
+        //Start_Object token error with the int ids in batchDTO
 //        mvc.perform(post("/api/v2/batch")
 //                .contentType(MediaType.APPLICATION_JSON_VALUE)
 //                .content(batchTest.toJsonString()))
