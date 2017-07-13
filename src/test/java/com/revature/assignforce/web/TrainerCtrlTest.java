@@ -50,7 +50,7 @@ public class TrainerCtrlTest {
     private MockMvc mvc;
 
     @Autowired
-    private TrainerCtrl trainerController = null;
+    private TrainerCtrl trainerController;
 
     @MockBean
     ActivatableObjectDaoService<Trainer, Integer> trainerService;

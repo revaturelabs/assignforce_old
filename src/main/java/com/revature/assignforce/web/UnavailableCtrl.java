@@ -74,8 +74,7 @@ public class UnavailableCtrl {
 		
 		if (out == null) {
 			return new ResponseEntity<ResponseErrorDTO> (
-					new ResponseErrorDTO("Unavailability failed to save."),
-					HttpStatus.NOT_MODIFIED);
+					new ResponseErrorDTO("Unavailability failed to save."), HttpStatus.NOT_MODIFIED);
 		} else {
 				return new ResponseEntity<Unavailable>(out, HttpStatus.OK);
 		}
