@@ -5,6 +5,7 @@ import com.revature.assignforce.domain.*;
 import com.revature.assignforce.domain.dto.BatchDTO;
 import com.revature.assignforce.service.ActivatableObjectDaoService;
 import com.revature.assignforce.service.DaoService;
+import com.revature.assignforce.utils.JsonMaker;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,6 +45,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class BatchCtrlTest {
 
     private BatchDTO batchDTO;
+
+    private JsonMaker jsonMaker = new JsonMaker();
 
     private BatchLocation batchLocation = new BatchLocation();
 
@@ -90,9 +93,9 @@ public class BatchCtrlTest {
         batchDTO.setID(1);
         batchDTO.setName("Roger");
         batchDTO.setCurriculum(1);
-        batchDTO.setFocus(1);
+        batchDTO.setFocus(2);
         batchDTO.setTrainer(1);
-        batchDTO.setCotrainer(1);
+        batchDTO.setCotrainer(2);
         batchDTO.setLocation(1);
         batchDTO.setBuilding(1);
         batchDTO.setRoom(1);
@@ -157,11 +160,11 @@ public class BatchCtrlTest {
         cotrainer = trainerService.getOneItem(batchDTO.getCotrainer());
 
         given(batchService.saveItem(any(Batch.class))).willReturn(batchTest);
-        //Start_Object token error with the int ids in batchDTO
-//        mvc.perform(post("/api/v2/batch")
-//                .contentType(MediaType.APPLICATION_JSON_VALUE)
-//                .content(batchTest.toJsonString()))
-//                .andExpect(status().isOk());
+        //Exception: Can not deserialize instance of int out of START_OBJECT token
+        mvc.perform(post("/api/v2/batch")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(jsonMaker.toJsonString(batchTest)))
+                .andExpect(status().isOk());
     }
 
     @Test
