@@ -29,6 +29,13 @@
                             <md-checkbox md-no-ink ng-model="b.salesSelect" aria-label="sales check"></md-checkbox>
                         </td>
                     </tr>
+                    <tr md-row>
+                        <td md-cell></td>
+                        <td md-cell></td>
+                        <td md-cell><md-button class="md-secondary" ng-click="bsCtrl.syncSF()">Push to Salesforce</md-button></td>
+                        <td md-cell><md-button class="md-secondary" ng-click="bsCtrl.syncAF()">Pull from Salesforce </md-button></td>
+                        <td md-cell></td>
+                    </tr>
                 </tbody>
             </table>
         </md-table-container>

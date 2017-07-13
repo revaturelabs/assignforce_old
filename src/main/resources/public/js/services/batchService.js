@@ -26,6 +26,15 @@ app.service('batchService', function($resource) {
         batch.$update(success, error);
     };
 
+    bs.afSyncUpdate = function(afBatch, sfBatch, success, error){
+        afBatch.sinked = (afBatch == sfBatch?1:0);
+        afBatch.$save(success,error);
+    };
+
+    bs.sfSyncUpdate = function(batch,success,error){
+        //send http request to create/update entry in salesforce
+    };
+
     bs.delete = function(batch, success, error){
         batch.$remove(success, error);
     }

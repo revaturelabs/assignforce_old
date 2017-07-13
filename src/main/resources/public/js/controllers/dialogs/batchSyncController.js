@@ -6,7 +6,7 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
         $mdDialog.cancel();
     }
     bsc.batchInfo = [];
-    bsc.sfb = bsc.afb;
+    bsc.sfb = batchService.getEmptyBatch();
     bsc.refresh = function(){
         bsc.batchInfo = [
             {name:"Name",vfunc:function(b){return b.name;},dfunc:function(str){return str;},sfunc:function(b,v){b.name = v;}},
@@ -52,7 +52,15 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
                 name:"Batch Location",
                 vfunc:function(b){return b.batchLocation;},
                 dfunc:function(l){
-                    return l.buildingName+", "+l.locationName;
+                    if(l.buildingName && l.locationName){
+                        return l.buildingName+", "+l.locationName;
+                    }else if(l.buildingName){
+                        return l.buildingName;
+                    }else if(l.locationName){
+                        return l.locationName;
+                    }else{
+                        return "";
+                    }
                 },
                 sfunc:function(b,v){b.batchLocation = v;}
             }
@@ -65,6 +73,31 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
         }else{
             return null;
         }
+    }
+
+    bsc.syncAF = function(){
+        bsc.batchInfo.map(function(e){
+            if(e.salesSelect){
+                e.sfunc(bsc.afb,e.vfunc(bsc.sfb));
+            }
+            return null;
+        });
+        bsc.refresh();
+        console.log(bsc.afb);
+        //batchService.afSyncUpdate(bsc.afb,bsc.sfb,function(){
+        //},function(){
+        //})
+    }
+
+    bsc.syncSF = function(){
+        bsc.batchInfo.map(function(e){
+            if(e.assignSelect){
+                e.sfunc(bsc.sfb,e.vfunc(bsc.afb));
+            }
+            return null;
+        });
+        bsc.refresh();
+        console.log(bsc.sfb);
     }
 
     bsc.refresh();
