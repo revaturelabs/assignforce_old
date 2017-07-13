@@ -1,6 +1,6 @@
 var assignforce = angular.module("batchApp");
 
-assignforce.controller("batchCtrl", function($scope, batchService, unavailableService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, skillService, $filter, $window, $rootScope) {
+assignforce.controller("batchCtrl", function($scope, batchService, unavailableService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, skillService, $filter, $window, $rootScope, $mdDialog) {
 
     var bc = this;
     bc.trainerSkillRatios = {};
@@ -238,7 +238,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 
     // Filters rooms based on selected building
     bc.filterRooms = function(locationId, buildingId) {
-        if (locationId && buildingId) {
+        if (locationId && buildingId && bc.locations) {
         	var buildings = bc.locations.find(function(location) {
                 return location.id === locationId;
             }).buildings;
@@ -451,6 +451,23 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
             return false;
         });
     };
+
+    bc.sync = function(batch){
+        $mdDialog.show({
+            templateUrl: "html/templates/dialogs/batchSyncDialog.html",
+            controller: "batchSyncCtrl",
+            controllerAs: "bsCtrl",
+            locals: {
+              afb: batch
+            },
+            bindToController: true,
+            clickOutsideToClose: true
+        }).then(function(){
+            bc.repull();
+        },function(){
+            bc.repull();
+        })
+    }
 
     //**** DATA ****\\
     bc.weeksSpan = "Spans 0 Weeks";

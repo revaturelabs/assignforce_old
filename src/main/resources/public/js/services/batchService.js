@@ -9,6 +9,7 @@ app.service('batchService', function($resource) {
     };
     
     bs.create = function(batch, success, error){
+        batch.sinked = 0;
         batch.$save(success, error);
     };
 
@@ -21,6 +22,7 @@ app.service('batchService', function($resource) {
     };
 
     bs.update = function(batch, success, error){
+        batch.sinked = 0;
         batch.$update(success, error);
     };
 
