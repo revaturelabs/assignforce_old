@@ -1,16 +1,22 @@
 package com.revature.assignforce.web;
 
+import com.revature.assignforce.AssignForceV2Application;
 import com.revature.assignforce.domain.Building;
 import com.revature.assignforce.domain.Room;
+import com.revature.assignforce.domain.Trainer;
 import com.revature.assignforce.domain.Unavailable;
 import com.revature.assignforce.domain.dto.BuildingDTO;
 import com.revature.assignforce.service.ActivatableObjectDaoService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.sql.Timestamp;
@@ -19,25 +25,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Created by roger on 7/13/2017.
  */
+@RunWith(SpringRunner.class)
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        classes = AssignForceV2Application.class)
+@AutoConfigureMockMvc
+
 public class BuildingCtrlTest {
 
     private BuildingDTO buildingDTO;
 
     private Building buildingTest;
-
-    private List<Room> rooms = new ArrayList<>();
-
-    private List<Unavailable> unavailabilities = new ArrayList<>();
-
-    private Timestamp sTimestamp = new Timestamp(Timestamp.valueOf(LocalDateTime.now().minusMonths(3)).getTime());
-
-    private Timestamp eTimestamp = new Timestamp(Timestamp.valueOf(LocalDateTime.now()).getTime());
 
     @Autowired
     private MockMvc mvc;
@@ -47,6 +53,15 @@ public class BuildingCtrlTest {
 
     @Before
     public void setUp() throws Exception {
+
+        List<Room> rooms = new ArrayList<>();
+
+        List<Unavailable> unavailabilities = new ArrayList<>();
+
+        Timestamp sTimestamp = new Timestamp(Timestamp.valueOf(LocalDateTime.now().minusMonths(3)).getTime());
+
+        Timestamp eTimestamp = new Timestamp(Timestamp.valueOf(LocalDateTime.now()).getTime());
+
         buildingDTO = new BuildingDTO();
         buildingDTO.setID(1);
         buildingDTO.setName("Building");
@@ -58,13 +73,7 @@ public class BuildingCtrlTest {
         aRoom.setActive(true);
         aRoom.setBuilding(1);
 
-        Unavailable unavailable = new Unavailable();
-        unavailable.setID(1);
-        unavailable.setStartDate(sTimestamp);
-        unavailable.setEndDate(eTimestamp);
-        unavailabilities.add(unavailable);
-
-        aRoom.setUnavailabilities(unavailabilities);
+        aRoom.setUnavailabilities(new ArrayList<>());
         rooms.add(aRoom);
 
         buildingDTO.setRooms(rooms);
@@ -81,13 +90,14 @@ public class BuildingCtrlTest {
         buildingTest = null;
     }
 
+    //Happy Trail test case
     @Test
     public void createBuilding() throws Exception {
-        //working on null pointer; Roger
-//        mvc.perform(post("/api/v2/building")
-//                .contentType(MediaType.APPLICATION_JSON_VALUE)
-//                .content(buildingTest.toJsonString()))
-//                .andExpect(status().isOk());
+        given(buildingService.saveItem(any(Building.class))).willReturn(buildingTest);
+        mvc.perform(post("/api/v2/building")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(buildingTest.toJsonString()))
+                .andExpect(status().isOk());
     }
 
     @Test
