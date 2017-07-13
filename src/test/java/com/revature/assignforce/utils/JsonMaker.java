@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 /**
- * Created by workm on 7/13/2017.
+ * Created by gdittric on 7/13/2017.
  */
 public class JsonMaker {
 
@@ -20,7 +20,7 @@ public class JsonMaker {
     }
 
     public String toJsonString(Object anObject){
-        return getGson().toJson(this);
+        return getGson().toJson(anObject);
     }
 
     public Gson getGson() {
