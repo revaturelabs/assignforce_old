@@ -3,10 +3,9 @@ package com.revature.assignforce.web;
 import com.revature.assignforce.AssignForceV2Application;
 import com.revature.assignforce.domain.Skill;
 import com.revature.assignforce.domain.Trainer;
-import com.revature.assignforce.domain.dto.ResponseErrorDTO;
 import com.revature.assignforce.domain.dto.TrainerDTO;
-import com.revature.assignforce.object.comparators.TrainerComparator;
 import com.revature.assignforce.service.ActivatableObjectDaoService;
+import com.revature.assignforce.utils.JsonMaker;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,15 +57,14 @@ public class TrainerCtrlTest {
 
     private Trainer testTrainer = null;
 
-    private TrainerComparator aTrainerComparator = null;
+    private JsonMaker jsonMaker = new JsonMaker();
     /*
-    * sets up the above object with their default values,
+    * sets up the above objects with their default values,
     * changes in the trainerDTO need to be made in the
     * test trainer as well
     */
     @Before
     public void setUp(){
-        aTrainerComparator = new TrainerComparator();
         trainerDTO = new TrainerDTO();
         trainerDTO.setTrainerId(1);
         trainerDTO.setFirstName("Andy");
@@ -93,7 +91,6 @@ public class TrainerCtrlTest {
     @After
     public void tearDown() throws Exception {
         trainerDTO = null;
-        aTrainerComparator = null;
         testTrainer = null;
     }
 
@@ -103,24 +100,24 @@ public class TrainerCtrlTest {
         given(trainerService.saveItem(any(Trainer.class))).willReturn(testTrainer);
         mvc.perform(post("/api/v2/trainer")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(testTrainer.toJsonString()))
+                .content(jsonMaker.toJsonString(testTrainer)))
                 .andExpect(status().isOk());
     }
 
     //tests trainer creation using a trainerDTO that contains uninitialized values
     @Test
-    public void createTrainerWithEmptyDTO() throws Exception{
+    public void createTrainerWithEmptyDTOTest() throws Exception{
         given(trainerService.saveItem(any(Trainer.class))).willReturn(null);
         testTrainer = new Trainer();
         mvc.perform(post("/api/v2/trainer")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(testTrainer.toJsonString()))
+                .content(jsonMaker.toJsonString(testTrainer)))
                 .andExpect(status().isInternalServerError());
     }
 
     //tests trainer creation call where no DTO is passed in
     @Test
-    public void createTrainerWithNullDTO() throws Exception{
+    public void createTrainerWithNullDTOTest() throws Exception{
         given(trainerService.saveItem(any(Trainer.class))).willReturn(null);
         mvc.perform(post("/api/v2/trainer")
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -128,7 +125,7 @@ public class TrainerCtrlTest {
     }
 
     @Test
-    public void retrieveTrainer() throws Exception{
+    public void retrieveTrainerTest() throws Exception{
         given(trainerService.getOneItem(any(Integer.class))).willReturn(testTrainer);
         mvc.perform(get("/api/v2/trainer/42")
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -139,7 +136,7 @@ public class TrainerCtrlTest {
     }
 
     @Test
-    public void retrieveTrainerWithBadId() throws Exception{
+    public void retrieveTrainerWithBadIdTest() throws Exception{
         given(trainerService.getOneItem(any(Integer.class))).willReturn(null);
         mvc.perform(get("/api/v2/trainer/42")
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -147,26 +144,26 @@ public class TrainerCtrlTest {
     }
 
     @Test
-    public void updateTrainer() throws Exception{
+    public void updateTrainerTest() throws Exception{
         given(trainerService.saveItem(any(Trainer.class))).willReturn(testTrainer);
         mvc.perform(put("/api/v2/trainer")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(testTrainer.toJsonString()))
+                .content(jsonMaker.toJsonString(testTrainer)))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void updateTrainerWithEmptyDTO() throws Exception{
+    public void updateTrainerWithEmptyDTOTest() throws Exception{
         testTrainer = new Trainer();
         given(trainerService.saveItem(any(Trainer.class))).willReturn(null);
         mvc.perform(put("/api/v2/trainer")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(testTrainer.toJsonString()))
+                .content(jsonMaker.toJsonString(testTrainer)))
                 .andExpect(status().isNotModified());
     }
 
     @Test
-    public void updateTrainerWithNullDTO() throws Exception{
+    public void updateTrainerWithNullDTOTest() throws Exception{
         testTrainer = new Trainer();
         given(trainerService.saveItem(any(Trainer.class))).willReturn(null);
         mvc.perform(put("/api/v2/trainer")
@@ -176,14 +173,14 @@ public class TrainerCtrlTest {
     }
 
     @Test
-    public void deleteTrainer() throws Exception{
+    public void deleteTrainerTest() throws Exception{
         doNothing().when(trainerService).deleteItem(any(Integer.class));
         mvc.perform(delete("/api/v2/trainer/42"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void retrieveAllTrainers() throws Exception{
+    public void retrieveAllTrainersTest() throws Exception{
         List<Trainer> trainers = new ArrayList<Trainer>();
         trainers.add(testTrainer);
         given(trainerService.getAllItems()).willReturn(trainers);
@@ -192,7 +189,7 @@ public class TrainerCtrlTest {
     }
 
     @Test
-    public void retrieveAllTrainersReturnEmptyList() throws Exception{
+    public void retrieveAllTrainersReturnEmptyListTest() throws Exception{
         List<Trainer> trainers = new ArrayList<Trainer>();
         given(trainerService.getAllItems()).willReturn(trainers);
         mvc.perform(get("/api/v2/trainer"))
@@ -200,7 +197,7 @@ public class TrainerCtrlTest {
     }
 
     @Test
-    public void retrieveAllTrainersReturnNull() throws Exception{
+    public void retrieveAllTrainersReturnNullTest() throws Exception{
         given(trainerService.getAllItems()).willReturn(null);
         mvc.perform(get("/api/v2/trainer"))
                 .andExpect(status().isNotFound());

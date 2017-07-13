@@ -127,12 +127,4 @@ public class Trainer implements Activatable{
 	public void setResume(String resume) {
 		this.resume = resume;
 	}
-
-	public String toJsonString(){
-		Gson gson = new GsonBuilder()
-				.serializeNulls().setFieldNamingPolicy(FieldNamingPolicy
-						.IDENTITY).create();
-		System.out.println(gson.toJson(this));
-		return gson.toJson(this);
-	}
 }
