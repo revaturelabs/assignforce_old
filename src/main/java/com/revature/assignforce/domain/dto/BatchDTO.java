@@ -20,6 +20,7 @@ public class BatchDTO {
 	private Timestamp startDate;
 	private Timestamp endDate;
 	private List<Skill> skills;
+	private int sinked;
 
 	public BatchDTO(){}
 
@@ -114,6 +115,11 @@ public class BatchDTO {
 	//building
 	public int getBuilding() {return building;}
 	public void setBuilding(int building) {this.building = building;}
+
+
+	public int getSinked() {return sinked;}
+
+	public void setSinked(int sinked) {this.sinked = sinked;}
 
 	@Override
 	public String toString() {
