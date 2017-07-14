@@ -4,6 +4,7 @@ import com.revature.assignforce.AssignForceV2Application;
 import com.revature.assignforce.domain.*;
 import com.revature.assignforce.domain.dto.BatchDTO;
 import com.revature.assignforce.service.ActivatableObjectDaoService;
+import com.revature.assignforce.service.BatchLocationDaoService;
 import com.revature.assignforce.service.DaoService;
 import com.revature.assignforce.utils.JsonMaker;
 import org.junit.After;
@@ -23,14 +24,19 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.doNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -44,21 +50,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class BatchCtrlTest {
 
-    private BatchDTO batchDTO;
+    private BatchDTO batchDTO = null;
 
     private JsonMaker jsonMaker = new JsonMaker();
 
-    private BatchLocation batchLocation = new BatchLocation();
+    private BatchLocation batchLocation = null;
+
+    private BatchStatusLookup batchStatusLookup = null;
 
     private Curriculum curriculum;
 
     private Curriculum focus;
 
-    private Trainer trainer;
+    private Trainer aTrainer;
 
-    private Trainer cotrainer;
+    private Trainer coTrainer;
 
-    private Batch batchTest = null;
+    private Batch testBatch = null;
 
     private Timestamp sTimestamp = new Timestamp(Timestamp.valueOf(LocalDateTime.now().minusMonths(3)).getTime());
 
@@ -67,6 +75,12 @@ public class BatchCtrlTest {
 
     @Autowired
     private MockMvc mvc;
+
+//    @MockBean
+//    DaoService<Room, Integer> roomService;
+
+    @MockBean
+    DaoService<Unavailable, Integer> unavailableService;
 
     @MockBean
     DaoService<Batch, Integer> batchService;
@@ -82,125 +96,155 @@ public class BatchCtrlTest {
 
     @Before
     public void setUp() {
-
-        List<Unavailable> unavailables = new ArrayList<>();
-
-        List<Certification> certifications = new ArrayList<>();
-
-        List<Skill> skills = new ArrayList<>();
-
-        batchDTO = new BatchDTO();
-        batchDTO.setID(1);
-        batchDTO.setName("Roger");
-        batchDTO.setCurriculum(1);
-        batchDTO.setFocus(2);
-        batchDTO.setTrainer(1);
-        batchDTO.setCotrainer(2);
-        batchDTO.setLocation(1);
-        batchDTO.setBuilding(1);
-        batchDTO.setRoom(1);
-        batchDTO.setStartDate(sTimestamp);
-        batchDTO.setEndDate(eTimestamp);
-
-        batchLocation.setId(1);
-        batchLocation.setLocationId(1);
-        batchLocation.setBuildingId(1);
-        batchLocation.setRoomId(1);
-
-        BatchStatusLookup bsl = new BatchStatusLookup(1, "Scheduled");;
-
-        Skill aSkill = new Skill();
-        aSkill.setName("skill");
-        aSkill.setSkillId(1);
-        aSkill.setActive(true);
+        List<Skill> skills = new ArrayList<Skill>();
+        Skill aSkill = new Skill(0, "aSkill");
         skills.add(aSkill);
-        batchDTO.setSkills(skills);
-
-        Unavailable unavailable = new Unavailable();
-        unavailable.setStartDate(sTimestamp);
-        unavailable.setEndDate(eTimestamp);
-        unavailables.add(unavailable);
-
-        Certification certification = new Certification();
-        certification.setId(1);
-        certification.setFile("file");
-        certification.setName("name");
-        certification.setTrainer(1);
-        certifications.add(certification);
-
-        curriculum = new Curriculum(1, "Test", skills);
-        focus = new Curriculum(2,"Test", skills);
-        trainer = new Trainer(1, "Test", "Tester", "resume", unavailables, skills, certifications);
-        cotrainer = new Trainer(2, "Test", "Tester", "resume", unavailables, skills, certifications);
-
-
-        batchTest = new Batch(batchDTO.getID(), batchDTO.getName(), batchDTO.getStartDate(), batchDTO.getEndDate(),
-                curriculum, bsl, trainer, cotrainer, batchDTO.getSkills(),
-                focus, batchLocation);
+        List<Unavailable> unavailability = new ArrayList<Unavailable>();
+        Unavailable anUnavailable = new Unavailable(0, new Timestamp(Timestamp.valueOf(LocalDateTime.now()).getTime()), new Timestamp(Timestamp.valueOf(LocalDateTime.now()).getTime()));
+        unavailability.add(anUnavailable);
+        List<Certification> certs = new ArrayList<Certification>();
+        Certification aCert = new Certification();
+        certs.add(aCert);
+        aTrainer = new Trainer(0, "fname", "lname", "aResume", unavailability, skills, certs);
+        coTrainer = new Trainer(2, "ffname", "dlname", "aResume2", unavailability, skills, certs);
+        curriculum = new Curriculum(2, "myCurriculum", skills);
+        batchStatusLookup = new BatchStatusLookup(0, "aStatus");
+        batchLocation = new BatchLocation();
+        batchLocation.setId(0);
+        batchLocation.setLocationId(0);
+        batchLocation.setLocationName("aLocation");
+        batchLocation.setBuildingId(0);
+        batchLocation.setRoomId(0);
+        testBatch = new Batch(0, "new batch",
+                new Timestamp(Timestamp.valueOf(LocalDateTime.now()).getTime()),
+                new Timestamp(Timestamp.valueOf(LocalDateTime.now()).getTime()), curriculum,
+                batchStatusLookup, aTrainer, coTrainer, skills,
+                curriculum, batchLocation);
+        batchDTO = new BatchDTO();
+        batchDTO.setID(testBatch.getID());
+        batchDTO.setName(testBatch.getName());
+        batchDTO.setCurriculum(testBatch.getCurriculum().getCurrId());
+        batchDTO.setFocus(testBatch.getFocus().getCurrId());
+        batchDTO.setTrainer(testBatch.getTrainer().getTrainerId());
+        batchDTO.setCotrainer(testBatch.getCotrainer().getTrainerId());
+        batchDTO.setLocation(testBatch.getBatchLocation().getLocationId());
+        batchDTO.setBuilding(testBatch.getBatchLocation().getBuildingId());
+        batchDTO.setRoom(testBatch.getBatchLocation().getRoomId());
+        batchDTO.setStartDate(testBatch.getStartDate());
+        batchDTO.setEndDate(testBatch.getEndDate());
+        batchDTO.setSkills(testBatch.getSkills());
     }
 
     @After
     public void tearDown() throws Exception {
-        batchDTO = null;
-        batchTest = null;
+        testBatch = null;
     }
 
     @Test
     public void createBatch() throws Exception {
-
-        given(currService.getOneItem(batchDTO.getCurriculum())).willReturn(curriculum);
-        given(currService.getOneItem(batchDTO.getFocus())).willReturn(focus);
-        given(trainerService.getOneItem(batchDTO.getTrainer())).willReturn(trainer);
-        given(trainerService.getOneItem(batchDTO.getCotrainer())).willReturn(cotrainer);
-        given(batchLocationService.saveItem(batchLocation)).willReturn(batchLocation);
-
-        curriculum = currService.getOneItem(batchDTO.getCurriculum());
-        focus = currService.getOneItem(batchDTO.getFocus());
-        trainer = trainerService.getOneItem(batchDTO.getTrainer());
-        cotrainer = trainerService.getOneItem(batchDTO.getCotrainer());
-
-        given(batchService.saveItem(any(Batch.class))).willReturn(batchTest);
-        //Exception: Can not deserialize instance of int out of START_OBJECT token
+        given(currService.getOneItem(anyInt())).willReturn(curriculum);
+        given(currService.getOneItem(anyInt())).willReturn(curriculum);
+        given(trainerService.getOneItem(anyInt())).willReturn(aTrainer);
+        given(trainerService.getOneItem(anyInt())).willReturn(coTrainer);
+        given(batchService.saveItem(any(Batch.class))).willReturn(testBatch);
         mvc.perform(post("/api/v2/batch")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(jsonMaker.toJsonString(batchTest)))
-                .andExpect(status().isOk());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonMaker.toJsonString(batchDTO)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.id", is(testBatch.getID())));
     }
 
     @Test
-    public void createBatchWithNullDTO() throws Exception {
+    public void createBatchWithEmptyDTO() throws Exception {
+        given(currService.getOneItem(anyInt())).willReturn(curriculum);
+        given(currService.getOneItem(anyInt())).willReturn(curriculum);
+        given(trainerService.getOneItem(anyInt())).willReturn(aTrainer);
+        given(trainerService.getOneItem(anyInt())).willReturn(coTrainer);
+        given(batchService.saveItem(any(Batch.class))).willReturn(null);
+        mvc.perform(post("/api/v2/batch")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonMaker.toJsonString(batchDTO)))
+                    .andExpect(status().isInternalServerError());
     }
 
     @Test
     public void retrieveBatch() throws Exception {
+        given(batchService.getOneItem(anyInt())).willReturn(testBatch);
+        mvc.perform(get("/api/v2/batch/42"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(testBatch.getID())));
     }
 
     @Test
-    public void retrieveBatchWithNullDTO() throws Exception {
+    public void retrieveBatchWithEmptyDTO() throws Exception {
+        given(batchService.getOneItem(anyInt())).willReturn(null);
+        mvc.perform(get("/api/v2/batch/42"))
+                .andExpect(status().isNotFound());
     }
 
     @Test
     public void deleteBatch() throws Exception {
-    }
-
-    @Test
-    public void deleteBatchWithNullDTO() throws Exception {
+        Room aRoom = new Room();
+        doNothing().when(batchService).deleteItem(anyInt());
+        doNothing().when(unavailableService).deleteItem(anyInt());
+        given(batchService.getOneItem(anyInt())).willReturn(testBatch);
+//        given(roomService.getOneItem(anyInt())).willReturn(aRoom);
+        mvc.perform(delete("/api/v2/batch/42"))
+                .andExpect(status().isOk());
     }
 
     @Test
     public void retrieveAllBatches() throws Exception {
+        List<Batch> batches = new ArrayList<Batch>();
+        batches.add(testBatch);
+        given(batchService.getAllItems()).willReturn(batches);
+        mvc.perform(get("/api/v2/batch"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(batches.size())));
     }
 
     @Test
-    public void retrieveAllBatchesWithNullDTO() throws Exception {
+    public void retrieveAllBatchesWithEmptySet() throws Exception {
+        List<Batch> batches = new ArrayList<Batch>();
+        given(batchService.getAllItems()).willReturn(batches);
+        mvc.perform(get("/api/v2/batch"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void retrieveAllBatchesWithError() throws Exception {
+        given(batchService.getAllItems()).willReturn(null);
+        mvc.perform(get("/api/v2/batch"))
+                .andExpect(status().isNotFound());
     }
 
     @Test
     public void updateBatch() throws Exception {
+        given(currService.getOneItem(anyInt())).willReturn(curriculum);
+        given(currService.getOneItem(anyInt())).willReturn(curriculum);
+        given(trainerService.getOneItem(anyInt())).willReturn(aTrainer);
+        given(trainerService.getOneItem(anyInt())).willReturn(coTrainer);
+        given(batchService.saveItem(any(Batch.class))).willReturn(testBatch);
+        given(batchService.getOneItem(anyInt())).willReturn(testBatch);
+        mvc.perform(put("/api/v2/batch")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonMaker.toJsonString(batchDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(testBatch.getID())));
     }
 
     @Test
-    public void updateBatchWithNullDTO() throws Exception {
+    public void updateBatchWithEmptyDTO() throws Exception {
+        given(currService.getOneItem(anyInt())).willReturn(curriculum);
+        given(currService.getOneItem(anyInt())).willReturn(curriculum);
+        given(trainerService.getOneItem(anyInt())).willReturn(aTrainer);
+        given(trainerService.getOneItem(anyInt())).willReturn(coTrainer);
+        given(batchService.saveItem(any(Batch.class))).willReturn(null);
+        given(batchService.getOneItem(anyInt())).willReturn(testBatch);
+        batchDTO = new BatchDTO();
+        mvc.perform(put("/api/v2/batch")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 
 }
