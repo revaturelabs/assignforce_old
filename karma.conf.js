@@ -1,5 +1,5 @@
 // Karma configuration
-// Generated on Mon Mar 06 2017 17:11:42 GMT-0500 (Eastern Standard Time)
+// Generated on Fri Jul 14 2017 11:28:01 GMT-0400 (Eastern Daylight Time)
 
 module.exports = function(config) {
   config.set({
@@ -15,13 +15,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-        'test-main.js',
-        {pattern: 'src/test/resources/angular_modules/jquery.min.js'},
-        {pattern: 'src/test/resources/angular_modules/angular.js'},
-        {pattern: 'src/test/resources/angular_modules/*.js'},
-        {pattern: 'src/main/resources/public/js/*.js'},
-        {pattern: 'src/main/resources/public/js/**/*.js'},
-        {pattern: 'src/test/resources/specs/curriculaController_spec.js'}
+        '.src/main/resources/public/js/services/test/building.spec.js'
     ],
 
 
@@ -62,7 +56,7 @@ module.exports = function(config) {
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     browsers: ['Chrome'],
-    // browsers: ['Firefox'],
+
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
@@ -70,11 +64,6 @@ module.exports = function(config) {
 
     // Concurrency level
     // how many browser should be started simultaneous
-    concurrency: Infinity,
-
-    plugins: [
-          'karma-chrome-launcher',
-          'karma-jasmine'
-    ]
+    concurrency: Infinity
   })
-};
+}
