@@ -31,6 +31,9 @@ public class Batch {
 	@Column(name = "END_DATE", nullable = false)
 	private Timestamp endDate;
 
+	@Column(name = "SINKED")
+	private int sinked;
+
 	@ManyToOne
 	@JoinColumn(name = "CURRICULUM")
 	@Fetch(FetchMode.JOIN)
@@ -74,7 +77,7 @@ public class Batch {
 
 	public Batch(int iD, String name, Timestamp startDate, Timestamp endDate, Curriculum curriculum,
 			BatchStatusLookup batchStatus, Trainer trainer, Trainer coTrainer, List<Skill> skills,
-			Curriculum focus, BatchLocation batchLocation
+			Curriculum focus, BatchLocation batchLocation, int sinked
 		) {
 		super();
 		ID = iD;
@@ -88,6 +91,7 @@ public class Batch {
 		this.skills = skills;
 		this.focus = focus;
 		this.batchLocation = batchLocation;
+		this.sinked = sinked;
 	}
 
 	public int getID() {
@@ -170,10 +174,19 @@ public class Batch {
 		this.batchLocation = batchLocation;
 	}
 
-	@Override
+    public int getSinked() {
+        return sinked;
+    }
+
+    public void setSinked(int sinked) {
+        this.sinked = sinked;
+    }
+
+    @Override
 	public String toString() {
 		return "Batch [ID=" + ID + ", Name = " + name + ", startDate = " + startDate + ", endDate = " + endDate
-				+ ", curriculum = " + curriculum + ", focus = " + focus + ", batchStatus = " + batchStatus + ", trainer = "+ trainer + ", cotrainer = " + cotrainer + "]";
+				+ ", curriculum = " + curriculum + ", focus = " + focus + ", batchStatus = " + batchStatus +
+                ", trainer = "+ trainer + ", cotrainer = " + cotrainer + ", sinked = " + sinked +"]";
 	}
 
 	public Trainer getCotrainer() {

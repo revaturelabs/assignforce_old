@@ -9,6 +9,7 @@ app.service('batchService', function($resource) {
     };
     
     bs.create = function(batch, success, error){
+        batch.sinked = 0;
         batch.$save(success, error);
     };
 
@@ -21,7 +22,18 @@ app.service('batchService', function($resource) {
     };
 
     bs.update = function(batch, success, error){
+        batch.sinked = 0;
         batch.$update(success, error);
+    };
+
+    bs.afSyncUpdate = function(afBatch, sfBatch, success, error){
+        afBatch.sinked = (afBatch == sfBatch?1:0);
+        afBatch.$save(success,error);
+    };
+
+    bs.sfSyncUpdate = function(batch,success,error){
+        //send http request to create/update entry in salesforce
+        error();
     };
 
     bs.delete = function(batch, success, error){

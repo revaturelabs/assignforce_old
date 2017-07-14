@@ -79,6 +79,7 @@ public class BatchCtrl {
 		Timestamp endDate = in.getEndDate();
 		BatchStatusLookup status = new BatchStatusLookup(1, "Scheduled");
 		List<Skill> skills = in.getSkills();
+		int	sinked = in.getSinked();
 
 		// Save Batch Location
 		Integer tempBuilding = in.getBuilding();
@@ -107,7 +108,7 @@ public class BatchCtrl {
 		}
 		createUnavailabilities(trainer, room, startDate, endDate);
 
-		Batch out = new Batch(ID, name, startDate, endDate, curriculum, status, trainer, cotrainer, skills, focus, bl);
+		Batch out = new Batch(ID, name, startDate, endDate, curriculum, status, trainer, cotrainer, skills, focus, bl, sinked);
 		out = batchService.saveItem(out);
 
 		if (out == null) {
@@ -247,6 +248,8 @@ public class BatchCtrl {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO(ex.getMessage()),
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+
+		b.setID(in.getSinked());
 
 		return new ResponseEntity<Batch>(b, HttpStatus.OK);
 	}
