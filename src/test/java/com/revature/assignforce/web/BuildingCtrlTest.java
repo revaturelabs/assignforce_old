@@ -90,17 +90,6 @@ public class BuildingCtrlTest {
         buildingTest = null;
     }
 
-<<<<<<< HEAD
-    //Happy Trail test case
-//    @Test
-//    public void createBuilding() throws Exception {
-//        given(buildingService.saveItem(any(Building.class))).willReturn(buildingTest);
-//        mvc.perform(post("/api/v2/building")
-//                .contentType(MediaType.APPLICATION_JSON_VALUE)
-//                .content(buildingTest.toJsonString()))
-//                .andExpect(status().isOk());
-//    }
-=======
     @Test
     public void createBuildingTest() throws Exception {
         given(buildingService.saveItem(any(Building.class))).willReturn(buildingTest);
@@ -156,7 +145,6 @@ public class BuildingCtrlTest {
                 .content(jsonMaker.toJsonString(buildingTest)))
                 .andExpect(status().isOk());
     }
->>>>>>> e1b1c42ffc3c817f9892d38ccc5c76c3ea012df6
 
     //null pointer exception
 //    @Test
