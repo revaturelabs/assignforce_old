@@ -7,7 +7,9 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
     }
     bsc.batchInfo = [];
     bsc.sfb = batchService.getEmptyBatch();
+    bsc.sfb.sinked = bsc.afb.sinked;
     bsc.refresh = function(){
+        //vfunc - function that returns the field's value, dfunc - formats value for display, sfunc - sets field's value
         bsc.batchInfo = [
             {name:"Name",vfunc:function(b){return b.name;},dfunc:function(str){return str;},sfunc:function(b,v){b.name = v;}},
             {name:"Start Date",vfunc:function(b){return b.startDate;},dfunc:function(time){return new Date(time).toDateString();},sfunc:function(b,v){b.startDate = v;}},
@@ -65,6 +67,10 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
                 sfunc:function(b,v){b.batchLocation = v;}
             }
         ];
+
+        bsc.batchInfo.map(function(b){
+            b.style = {"background-color":(b.vfunc(bsc.afb) == b.vfunc(bsc.sfb)?"white":"lightpink")}
+        });
     }
 
     bsc.nullCheck = function(f,arg){
@@ -83,7 +89,6 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
             return null;
         });
         bsc.refresh();
-        console.log(bsc.afb);
         //batchService.afSyncUpdate(bsc.afb,bsc.sfb,function(){
         //},function(){
         //})
@@ -97,7 +102,19 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
             return null;
         });
         bsc.refresh();
-        console.log(bsc.sfb);
+    }
+
+    bsc.save = function(){
+        //console.log(batchService.sfSyncUpdate);
+        batchService.sfSyncUpdate(bsc.sfb,function(){
+            batchService.afSyncUpdate(bsc.afb,bsc.sfb,function(){
+                $mdDialog.hide();
+            },function(){
+                $mdDialog.cancel();
+            });
+        },function(){
+            $mdDialog.cancel();
+        });
     }
 
     bsc.refresh();

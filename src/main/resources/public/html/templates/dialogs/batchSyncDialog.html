@@ -18,7 +18,7 @@
                     </tr>
                 </thead>
                 <tbody md-body>
-                    <tr md-row ng-repeat="b in bsCtrl.batchInfo">
+                    <tr md-row ng-repeat="b in bsCtrl.batchInfo" ng-style="b.style">
                         <td md-cell>{{b.name}}</td>
                         <td md-cell>
                             <md-checkbox md-no-ink ng-model="b.assignSelect" aria-label="assign check"> </md-checkbox>
@@ -32,8 +32,8 @@
                     <tr md-row>
                         <td md-cell></td>
                         <td md-cell></td>
-                        <td md-cell><md-button class="md-secondary" ng-click="bsCtrl.syncSF()">Push to Salesforce</md-button></td>
-                        <td md-cell><md-button class="md-secondary" ng-click="bsCtrl.syncAF()">Pull from Salesforce </md-button></td>
+                        <td md-cell><md-button class="md-primary" ng-click="bsCtrl.syncSF()">Push to Salesforce</md-button></td>
+                        <td md-cell><md-button class="md-primary" ng-click="bsCtrl.syncAF()">Pull from Salesforce </md-button></td>
                         <td md-cell></td>
                     </tr>
                 </tbody>
@@ -41,6 +41,7 @@
         </md-table-container>
     </md-dialog-content>
     <md-dialog-actions>
-        <md-button class="md-primary" ng-click="bsCtrl.exitbdg()"> Go Back </md-button>
+        <md-button class="md-primary" ng-click="bsCtrl.save()"> Save Changes</md-button>
+        <md-button class="md-primary" ng-click="bsCtrl.exitbdg()"> Cancel </md-button>
     </md-dialog-actions>
 </md-dialog>

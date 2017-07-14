@@ -250,9 +250,9 @@
                                 <td md-cell> {{ batch.batchLocation.roomName | limitTo:20 }} </td>
                                 <td md-cell> {{ batch.startDate | date:'MMM. d, yyyy' }} </td>
                                 <td md-cell> {{ batch.endDate | date:'MMM. d, yyyy' }} </td>
-                                <td md-cell layout layout-align="end center"> 
+                                <td md-cell layout layout-align="end center" >
                                     <md-button class="md-fab md-mini" ng-click="bCtrl.edit(batch)"> 
-                                        <md-tooltip class="md-title"> Edit </md-tooltip>
+                                        <md-tooltip class="md-title"> Edit</md-tooltip>
                                         <md-icon md-svg-src="img/ic_edit_white_24px.svg"></md-icon>
                                     </md-button>
                                     <md-button class="md-fab md-mini" ng-click="bCtrl.clone(batch)"> 
@@ -264,7 +264,7 @@
                                         <md-icon md-svg-src="img/ic_delete_white_24px.svg"></md-icon>
                                     </md-button>
 
-                                    <md-button class="md-fab md-mini"  ng-click="bCtrl.sync(batch)">
+                                    <md-button class="md-fab md-mini" ng-click="bCtrl.sync(batch)" ng-style="bCtrl.syncColor(batch)">
                                         <md-tooltip class="md-title"> Synchronize </md-tooltip>
                                         <md-icon md-svg-src="img/ic_skip_next_white_24px.svg"></md-icon>
                                     </md-button>

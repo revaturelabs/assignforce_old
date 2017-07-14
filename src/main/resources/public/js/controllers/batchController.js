@@ -463,10 +463,19 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
             bindToController: true,
             clickOutsideToClose: true
         }).then(function(){
+            bc.showToast("Batch synced.")
             bc.repull();
         },function(){
+            bc.showToast("Failed to sync batch.")
             bc.repull();
         })
+    }
+
+    bc.pullSF = function(){
+    }
+
+    bc.syncColor=function(batch){
+        return {"background-color":(batch.sinked == 1?"green":"red")};
     }
 
     //**** DATA ****\\

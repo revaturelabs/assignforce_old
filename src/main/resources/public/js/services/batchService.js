@@ -33,6 +33,7 @@ app.service('batchService', function($resource) {
 
     bs.sfSyncUpdate = function(batch,success,error){
         //send http request to create/update entry in salesforce
+        error();
     };
 
     bs.delete = function(batch, success, error){
