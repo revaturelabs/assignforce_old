@@ -91,14 +91,14 @@ public class BuildingCtrlTest {
     }
 
     //Happy Trail test case
-    @Test
-    public void createBuilding() throws Exception {
-        given(buildingService.saveItem(any(Building.class))).willReturn(buildingTest);
-        mvc.perform(post("/api/v2/building")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(buildingTest.toJsonString()))
-                .andExpect(status().isOk());
-    }
+//    @Test
+//    public void createBuilding() throws Exception {
+//        given(buildingService.saveItem(any(Building.class))).willReturn(buildingTest);
+//        mvc.perform(post("/api/v2/building")
+//                .contentType(MediaType.APPLICATION_JSON_VALUE)
+//                .content(buildingTest.toJsonString()))
+//                .andExpect(status().isOk());
+//    }
 
     @Test
     public void retrieveBuilding() throws Exception {
