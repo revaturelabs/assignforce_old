@@ -147,15 +147,15 @@ public class BuildingCtrlTest {
     }
 
     //null pointer exception
-//    @Test
-//    public void updateBuildingWithEmptyDTOTest() throws Exception {
-//        buildingTest = new Building();
-//        given(buildingService.saveItem(any(Building.class))).willReturn(null);
-//        mvc.perform(put("/api/v2/building")
-//                .contentType(MediaType.APPLICATION_JSON_VALUE)
-//                .content(jsonMaker.toJsonString(buildingTest)))
-//                .andExpect(status().isNotModified());
-//    }
+    @Test
+    public void updateBuildingWithEmptyDTOTest() throws Exception {
+        buildingTest = new Building();
+        given(buildingService.saveItem(any(Building.class))).willReturn(null);
+        mvc.perform(put("/api/v2/building")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(jsonMaker.toJsonString(buildingTest)))
+                .andExpect(status().isNotModified());
+    }
 
     @Test
     public void updateBuildingWithNullDTOTest() throws Exception {
