@@ -1,0 +1,30 @@
+<md-dialog>
+    <form name="trainerForm" ng-submit="tdCtrl.save(trainerForm.$valid)" novalidate>
+        <md-dialog-content>
+            <md-toolbar layout="columns">
+                <div class="md-toolbar-tools">
+                    <span>Add New Trainer</span>
+                </div>
+            </md-toolbar>
+
+            <div class="md-padding">
+                <div layout layout-wrap>
+                    <md-input-container flex="100">
+                        <label>First Name</label>
+                        <input ng-model="tdCtrl.trainer.firstName" required>
+                    </md-input-container>
+
+                    <md-input-container flex="100">
+                        <label>Last Name</label>
+                        <input ng-model="tdCtrl.trainer.lastName" required>
+                    </md-input-container>
+                </div>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions>
+            <md-button class="md-primary" type="submit">Save</md-button>
+            <md-button class="md-primary" ng-click="tdCtrl.cancel()">Cancel</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
