@@ -86,33 +86,9 @@ public class BatchCtrl {
         Integer tempLocation = in.getLocation();
         BatchLocation bl = saveBatchLocation(tempBuilding, tempLocation, tempRoom);
 
-        //Roger moved this code into the saveBatchLocation method
-//		if (tempBuilding < 1) {
-//			tempBuilding = null;
-//		}
-//		if (tempRoom < 1) {
-//			tempRoom = null;
-//		}
-//
-//		BatchLocation bl = new BatchLocation();
-//		bl.setLocationId(in.getLocation());
-//		bl.setBuildingId(tempBuilding);
-//		bl.setRoomId(tempRoom);
-//
-//		bl = batchLocationService.saveItem(bl);
-
 		// Save Unavailable
         //edited by Roger 7/12/2017; created saveUnavailable method
         saveUnavailable(trainer, tempRoom, startDate, endDate);
-
-        //Roger moved this code into the saveUnavailable method
-//		Room room;
-//		if (tempRoom != null) {
-//			room = roomService.getOneItem(tempRoom);
-//		} else {
-//			room = null;
-//		}
-//		createUnavailabilities(trainer, room, startDate, endDate);
 
 		Batch out = new Batch(ID, name, startDate, endDate, curriculum, status, trainer, cotrainer, skills, focus, bl);
 		out = batchService.saveItem(out);
