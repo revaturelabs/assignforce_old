@@ -472,6 +472,14 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
     }
 
     bc.pullSF = function(){
+        $mdDialog.show({
+        }).then(function(){
+            bc.showToast("Batches synced.");
+            bc.repull();
+        },function(){
+            bc.showToast("Failed to sync batches.")
+            bc.repull();
+        })
     }
 
     bc.syncColor=function(batch){
