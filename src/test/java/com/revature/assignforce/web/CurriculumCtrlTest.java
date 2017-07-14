@@ -1,7 +1,6 @@
 package com.revature.assignforce.web;
 
 import com.revature.assignforce.AssignForceV2Application;
-import com.revature.assignforce.domain.Building;
 import com.revature.assignforce.domain.Curriculum;
 import com.revature.assignforce.domain.Skill;
 import com.revature.assignforce.domain.dto.CurriculumDTO;
@@ -23,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;

@@ -46,7 +46,7 @@ public class LocationCtrl {
 
 		if (out == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Location failed to save."),
-					HttpStatus.NOT_IMPLEMENTED);
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		} else {
 			return new ResponseEntity<Location>(out, HttpStatus.OK);
 		}
