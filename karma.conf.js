@@ -15,7 +15,34 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-        '.src/main/resources/public/js/services/test/building.spec.js'
+        './node_modules/angular/angular.js',
+        './node_modules/angular-ui-router/release/angular-ui-router.js',
+        './node_modules/angular-mocks/angular-mocks.js',
+        './src/main/resources/public/js/assignforce.js',
+        './src/main/resources/public/js/services/batchService.js',
+        './src/main/resources/public/js/services/test/batch.spec.js',
+        './src/main/resources/public/js/services/buildingService.js',
+        './src/main/resources/public/js/services/test/building.spec.js',
+        './src/main/resources/public/js/services/calendarService.js',
+        './src/main/resources/public/js/services/test/calendar.spec.js',
+        './src/main/resources/public/js/services/curriculumService.js',
+        './src/main/resources/public/js/services/test/curriculum.spec.js',
+        './src/main/resources/public/js/services/locationService.js',
+        './src/main/resources/public/js/services/test/location.spec.js',
+        './src/main/resources/public/js/services/ptoService.js',
+        './src/main/resources/public/js/services/test/pto.spec.js',
+        './src/main/resources/public/js/services/roomService.js',
+        './src/main/resources/public/js/services/test/room.spec.js',
+        './src/main/resources/public/js/services/settingService.js',
+        './src/main/resources/public/js/services/test/setting.spec.js',
+        './src/main/resources/public/js/services/skillService.js',
+        './src/main/resources/public/js/services/test/skill.spec.js',
+        './src/main/resources/public/js/services/trainerService.js',
+        './src/main/resources/public/js/services/test/trainer.spec.js',
+        './src/main/resources/public/js/services/unavailableService.js',
+        './src/main/resources/public/js/services/test/unavailable.spec.js',
+        './src/main/resources/public/js/services/userService.js',
+        './src/main/resources/public/js/services/test/user.spec.js',
     ],
 
 
