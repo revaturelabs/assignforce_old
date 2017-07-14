@@ -61,7 +61,7 @@ public class Force {
         System.out.println(roleData);
         employee.setRoleId(roleData.get("Id").getAsString());
         employee.setRoleId(roleData.get("Name").getAsString());
-        System.out.println(employee);
+        //System.out.println("XXXXXXXXXXXXXXXXXXXXXXXX" + roleData.get("Name").getAsString());
 
         return employee;
     }

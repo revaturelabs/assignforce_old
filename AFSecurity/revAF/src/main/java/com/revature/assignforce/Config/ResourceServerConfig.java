@@ -25,18 +25,22 @@
 //    @Override
 //    public void configure(HttpSecurity http) throws Exception {
 //        //super.configure(http);
+////        http.authorizeRequests()
+////                .antMatchers("/login").authenticated()
+////                .antMatchers(HttpMethod.POST, "/api/v2").access("#oauth2.hasScope('resource-server-write')")
+//////                .antMatchers(HttpMethod.PUT, "/api/**").access("#oauth2.hasScope('resource-server-write')")
+//////                .antMatchers(HttpMethod.DELETE, "/api/**").access("#oauth2.hasScope('resource-server-write')")
+////                //.antMatchers(HttpMethod.GET, "/api/v2").access("#oauth2.hasScope('resource-server-read')")
+////                //.antMatchers(HttpMethod.OPTIONS).permitAll()
+////                .antMatchers("/home").permitAll();
+//////                .and()
+//////                .formLogin().permitAll()
+//////                .and()
+//////                .cors();
 //
-//        http.authorizeRequests()
-//                .antMatchers("/auth").authenticated()
-//                .antMatchers(HttpMethod.POST, "/api/v2").access("#oauth2.hasScope('resource-server-write')")
-////                .antMatchers(HttpMethod.PUT, "/api/**").access("#oauth2.hasScope('resource-server-write')")
-////                .antMatchers(HttpMethod.DELETE, "/api/**").access("#oauth2.hasScope('resource-server-write')")
-//                //.antMatchers(HttpMethod.GET, "/api/v2").access("#oauth2.hasScope('resource-server-read')")
-//                //.antMatchers(HttpMethod.OPTIONS).permitAll()
-//                .antMatchers("/login").permitAll();
-////                .and()
-////                .formLogin().permitAll()
-////                .and()
-////                .cors();
+//        http
+//                .authorizeRequests()
+//                .antMatchers("/home").hasRole("Trainer");
+//
 //    }
 //}

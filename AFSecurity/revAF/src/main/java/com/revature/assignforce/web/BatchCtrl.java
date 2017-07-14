@@ -8,11 +8,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
+import com.revature.assignforce.Force;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,6 +65,9 @@ public class BatchCtrl {
 
 	@Autowired
 	DaoService<Unavailable, Integer> unavailableService;
+
+
+
 
 	// CREATE
 	// creating new batch object from information passed from batch data
@@ -163,7 +169,6 @@ public class BatchCtrl {
 	// retrieve all batches
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveAllBatches() {
-
 
 		List<Batch> all = batchService.getAllItems();
 		if (all == null) {

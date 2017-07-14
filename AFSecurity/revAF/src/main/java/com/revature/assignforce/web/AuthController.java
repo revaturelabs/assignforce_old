@@ -1,9 +1,12 @@
 package com.revature.assignforce.web;
 
 //import com.revature.assignforce.Force;
+import com.revature.assignforce.Force;
 import com.revature.assignforce.domain.dto.LoginDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +22,14 @@ import java.util.List;
 @RequestMapping(value = "/api/v2")
 public class AuthController {
 
+	@Autowired
+	private Force force;
+	@Qualifier("oauth2ClientContext")
+	@Autowired
+	private OAuth2ClientContext context;
 
-//	@Autowired
+
+	//	@Autowired
 //	private Force force;
 //
 //	@RequestMapping(value = "/auth", method = RequestMethod.POST)
@@ -31,6 +40,11 @@ public class AuthController {
 	public OAuth2Authentication getUser(OAuth2Authentication auth)
 {
 
+
+	System.out.println("Force.get Role: XXXXXXXXXXXXX " + force.getRole(auth));
+//		System.out.println("USER DETAILS MMMMMMMMMMM: " + auth.getUserAuthentication().getDetails());
+//		//return (List<Force>) force.getRole(auth);
+//
 	System.out.println("Authorized XZXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" + (OAuth2Authentication) auth.getUserAuthentication().getDetails());
 	return (OAuth2Authentication) auth.getUserAuthentication().getDetails();
 

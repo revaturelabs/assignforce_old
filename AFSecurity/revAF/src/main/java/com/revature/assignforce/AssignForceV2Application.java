@@ -3,6 +3,7 @@ package com.revature.assignforce;
 import com.revature.assignforce.domain.Employee;
 import com.revature.assignforce.web.AuthController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -45,16 +46,32 @@ import java.util.Map;
 @EnableOAuth2Sso
 public class AssignForceV2Application {
 
-	@Autowired
-	private Force force;
+//	@Autowired
+//	private Force force;
+//    @Qualifier("oauth2ClientContext")
+//    @Autowired
+//    private OAuth2ClientContext context;
+//
 
-	@RequestMapping("/home")
-	public List<Force> employees(OAuth2Authentication principal)
-	{
-		System.out.println(force.getRole(principal));
-		return (List<Force>) force.getRole(principal);
+//	@RequestMapping("/home")
+//	public List<Force> employees(OAuth2Authentication auth)
+//	{
+//		System.out.println(force.getRole(auth));
+//		System.out.println(auth.getUserAuthentication().getDetails());
+//		return (List<Force>) force.getRole(auth);
+//
+//	}
 
-	}
+//	@RequestMapping("/home")
+//	public OAuth2Authentication getUser(OAuth2Authentication auth)
+//	{
+//
+//		System.out.println("Authorized XZXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" + (OAuth2Authentication) auth.getUserAuthentication().getDetails());
+//		return (OAuth2Authentication) auth.getUserAuthentication().getDetails();
+//
+//
+//	}
+
 
 	public static void main(String[] args) {
 
@@ -71,7 +88,7 @@ public class AssignForceV2Application {
 	}
 
 	@Bean
-	public OAuth2RestTemplate restTemplate(OAuth2ProtectedResourceDetails resource, OAuth2ClientContext context) {
+	public OAuth2RestTemplate restTemplate(OAuth2ProtectedResourceDetails resource, @Qualifier("oauth2ClientContext") OAuth2ClientContext context) {
 		return new OAuth2RestTemplate(resource, context);
 	}
 
