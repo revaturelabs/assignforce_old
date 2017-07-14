@@ -182,11 +182,9 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
     };
 
     bc.updateTrainerAvalRatios = function(){
-        console.log(bc.trainer)
        bc.trainers.forEach(function(t) {
             bc.trainerAvalRatios[t.trainerId] = bc.calcTrainerAvalibilityRatio(t);
         });
-
     };
 
     // Disables all but Mondays in start datepickers
@@ -546,7 +544,8 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
     bc.calcTrainerAvalibilityRatio = function(trainer){
         var sd = new Date(bc.batch.startDate);
         var ed = new Date(bc.batch.endDate);
-        var unavailable = trainer.UNAVAILABILITY;
+        var unavailable = trainer.unavailabilities;
+        console.log(unavailable);
         var counter = 0;
         var One_day = 1000 * 60 * 60 * 24;
         var dif_mils = Math.abs(ed - sd);
