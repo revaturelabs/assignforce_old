@@ -1,6 +1,6 @@
 var assignforce = angular.module( "batchApp" );
 
-assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchService){
+assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchService, $http){
     var bsc = this;
     bsc.exitbdg = function(){
         $mdDialog.cancel();
@@ -115,7 +115,76 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
         },function(){
             $mdDialog.cancel();
         });
-    }
+
+        //send to sf
+        if (bsc.afb.id == 18) { //already has a sf id number
+            var fun = function(){
+                $http({
+                    method: "PATCH",
+                    url: "https://revature--int1.cs17.my.salesforce.com/services/data/v40.0/sobjects/Training__c/{bsc.afb.ID}"
+                }).success(function(data){
+                    bsc.afb.sinked = 1;
+                    batchService.update(bsc.afb);
+                })
+            }
+        }else{ //has not been updated in sf
+            var fun = function sendData(){
+                $http({
+                    method: "POST",
+                    url: "https://revature--int1.cs17.my.salesforce.com/services/data/v40.0/sobjects/Training__c",
+                    data: reformatData(bsc.afb)
+                }).success(function (data) {
+                    //need to setup method to get sf ID by course name.
+                    bsc.afb.sinked = 1;
+                    batchService.update(bsc.afb);
+                });
+            }();
+        };
+    };
+
+    bsc.reformatData= function(batch){
+        //reformat af batch info to match sf
+        var course;
+        switch (batch.curriculum){
+            case ".NET":
+                course = ".NET";
+                break;
+            case "Java":
+                course = "J2EE";
+                break;
+            case "SDET":
+                course = "JTA";
+                break;
+            default:
+                course = null;
+        };
+
+        var sfBatch = {
+            "Name" : batch.name,
+            "Batch_Trainer_c":batch.trainer, //may need .trainerId
+            "Batch_Start_Date_c": batch.startDate,
+            "Batch_End_Date_c": batch.endDate,
+            "Skill_Type_c": course
+        };
+
+        bsc.strData = JSON.stringify(sfBatch);
+        return sfBatch;
+    };
+
+    bsc.getSFdata = function(){
+        var sfBatchs = [];
+        $http({
+            method: "GET",
+            url: "https://revature--int1.cs17.my.salesforce.com/services/data/v40.0/sobjects/Training__c",
+
+        }).success(function(response){
+            sfBatchs = response;
+
+        }).error(function (response){
+            console.log("error getting data");
+        }) 
+        return sfBatchs;
+    };
 
     bsc.refresh();
 });
