@@ -14,16 +14,22 @@ module.exports = function(config) {
 
 
     // list of files / patterns to load in the browser
+
     files: [
         './node_modules/angular/angular.js',
         './node_modules/angular-animate/angular-animate.js',
-        'node_modules/angular-aria/angular-aria.js',
-        'node_modules/angular-material/angular-material.js',
-        'node_modules/angular-resource/angular-resource.js',
+        './node_modules/angular-aria/angular-aria.js',
         './node_modules/angular-route/angular-route.js',
-        'node_modules/angular-bootstrap/ui-bootstrap.js',
         './node_modules/angular-mocks/angular-mocks.js',
-        './/node_modules/angular-material/angular-material-mocks.js',
+        './node_modules/angular-sanitize/angular-sanitize.js',
+        './node_modules/angular-material-icons/angular-material-icons.js',
+        './node_modules/angular-material/angular-material.js',
+        './node_modules/angular-material/angular-material-mocks.js',
+        './node_modules/angular-resource/angular-resource.js',
+        './node_modules/angular-bootstrap/ui-bootstrap.js',
+        './node_modules/angular-md-table/dist/angular-md-table.min.js',
+        './node_modules/angular-material-data-table/dist/md-data-table.js',
+        './node_modules/ngcsv/ngcsv.js',
         './src/main/resources/public/js/assignforce.js',
         './src/main/resources/public/js/services/*Service.js',
         './src/main/resources/public/js/services/test/*.spec.js',
@@ -44,7 +50,7 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ['spec'],
 
 
     // web server port
@@ -71,7 +77,7 @@ module.exports = function(config) {
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false,
+    singleRun: true,
 
     // Concurrency level
     // how many browser should be started simultaneous
