@@ -34,6 +34,10 @@ public class Batch {
 	@Column(name = "SINKED")
 	private int sinked;
 
+	@Column(name = "SALESFORCEID")
+	private String SFId;
+
+
 	@ManyToOne
 	@JoinColumn(name = "CURRICULUM")
 	@Fetch(FetchMode.JOIN)
@@ -182,7 +186,11 @@ public class Batch {
         this.sinked = sinked;
     }
 
-    @Override
+	public String getSFId() {return SFId;}
+
+	public void setSFId(String SFId) {this.SFId = SFId;}
+
+	@Override
 	public String toString() {
 		return "Batch [ID=" + ID + ", Name = " + name + ", startDate = " + startDate + ", endDate = " + endDate
 				+ ", curriculum = " + curriculum + ", focus = " + focus + ", batchStatus = " + batchStatus +
