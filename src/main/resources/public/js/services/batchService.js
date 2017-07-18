@@ -26,8 +26,7 @@ app.service('batchService', function($resource) {
         batch.$update(success, error);
     };
 
-    bs.afSyncUpdate = function(afBatch, sfBatch, success, error){
-        afBatch.sinked = (afBatch == sfBatch?1:0);
+    bs.afSyncUpdate = function(afBatch,success, error){
         afBatch.$save(success,error);
     };
 

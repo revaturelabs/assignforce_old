@@ -1,6 +1,6 @@
 var assignforce = angular.module( "batchApp" );
 
-assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchService){
+assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchService, SFService){
     var bsc = this;
     bsc.exitbdg = function(){
         $mdDialog.cancel();
@@ -15,7 +15,7 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
             {name:"Start Date",vfunc:function(b){return b.startDate;},dfunc:function(time){return new Date(time).toDateString();},sfunc:function(b,v){b.startDate = v;}},
             {name:"End Date",vfunc:function(b){return b.endDate;},dfunc:function(time){return new Date(time).toDateString();},sfunc:function(b,v){b.endDate = v;}},
             {name:"Curriculum",vfunc:function(b){return b.curriculum;},dfunc:function(c){return c.name;},sfunc:function(b,v){b.curriculum = v;}},
-            {name:"Batch Status",vfunc:function(b){return b.batchStatus;},dfunc:function(bs){return bs.batchStatusName;},sfunc:function(b,v){b.batchStatus = v;}},
+            //{name:"Batch Status",vfunc:function(b){return b.batchStatus;},dfunc:function(bs){return bs.batchStatusName;},sfunc:function(b,v){b.batchStatus = v;}},
             {
                 name:"Trainer",
                 vfunc:function(b){return b.trainer;},
@@ -23,7 +23,8 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
                     return t.firstName+" "+t.lastName;
                 },
                 sfunc:function(b,v){b.trainer = v;}
-            },
+            }//,
+            /*
             {
                 name:"Co-Trainer",
                 vfunc:function(b){return b.coTrainer;},
@@ -66,6 +67,7 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
                 },
                 sfunc:function(b,v){b.batchLocation = v;}
             }
+            */
         ];
 
         bsc.batchInfo.map(function(b){

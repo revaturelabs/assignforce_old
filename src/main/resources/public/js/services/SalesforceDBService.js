@@ -3,7 +3,7 @@ var app = angular.module("batchApp");
 app.service('SFService', function($resource) {
     var sfs = this;
 
-    sfs.SaveSF() = function(batch){
+    sfs.SaveSF = function(batch){
         //send to sf
         if (batch.SALESFORCEID != null) { //already has a sf id number
             var fun = function(){
@@ -13,7 +13,7 @@ app.service('SFService', function($resource) {
                     data: reformatData(batch)
                 }).success(function(data){
                     batch.sinked = 1;
-                    batchService.update(batch);
+                    //batchService.afSyncUpdate(batch);
                 })
             }
         }else{ //has not been updated in sf
@@ -25,7 +25,7 @@ app.service('SFService', function($resource) {
                 }).success(function (response) {
                     batch.SALESFORCEID = response.id;
                     batch.sinked = 1;
-                    batchService.update(batch);
+                    //batchService.afSyncUpdate(batch);
                 });
             }
         }     
@@ -34,7 +34,7 @@ app.service('SFService', function($resource) {
     sfs.reformatData= function(batch){
         //reformat af batch info to match sf
         var course;
-        switch (batch.curriculum){
+        switch (batch.curriculum.name){
             case ".NET":
                 course = ".NET";
                 break;
@@ -60,18 +60,18 @@ app.service('SFService', function($resource) {
         return sfBatch;
     };
 
-    bsc.getSFdata = function(){
-        var sfBatchs = [];
+    sfs.getSFdata = function(){
+        sfs.sfBatchs = [];
         $http({
             method: "GET",
             url: "https://revature--int1.cs17.my.salesforce.com/services/data/v40.0/sobjects/Training__c",
 
         }).success(function(response){
-            sfBatchs = response;
+            sfs.sfBatchs = response;
 
         }).error(function (response){
             console.log("error getting data");
         }) 
-        return sfBatchs;
+        return sfs.sfBatchs;
     };
 });
