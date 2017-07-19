@@ -28,6 +28,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -44,9 +45,51 @@ import java.util.Map;
 @EnableJpaRepositories(basePackages={"com.revature.assignforce.domain.dao"})
 @EntityScan("com.revature.assignforce.domain")
 @EnableOAuth2Sso
+//@EnableResourceServer
 public class AssignForceV2Application {
 
-//	@Autowired
+	@Autowired
+	Force force;
+
+	public static void main(String[] args) {
+
+		SpringApplication.run(AssignForceV2Application.class, args);
+		//OAuth2Authentication auth = new OAuth2Authentication()
+
+		//System.out.println( "DDDDDDDDDDDDDDDDDDD"+  auth.getUserAuthentication().getDetails());
+//		AuthController au = ne...w AuthController();
+//
+//		Object auth;
+//		OAuth2Authentication auth;
+//		HttpServletResponse res;
+//				au.getUser(OAuth2Authentication auth, HttpServletResponse res);
+	}
+
+//	@RestController
+//	class AuthController{
+//		@RequestMapping(value = "/api/v2/auth", method=RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+//		public OAuth2Authentication getUser(OAuth2Authentication auth)
+//		{
+//
+//			auth.isAuthenticated();
+//
+//			System.out.println("Rainer: XXXXXXXXXXXXX " + force.getRole(auth));
+//			System.out.println("RRRRRRR MMMMMMMMMMM: " + auth.getUserAuthentication().getDetails());
+//			//return (List<Force>) force.getRole(auth);
+////
+//			System.out.println("Authorized XZXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" + (OAuth2Authentication) auth.getUserAuthentication().getDetails());
+//			return (OAuth2Authentication) auth.getUserAuthentication().getDetails();
+//
+//		}
+//
+//	}
+//
+	@Bean
+	public OAuth2RestTemplate restTemplate(OAuth2ProtectedResourceDetails resource, @Qualifier("oauth2ClientContext") OAuth2ClientContext context) {
+		return new OAuth2RestTemplate(resource, context);
+	}
+
+	//	@Autowired
 //	private Force force;
 //    @Qualifier("oauth2ClientContext")
 //    @Autowired
@@ -71,26 +114,6 @@ public class AssignForceV2Application {
 //
 //
 //	}
-
-
-	public static void main(String[] args) {
-
-		SpringApplication.run(AssignForceV2Application.class, args);
-		//OAuth2Authentication auth = new OAuth2Authentication()
-
-		//System.out.println( "DDDDDDDDDDDDDDDDDDD"+  auth.getUserAuthentication().getDetails());
-//		AuthController au = new AuthController();
-//
-//		Object auth;
-//		OAuth2Authentication auth;
-//		HttpServletResponse res;
-//				au.getUser(OAuth2Authentication auth, HttpServletResponse res);
-	}
-
-	@Bean
-	public OAuth2RestTemplate restTemplate(OAuth2ProtectedResourceDetails resource, @Qualifier("oauth2ClientContext") OAuth2ClientContext context) {
-		return new OAuth2RestTemplate(resource, context);
-	}
 
 	//public void authManager(AuthenticationManagerBuilder b, )
 

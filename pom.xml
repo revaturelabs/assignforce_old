@@ -8,7 +8,7 @@
 	<version>0.0.4-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	
-	<name>AssignForce-V2</name>
+	<!--<name>AssignForce-V2</name>-->
 	<description>Revature Batch Management Project</description>
 
 	<parent>
@@ -17,6 +17,13 @@
 		<version>1.4.2.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
+
+	<!--<parent>-->
+		<!--<groupId>org.springframework.cloud</groupId>-->
+		<!--<artifactId>spring-cloud-starter-parent</artifactId>-->
+		<!--<version>Angel.SR3</version>-->
+		<!--<relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
+	<!--</parent>-->
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -52,6 +59,26 @@
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
 			<version>0.7.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security.oauth</groupId>
+			<artifactId>spring-security-oauth2</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-oauth2</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-jwt</artifactId>
 		</dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
