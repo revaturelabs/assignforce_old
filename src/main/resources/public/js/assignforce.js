@@ -1,4 +1,5 @@
-var assignforce = angular.module( "batchApp", ['ngRoute', 'ngAnimate', 'ngAria', 'ngResource', 'ngMaterial', 'md.data.table']);
+
+	var assignforce = angular.module( "batchApp", ['ngRoute', 'ngAnimate', 'ngAria', 'ngResource', 'ngMaterial', 'md.data.table', 'ngCsv']);
 
           // global constants
         assignforce.constant( "secWeek", 604800000 )
@@ -14,7 +15,8 @@ var assignforce = angular.module( "batchApp", ['ngRoute', 'ngAnimate', 'ngAria',
 		assignforce.config( function($routeProvider, $locationProvider){
 			$routeProvider
 				.when("/login", {
-					templateUrl : "html/views/login.html"
+					templateUrl : "html/views/login.html",
+					controller : "authCtrl as aCtrl"
 				})
 				.when("/home", {
 					templateUrl : "html/views/home.html",
@@ -52,7 +54,10 @@ var assignforce = angular.module( "batchApp", ['ngRoute', 'ngAnimate', 'ngAria',
 					templateUrl : "html/views/settings.html",
 					controller  : "settingsCtrl as sCtrl"
 				})
-				.otherwise({"redirectTo": "/login"});
+                .otherwise({
+                    templateUrl : "html/views/home.html",
+                    controller  : "homeCtrl as hCtrl"
+                })
 			
 			$locationProvider.html5Mode(true);
 		});

@@ -1,0 +1,47 @@
+
+   /*  .newBatch form .ng-invalid {
+        border: none;
+        border-bottom: 1px solid red;
+    }
+
+    .newBatch form .ng-empty {
+        border: none;
+        border-bottom: 1px solid grey;
+    }
+
+    .newBatch form .ng-valid {
+        border: none;
+        border-bottom: 1px solid grey;
+    }
+
+    .newBatch .material-textbox {
+        border: none;
+        border-bottom: 1px solid grey;
+    } */
+
+    /* .newBatch select option:disabled {
+        color: grey;
+        display: none;
+    }
+
+    .newBatch select {
+        height: 20.9px;
+        width: 45vw;
+
+        color: rgba(0,0,0,.5);
+
+        display: block;
+    } */
+
+    /* .newBatch select:focus, input:focus {
+        outline: none;
+        border-bottom: 2px solid #F26A25;
+    } */
+
+    /* .newBatch option:not(first-child) {
+        color: #757575;
+    } */
+
+    /* .newBatch input {
+        width: 45vw;
+    } */

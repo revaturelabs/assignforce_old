@@ -16,6 +16,13 @@
             }
         };
 
+        // if ($scope.role == "trainer"){
+        //     $scope.toggle = true;
+        // }else{
+        //     $scope.toggle = false;
+        // }
+
+        $scope.toggle = false;
           // data
         mc.currentPage = mc.findCurrentPage();
     });

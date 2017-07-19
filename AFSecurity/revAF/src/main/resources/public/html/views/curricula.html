@@ -1,0 +1,120 @@
+<md-card>
+    <md-content>
+        <md-toolbar layout="columns">
+            <div class="md-toolbar-tools">
+                <span>Curricula</span>
+            </div>
+        </md-toolbar>
+        <!--content for core Curricula-->
+        <md-card>
+            <md-toolbar class="md-primary md-hue-2">
+                <div class="md-toolbar-tools">
+                    <span>Core Curricula</span>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cCtrl.toggleCoreToolbar()">
+                        <md-tooltip class="md-title"> Toggle Content </md-tooltip>
+                        <i id="coreArrow" class="material-icons">keyboard_arrow_up</i>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <md-card-content id="core" ng-if="cCtrl.curricula != undefined && cCtrl.skills != undefined">
+                <md-list>
+                    <md-list-item class="md-2-line" md-ink-ripple ng-repeat="curr in cCtrl.curricula | activeItem" ng-if="curr.core == true">
+                        <div class="md-list-item-text" layout="column">
+                            <h3>{{curr.name}}</h3>
+                            <p>Skills: {{ curr.skills.map(cCtrl.joinObjArrayByName).join(", ");}}</p>
+                        </div>
+                    </md-list-item>
+                </md-list>
+            </md-card-content>
+        </md-card>
+        <!--content for focuses-->
+        <md-card>
+            <md-toolbar class="md-primary md-hue-2">
+                <div class="md-toolbar-tools">
+                    <span>Focuses</span>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cCtrl.toggleFocusStatus()">
+                        <md-tooltip class="md-title"> Create Focus</md-tooltip>
+                        <i class="material-icons">add_circle</i>
+                    </md-button>
+                    <md-button class="md-icon-button" ng-click="cCtrl.toggleFocusToolbar()">
+                        <md-tooltip class="md-title"> Toggle Content </md-tooltip>
+                        <i id="focusArrow" class="material-icons">keyboard_arrow_up</i>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <md-card-content id="focus" ng-if="cCtrl.curricula != undefined && cCtrl.skills != undefined">
+                <md-card class="simpleCard">
+                    <form name="focusForm" ng-show="cCtrl.focusStatus">
+                        <div layout="row" class="md-padding">
+                            <md-input-container flex="50">
+                                <label>Focus Name:</label>
+                                <input type="text" name="focus" ng-model="cCtrl.focusName" required />
+                            </md-input-container>
+                            <md-input-container style="margin-right: 10px;" required flex="50">
+                                <label>Skills:</label>
+                                <md-select ng-model="cCtrl.selectedSkills" multiple>
+                                    <md-option ng-repeat="skill in cCtrl.skills" value="{{skill.skillId}}">{{skill.name}}</md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                        <div layout="row" class="md-padding">
+                            <md-button ng-click="cCtrl.createFocus(focusForm)" class="md-primary"> Save </md-button>
+                        </div>
+                    </form>
+                </md-card>
+                <md-list>
+                    <md-list-item ng-repeat="curr in cCtrl.curricula | activeItem" ng-if="curr.core == false" class="md-2-line" md-ink-ripple="#ff0000">
+                        <div class="md-list-item-text" layout="column">
+                            <h3>{{curr.name}}</h3>
+                            <p>Skills: {{ curr.skills.map(cCtrl.joinObjArrayByName).join(", ");}}</p>
+                        </div>
+                        <span flex></span>
+                        <!--<md-button class="md-icon-button" ng-click="cCtrl.editFocus(curr)">-->
+                        <!--<md-tooltip class="md-title"> Edit Focus </md-tooltip>-->
+                        <!--<i class="material-icons revOrange"> edit </i>-->
+                        <!--</md-button>-->
+                        <md-button class="md-icon-button" ng-click="cCtrl.removeFocus(curr)">
+                            <md-tooltip class="md-title"> Remove Focus </md-tooltip>
+                            <i class="material-icons revOrange">remove_circle</i>
+                        </md-button>
+                    </md-list-item>
+                </md-list>
+            </md-card-content>
+        </md-card>
+        <md-card>
+            <md-toolbar class="md-primary md-hue-2">
+                <div class="md-toolbar-tools">
+                    <span>Skills</span>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cCtrl.toggleSkillToolbar()">
+                        <md-tooltip class="md-title"> Toggle Content </md-tooltip>
+                        <i id="skillArrow" class="material-icons">keyboard_arrow_up</i>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <md-card-content id="skill" ng-if="cCtrl.curricula != undefined && cCtrl.skills != undefined">
+                <form name="skillForm">
+                    <div layout="row">
+                        <md-input-container flex="50">
+                            <label>Skill Name:</label>
+                            <input type="text" name="skill" ng-model="cCtrl.skillName" required />
+                        </md-input-container>
+                        <div class="container" flex="50">
+                            <div class="btn" ng-click="cCtrl.createSkill(skillForm)">
+                                <span>Create</span>
+                                <div class="dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </md-card-content>
+        </md-card>
+        <div ng-if="cCtrl.curricula == undefined && cCtrl.skills == undefined" layout="column" layout-wrap layout-align="center center">
+            <div flex="100"> &nbsp; </div>
+            <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
+            <div flex="100"> &nbsp; </div>
+        </div>
+    </md-content>
+</md-card>
