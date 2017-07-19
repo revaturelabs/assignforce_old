@@ -13,6 +13,7 @@ app.controller("AuthCtrl", function($scope, $location, $window, $mdToast, $http,
     ac.username = '';
     ac.password = '';
 
+
     // global function available to all other controllers (as they are all children of authCtrl) to create toast messages
     ac.showToast = function( message ) {
         $mdToast.show( $mdToast.simple().textContent( message ).action("OKAY").position("top right").highlightAction(true) );

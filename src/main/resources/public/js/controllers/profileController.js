@@ -8,7 +8,7 @@ var assignforce = angular.module( "batchApp" );
 assignforce.controller( "profileCtrl", function( $scope,$resource, $http, $mdDialog, $mdToast, trainerService, roomService, skillService, s3Service, $routeParams) {
     var pc = this;
     pc.tId = $routeParams.id; //grabs the trainer id from the url to load the page with the trainer specified
-
+    // pc.user = userSrv.getAll();
     // functions
 
     // calls showToast method of aCtrl
@@ -195,6 +195,14 @@ assignforce.controller( "profileCtrl", function( $scope,$resource, $http, $mdDia
             pc.showToast("Could not fetch trainer.");
         });
     } else {
+        //D1
+        // var names = name.split(" ");
+        // var fname = names[0];
+        // var lname = names[1];
+        // trainerService.getByFirstNameAndLastName(fname, lname, function(response){
+        //     pc.trainer = response;
+        //     pc.getAllSkills();
+
         trainerService.getById(1, function (response) {
             pc.trainer = response;
             pc.getAllSkills();

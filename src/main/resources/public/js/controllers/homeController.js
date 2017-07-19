@@ -1,8 +1,12 @@
 
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "homeCtrl", function( $scope, $filter, batchService, trainerService, locationService, buildingService ) {
+    assignforce.controller( "homeCtrl", function( $scope, $filter, batchService, $rootScope , $resource ,trainerService, locationService, buildingService, userSrv ) {
         var hc = this;
+
+        hc.userSrv.getAll();
+
+        $RootScope.foo;
 
           // functions
             // calls showToast method of aCtrl
