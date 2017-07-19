@@ -41,7 +41,7 @@ public class CurriculumCtrl {
 		out = currService.saveItem( out );
 		
 		if (out == null) {
-			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Curriculum failed to save."), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Curriculum failed to save."), HttpStatus.NOT_IMPLEMENTED);
 		} else {
 			return new ResponseEntity<Curriculum>(out, HttpStatus.OK);
 		}

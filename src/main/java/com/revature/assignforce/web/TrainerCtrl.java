@@ -28,8 +28,7 @@ public class TrainerCtrl {
 		// creating new trainer object from information passed from trainer data transfer object
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createTrainer( @RequestBody TrainerDTO in ) {
-		//Maybe use a factory or builder?
-		Trainer out = null;
+	
 		int ID = in.getTrainerId();
 		String firstName = in.getFirstName();
 		String lastName = in.getLastName();
@@ -37,12 +36,12 @@ public class TrainerCtrl {
 		List<Skill> skills = in.getSkills();
 		List<Certification> certifications = in.getCertifications();
 		List<Unavailable> unavailabilities = in.getUnavailabilities();
-		out = new Trainer(ID, firstName, lastName, resume, unavailabilities, skills, certifications);
-		out = trainerService.saveItem(out);
+
+		Trainer out = new Trainer( ID, firstName, lastName, resume, unavailabilities, skills, certifications );
+		out = trainerService.saveItem( out );
+		
 		if (out == null) {
-			//Changed status code to 500 since this is implemented but if here just broken gdittric 7/11/12
-			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Trainer failed to save."),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<ResponseErrorDTO>( new ResponseErrorDTO("Trainer failed to save."), HttpStatus.NOT_IMPLEMENTED);
 		} else {
 			return new ResponseEntity<Trainer>(out, HttpStatus.OK);
 		}

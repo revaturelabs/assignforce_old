@@ -1,10 +1,5 @@
 package com.revature.assignforce.domain;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.sql.Timestamp;
 import java.util.Calendar;
 
@@ -83,7 +78,5 @@ public class Unavailable {
 	@Override
 	public String toString() {
 		return "Unavailable [ID = " + ID + ", startDate = " + startDate + ", endDate = " + endDate + "]";
-	}
-
-
+	}	
 }

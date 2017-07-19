@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.assignforce.domain.Room;
@@ -42,9 +43,7 @@ public class RoomCtrl {
 		out = roomService.saveItem( out );
 		
 		if (out == null) {
-			return new ResponseEntity<ResponseErrorDTO>(
-					new ResponseErrorDTO("Room failed to save."),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<ResponseErrorDTO>( new ResponseErrorDTO("Room failed to save."), HttpStatus.NOT_IMPLEMENTED);
 		} else {
 			return new ResponseEntity<Room>(out, HttpStatus.OK);
 		}

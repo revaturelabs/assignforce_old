@@ -22,12 +22,12 @@ import java.util.List;
 @ComponentScan(basePackages = "com.revature.assignforce.service")
 public class SettingCtrl {
     @Autowired
-    private DaoService<Setting, Integer> settingService;
+    DaoService<Setting, Integer> settingService;
 
     //Create
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object createSetting(@RequestBody SettingDTO in ){
-        return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Not Implemented"), HttpStatus.NOT_IMPLEMENTED);
+        return null;
     }
 
     //Retrieve
@@ -61,7 +61,7 @@ public class SettingCtrl {
     public Object updateSetting(@RequestBody Setting in ){
 
         try{
-            Object anObject = settingService.saveItem(in);
+            settingService.saveItem(in);
         }catch (Exception ex){
             return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("An error has occured while updating system settings"),
                     HttpStatus.INTERNAL_SERVER_ERROR);
@@ -70,8 +70,4 @@ public class SettingCtrl {
     }
 
     //Delete
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object deleteSetting(){
-        return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Not Implemented"), HttpStatus.NOT_IMPLEMENTED);
-    }
 }

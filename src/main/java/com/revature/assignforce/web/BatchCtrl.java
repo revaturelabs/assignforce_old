@@ -87,48 +87,42 @@ public class BatchCtrl {
 		BatchStatusLookup status = new BatchStatusLookup(1, "Scheduled");
 		List<Skill> skills = in.getSkills();
 
-        // Save Batch Location
+		// Save Batch Location
 		Integer tempBuilding = in.getBuilding();
 		Integer tempRoom = in.getRoom();
-        Integer tempLocation = in.getLocation();
-        BatchLocation bl = saveBatchLocation(tempBuilding, tempLocation, tempRoom);
+
+		if (tempBuilding < 1) {
+			tempBuilding = null;
+		}
+		if (tempRoom < 1) {
+			tempRoom = null;
+		}
+
+		BatchLocation bl = new BatchLocation();
+		bl.setLocationId(in.getLocation());
+		bl.setBuildingId(tempBuilding);
+		bl.setRoomId(tempRoom);
+
+		bl = batchLocationService.saveItem(bl);
 
 		// Save Unavailable
-        //edited by Roger 7/12/2017; created saveUnavailable method
-        saveUnavailable(trainer, tempRoom, startDate, endDate);
+		Room room;
+		if (tempRoom != null) {
+			room = roomService.getOneItem(tempRoom);
+		} else {
+			room = null;
+		}
+		createUnavailabilities(trainer, room, startDate, endDate);
 
 		Batch out = new Batch(ID, name, startDate, endDate, curriculum, status, trainer, cotrainer, skills, focus, bl);
 		out = batchService.saveItem(out);
 
 		if (out == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Batch failed to save."),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+					HttpStatus.NOT_IMPLEMENTED);
 		} else {
 			return new ResponseEntity<Batch>(out, HttpStatus.OK);
 		}
-	}
-
-	//SAVE
-	//save batch location
-	///Roger edited 7/12/2017; created method
-	@Transactional
-	private BatchLocation saveBatchLocation(Integer building, Integer location, Integer room){
-
-        if (building < 1) {
-            building = null;
-        }
-        if (room < 1) {
-            room = null;
-        }
-
-        BatchLocation bl = new BatchLocation();
-        bl.setLocationId(location);
-        bl.setBuildingId(building);
-        bl.setRoomId(room);
-
-        bl = batchLocationService.saveItem(bl);
-
-		return bl;
 	}
 
 	// RETRIEVE
@@ -263,20 +257,6 @@ public class BatchCtrl {
 
 		return new ResponseEntity<Batch>(b, HttpStatus.OK);
 	}
-
-    //SAVE
-    //save unavailable
-    ///Roger edited 7/12/2017; created method
-	@Transactional
-    private void saveUnavailable(Trainer trainer, Integer tempRoom, Timestamp startDate, Timestamp endDate){
-        Room room;
-        if (tempRoom != null) {
-            room = roomService.getOneItem(tempRoom);
-        } else {
-            room = null;
-        }
-        createUnavailabilities(trainer, room, startDate, endDate);
-    }
 
 	@Transactional
 	private void createUnavailabilities(Trainer trainer, Room room, Timestamp startDate, Timestamp endDate) {

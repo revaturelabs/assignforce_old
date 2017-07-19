@@ -1,9 +1,5 @@
 package com.revature.assignforce.domain;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import java.util.List;
 
 import javax.persistence.*;
@@ -28,8 +24,8 @@ public class Trainer implements Activatable{
 	private String resume;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
-	@JoinTable(name="TRAINER_UNAVAILABILITY_JT",
-	joinColumns=@JoinColumn(name="TRAINER"),
+	@JoinTable(name="TRAINER_UNAVAILABILITY_JT", 
+	joinColumns=@JoinColumn(name="TRAINER"), 
 	inverseJoinColumns=@JoinColumn(name="UNAVAILABILITY"))
 	private List<Unavailable> unavailabilities;
 
@@ -61,7 +57,6 @@ public class Trainer implements Activatable{
 		this.skills = skills;
 		this.certifications = certifications;
 		this.resume = resume;
-		this.active = false;
 	}
 
     public int getTrainerId() {
