@@ -1,9 +1,11 @@
 var assignforce = angular.module("batchApp");
 
-assignforce.controller("batchCtrl", function($scope, batchService, unavailableService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, skillService, $filter, $window, $rootScope) {
+assignforce.controller("batchCtrl", function($scope, batchService, batchSyncController, unavailableService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, skillService, $filter, $window, $rootScope, $mdDialog) {
 
     var bc = this;
     bc.trainerSkillRatios = {};
+    bc.trainerAvalRatios = {};
+    bc.roomAvalRatios = {};
     bc.settings = {};
 
     /*FUNCTIONS*/
@@ -21,6 +23,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 			bc.batch = batchService.getEmptyBatch();
             bc.batch.location = bc.settings.defaultLocation;
             bc.batch.building = bc.settings.defaultBuilding;
+            bc.updateRoomAvalRatios();
 
 		} else if (newState == "edit"){
 
@@ -47,7 +50,9 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
             }
             
             bc.updateSkillRatios();
-            bc.updateWeeks()
+            bc.updateWeeks();
+            bc.updateRoomAvalRatios();
+            bc.updateTrainerAvalRatios();
             
 		} else { // If Clone
 			
@@ -78,7 +83,9 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
             }
             
             bc.updateSkillRatios();
-            bc.updateWeeks()
+            bc.updateWeeks();
+            bc.updateRoomAvalRatios();
+            bc.updateTrainerAvalRatios();
 		}
 	};
 
@@ -167,6 +174,19 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
         });
     };
 
+    bc.updateRoomAvalRatios = function(){
+        var rooms = bc.filterRooms(bc.batch.location, bc.batch.building);
+        rooms.forEach(function(r){
+            bc.roomAvalRatios[r.roomID]= bc.calcRoomAvalibilityRatio(r);
+        });
+    };
+
+    bc.updateTrainerAvalRatios = function(){
+       bc.trainers.forEach(function(t) {
+            bc.trainerAvalRatios[t.trainerId] = bc.calcTrainerAvalibilityRatio(t);
+        });
+    };
+
     // Disables all but Mondays in start datepickers
     bc.enableMondays = function(date) {
         return date.getDay() == 1;
@@ -238,7 +258,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 
     // Filters rooms based on selected building
     bc.filterRooms = function(locationId, buildingId) {
-        if (locationId && buildingId) {
+        if (locationId && buildingId && bc.locations) {
         	var buildings = bc.locations.find(function(location) {
                 return location.id === locationId;
             }).buildings;
@@ -452,6 +472,111 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
         });
     };
 
+    bc.sync = function(batch){
+        $mdDialog.show({
+            templateUrl: "html/templates/dialogs/batchSyncDialog.html",
+            controller: "batchSyncCtrl",
+            controllerAs: "bsCtrl",
+            locals: {
+              afb: batch
+            },
+            bindToController: true,
+            clickOutsideToClose: true
+        }).then(function(){
+            bc.showToast("Batch synced.")
+            bc.repull();
+        },function(){
+            bc.showToast("Failed to sync batch.")
+            bc.repull();
+        })
+    }
+
+    bc.pullSF = function(){
+        $mdDialog.show({
+        }).then(function(){
+            bc.showToast("Batches synced.");
+            bc.repull();
+        },function(){
+            bc.showToast("Failed to sync batches.")
+            bc.repull();
+        })
+    }
+
+    bc.syncColor = function(batch){
+        return {"background-color":"red"};
+    }
+    //calculates the presentage of time that a room is available for use
+    bc.calcRoomAvalibilityRatio = function(room){
+        var sd = new Date(bc.batch.startDate);
+        var ed = new Date(bc.batch.endDate);
+        var unavailable = room.unavailabilities;
+        var counter = 0;
+        var One_day = 1000 * 60 * 60 * 24;
+        var dif_mils = Math.abs(ed - sd);
+        var dayCount = Math.round(dif_mils/One_day);
+        if (sd == null || ed == null){
+            return 100;
+        }else if (ed-sd == 0){
+            return 100;
+        };
+         if (unavailable != null) {
+            for (var j=0; j < unavailable.length; j++){
+                var Rsd = new Date(unavailable[j].startDate);
+                var Red = new Date(unavailable[j].endDate);
+                var curDay = new Date(Rsd.getFullYear(), Rsd.getMonth(), Rsd.getDate() + 1);
+                for (var i = 0; i < dayCount; i++){
+                    if (curDay >= sd && curDay < ed){
+                        counter++;
+                    };
+                    curDay = new Date(curDay.getFullYear(), curDay.getMonth(), curDay.getDate() +1);
+                    if (!(curDay >= Rsd && curDay < Red)){
+                        break;
+                    };
+                };
+            };
+        }else{
+            return 100;
+        }
+        return 100- (Math.floor((counter/dayCount)*100));
+    }
+
+//calculates the presentage of time that a trainer is available for use
+    bc.calcTrainerAvalibilityRatio = function(trainer){
+        var sd = new Date(bc.batch.startDate);
+        var ed = new Date(bc.batch.endDate);
+        var unavailable = trainer.unavailabilities;
+        console.log(unavailable);
+        var counter = 0;
+        var One_day = 1000 * 60 * 60 * 24;
+        var dif_mils = Math.abs(ed - sd);
+        var dayCount = Math.round(dif_mils/One_day);
+        if (sd == null || ed == null){
+            return 100;
+        }else if (ed-sd == 0){
+            return 100;
+        };
+         if (unavailable != null) {
+            for (var j=0; j < unavailable.length; j++){
+                var Rsd = new Date(unavailable[j].startDate);
+                var Red = new Date(unavailable[j].endDate);
+                var curDay = new Date(Rsd.getFullYear(), Rsd.getMonth(), Rsd.getDate() + 1);
+                for (var i = 0; i < dayCount; i++){
+                    if (curDay >= sd && curDay < ed){
+                        counter++;
+                    };
+                    curDay = new Date(curDay.getFullYear(), curDay.getMonth(), curDay.getDate() +1);
+                    if (!(curDay >= Rsd && curDay < Red)){
+                        break;
+                    };
+                };
+            };
+        }else{
+            return 100;
+        }
+        return 100- (Math.floor((counter/dayCount)*100));
+    }
+
+
     //**** DATA ****\\
     bc.weeksSpan = "Spans 0 Weeks";
     bc.batchOrder = "startDate";
@@ -526,5 +651,6 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 
     }, function(){
         bc.showToast("Could not load settings")
-    })
+    });
+
 });
