@@ -1,12 +1,14 @@
 var assignforce = angular.module("batchApp");
 
-assignforce.controller("batchCtrl", function($scope, batchService, batchSyncController, unavailableService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, skillService, $filter, $window, $rootScope, $mdDialog) {
+assignforce.controller("batchCtrl", function($scope, batchService, unavailableService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, skillService, $filter, $window, $rootScope, $mdDialog) {
 
     var bc = this;
     bc.trainerSkillRatios = {};
     bc.trainerAvalRatios = {};
     bc.roomAvalRatios = {};
     bc.settings = {};
+
+    $scope.isManager = false;
 
     /*FUNCTIONS*/
 
