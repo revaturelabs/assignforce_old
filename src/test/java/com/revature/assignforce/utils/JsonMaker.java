@@ -20,7 +20,11 @@ public class JsonMaker {
     }
 
     public String toJsonString(Object anObject){
-        return getGson().toJson(anObject);
+        try {
+            return getGson().toJson(anObject);
+        }catch (NullPointerException ex){
+            return "";
+        }
     }
 
     public Gson getGson() {

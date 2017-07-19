@@ -45,7 +45,7 @@ public class BuildingCtrl {
 		out = buildingService.saveItem(out);// I need to see this: active is being set to null in the db. Is it because it should be 1 in the db instead of true?  idk
 		if (out == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Building failed to save."),
-					HttpStatus.NOT_IMPLEMENTED);
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		} else {
 			return new ResponseEntity<Building>(out, HttpStatus.OK);
 		}
