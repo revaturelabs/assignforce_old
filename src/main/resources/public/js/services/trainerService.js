@@ -1,7 +1,8 @@
 var app = angular.module("batchApp");
 
 app.service('trainerService', function($resource) {
-    var Trainer = $resource('api/v2/trainer/:trainerId',{trainerId:'@trainerId'},{update:{method:'PUT', url:'api/v2/trainer'}});
+    var Trainer = $resource('api/v2/trainer/:trainerId',{trainerId:'@trainerId'},{update:{method:'PUT', url:'api/v2/trainer'}});     
+    var Trainer2 = $resource('api/v2/trainer/:firstName/:lastName',{firstName: '@firstName', lastName: '@lastName'})
     //remove url in the put method
     var ts = this;
 
@@ -18,6 +19,10 @@ app.service('trainerService', function($resource) {
     ts.getById = function(id, success, error){
         Trainer.get({trainerId: id}, success, error);
     };
+
+    ts.getByFirstNameAndLastName = function(fName, lName, success, error){
+        Trainer2.get({firstName: fName, lastName: lName}, success, error);
+    }
 
     ts.create = function (trainer, success, error) {
         trainer.$save(success, error);

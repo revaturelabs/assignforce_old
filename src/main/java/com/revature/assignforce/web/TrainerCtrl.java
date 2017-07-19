@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.revature.assignforce.domain.Certification;
 import com.revature.assignforce.service.ActivatableObjectDaoService;
+import com.revature.assignforce.service.TrainerDaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,7 +22,7 @@ import com.revature.assignforce.domain.dto.TrainerDTO;
 public class TrainerCtrl {
 	
 	@Autowired
-	ActivatableObjectDaoService<Trainer, Integer> trainerService;
+	TrainerDaoService trainerService;
 
 	  // CREATE
 		// creating new trainer object from information passed from trainer data transfer object
@@ -55,6 +56,19 @@ public class TrainerCtrl {
 
 		if (out == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No trainer found of ID " + ID + "."), HttpStatus.NOT_FOUND);
+		} else {
+			return new ResponseEntity<Trainer>(out, HttpStatus.OK);
+		}
+	}
+
+	//RETRIEVE
+	//retrieve trainer with given fistName, lastName
+	@RequestMapping(value = "/{firstName}/{lastName}", method = RequestMethod.GET, produces =  MediaType.APPLICATION_JSON_VALUE)
+	public Object retrieveTrainer (@PathVariable("firstName") String fName, @PathVariable("lastName") String lname){
+		Trainer out = trainerService.getByFirstNameANDLastName(fName, lname);
+
+		if (out == null) {
+			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No trainer found of name " + fName +" " + lname + "."), HttpStatus.NOT_FOUND);
 		} else {
 			return new ResponseEntity<Trainer>(out, HttpStatus.OK);
 		}

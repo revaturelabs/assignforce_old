@@ -3,7 +3,7 @@
  */
 
 var app = angular.module("batchApp");
-app.constant("ADAPTER_URL", 'api/v2/authorize?redirect_url=');
+app.constant("ADAPTER_URL", 'api/v2/authorize?redirect_url  =');
 app.controller("AuthCtrl", function($scope, $location, $window, $mdToast, $http, $rootScope){
 
     var ac = this;
@@ -25,19 +25,20 @@ app.controller("AuthCtrl", function($scope, $location, $window, $mdToast, $http,
         $http({
             method :  "POST",
             url    :  "api/v2/auth",
-            data   :  {
-                username : ac.username,
-                password : ac.password
-            }
+            //data   :  {
+                // username : ac.username,
+                // password : ac.password
+            //}
         })
             .success(function(){
                 ac.loggedIn = true;
                 window.location = "home";
             })
             .error(function(){
+                window.location = "login";
                 ac.loginError = true;
-                ac.username = '';
-                ac.password = '';
+                // ac.username = '';
+                // ac.password = '';
             });
     }
 });
