@@ -6,7 +6,15 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
         $mdDialog.cancel();
     }
     bsc.batchInfo = [];
-    bsc.sfb = batchService.getEmptyBatch();
+    if(bsc.afb.SFId){
+        //bsc.sfb =
+        //bsc.sfb.SFId = bsc.afb.SFId
+        bsc.sfb = batchService.getEmptyBatch();
+    }else{
+        bsc.sfb = batchService.getEmptyBatch();
+    }
+
+
     bsc.sfb.sinked = bsc.afb.sinked;
     bsc.refresh = function(){
         //vfunc - function that returns the field's value, dfunc - formats value for display, sfunc - sets field's value
