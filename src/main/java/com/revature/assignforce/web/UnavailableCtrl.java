@@ -40,7 +40,9 @@ public class UnavailableCtrl {
 		out = unavailableService.saveItem( out );
 		
 		if (out == null) {
-			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Unavailability failed to save."), HttpStatus.NOT_IMPLEMENTED);
+			return new ResponseEntity<ResponseErrorDTO>(
+					new ResponseErrorDTO("Unavailability failed to save."),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		} else {
 			return new ResponseEntity<Unavailable>(out, HttpStatus.OK);
 		}
@@ -71,7 +73,8 @@ public class UnavailableCtrl {
 		out = unavailableService.saveItem( out );
 		
 		if (out == null) {
-			return new ResponseEntity<ResponseErrorDTO> (new ResponseErrorDTO("Unavailability failed to save."), HttpStatus.NOT_MODIFIED);
+			return new ResponseEntity<ResponseErrorDTO> (
+					new ResponseErrorDTO("Unavailability failed to save."), HttpStatus.NOT_MODIFIED);
 		} else {
 				return new ResponseEntity<Unavailable>(out, HttpStatus.OK);
 		}

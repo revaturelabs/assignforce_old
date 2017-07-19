@@ -1,0 +1,78 @@
+<div ng-app="developmentAreaApp" ng-controller="DevelopmentAreaController" layout-margin>
+    <mdt-table
+            paginated-rows="{isEnabled: true, rowsPerPageValues: [5,10,20,50]}"
+            table-card="{isEnabled: true, title: 'Anyad', columnSelector: true}"
+            alternate-headers="'contextual'"
+            mdt-loading-indicator="{color: 'red'}"
+            mdt-row-paginator="paginatorCallback(page, pageSize, options)"
+            mdt-row-paginator-error-message="Error happened during loading nutritions."
+            mdt-row="{
+            'table-row-id-key': 'fields._id',
+            'column-keys': [
+                'fields.item_name',
+                'fields.nf_serving_size_unit',
+                'fields.nf_total_fat',
+                'fields.nf_total_carbohydrate',
+                'fields.nf_protein',
+                'fields.nf_sodium',
+                'fields.nf_calcium_dv',
+                'fields.nf_iron_dv'
+            ]}">
+
+        <mdt-header-row>
+            <mdt-column align-rule="left"
+                        column-sort="true"
+                        exclude-from-column-selector="true"
+                        column-filter="{
+                            'valuesProviderCallback': nutritionNameFilterCallback,
+                            'valuesTransformerCallback': nutritionNameTransformer,
+                            'placeholderText': 'Filter column...',
+                            'filterType': 'chips'
+                        }"
+            >Dessert (100g serving)</mdt-column>
+
+            <mdt-column align-rule="left"
+                        column-sort="true"
+                        column-filter="{
+                            'valuesProviderCallback': serviceUnitsFilterCallback,
+                            'valuesTransformerCallback': serviceUnitNameTransformer,
+                            'filterType': 'checkbox'
+                        }"
+            >Service Size Units</mdt-column>
+
+            <mdt-column align-rule="left"
+                        column-sort="true"
+                        hide-column-by-default="true"
+                        column-filter="{
+                            'valuesProviderCallback': fatValuesCallback,
+                            'valuesTransformerCallback': fatValuesTransformer,
+                            'placeholderText': 'Select a value',
+                            'filterType': 'dropdown'
+                        }">Fat (g)</mdt-column>
+
+            <mdt-column
+                    align-rule="right"
+                    column-sort="true"
+                    hide-column-by-default="true"
+            >Carbs (g)</mdt-column>
+            <mdt-column align-rule="right">Protein (g)</mdt-column>
+            <mdt-column align-rule="right">Sodium (mg)</mdt-column>
+            <mdt-column align-rule="right">Calcium (%)</mdt-column>
+            <mdt-column align-rule="right">Iron (%)</mdt-column>
+        </mdt-header-row>
+
+        <mdt-custom-cell column-key="fields.nf_protein">
+            <span ng-class="{'red': value > 5, 'green': value <= 5}">{{value}}, -{{rowId}}-</span>
+        </mdt-custom-cell>
+    </mdt-table>
+</div>
+
+<style>
+    .red {
+        color: orangered;
+    }
+
+    .green {
+        color: green;
+    }
+</style>

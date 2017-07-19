@@ -1,0 +1,10 @@
+<div class="service-item" layout="column">
+    <!-- Mobile -->
+    <ttmd-mobile-item ng-if="vm.listCtrl.goMobile()" item="vm.item" headers="vm.headers">
+        <div ng-transclude></div>
+    </ttmd-mobile-item>
+    <!-- Desktop -->
+    <ttmd-desktop-item ng-if="!vm.listCtrl.goMobile()" item="vm.item">
+        <div ng-transclude></div>
+    </ttmd-desktop-item>
+</div>

@@ -22,7 +22,7 @@ import java.util.List;
 public class SkillCtrl {
 
     @Autowired
-    ActivatableObjectDaoService<Skill, Integer> skillService;
+    private ActivatableObjectDaoService<Skill, Integer> skillService;
 
     // CREATE
     // creating new curriculum object from information passed from curriculum data transfer object
@@ -36,7 +36,7 @@ public class SkillCtrl {
         out = skillService.saveItem( out );
 
         if (out == null) {
-            return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Skill failed to save."), HttpStatus.NOT_IMPLEMENTED);
+            return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Skill failed to save."), HttpStatus.INTERNAL_SERVER_ERROR);
         } else {
             return new ResponseEntity<Skill>(out, HttpStatus.OK);
         }
