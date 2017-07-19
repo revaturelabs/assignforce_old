@@ -3,7 +3,7 @@ var app = angular.module("batchApp");
 app.service('SFService', function($resource) {
     var sfs = this;
 
-    sfs.SaveSF = function(batch){
+    sfs.SaveSF = function(batch,succ,err){
         //send to sf
         if (batch.SALESFORCEID != null) { //already has a sf id number
             var fun = function(){
@@ -11,10 +11,8 @@ app.service('SFService', function($resource) {
                     method: "PATCH",
                     url: "https://revature--int1.cs17.my.salesforce.com/services/data/v40.0/sobjects/Training__c/{bsc.afb.ID}",
                     data: reformatData(batch)
-                }).success(function(data){
-                    batch.sinked = 1;
-                    //batchService.afSyncUpdate(batch);
-                })
+                }).success(succ).error(err);
+
             }
         }else{ //has not been updated in sf
             var fun = function sendData(){
@@ -24,9 +22,8 @@ app.service('SFService', function($resource) {
                     data: reformatData(batch)
                 }).success(function (response) {
                     batch.SALESFORCEID = response.id;
-                    batch.sinked = 1;
-                    //batchService.afSyncUpdate(batch);
-                });
+                    succ(response);
+                }).error(err);
             }
         }     
     }  
@@ -60,7 +57,7 @@ app.service('SFService', function($resource) {
         return sfBatch;
     };
 
-    sfs.getSFdata = function(){
+    sfs.getSFdata = function(succ,err){
         sfs.sfBatchs = [];
         $http({
             method: "GET",
@@ -68,10 +65,11 @@ app.service('SFService', function($resource) {
 
         }).success(function(response){
             sfs.sfBatchs = response;
+            succ(response);
 
         }).error(function (response){
-            console.log("error getting data");
+            err(response);
         }) 
-        return sfs.sfBatchs;
+        //return sfs.sfBatchs;
     };
 });

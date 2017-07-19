@@ -1048,5 +1048,15 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 				.attr('y', function(d) {return ((d.y1+d.y2)/2)+5;})
 				.attr('x', function(d) {return d.x+5;})
 				.text(function(d) {return d.length;});
+		tlc.moveAxis();
+	}
+
+	tlc.moveAxis = function(){
+	    var x = document.getElementsByClassName("x axis")
+	    if(x){
+	        x[0].setAttribute("transform","translate(100,100)");
+	    }else{
+	        setTimeout(tlc.moveAxis,1000);
+	    }
 	}
 });
