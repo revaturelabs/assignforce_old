@@ -64,7 +64,7 @@
                 <div class="md-toolbar-tools">
                     <span>Focuses</span>
                     <span flex></span>
-                    <md-button class="md-icon-button" ng-click="cCtrl.toggleFocusStatus()">
+                    <md-button class="md-icon-button" ng-click="cCtrl.toggleFocusStatus()" ng-show="isManager">
                         <md-tooltip class="md-title"> Create Focus</md-tooltip>
                         <i class="material-icons">add_circle</i>
                     </md-button>
@@ -106,7 +106,7 @@
                         <!--<md-tooltip class="md-title"> Edit Focus </md-tooltip>-->
                         <!--<i class="material-icons revOrange"> edit </i>-->
                         <!--</md-button>-->
-                        <md-button class="md-icon-button" ng-click="cCtrl.removeFocus(curr)">
+                        <md-button class="md-icon-button" ng-click="cCtrl.removeFocus(curr)" ng-show="isManager">
                             <md-tooltip class="md-title"> Remove Focus </md-tooltip>
                             <i class="material-icons revOrange">remove_circle</i>
                         </md-button>

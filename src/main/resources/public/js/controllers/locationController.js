@@ -4,6 +4,8 @@ var assignforce = angular.module("batchApp");
 assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, locationService, buildingService, roomService) {
 	var lc = this;
 
+	$scope.isManager = false;
+
 	// functions
 	// calls showToast method of aCtrl
 	lc.showToast = function(message) {

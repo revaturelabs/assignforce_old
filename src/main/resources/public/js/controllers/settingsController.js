@@ -4,6 +4,8 @@ var assignforce = angular.module( "batchApp");
 assignforce.controller("settingsCtrl", function ($scope, settingService, locationService) {
     var sc = this;
 
+    var isManager = false;
+
     //functions
         //calls Show Toast method of aCtrl
     sc.showToast = function (message) {
