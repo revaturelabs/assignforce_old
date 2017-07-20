@@ -35,9 +35,9 @@ public class CurriculumCtrl {
 		int id = in.getCurrId();
 		String name = in.getName();
 		List<Skill> skills = in.getSkills();
-		
-		Curriculum out = new Curriculum( id, name, skills );
-		out.setCore(false);
+		boolean core = in.getCore();
+
+		Curriculum out = new Curriculum( id, name, skills, core);
 		out = currService.saveItem( out );
 		
 		if (out == null) {
@@ -68,10 +68,10 @@ public class CurriculumCtrl {
 		int id = in.getCurrId();
 		String name = in.getName();
 		List<Skill> skills = in.getSkills();
+		boolean core = in.getCore();
 		
-		Curriculum out = new Curriculum( id, name, skills );
+		Curriculum out = new Curriculum( id, name, skills, core );
 		out.setActive(in.getActive());
-		out.setCore(in.getCore());
 		out = currService.saveItem( out );
 		
 		if (out == null) {

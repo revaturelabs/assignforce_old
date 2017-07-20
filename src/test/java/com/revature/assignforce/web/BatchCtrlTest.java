@@ -107,7 +107,7 @@ public class BatchCtrlTest {
         certs.add(aCert);
         aTrainer = new Trainer(0, "fname", "lname", "aResume", unavailability, skills, certs);
         coTrainer = new Trainer(2, "ffname", "dlname", "aResume2", unavailability, skills, certs);
-        curriculum = new Curriculum(2, "myCurriculum", skills);
+       // curriculum = new Curriculum(2, "myCurriculum", skills);
         batchStatusLookup = new BatchStatusLookup(0, "aStatus");
         batchLocation = new BatchLocation();
         batchLocation.setId(0);

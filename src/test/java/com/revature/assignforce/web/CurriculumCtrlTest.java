@@ -66,7 +66,7 @@ public class CurriculumCtrlTest {
         skills.add(aSkill);
         curriculumDTO.setSkills(skills);
 
-        curriculumTest = new Curriculum(curriculumDTO.getCurrId(), curriculumDTO.getName(), curriculumDTO.getSkills());
+        //curriculumTest = new Curriculum(curriculumDTO.getCurrId(), curriculumDTO.getName(), curriculumDTO.getSkills());
     }
 
     @After

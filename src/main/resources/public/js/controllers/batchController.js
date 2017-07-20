@@ -633,7 +633,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
             return (t.core);
         });
         bc.foci = temp.filter(function(t) {
-            return !(t.core);
+            return !(t.core)&&(t.active);
         });
     }, function() {
         bc.showToast("Could not fetch curricula.");
