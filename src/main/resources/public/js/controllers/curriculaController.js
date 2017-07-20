@@ -6,6 +6,8 @@ var assignforce = angular.module( "batchApp" );
 
 assignforce.controller("curriculaCtrl", function ($scope, curriculumService, skillService) {
     var cc = this;
+
+    var isManager = false;
     // $scope.skillToggle = false;
 
     //functions
