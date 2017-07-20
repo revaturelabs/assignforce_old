@@ -8,18 +8,9 @@ var assignforce = angular.module( "batchApp" );
 assignforce.controller( "profileCtrl", function( $scope, $resource, $http, $mdDialog, $mdToast, trainerService, roomService, skillService, s3Service, $routeParams) {
     var pc = this;
     pc.tId = $routeParams.id; //grabs the trainer id from the url to load the page with the trainer specified
-<<<<<<< HEAD
-<<<<<<< HEAD
-    $scope.lockProfile = (!pc.tId);
-    //pc.user = userSrv.getAll();
-=======
     //pc.user = userSrv.getAll();
 
     pc.lockProfile = true;
->>>>>>> 617541aed2e8912a3dd498f5e9882142117f735f
-=======
-    // pc.user = userSrv.getAll();
->>>>>>> 45746d0db7d64a3943a2b5c309bb746a7bd21b4f
     // functions
 
     // calls showToast method of aCtrl
@@ -199,48 +190,26 @@ assignforce.controller( "profileCtrl", function( $scope, $resource, $http, $mdDi
 
     // id is hard coded for testing. unless you click on a trainer in the trainer page.
     if(pc.tId){
-<<<<<<< HEAD
-        lock = true;
-=======
         pc.lockProfile = true;
->>>>>>> 617541aed2e8912a3dd498f5e9882142117f735f
         trainerService.getById(pc.tId, function (response) {
             pc.trainer = response;
             pc.getAllSkills();
         }, function () {
             pc.showToast("Could not fetch trainer.");
         });
-<<<<<<< HEAD
     } else{
         var name = "August Duet";
-<<<<<<< HEAD
-        lock = false;
-=======
         pc.lockProfile = false;
->>>>>>> 617541aed2e8912a3dd498f5e9882142117f735f
         // var name = pc.user.employeeName;
         var names = name.split(" ");
         var fname = names[0];
         var lname = names[1];
         trainerService.getByFirstNameAndLastName(fname, lname, function (response) {
-=======
-    } else {
-        //D1
-        // var names = name.split(" ");
-        // var fname = names[0];
-        // var lname = names[1];
-        // trainerService.getByFirstNameAndLastName(fname, lname, function(response){
-        //     pc.trainer = response;
-        //     pc.getAllSkills();
-
-        trainerService.getById(1, function (response) {
->>>>>>> 45746d0db7d64a3943a2b5c309bb746a7bd21b4f
             pc.trainer = response;
             pc.getAllSkills();
         }, function () {
             pc.showToast("Could not fetch trainer.");
         });
-
     }
 
     //grab credentials for s3

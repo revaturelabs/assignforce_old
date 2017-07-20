@@ -56,18 +56,11 @@
 					templateUrl : "html/views/settings.html",
 					controller  : "settingsCtrl as sCtrl"
 				})
-<<<<<<< HEAD
-                .otherwise({
-                    templateUrl : "html/views/home.html",
-                    controller  : "homeCtrl as hCtrl"
-                })
-=======
 				// .otherwise({"redirectTo": "/landing"});
                 .otherwise({
                     templateUrl : "html/views/home.html",
                     controller  : "homeCtrl as hCtrl"
 				});
->>>>>>> 45746d0db7d64a3943a2b5c309bb746a7bd21b4f
 			
 			$locationProvider.html5Mode(true);
 		});
