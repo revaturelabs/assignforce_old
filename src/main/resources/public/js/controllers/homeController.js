@@ -6,8 +6,6 @@
 
         userService.User;
 
-        $rootScope.foo;
-
           // functions
             // calls showToast method of aCtrl
         hc.showToast = function( message ) {

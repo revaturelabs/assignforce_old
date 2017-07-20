@@ -4,16 +4,21 @@
 var app = angular.module("batchApp");
 
 app.constant('authorizeUrl', 'api/v2/authorize');
-//may need $http, authorizeUrl as parameters
 
-app.service('userService', function($resource, $rootScope){
-	var User = $resource('api/v2/userinfo/');
+app.service('userService', function($resource, $rootScope, $http){
     var us = this;
 
-    us.getAll = function(success, error) {
-		User.query(success, error);
-    };
+   $http.get("/api/v2/userinfo")
+       .then(function(response) {
+           $rootScope.data = response.data;
+           console.log($rootScope.data);
 
-    $rootScope.foo =us.getAll();
-    console.log($rootScope.foo);
+           $rootScope.role = response.data.roleName;
+           $rootScope.token = response.data.accessToken;
+           $rootScope.fName = response.data.firstName;
+           $rootScope.lName = response.data.lastName;
+           console.log($rootScope.role, $rootScope.token, $rootScope.fName, $rootScope.lName);
+       }, function (error) {
+
+       })
 });

@@ -5,10 +5,12 @@
 
 var assignforce = angular.module( "batchApp" );
 
-assignforce.controller( "profileCtrl", function( $scope, $resource, $http, $mdDialog, $mdToast, trainerService, roomService, skillService, s3Service, $routeParams) {
+assignforce.controller( "profileCtrl", function( $scope, $resource, $http, $mdDialog, $mdToast, $rootScope, trainerService, roomService, skillService, s3Service, $routeParams) {
     var pc = this;
     pc.tId = $routeParams.id; //grabs the trainer id from the url to load the page with the trainer specified
     //pc.user = userSrv.getAll();
+
+    console.log('@Profile '+$rootScope.fName);
 
     pc.lockProfile = true;
     // functions
