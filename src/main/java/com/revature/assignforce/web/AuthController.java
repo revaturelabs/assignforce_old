@@ -47,10 +47,11 @@ public class AuthController {
 		String redirect = (String) session.getAttribute("redirect");
 		response.sendRedirect(String.format("%s?token=%s", redirect, token));
 	}*/
-    @RequestMapping(value= "/userinfo", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value= "/userinfo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Employee> getInfo(OAuth2Authentication auth)
     {
         //System.out.println("AUTHCONTROLLER CURRENT EMPLOYEE: " + force.getCurrentEmployee(auth));
         return ResponseEntity.ok( force.getCurrentEmployee(auth));
     }
+
 }

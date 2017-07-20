@@ -253,7 +253,7 @@ public class BatchCtrl {
 	}
 
 	@Transactional
-	private void createUnavailabilities(Trainer trainer, Room room, Timestamp startDate, Timestamp endDate) {
+	void createUnavailabilities(Trainer trainer, Room room, Timestamp startDate, Timestamp endDate) {
 		Unavailable unavailable = new Unavailable(startDate, endDate);
 		List<Unavailable> unavailabilities;
 
@@ -273,7 +273,7 @@ public class BatchCtrl {
 	}
 
 	@Transactional
-	private void removeUnavailabilities(Trainer trainer, Room room, Timestamp startDate, Timestamp endDate) {
+	void removeUnavailabilities(Trainer trainer, Room room, Timestamp startDate, Timestamp endDate) {
 		Unavailable unavailableToRemove;
 		List<Unavailable> unavailabilities;
 

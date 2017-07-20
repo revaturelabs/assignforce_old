@@ -4,7 +4,7 @@
     assignforce.controller( "homeCtrl", function( $scope, $filter, batchService, $rootScope , $resource ,trainerService, locationService, buildingService, userService ) {
         var hc = this;
 
-        userService.getAll();
+        userService.User;
 
         $rootScope.foo;
 
