@@ -71,7 +71,6 @@
 			<version>0.7.0</version>
 		</dependency>
 
-<<<<<<< HEAD
 		<dependency>
 			<groupId>org.springframework.security.oauth</groupId>
 			<artifactId>spring-security-oauth2</artifactId>
@@ -98,16 +97,6 @@
         </dependency>
 
     </dependencies>
-=======
-		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.8.1</version>
-		</dependency>
-
-	</dependencies>
->>>>>>> 45746d0db7d64a3943a2b5c309bb746a7bd21b4f
 
 
 	<build>
@@ -120,4 +109,5 @@
 		</plugins>
 
 	</build>
+
 </project>
