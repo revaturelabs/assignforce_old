@@ -154,8 +154,8 @@
             <!---->
             <!--</md-list-item>-->
             <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
-                <md-button layout-align="center center" class="md-primary md-raised md-warn" ng-click="sCtrl.updateSettings()" >Save</md-button>
-                <md-button layout-align="center center" class="md-secondary md-raised white" ng-click="sCtrl.resetSettings()">Reset</md-button>
+                <md-button layout-align="center center" class="md-primary md-raised md-warn" ng-click="sCtrl.updateSettings()" ng-show="isManager">Save</md-button>
+                <md-button layout-align="center center" class="md-secondary md-raised white" ng-click="sCtrl.resetSettings()" ng-show="isManager">Reset</md-button>
             </section>
             </md-list>
 

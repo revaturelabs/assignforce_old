@@ -2,6 +2,7 @@ var assignforce = angular.module( "batchApp" );
 
 assignforce.controller( "trainerCtrl", function( $scope, $mdDialog, $mdToast, $location, trainerService, s3Service, ptoService ) {
     var tc = this;
+    var isManager = false;
 
       // functions
 
