@@ -8,14 +8,17 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
-import com.revature.assignforce.Force;
+import com.revature.assignforce.domain.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
+
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,15 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.revature.assignforce.domain.Batch;
-import com.revature.assignforce.domain.BatchLocation;
-import com.revature.assignforce.domain.BatchStatusLookup;
-import com.revature.assignforce.domain.Curriculum;
-import com.revature.assignforce.domain.Location;
-import com.revature.assignforce.domain.Room;
-import com.revature.assignforce.domain.Skill;
-import com.revature.assignforce.domain.Trainer;
-import com.revature.assignforce.domain.Unavailable;
 import com.revature.assignforce.domain.dto.BatchDTO;
 import com.revature.assignforce.domain.dto.ResponseErrorDTO;
 import com.revature.assignforce.service.DaoService;

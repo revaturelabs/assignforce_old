@@ -10,8 +10,10 @@
                                            'SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'] )
                    .constant( "monthList", [ "Jan.", "Feb.", "Mar.", "Apr.", "May", "June",
                                              "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."] );
-        
-		  // url routing
+
+    	// assignforce.constant('authorizeUrl', 'api/v2/authorize');
+
+        // url routing
 		assignforce.config( function($routeProvider, $locationProvider){
 			$routeProvider
 				.when("/login", {
@@ -54,10 +56,18 @@
 					templateUrl : "html/views/settings.html",
 					controller  : "settingsCtrl as sCtrl"
 				})
+<<<<<<< HEAD
                 .otherwise({
                     templateUrl : "html/views/home.html",
                     controller  : "homeCtrl as hCtrl"
                 })
+=======
+				// .otherwise({"redirectTo": "/landing"});
+                .otherwise({
+                    templateUrl : "html/views/home.html",
+                    controller  : "homeCtrl as hCtrl"
+				});
+>>>>>>> 45746d0db7d64a3943a2b5c309bb746a7bd21b4f
 			
 			$locationProvider.html5Mode(true);
 		});

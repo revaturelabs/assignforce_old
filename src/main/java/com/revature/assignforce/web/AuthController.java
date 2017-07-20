@@ -1,35 +1,14 @@
 package com.revature.assignforce.web;
 
-//import com.revature.assignforce.Force;
-import com.revature.assignforce.Force;
 import com.revature.assignforce.domain.Employee;
-import com.revature.assignforce.domain.dto.LoginDTO;
+import com.revature.assignforce.domain.Force;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-<<<<<<< HEAD
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.client.OAuth2ClientContext;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-=======
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.client.OAuth2ClientContext;
->>>>>>> 617541aed2e8912a3dd498f5e9882142117f735f
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/api/v2")
@@ -37,56 +16,20 @@ public class AuthController {
 
 	@Autowired
 	private Force force;
-<<<<<<< HEAD
-	@Autowired
-	public OAuth2RestTemplate restTemplate;
-=======
->>>>>>> 617541aed2e8912a3dd498f5e9882142117f735f
-	@Qualifier("oauth2ClientContext")
-	@Autowired
-	private OAuth2ClientContext context;
 
-<<<<<<< HEAD
-	@RequestMapping(value= "/userinfo", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Employee> getInfo(OAuth2Authentication auth)
-	{
-		Employee emp = force.getCurrentEmployee(auth);
-		String tk = restTemplate.getAccessToken().toString();
-		emp.setAccessToken(tk);
-		return ResponseEntity.ok(emp);
-=======
+    @RequestMapping(value="/auth", method=RequestMethod.POST)
+    public OAuth2Authentication getUser(OAuth2Authentication auth)
+    {
+        System.out.println("Authorized: @AuthController" + auth.getUserAuthentication().getDetails());
+        return (OAuth2Authentication) auth.getUserAuthentication().getDetails();
+    }
 
-	//	@Autowired
-//	private Force force;
-//
-//	@RequestMapping(value = "/auth", method = RequestMethod.POST)
-//	public List<Force.Trainer> train(OAuth2Authentication principal) {
-//		return force.trainers(principal);
-//	}
-@RequestMapping(value="/auth", method=RequestMethod.POST)
-	public OAuth2Authentication getUser(OAuth2Authentication auth)
-{
-
-
-	System.out.println("Force.get Role: XXXXXXXXXXXXX " + force.getRole(auth));
-//		System.out.println("USER DETAILS MMMMMMMMMMM: " + auth.getUserAuthentication().getDetails());
-//		//return (List<Force>) force.getRole(auth);
-//
-	System.out.println("Authorized XZXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" + (OAuth2Authentication) auth.getUserAuthentication().getDetails());
-	return (OAuth2Authentication) auth.getUserAuthentication().getDetails();
-
-
-}
-
-
-
-	//used for Parasol. Temporarily out of order. Sorry for the inconvenience
+    //used for Parasol. Temporarily out of order. Sorry for the inconvenience
 
 	/*@RequestMapping(value="/authorize",method=RequestMethod.GET)
 	public void initSetup(@RequestParam String redirect_url, HttpSession session, HttpServletResponse response) throws IOException{
 		String sToken = (String) session.getAttribute("token");
 		String authServiceRedirectUrl = System.getenv("AUTH_SERVICE_REDIRECT");
-
 		if(authServiceRedirectUrl == null){
 			response.sendError(500, "Could not contact the authorization service");
 			return;
@@ -98,20 +41,16 @@ public class AuthController {
 			response.sendRedirect(String.format("%s?token=%s", redirect_url, sToken));
 		}
 	}
-
 	@RequestMapping(value="/token")
 	public void getToken(@RequestParam(required = false) String token, HttpSession session, HttpServletResponse response) throws IOException {
-
 		session.setAttribute("token", token);
 		String redirect = (String) session.getAttribute("redirect");
 		response.sendRedirect(String.format("%s?token=%s", redirect, token));
 	}*/
-
-	@RequestMapping(value= "/userinfo", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Employee> getInfo(OAuth2Authentication auth)
-	{
-		System.out.println("AUTHCONTROLLER CURRENT EMPLOYEE: " + force.getCurrentEmployee(auth));
-		return ResponseEntity.ok( force.getCurrentEmployee(auth));
->>>>>>> 617541aed2e8912a3dd498f5e9882142117f735f
-	}
+    @RequestMapping(value= "/userinfo", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Employee> getInfo(OAuth2Authentication auth)
+    {
+        //System.out.println("AUTHCONTROLLER CURRENT EMPLOYEE: " + force.getCurrentEmployee(auth));
+        return ResponseEntity.ok( force.getCurrentEmployee(auth));
+    }
 }

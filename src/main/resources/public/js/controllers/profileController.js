@@ -9,6 +9,7 @@ assignforce.controller( "profileCtrl", function( $scope, $resource, $http, $mdDi
     var pc = this;
     pc.tId = $routeParams.id; //grabs the trainer id from the url to load the page with the trainer specified
 <<<<<<< HEAD
+<<<<<<< HEAD
     $scope.lockProfile = (!pc.tId);
     //pc.user = userSrv.getAll();
 =======
@@ -16,6 +17,9 @@ assignforce.controller( "profileCtrl", function( $scope, $resource, $http, $mdDi
 
     pc.lockProfile = true;
 >>>>>>> 617541aed2e8912a3dd498f5e9882142117f735f
+=======
+    // pc.user = userSrv.getAll();
+>>>>>>> 45746d0db7d64a3943a2b5c309bb746a7bd21b4f
     // functions
 
     // calls showToast method of aCtrl
@@ -206,6 +210,7 @@ assignforce.controller( "profileCtrl", function( $scope, $resource, $http, $mdDi
         }, function () {
             pc.showToast("Could not fetch trainer.");
         });
+<<<<<<< HEAD
     } else{
         var name = "August Duet";
 <<<<<<< HEAD
@@ -218,6 +223,18 @@ assignforce.controller( "profileCtrl", function( $scope, $resource, $http, $mdDi
         var fname = names[0];
         var lname = names[1];
         trainerService.getByFirstNameAndLastName(fname, lname, function (response) {
+=======
+    } else {
+        //D1
+        // var names = name.split(" ");
+        // var fname = names[0];
+        // var lname = names[1];
+        // trainerService.getByFirstNameAndLastName(fname, lname, function(response){
+        //     pc.trainer = response;
+        //     pc.getAllSkills();
+
+        trainerService.getById(1, function (response) {
+>>>>>>> 45746d0db7d64a3943a2b5c309bb746a7bd21b4f
             pc.trainer = response;
             pc.getAllSkills();
         }, function () {
