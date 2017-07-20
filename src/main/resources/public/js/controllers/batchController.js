@@ -8,6 +8,8 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
     bc.roomAvalRatios = {};
     bc.settings = {};
 
+    $scope.isManager = false;
+
     /*FUNCTIONS*/
 
     // This showToast is a function that comes from the parent

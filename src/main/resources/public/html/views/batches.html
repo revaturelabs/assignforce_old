@@ -3,7 +3,7 @@
 
         <!-- Create/Edit batch section -->
         <!--  bCtrl is Batch Controller -->
-        <md-content>
+        <md-content ng-show="isManager">
             <form class="batchForm" name="batchForm" ng-submit="bCtrl.saveBatch(batchForm.$valid)" novalidate>		
                     
                 <!-- Labels section and buttons based on creation mode (create/edit/clone) -->
@@ -102,8 +102,12 @@
                             <md-select ng-model="bCtrl.batch.trainer">
                             	<div ng-if="bCtrl.batch.curriculum">
                             		<div ng-if="bCtrl.trainers.length && (bCtrl.batch.startDate && bCtrl.batch.endDate)">
+<<<<<<< HEAD
                                         <md-option ng-value="">Select Option</md-option>
                                         <div ng-repeat="trainer in bCtrl.trainers">
+=======
+		                                <div ng-repeat="trainer in bCtrl.trainers">
+>>>>>>> 617541aed2e8912a3dd498f5e9882142117f735f
 		                                    <md-option ng-value="trainer.trainerId"> {{ trainer.firstName }}  {{ trainer.lastName }} ({{ bCtrl.trainerSkillRatios[trainer.trainerId] }} % skill match to required skills. {{ bCtrl.trainerAvalRatios[trainer.trainerId] }} % avalibility.)</md-option>
 		                                    <td colspan="9" class="progressBar">
 		                                        <md-progress-linear class="md-accent" style="height: 2px" md-mode="determinate" value="{{ bCtrl.trainerSkillRatios[trainer.trainerId] }}"> </md-progress-linear>
@@ -197,12 +201,16 @@
 
                 <span flex> </span>
 
-                <md-button class="md-icon-button" ng-click="bCtrl.deleteMultiple()" ng-show="bCtrl.batchesSelected.length >= 2"> 
+                <md-button class="md-icon-button" ng-click="bCtrl.deleteMultiple()" ng-show="bCtrl.batchesSelected.length >= 2" ng-show="isManager">
                     <md-tooltip class="md-title"> Delete selected </md-tooltip>
                     <md-icon md-svg-src="img/ic_delete_white_24px.svg"></md-icon>
                 </md-button>
 
+<<<<<<< HEAD
                 <md-button class="md-icon-button" ng-click="">
+=======
+                <md-button class="md-icon-button" ng-click="" ng-show="isManager">
+>>>>>>> 617541aed2e8912a3dd498f5e9882142117f735f
                     <md-tooltip class="md-title"> Pull new entries from Salesforce</md-tooltip>
                     <md-icon md-svg-src="img/ic_skip_next_white_24px.svg"></md-icon>
                 </md-button>
@@ -218,7 +226,7 @@
                         
                         <thead md-head md-order="bCtrl.batchOrder">
                             <tr md-row>
-                                <th md-column md-checkbox-column>
+                                <th md-column md-checkbox-column ng-show="isManager">
                                 	<!-- Select All Batches --> 
                                     <!-- <md-checkbox ng-click="bCtrl.toggleAll()" ng-checked="bCtrl.allSelected()" aria-label="batches select all"> </md-checkbox>  -->
                                 </th>
@@ -239,7 +247,7 @@
                             <tr md-row class="batchRow" ng-repeat-start="batch in (bCtrl.batches | orderBy:bCtrl.batchOrder) track by batch.id" ng-click="bCtrl.highlightBatch(batch)" ng-class="bCtrl.selectedBatchRow(batch)">
                                 <td md-cell>
                                 	<!-- Select Individual Batches -->
-                                    <md-checkbox md-no-ink ng-checked="bCtrl.exists(batch)" ng-click="bCtrl.toggle(batch)" aria-label="batch check"> </md-checkbox> 
+                                    <md-checkbox md-no-ink ng-checked="bCtrl.exists(batch)" ng-click="bCtrl.toggle(batch)" aria-label="batch check" ng-show="isManager"> </md-checkbox>
                                 </td>
                                 <td md-cell> {{ batch.name | limitTo:20 }} </td>
                                 <td md-cell> {{ batch.curriculum.name }} </td>
@@ -252,7 +260,11 @@
                                 <td md-cell> {{ batch.batchLocation.roomName | limitTo:20 }} </td>
                                 <td md-cell> {{ batch.startDate | date:'MMM. d, yyyy' }} </td>
                                 <td md-cell> {{ batch.endDate | date:'MMM. d, yyyy' }} </td>
+<<<<<<< HEAD
                                 <td md-cell layout layout-align="end center" >
+=======
+                                <td md-cell layout layout-align="end center" ng-show="isManager">
+>>>>>>> 617541aed2e8912a3dd498f5e9882142117f735f
                                     <md-button class="md-fab md-mini" ng-click="bCtrl.edit(batch)"> 
                                         <md-tooltip class="md-title"> Edit</md-tooltip>
                                         <md-icon md-svg-src="img/ic_edit_white_24px.svg"></md-icon>

@@ -1,5 +1,6 @@
 package com.revature.assignforce.domain;
 
+<<<<<<< HEAD
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
 public class Employee {
@@ -33,6 +34,16 @@ public class Employee {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+=======
+public class Employee {
+    private String employeeId;
+    private String roleId;
+    private String employeeName;
+
+    public String getEmployeeName() {return employeeName;}
+
+    public void setEmployeeName(String employeeName) {this.employeeName = employeeName;}
+>>>>>>> 617541aed2e8912a3dd498f5e9882142117f735f
 
     public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
@@ -49,6 +60,7 @@ public class Employee {
     public String getRoleId() {
         return roleId;
     }
+<<<<<<< HEAD
 
     public String getRoleName() {
         return roleName;
@@ -57,4 +69,6 @@ public class Employee {
     public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
+=======
+>>>>>>> 617541aed2e8912a3dd498f5e9882142117f735f
 }

@@ -6,6 +6,7 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
         $mdDialog.cancel();
     }
     bsc.batchInfo = [];
+<<<<<<< HEAD
     if(bsc.afb.SFId){
         //bsc.sfb =
         //bsc.sfb.SFId = bsc.afb.SFId
@@ -15,6 +16,9 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
     }
 
 
+=======
+    bsc.sfb = batchService.getEmptyBatch();
+>>>>>>> 617541aed2e8912a3dd498f5e9882142117f735f
     bsc.sfb.sinked = bsc.afb.sinked;
     bsc.refresh = function(){
         //vfunc - function that returns the field's value, dfunc - formats value for display, sfunc - sets field's value
@@ -23,7 +27,11 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
             {name:"Start Date",vfunc:function(b){return b.startDate;},dfunc:function(time){return new Date(time).toDateString();},sfunc:function(b,v){b.startDate = v;}},
             {name:"End Date",vfunc:function(b){return b.endDate;},dfunc:function(time){return new Date(time).toDateString();},sfunc:function(b,v){b.endDate = v;}},
             {name:"Curriculum",vfunc:function(b){return b.curriculum;},dfunc:function(c){return c.name;},sfunc:function(b,v){b.curriculum = v;}},
+<<<<<<< HEAD
             //{name:"Batch Status",vfunc:function(b){return b.batchStatus;},dfunc:function(bs){return bs.batchStatusName;},sfunc:function(b,v){b.batchStatus = v;}},
+=======
+            {name:"Batch Status",vfunc:function(b){return b.batchStatus;},dfunc:function(bs){return bs.batchStatusName;},sfunc:function(b,v){b.batchStatus = v;}},
+>>>>>>> 617541aed2e8912a3dd498f5e9882142117f735f
             {
                 name:"Trainer",
                 vfunc:function(b){return b.trainer;},
@@ -31,8 +39,12 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
                     return t.firstName+" "+t.lastName;
                 },
                 sfunc:function(b,v){b.trainer = v;}
+<<<<<<< HEAD
             }//,
             /*
+=======
+            },
+>>>>>>> 617541aed2e8912a3dd498f5e9882142117f735f
             {
                 name:"Co-Trainer",
                 vfunc:function(b){return b.coTrainer;},
@@ -75,7 +87,10 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
                 },
                 sfunc:function(b,v){b.batchLocation = v;}
             }
+<<<<<<< HEAD
             */
+=======
+>>>>>>> 617541aed2e8912a3dd498f5e9882142117f735f
         ];
 
         bsc.batchInfo.map(function(b){

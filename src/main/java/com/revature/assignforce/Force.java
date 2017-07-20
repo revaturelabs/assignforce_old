@@ -1,6 +1,7 @@
 package com.revature.assignforce;
 
 import com.google.gson.Gson;
+<<<<<<< HEAD
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -21,6 +22,21 @@ import org.springframework.security.web.csrf.DefaultCsrfToken;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+=======
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.revature.assignforce.domain.Employee;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+>>>>>>> 617541aed2e8912a3dd498f5e9882142117f735f
 
 @Component
 public class Force {
@@ -29,11 +45,14 @@ public class Force {
     @Autowired
     public OAuth2RestTemplate restTemplate;
 
+<<<<<<< HEAD
     @Autowired
     public Force(OAuth2ProtectedResourceDetails resourceDetails,  OAuth2ClientContext clientContext) {
         this.restTemplate = new OAuth2RestTemplate(resourceDetails, clientContext);
     }
 
+=======
+>>>>>>> 617541aed2e8912a3dd498f5e9882142117f735f
     @SuppressWarnings("unchecked")
     public String restUrl(OAuth2Authentication auth, String url) {
         HashMap<String, Object> details = (HashMap<String, Object>) auth.getUserAuthentication().getDetails();
@@ -43,6 +62,7 @@ public class Force {
     }
 
     @SuppressWarnings("unchecked")
+<<<<<<< HEAD
     public Employee getCurrentEmployee(OAuth2Authentication auth) {
         HashMap<String, String> details = (HashMap<String, String>) auth.getUserAuthentication().getDetails();
         String query = "SELECT Id, Name, CommunityNickname, FirstName, LastName, Email, FullPhotoUrl, SmallPhotoUrl, " +
@@ -107,4 +127,52 @@ public class Force {
 
         return employees;
     }
+=======
+    public Employee getRole(OAuth2Authentication auth) {
+        HashMap<String, String> details = (HashMap<String, String>) auth.getUserAuthentication().getDetails();
+        String url = restUrl(auth, "query") + "?q={q}";
+
+        Gson gson = new Gson();
+        Employee employee = gson.fromJson(gson.toJsonTree(details), Employee.class);
+        employee.setEmployeeId(details.get("user_id"));
+
+        Map<String, String> params = new HashMap<>();
+        params.put("q", "SELECT id, name FROM UserRole " +
+                "WHERE Id IN (SELECT UserRoleId FROM User " +
+                "WHERE id = '" +
+                employee.getEmployeeId()  +"')");
+
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.GET, entity, String.class, params);
+        //String roleStr = restTemplate.getForObject(url, String.class, params);
+        String roleStr = responseEntity.getBody();
+        System.out.println(url);
+        System.out.println(roleStr);
+        JsonObject roleData = gson.fromJson(roleStr, JsonElement.class)
+                .getAsJsonObject().get("records")
+                .getAsJsonArray().get(0).getAsJsonObject();
+        System.out.println(roleData);
+        //employee.setRoleId(roleData.get("Id").getAsString());
+        employee.setRoleId(roleData.get("roleName").getAsString());
+        employee.setEmployeeName(roleData.get("userName").getAsString());
+        //System.out.println("XXXXXXXXXXXXXXXXXXXXXXXX" + roleData.get("Name").getAsString());
+
+        return employee;
+    }
+
+    public Employee getCurrentEmployee(OAuth2Authentication auth) {
+        Employee em = getRole(auth);
+        return em;
+    }
+
+    private static class QueryResult<T> {
+        public List<T> records;
+    }
+
+    private static class QueryResultEmployee extends QueryResult<Employee> {}
+>>>>>>> 617541aed2e8912a3dd498f5e9882142117f735f
 }

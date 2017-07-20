@@ -8,8 +8,14 @@ var assignforce = angular.module( "batchApp" );
 assignforce.controller( "profileCtrl", function( $scope, $resource, $http, $mdDialog, $mdToast, trainerService, roomService, skillService, s3Service, $routeParams) {
     var pc = this;
     pc.tId = $routeParams.id; //grabs the trainer id from the url to load the page with the trainer specified
+<<<<<<< HEAD
     $scope.lockProfile = (!pc.tId);
     //pc.user = userSrv.getAll();
+=======
+    //pc.user = userSrv.getAll();
+
+    pc.lockProfile = true;
+>>>>>>> 617541aed2e8912a3dd498f5e9882142117f735f
     // functions
 
     // calls showToast method of aCtrl
@@ -189,7 +195,11 @@ assignforce.controller( "profileCtrl", function( $scope, $resource, $http, $mdDi
 
     // id is hard coded for testing. unless you click on a trainer in the trainer page.
     if(pc.tId){
+<<<<<<< HEAD
         lock = true;
+=======
+        pc.lockProfile = true;
+>>>>>>> 617541aed2e8912a3dd498f5e9882142117f735f
         trainerService.getById(pc.tId, function (response) {
             pc.trainer = response;
             pc.getAllSkills();
@@ -198,7 +208,11 @@ assignforce.controller( "profileCtrl", function( $scope, $resource, $http, $mdDi
         });
     } else{
         var name = "August Duet";
+<<<<<<< HEAD
         lock = false;
+=======
+        pc.lockProfile = false;
+>>>>>>> 617541aed2e8912a3dd498f5e9882142117f735f
         // var name = pc.user.employeeName;
         var names = name.split(" ");
         var fname = names[0];
