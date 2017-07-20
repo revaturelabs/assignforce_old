@@ -1,6 +1,9 @@
+package com.revature.assignforce.domain;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.revature.assignforce.domain.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;

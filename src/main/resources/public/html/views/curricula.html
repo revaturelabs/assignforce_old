@@ -58,7 +58,6 @@
                 </md-list>
             </md-card-content>
         </md-card>
-
         <!--content for focuses-->
         <md-card>
             <md-toolbar class="md-primary md-hue-2">
@@ -87,7 +86,7 @@
                             <md-input-container style="margin-right: 10px;" required flex="50">
                                 <label>Skills:</label>
                                 <md-select ng-model="cCtrl.selectedSkills" multiple>
-                                    <md-option ng-repeat="skill in cCtrl.skills | activeItem" value="{{skill.skillId}}" ng-if="skill.active == true">{{skill.name}}</md-option>
+                                    <md-option ng-repeat="skill in cCtrl.skills" value="{{skill.skillId}}">{{skill.name}}</md-option>
                                 </md-select>
                             </md-input-container>
                         </div>
