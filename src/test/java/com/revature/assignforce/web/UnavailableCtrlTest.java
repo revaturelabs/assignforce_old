@@ -85,7 +85,7 @@ public class UnavailableCtrlTest {
         mvc.perform(post("/api/v2/unavailable")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonMaker.toJsonString(testUnavailable)))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -139,7 +139,7 @@ public class UnavailableCtrlTest {
         mvc.perform(put("/api/v2/unavailable")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonMaker.toJsonString(testUnavailable)))
-                .andExpect(status().isNotModified());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
