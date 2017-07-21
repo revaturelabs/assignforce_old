@@ -4,10 +4,10 @@
 
 var assignforce = angular.module( "batchApp" );
 
-assignforce.controller("curriculaCtrl", function ($scope, curriculumService, skillService) {
+assignforce.controller("curriculaCtrl", function ($scope, $rootScope, curriculumService, skillService) {
     var cc = this;
 
-    var isManager = false;
+    $scope.isManager = $rootScope.role == "VP of Technology";
     // $scope.skillToggle = false;
 
     //functions
