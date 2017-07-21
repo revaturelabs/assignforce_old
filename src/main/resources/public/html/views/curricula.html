@@ -11,7 +11,7 @@
                 <div class="md-toolbar-tools">
                     <span>Core Curricula</span>
                     <span flex></span>
-                    <md-button class="md-icon-button" ng-click="cCtrl.toggleCoreStatus()">
+                    <md-button class="md-icon-button" ng-click="cCtrl.toggleCoreStatus()" ng-show="isManager">
                         <md-tooltip class="md-title"> Create Core</md-tooltip>
                         <i class="material-icons">add_circle</i>
                     </md-button>
@@ -116,7 +116,7 @@
         </md-card>
 
         <!--content for Skills-->
-        <md-card>
+        <md-card ng-show="isManager">
             <md-toolbar class="md-primary md-hue-2">
                 <div class="md-toolbar-tools">
                     <span>Skills</span>

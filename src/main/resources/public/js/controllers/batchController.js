@@ -8,7 +8,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
     bc.roomAvalRatios = {};
     bc.settings = {};
 
-    $scope.isManager = false;
+    $scope.isManager = $rootScope.role == "VP of Technology";
 
     /*FUNCTIONS*/
 
