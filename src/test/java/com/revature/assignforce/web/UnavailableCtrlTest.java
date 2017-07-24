@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -26,6 +27,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doNothing;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -69,107 +71,130 @@ public class UnavailableCtrlTest {
     }
 
     @Test
+    @WithMockUser(roles="ADMIN")
     public void createUnavailabilityTest() throws Exception {
         given(unavailableService.saveItem(any(Unavailable.class))).willReturn(testUnavailable);
         System.out.println(Timestamp.valueOf(LocalDateTime.now()).toString());
-        mvc.perform(post("/api/v2/unavailable")
+        mvc.perform(post("/api/v2/unavailable").with(csrf().asHeader())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonMaker.toJsonString(testUnavailable)))
                 .andExpect(status().isOk());
     }
 
     @Test
+    @WithMockUser(roles="ADMIN")
     public void createUnavailabilityWithEmptyDTOTest() throws Exception {
         testUnavailable = new Unavailable();
         given(unavailableService.saveItem(any(Unavailable.class))).willReturn(null);
         mvc.perform(post("/api/v2/unavailable")
+                .with(csrf().asHeader())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonMaker.toJsonString(testUnavailable)))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
+    @WithMockUser(roles="ADMIN")
     public void createUnavailabilityWithNoDTOTest() throws Exception {
         given(unavailableService.saveItem(any(Unavailable.class))).willReturn(null);
         mvc.perform(post("/api/v2/unavailable")
+                .with(csrf().asHeader())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(""))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
+    @WithMockUser(roles="ADMIN")
     public void retrieveUnavailabilityTest() throws Exception {
         given(unavailableService.getOneItem(any(Integer.class))).willReturn(testUnavailable);
-        mvc.perform(get("/api/v2/unavailable/42"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.startDate", is(testUnavailable.getStartDate().getTime())))
-                .andExpect(jsonPath("$.endDate", is(testUnavailable.getEndDate().getTime())))
-                .andExpect(jsonPath("$.id", is(testUnavailable.getID())));
+        mvc.perform(get("/api/v2/unavailable/42")
+                .with(csrf().asHeader()))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.startDate", is(testUnavailable.getStartDate().getTime())))
+                    .andExpect(jsonPath("$.endDate", is(testUnavailable.getEndDate().getTime())))
+                    .andExpect(jsonPath("$.id", is(testUnavailable.getID())));
     }
 
     @Test
+    @WithMockUser(roles="ADMIN")
     public void retrieveUnavailableUnavailabilityTest() throws Exception {
         given(unavailableService.getOneItem(any(Integer.class))).willReturn(null);
-        mvc.perform(get("/api/v2/unavailable/42"))
-                .andExpect(status().isNotFound());
+        mvc.perform(get("/api/v2/unavailable/42")
+                .with(csrf().asHeader()))
+                    .andExpect(status().isNotFound());
     }
 
     @Test
+    @WithMockUser(roles="ADMIN")
     public void updateSkillTest() throws Exception {
         given(unavailableService.saveItem(any(Unavailable.class))).willReturn(testUnavailable);
         mvc.perform(put("/api/v2/unavailable")
+                .with(csrf().asHeader())
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonMaker.toJsonString(testUnavailable)))
             .andExpect(status().isOk());
     }
 
     @Test
+    @WithMockUser(roles="ADMIN")
     public void updateSkillWithNullTest() throws Exception {
         given(unavailableService.saveItem(any(Unavailable.class))).willReturn(null);
         mvc.perform(put("/api/v2/unavailable")
+                    .with(csrf().asHeader())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(""))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
+    @WithMockUser(roles="ADMIN")
     public void updateSkillWithEmptyUnavailableTest() throws Exception {
         testUnavailable = new Unavailable();
         given(unavailableService.saveItem(any(Unavailable.class))).willReturn(null);
         mvc.perform(put("/api/v2/unavailable")
+                .with(csrf().asHeader())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonMaker.toJsonString(testUnavailable)))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
+    @WithMockUser(roles="ADMIN")
     public void deleteUnavailabilityTest() throws Exception {
         doNothing().when(unavailableService).deleteItem(anyInt());
-        mvc.perform(get("/api/v2/unavailable/42"))
+        mvc.perform(get("/api/v2/unavailable/42")
+                .with(csrf().asHeader()))
                 .andExpect(status().isNotFound());
     }
 
     @Test
+    @WithMockUser(roles="ADMIN")
     public void retrieveAllUnavailabilitiesTest() throws Exception {
         List<Unavailable> unavailableList = new ArrayList<Unavailable>();
         unavailableList.add(testUnavailable);
         given(unavailableService.getAllItems()).willReturn(unavailableList);
-        mvc.perform(get("/api/v2/unavailable"))
+        mvc.perform(get("/api/v2/unavailable")
+                .with(csrf().asHeader()))
                 .andExpect(status().isOk());
     }
 
     @Test
+    @WithMockUser(roles="ADMIN")
     public void retrieveAllUnavailabilitiesWhenEmptyTest() throws Exception {
         List<Unavailable> unavailableList = new ArrayList<Unavailable>();
         given(unavailableService.getAllItems()).willReturn(unavailableList);
-        mvc.perform(get("/api/v2/unavailable"))
+        mvc.perform(get("/api/v2/unavailable")
+                .with(csrf().asHeader()))
                 .andExpect(status().isNotFound());
     }
 
     @Test
+    @WithMockUser(roles="ADMIN")
     public void retrieveAllUnavailabilitiesWhenNullTest() throws Exception {
         given(unavailableService.getAllItems()).willReturn(null);
-        mvc.perform(get("/api/v2/unavailable"))
+        mvc.perform(get("/api/v2/unavailable")
+                .with(csrf().asHeader()))
                 .andExpect(status().isNotFound());
     }
 }

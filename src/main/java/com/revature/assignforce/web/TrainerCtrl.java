@@ -27,6 +27,7 @@ public class TrainerCtrl {
 	  // CREATE
 		// creating new trainer object from information passed from trainer data transfer object
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+
 	public Object createTrainer( @RequestBody TrainerDTO in ) {
 	
 		int ID = in.getTrainerId();
