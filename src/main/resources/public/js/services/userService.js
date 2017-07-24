@@ -17,8 +17,7 @@ app.service('userService', function($resource, $rootScope, $http){
            $rootScope.token = response.data.accessToken;
            $rootScope.fName = response.data.firstName;
            $rootScope.lName = response.data.lastName;
-           console.log($rootScope.role, $rootScope.token, $rootScope.fName, $rootScope.lName);
        }, function (error) {
 
-       })
+    })
 });

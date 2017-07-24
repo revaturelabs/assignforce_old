@@ -1,6 +1,6 @@
 var assignforce = angular.module( "batchApp" );
 
-assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchService){
+assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchService, SFService){
     var bsc = this;
     bsc.exitbdg = function(){
         $mdDialog.cancel();
