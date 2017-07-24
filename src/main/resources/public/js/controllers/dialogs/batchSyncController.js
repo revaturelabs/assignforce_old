@@ -7,6 +7,18 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
     }
     bsc.batchInfo = [];
     bsc.sfb = batchService.getEmptyBatch();
+
+    SFService.getSFdata(
+        function(resp){
+            console.log("AAA");
+            console.log(resp);
+        },
+        function(resp){
+            console.log("BBB");
+            console.log(resp);
+        }
+    );
+
     bsc.sfb.sinked = bsc.afb.sinked;
     bsc.refresh = function(){
         //vfunc - function that returns the field's value, dfunc - formats value for display, sfunc - sets field's value
