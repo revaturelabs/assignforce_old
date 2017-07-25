@@ -20,7 +20,7 @@ import com.revature.assignforce.domain.dto.TrainerDTO;
 @RestController
 @RequestMapping("/api/v2/trainer")
 public class TrainerCtrl {
-	
+
 	@Autowired
 	TrainerDaoService trainerService;
 
@@ -29,7 +29,7 @@ public class TrainerCtrl {
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 
 	public Object createTrainer( @RequestBody TrainerDTO in ) {
-	
+
 		int ID = in.getTrainerId();
 		String firstName = in.getFirstName();
 		String lastName = in.getLastName();
@@ -40,19 +40,19 @@ public class TrainerCtrl {
 
 		Trainer out = new Trainer( ID, firstName, lastName, resume, unavailabilities, skills, certifications );
 		out = trainerService.saveItem( out );
-		
+
 		if (out == null) {
-			return new ResponseEntity<ResponseErrorDTO>( new ResponseErrorDTO("Trainer failed to save."), HttpStatus.NOT_IMPLEMENTED);
+			return new ResponseEntity<ResponseErrorDTO>( new ResponseErrorDTO("Trainer failed to save."), HttpStatus.INTERNAL_SERVER_ERROR);
 		} else {
 			return new ResponseEntity<Trainer>(out, HttpStatus.OK);
 		}
 	}
-	
+
 	  // RETRIEVE
 		// retrieve trainer with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveTrainer( @PathVariable("id") int ID ) {
-		
+
 		Trainer out = trainerService.getOneItem(ID);
 
 		if (out == null) {
@@ -66,7 +66,7 @@ public class TrainerCtrl {
 	//retrieve trainer with given fistName, lastName
 	@RequestMapping(value = "/{firstName}/{lastName}", method = RequestMethod.GET, produces =  MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveTrainer (@PathVariable("firstName") String fName, @PathVariable("lastName") String lname){
-		Trainer out = trainerService.getByFirstNameANDLastName(fName, lname);
+		Trainer out = trainerService.findByFirstNameAndLastName(fName, lname);
 
 		if (out == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No trainer found of name " + fName +" " + lname + "."), HttpStatus.NOT_FOUND);
@@ -98,7 +98,7 @@ public class TrainerCtrl {
 			return new ResponseEntity<Trainer>(out, HttpStatus.OK);
 		}
 	}
-	
+
 	  // DELETE
 		// delete trainer with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -106,7 +106,7 @@ public class TrainerCtrl {
 		trainerService.deleteItem(ID);
 		return new ResponseEntity<Object>(null, HttpStatus.OK);
 	}
-	
+
 	  // GET ALL
 		// retrieve all trainers
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

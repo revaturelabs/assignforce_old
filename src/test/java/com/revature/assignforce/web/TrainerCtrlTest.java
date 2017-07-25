@@ -4,7 +4,7 @@ import com.revature.assignforce.AssignForceV2Application;
 import com.revature.assignforce.domain.Skill;
 import com.revature.assignforce.domain.Trainer;
 import com.revature.assignforce.domain.dto.TrainerDTO;
-import com.revature.assignforce.service.ActivatableObjectDaoService;
+import com.revature.assignforce.service.TrainerDaoService;
 import com.revature.assignforce.utils.JsonMaker;
 import org.junit.After;
 import org.junit.Before;
@@ -16,7 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 
@@ -35,23 +35,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Created by gdittric on 7/11/2017.
  */
-@RunWith(SpringRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = AssignForceV2Application.class)
 @AutoConfigureMockMvc
-
 public class TrainerCtrlTest {
     private TrainerDTO trainerDTO;
 
     @Autowired
     private MockMvc mvc;
 
-    @Autowired
-    private TrainerCtrl trainerController;
-
     @MockBean
-    ActivatableObjectDaoService<Trainer, Integer> trainerService;
+    TrainerDaoService trainerService;
 
     private Trainer testTrainer = null;
 

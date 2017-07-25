@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -24,6 +25,7 @@ import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -63,17 +65,21 @@ public class SettingCtrlTest {
     }
 
     @Test
+    @WithMockUser(roles = "admin")
     public void createSettingTest() throws Exception {
         mvc.perform(post("/api/v2/setting")
+                .with(csrf().asHeader())
         .contentType(MediaType.APPLICATION_JSON)
         .content(jsonMaker.toJsonString(testSetting)))
                 .andExpect(status().isNotImplemented());
     }
 
     @Test
+    @WithMockUser(roles = "admin")
     public void retrieveSettingTest() throws Exception {
         given(settingService.getOneItem(anyInt())).willReturn(testSetting);
-        mvc.perform(get("/api/v2/setting/42"))
+        mvc.perform(get("/api/v2/setting/42")
+                .with(csrf().asHeader()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.settingId",
                         Matchers.is(testSetting.getSettingId())))
@@ -82,42 +88,52 @@ public class SettingCtrlTest {
     }
 
     @Test
+    @WithMockUser(roles = "admin")
     public void retrieveInvalidSettingTest() throws Exception {
         given(settingService.getOneItem(anyInt())).willReturn(null);
-        mvc.perform(get("/api/v2/setting/42"))
+        mvc.perform(get("/api/v2/setting/42")
+                .with(csrf().asHeader()))
                 .andExpect(status().isNotFound());
     }
 
     @Test
+    @WithMockUser(roles = "admin")
     public void getGlobalSettingsTest() throws Exception {
         List<Setting> listOfSettings = new ArrayList<Setting>();
         listOfSettings.add(testSetting);
         given(settingService.getAllItems()).willReturn(listOfSettings);
-        mvc.perform(get("/api/v2/setting"))
+        mvc.perform(get("/api/v2/setting")
+                .with(csrf().asHeader()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()",
                         Matchers.is(listOfSettings.size())));
     }
 
     @Test
+    @WithMockUser(roles = "admin")
     public void getEmptyGlobalSettingsTest() throws Exception {
         List<Setting> listOfSettings = new ArrayList<Setting>();
         given(settingService.getAllItems()).willReturn(listOfSettings);
-        mvc.perform(get("/api/v2/setting"))
+        mvc.perform(get("/api/v2/setting")
+                .with(csrf().asHeader()))
                 .andExpect(status().isNotFound());
     }
 
     @Test
+    @WithMockUser(roles = "admin")
     public void getGlobalSettingsFailedTest() throws Exception {
         given(settingService.getAllItems()).willReturn(null);
-        mvc.perform(get("/api/v2/setting"))
+        mvc.perform(get("/api/v2/setting")
+                .with(csrf().asHeader()))
                 .andExpect(status().isNotFound());
     }
 
     @Test
+    @WithMockUser(roles = "admin")
     public void updateSettingTest() throws Exception {
        given(settingService.saveItem(testSetting)).willReturn(testSetting);
        mvc.perform(put("/api/v2/setting")
+               .with(csrf().asHeader())
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonMaker.toJsonString(testSetting)))
                 .andExpect(status().isNoContent());
@@ -134,8 +150,10 @@ public class SettingCtrlTest {
 //    }
 
     @Test
+    @WithMockUser(roles = "admin")
     public void deleteSettingTest() throws Exception {
-        mvc.perform(delete("/api/v2/setting/42"))
+        mvc.perform(delete("/api/v2/setting/42")
+                .with(csrf().asHeader()))
                 .andExpect(status().isNotImplemented());
     }
 

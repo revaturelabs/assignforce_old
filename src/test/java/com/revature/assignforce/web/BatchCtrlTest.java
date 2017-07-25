@@ -6,6 +6,7 @@ import com.revature.assignforce.domain.dto.BatchDTO;
 import com.revature.assignforce.service.ActivatableObjectDaoService;
 import com.revature.assignforce.service.BatchLocationDaoService;
 import com.revature.assignforce.service.DaoService;
+import com.revature.assignforce.service.TrainerDaoService;
 import com.revature.assignforce.utils.JsonMaker;
 import org.junit.After;
 import org.junit.Before;
@@ -19,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -35,6 +37,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doNothing;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -89,7 +92,7 @@ public class BatchCtrlTest {
     ActivatableObjectDaoService<Curriculum, Integer> currService;
 
     @MockBean
-    ActivatableObjectDaoService<Trainer, Integer> trainerService;
+    TrainerDaoService trainerService;
 
     @MockBean
     DaoService<BatchLocation, Integer> batchLocationService;
@@ -107,7 +110,7 @@ public class BatchCtrlTest {
         certs.add(aCert);
         aTrainer = new Trainer(0, "fname", "lname", "aResume", unavailability, skills, certs);
         coTrainer = new Trainer(2, "ffname", "dlname", "aResume2", unavailability, skills, certs);
-       // curriculum = new Curriculum(2, "myCurriculum", skills);
+        curriculum = new Curriculum(2, "myCurriculum", skills, false);
         batchStatusLookup = new BatchStatusLookup(0, "aStatus");
         batchLocation = new BatchLocation();
         batchLocation.setId(0);
@@ -141,6 +144,7 @@ public class BatchCtrlTest {
     }
 
     @Test
+    @WithMockUser
     public void createBatch() throws Exception {
         given(currService.getOneItem(anyInt())).willReturn(curriculum);
         given(currService.getOneItem(anyInt())).willReturn(curriculum);
@@ -148,6 +152,7 @@ public class BatchCtrlTest {
         given(trainerService.getOneItem(anyInt())).willReturn(coTrainer);
         given(batchService.saveItem(any(Batch.class))).willReturn(testBatch);
         mvc.perform(post("/api/v2/batch")
+                .with(csrf().asHeader())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonMaker.toJsonString(batchDTO)))
                     .andExpect(status().isOk())
@@ -155,6 +160,7 @@ public class BatchCtrlTest {
     }
 
     @Test
+    @WithMockUser
     public void createBatchWithEmptyDTO() throws Exception {
         given(currService.getOneItem(anyInt())).willReturn(curriculum);
         given(currService.getOneItem(anyInt())).willReturn(curriculum);
@@ -162,63 +168,77 @@ public class BatchCtrlTest {
         given(trainerService.getOneItem(anyInt())).willReturn(coTrainer);
         given(batchService.saveItem(any(Batch.class))).willReturn(null);
         mvc.perform(post("/api/v2/batch")
+                .with(csrf().asHeader())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonMaker.toJsonString(batchDTO)))
                     .andExpect(status().isInternalServerError());
     }
 
     @Test
+    @WithMockUser
     public void retrieveBatch() throws Exception {
         given(batchService.getOneItem(anyInt())).willReturn(testBatch);
-        mvc.perform(get("/api/v2/batch/42"))
+        mvc.perform(get("/api/v2/batch/42")
+                .with(csrf().asHeader()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(testBatch.getID())));
     }
 
     @Test
+    @WithMockUser
     public void retrieveBatchWithEmptyDTO() throws Exception {
         given(batchService.getOneItem(anyInt())).willReturn(null);
-        mvc.perform(get("/api/v2/batch/42"))
+        mvc.perform(get("/api/v2/batch/42")
+                .with(csrf().asHeader()))
                 .andExpect(status().isNotFound());
     }
 
     @Test
+    @WithMockUser
     public void deleteBatch() throws Exception {
         Room aRoom = new Room();
         doNothing().when(batchService).deleteItem(anyInt());
         doNothing().when(unavailableService).deleteItem(anyInt());
         given(batchService.getOneItem(anyInt())).willReturn(testBatch);
 //        given(roomService.getOneItem(anyInt())).willReturn(aRoom);
-        mvc.perform(delete("/api/v2/batch/42"))
+        mvc.perform(delete("/api/v2/batch/42")
+                .with(csrf().asHeader()))
                 .andExpect(status().isOk());
     }
 
     @Test
+    @WithMockUser
     public void retrieveAllBatches() throws Exception {
         List<Batch> batches = new ArrayList<Batch>();
         batches.add(testBatch);
         given(batchService.getAllItems()).willReturn(batches);
-        mvc.perform(get("/api/v2/batch"))
+        mvc.perform(get("/api/v2/batch")
+                .with(csrf().asHeader()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()", is(batches.size())));
     }
 
     @Test
+    @WithMockUser
     public void retrieveAllBatchesWithEmptySet() throws Exception {
         List<Batch> batches = new ArrayList<Batch>();
         given(batchService.getAllItems()).willReturn(batches);
-        mvc.perform(get("/api/v2/batch"))
+        mvc.perform(get("/api/v2/batch")
+                .with(csrf().asHeader()))
                 .andExpect(status().isNotFound());
     }
 
     @Test
+    @WithMockUser
     public void retrieveAllBatchesWithError() throws Exception {
         given(batchService.getAllItems()).willReturn(null);
-        mvc.perform(get("/api/v2/batch"))
+        mvc.perform(get("/api/v2/batch")
+                .with(csrf().asHeader()))
                 .andExpect(status().isNotFound());
     }
 
     @Test
+    @WithMockUser
     public void updateBatch() throws Exception {
         given(currService.getOneItem(anyInt())).willReturn(curriculum);
         given(currService.getOneItem(anyInt())).willReturn(curriculum);
@@ -227,6 +247,7 @@ public class BatchCtrlTest {
         given(batchService.saveItem(any(Batch.class))).willReturn(testBatch);
         given(batchService.getOneItem(anyInt())).willReturn(testBatch);
         mvc.perform(put("/api/v2/batch")
+                .with(csrf().asHeader())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonMaker.toJsonString(batchDTO)))
                 .andExpect(status().isOk())
@@ -234,6 +255,7 @@ public class BatchCtrlTest {
     }
 
     @Test
+    @WithMockUser
     public void updateBatchWithEmptyDTO() throws Exception {
         given(currService.getOneItem(anyInt())).willReturn(curriculum);
         given(currService.getOneItem(anyInt())).willReturn(curriculum);
@@ -243,6 +265,7 @@ public class BatchCtrlTest {
         given(batchService.getOneItem(anyInt())).willReturn(testBatch);
         batchDTO = new BatchDTO();
         mvc.perform(put("/api/v2/batch")
+                .with(csrf().asHeader())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }

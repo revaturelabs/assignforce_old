@@ -17,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -30,6 +31,7 @@ import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -91,37 +93,45 @@ public class BuildingCtrlTest {
     }
 
     @Test
+    @WithMockUser
     public void createBuildingTest() throws Exception {
         given(buildingService.saveItem(any(Building.class))).willReturn(buildingTest);
         mvc.perform(post("/api/v2/building")
+                .with(csrf().asHeader())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(jsonMaker.toJsonString(buildingTest)))
                 .andExpect(status().isOk());
     }
 
     @Test
+    @WithMockUser
     public void createBuildingWithEmptyDTOTest() throws Exception{
         given(buildingService.saveItem(any(Building.class))).willReturn(null);
         buildingTest = new Building();
         mvc.perform(post("/api/v2/building")
+                .with(csrf().asHeader())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(jsonMaker.toJsonString(buildingTest)))
                 .andExpect(status().isInternalServerError());
     }
 
     @Test
+    @WithMockUser
     public void createBuildingWithNullDTOTest() throws Exception{
         given(buildingService.saveItem(any(Building.class))).willReturn(null);
         mvc.perform(post("/api/v2/building")
+                .with(csrf().asHeader())
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isBadRequest());
 
     }
 
     @Test
+    @WithMockUser
     public void retrieveBuildingTest() throws Exception {
         given(buildingService.getOneItem(any(Integer.class))).willReturn(buildingTest);
         mvc.perform(get("/api/v2/building/1")
+                .with(csrf().asHeader())
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is(buildingTest.getName())))
@@ -130,38 +140,46 @@ public class BuildingCtrlTest {
     }
 
     @Test
+    @WithMockUser
     public void retrieveBuildingWithBadIdTest() throws Exception {
         given(buildingService.getOneItem(any(Integer.class))).willReturn(null);
         mvc.perform(get("/api/v2/building/1")
+                .with(csrf().asHeader())
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isNotFound());
     }
 
     @Test
+    @WithMockUser
     public void updateBuildingTest() throws Exception {
         given(buildingService.saveItem(any(Building.class))).willReturn(buildingTest);
         mvc.perform(put("/api/v2/building")
+                .with(csrf().asHeader())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(jsonMaker.toJsonString(buildingTest)))
                 .andExpect(status().isOk());
     }
 
-    //null pointer exception
+
     @Test
+    @WithMockUser
     public void updateBuildingWithEmptyDTOTest() throws Exception {
         buildingTest = new Building();
         given(buildingService.saveItem(any(Building.class))).willReturn(null);
         mvc.perform(put("/api/v2/building")
+                .with(csrf().asHeader())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(jsonMaker.toJsonString(buildingTest)))
                 .andExpect(status().isNotModified());
     }
 
     @Test
+    @WithMockUser
     public void updateBuildingWithNullDTOTest() throws Exception {
         buildingTest = new Building();
         given(buildingService.saveItem(any(Building.class))).willReturn(null);
         mvc.perform(put("/api/v2/building")
+                .with(csrf().asHeader())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(""))
                 .andExpect(status().isBadRequest());
@@ -169,33 +187,41 @@ public class BuildingCtrlTest {
     }
 
     @Test
+    @WithMockUser
     public void deleteBuildingTest() throws Exception {
         doNothing().when(buildingService).deleteItem(any(Integer.class));
-        mvc.perform(delete("/api/v2/building/1"))
+        mvc.perform(delete("/api/v2/building/1")
+                .with(csrf().asHeader()))
                 .andExpect(status().isOk());
     }
 
     @Test
+    @WithMockUser
     public void retrieveAllBuildingsTest() throws Exception {
         List<Building> buildings = new ArrayList<>();
         buildings.add(buildingTest);
         given(buildingService.getAllItems()).willReturn(buildings);
-        mvc.perform(get("/api/v2/building"))
+        mvc.perform(get("/api/v2/building")
+                .with(csrf().asHeader()))
                 .andExpect(status().isOk());
     }
 
     @Test
+    @WithMockUser
     public void retrieveAllBuildingsReturnEmptyListTest() throws Exception {
         List<Building> buildings = new ArrayList<>();
         given(buildingService.getAllItems()).willReturn(buildings);
-        mvc.perform(get("/api/v2/building"))
+        mvc.perform(get("/api/v2/building")
+                .with(csrf().asHeader()))
                 .andExpect(status().isNotFound());
     }
 
     @Test
+    @WithMockUser
     public void retrieveAllBuildingsReturnNullTest() throws Exception {
         given(buildingService.getAllItems()).willReturn(null);
-        mvc.perform(get("/api/v2/building"))
+        mvc.perform(get("/api/v2/building")
+                .with(csrf().asHeader()))
                 .andExpect(status().isNotFound());
 
     }
