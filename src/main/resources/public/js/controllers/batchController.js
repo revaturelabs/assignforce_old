@@ -480,8 +480,8 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
             controller: "batchSyncCtrl",
             controllerAs: "bsCtrl",
             locals: {
-              afb: batch
-              trainers: bc.trainers
+              afb: batch,
+              trainers: bc.trainers,
               curricula: bc.curricula
             },
             bindToController: true,
