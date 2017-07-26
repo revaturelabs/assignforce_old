@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -26,6 +27,7 @@ import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.doNothing;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -65,42 +67,52 @@ public class RoomCtrlTest {
     }
 
     @Test
+    @WithMockUser(roles = "admin")
     public void createRoom() throws Exception {
         given(roomService.saveItem(any(Room.class))).willReturn(testRoom);
         mvc.perform(post("/api/v2/room")
+                .with(csrf().asHeader())
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonMaker.toJsonString(testRoom)))
                 .andExpect(status().isOk());
     }
 
     @Test
+    @WithMockUser(roles = "admin")
     public void createRoomWithInvalidDTO() throws Exception {
         given(roomService.saveItem(any(Room.class))).willReturn(null);
         mvc.perform(post("/api/v2/room")
+                .with(csrf().asHeader())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonMaker.toJsonString(testRoom)))
                 .andExpect(status().isInternalServerError());
     }
 
     @Test
+    @WithMockUser(roles = "admin")
     public void retrieveRoom() throws Exception {
         given(roomService.getOneItem(anyInt())).willReturn(testRoom);
-        mvc.perform(get("/api/v2/room/42"))
+        mvc.perform(get("/api/v2/room/42")
+                .with(csrf().asHeader()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.roomName", is(testRoom.getRoomName())));
     }
 
     @Test
+    @WithMockUser(roles = "admin")
     public void retrieveInvalidRoom() throws Exception {
         given(roomService.getOneItem(anyInt())).willReturn(null);
-        mvc.perform(get("/api/v2/room/42"))
+        mvc.perform(get("/api/v2/room/42")
+                .with(csrf().asHeader()))
                 .andExpect(status().isNotFound());
     }
 
     @Test
+    @WithMockUser(roles = "admin")
     public void updateRoom() throws Exception {
         given(roomService.saveItem(any(Room.class))).willReturn(testRoom);
         mvc.perform(put("/api/v2/room")
+                .with(csrf().asHeader())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonMaker.toJsonString(testRoom)))
                     .andExpect(status().isOk())
@@ -109,43 +121,53 @@ public class RoomCtrlTest {
     }
 
     @Test
+    @WithMockUser(roles = "admin")
     public void updateInvalidRoom() throws Exception {
         given(roomService.saveItem(any(Room.class))).willReturn(null);
         mvc.perform(put("/api/v2/room")
+                .with(csrf().asHeader())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonMaker.toJsonString(testRoom)))
                 .andExpect(status().isNotModified());
     }
 
     @Test
+    @WithMockUser(roles = "admin")
     public void deleteRoom() throws Exception {
         doNothing().when(roomService).deleteItem(anyInt());
-        mvc.perform(delete("/api/v2/room/42"))
+        mvc.perform(delete("/api/v2/room/42")
+                .with(csrf().asHeader()))
                 .andExpect(status().isOk());
     }
 
     @Test
+    @WithMockUser(roles = "admin")
     public void retrieveAllRooms() throws Exception {
         List<Room> rooms = new ArrayList<Room>();
         rooms.add(testRoom);
         given(roomService.getAllItems()).willReturn(rooms);
-        mvc.perform(get("/api/v2/room"))
+        mvc.perform(get("/api/v2/room")
+                .with(csrf().asHeader()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()", is(rooms.size())));
     }
 
     @Test
+    @WithMockUser(roles = "admin")
     public void retrieveAllRoomsWithEmptySet() throws Exception {
         List<Room> rooms = new ArrayList<Room>();
         given(roomService.getAllItems()).willReturn(rooms);
-        mvc.perform(get("/api/v2/room"))
+        mvc.perform(get("/api/v2/room")
+                .with(csrf().asHeader()))
                 .andExpect(status().isNotFound());
     }
 
     @Test
+    @WithMockUser(roles = "admin")
     public void retrieveAllRoomsWithFailure() throws Exception {
         given(roomService.getAllItems()).willReturn(null);
-        mvc.perform(get("/api/v2/room"))
+        mvc.perform(get("/api/v2/room")
+                .with(csrf().asHeader()))
                 .andExpect(status().isNotFound());
     }
 

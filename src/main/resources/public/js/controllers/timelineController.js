@@ -801,9 +801,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 				
 		svg.call(tip);
 		
-		svg.append('g')
-			.attr('class','x axis')
-			.call(xAxis);
+
 		
 		svg.append('g')
 			.attr('class','y axis')
@@ -831,7 +829,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 				})
 				.attr('y2', timelineFormatting.height)
 				.attr('stroke','lightgray');
-		
+
 		//Add line for current date on timeline
 		svg.append('g')
 			.attr('class','currentdate');
@@ -882,6 +880,8 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 			.attr("in2", "betterBlur")
 			.attr("operator", "in")
 			.attr("result", "colorBlur");
+
+
 		
 		var feMerge = filter.append("feMerge");
 		
@@ -893,6 +893,26 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		//Normal stuff
 		svg.append('g')
 			.attr('class','rectangles');
+
+        /*
+        svg.append('rect')
+            .attr('class','axisrect')
+            .attr('width',100)
+            .attr('height',100)
+            .style('fill','red');
+            */
+
+        var x = svg.append('g')
+            .attr('class','x axis');
+            //.call(xAxis);
+
+        var brect = x.append('rect');
+
+        x.call(xAxis);
+
+
+
+
 
 		d3.select('.rectangles')
 			.selectAll('g')
@@ -1048,5 +1068,31 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 				.attr('y', function(d) {return ((d.y1+d.y2)/2)+5;})
 				.attr('x', function(d) {return d.x+5;})
 				.text(function(d) {return d.length;});
+
+		tlc.moveAxis();
+
+        brect
+            .attr('class','axisrect')
+            .attr('transform','translate('+(timelineFormatting.margin_left/2)+',-'+x.node().getBoundingClientRect().height+')')
+            .attr('width',x.node().getBoundingClientRect().width+timelineFormatting.margin_left/2)
+            .attr('height',x.node().getBoundingClientRect().height)
+            .style('fill','white');
+
+
 	}
+
+	//function to freeze trainers names over the graph at the top of the window whenever you scroll out of the window
+	tlc.axisDisplacement = 0
+    tlc.moveAxis= function () {
+        var x = document.getElementsByClassName("x axis");
+        if(x[0].getBoundingClientRect().top) {
+        	tlc.axisDisplacement -= x[0].getBoundingClientRect().top
+			if(tlc.axisDisplacement <0){tlc.axisDisplacement =0;}
+                x[0].setAttribute("transform", "translate(0," + tlc.axisDisplacement + ")");
+
+        }//else{
+            setTimeout(tlc.moveAxis,120);
+        //}
+    }
+
 });

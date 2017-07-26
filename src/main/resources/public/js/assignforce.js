@@ -57,6 +57,7 @@
 					templateUrl : "html/views/settings.html",
 					controller  : "settingsCtrl as sCtrl"
 				})
+
 				.otherwise({"redirectTo": "/home"});
                 // .otherwise({
                 //     templateUrl : "html/views/home.html",

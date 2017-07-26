@@ -1,5 +1,6 @@
 package com.revature.assignforce.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.revature.assignforce.service.ActivatableObjectDaoService;
@@ -33,7 +34,7 @@ public class BuildingCtrl {
 	// transfer object
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createBuilding(@RequestBody BuildingDTO in) {
-		
+
 		int ID = in.getID(); //we shouldn't need the building id - it will be generated...  right?
 		String name = in.getName(); //building name
 		int location = in.getLocation(); //building's location id.  This is where it is was breaking - said the location id is 0
@@ -71,12 +72,14 @@ public class BuildingCtrl {
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object updateBuilding(@RequestBody BuildingDTO in) {
 
-		int ID = in.getID();
-		String name = in.getName();
-		int location = in.getLocation();
-		List<Room> rooms = in.getRooms();
-		Boolean active = in.getActive();
-		Building out = new Building(ID, name, rooms, active, location);
+		Integer id = in.getID();
+		id = (id != null)? id : 0;
+		String name = (in.getName() != null)? in.getName(): "";
+		Integer location = in.getLocation();
+		location = (location != null)? in.getLocation() : 0;
+		List<Room> rooms = (in.getRooms() != null)? in.getRooms() : new ArrayList<Room>();
+		Boolean active = (in.getActive() != null)? in.getActive() : false;
+		Building out = new Building(id, name, rooms, active, location);
 		out = buildingService.saveItem(out);
 		if (out == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Building failed to update."),

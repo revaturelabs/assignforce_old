@@ -113,7 +113,7 @@ public class BatchCtrl {
 
 		if (out == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Batch failed to save."),
-					HttpStatus.NOT_IMPLEMENTED);
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		} else {
 			return new ResponseEntity<Batch>(out, HttpStatus.OK);
 		}

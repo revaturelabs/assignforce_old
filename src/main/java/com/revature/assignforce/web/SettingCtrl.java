@@ -27,7 +27,7 @@ public class SettingCtrl {
     //Create
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object createSetting(@RequestBody SettingDTO in ){
-        return null;
+        return new ResponseEntity(null, HttpStatus.NOT_IMPLEMENTED);
     }
 
     //Retrieve
@@ -70,4 +70,8 @@ public class SettingCtrl {
     }
 
     //Delete
+    @RequestMapping(value = "/{settingId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Object deleteSetting(){
+        return new ResponseEntity<Object>(null, HttpStatus.NOT_IMPLEMENTED);
+    }
 }

@@ -43,7 +43,7 @@ public class RoomCtrl {
 		out = roomService.saveItem( out );
 		
 		if (out == null) {
-			return new ResponseEntity<ResponseErrorDTO>( new ResponseErrorDTO("Room failed to save."), HttpStatus.NOT_IMPLEMENTED);
+			return new ResponseEntity<ResponseErrorDTO>( new ResponseErrorDTO("Room failed to save."), HttpStatus.INTERNAL_SERVER_ERROR);
 		} else {
 			return new ResponseEntity<Room>(out, HttpStatus.OK);
 		}
