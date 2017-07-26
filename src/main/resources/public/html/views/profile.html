@@ -29,13 +29,13 @@
             </div>
             <div layout="row">
                 <input class="ng-hide" id="input-file-id"  type="file" file-model="pCtrl.myFile">
-                <label for="input-file-id" class="md-button md-icon-button">
+                <label for="input-file-id" ng-show="lockProfile" class="md-button md-icon-button">
                     <md-icon md-menu-origin class="material-icons" style="color: #FB8C00;"> add_circle </md-icon>
                     <md-tooltip class="md-title"> Add/Update Resume </md-tooltip>
                 </label>
                 <div ng-if="pCtrl.myFile != undefined">
                     <label>{{pCtrl.myFile.name}}</label>
-                    <md-button ng-click="pCtrl.uploadResume()">Update</md-button>
+                    <md-button ng-show="lockProfile" ng-click="pCtrl.uploadResume()">Update</md-button>
                 </div>
             </div>
         </div>
@@ -47,16 +47,16 @@
             <div class="md-toolbar-tools">
                 <span> Skills </span>
                 <span flex> </span>
-                <md-button class="md-icon-button" ng-click="pCtrl.saveTSkills()">
+                <md-button class="md-icon-button" ng-show="lockProfile" ng-click="pCtrl.saveTSkills()">
                     <md-tooltip class="md-title"> Save Skills </md-tooltip>
                     <i class="material-icons">save</i>
                 </md-button>
             </div>
         </md-toolbar>
         <div class="md-padding" layout="column">
-            <md-subheader class="md-no-sticky"><h2>Select a skill:</h2></md-subheader>
+            <md-subheader ng-show="lockProfile" class="md-no-sticky"><h2>Select a skill:</h2></md-subheader>
 
-            <md-chips ng-model="pCtrl.skillsList" md-removable="false" md-on-select="pCtrl.addSkill($chip)">
+            <md-chips ng-show="lockProfile" ng-model="pCtrl.skillsList" md-removable="false" md-on-select="pCtrl.addSkill($chip)">
             </md-chips>
             <md-list class="fixedRows">
                 <md-subheader class="md-no-sticky"><h2>Current skills:</h2></md-subheader>
@@ -75,7 +75,7 @@
                 <span> Certifications </span>
                 <span flex> </span>
                 <input class="ng-hide" id="input-file-cert"  type="file" file-model="pCtrl.certFile">
-                <label for="input-file-cert" class="md-icon-button">
+                <label for="input-file-cert" class="md-icon-button" ng-show="lockProfile">
                     <md-icon md-menu-origin class="material-icons"> add_circle </md-icon>
                     <md-tooltip class="md-title"> Add Certification </md-tooltip>
                 </label>
@@ -91,7 +91,7 @@
                     </md-input-container>
                     <br>
                     <label>{{pCtrl.certFile.name}}</label>
-                    <md-button ng-click="pCtrl.uploadCertification()" ng-if="pCtrl.certName != undefined">Update</md-button>
+                    <md-button ng-show="lockProfile" ng-click="pCtrl.uploadCertification()" ng-if="pCtrl.certName != undefined">Update</md-button>
                     <br>
                 </div>
             </div>
@@ -104,7 +104,7 @@
                     <md-icon md-svg-icon="img/ic_sim_card_black_24px.svg" class="revOrange"></md-icon>
                     <h3> {{cert.name}} </h3>
                     <span flex></span>
-                    <md-button class="md-icon-button" ng-click="pCtrl.removeCertification(cert)">
+                    <md-button class="md-icon-button" ng-show=lockProfile ng-click="pCtrl.removeCertification(cert)">
                         <md-tooltip class="md-title revOrange">Remove Certification</md-tooltip>
                         <i class="material-icons">remove_circle</i>
                     </md-button>

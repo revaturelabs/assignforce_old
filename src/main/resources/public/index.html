@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html>
-
-
 <head>
     <!-- New .js files MUST be referenced here -->
     <title>AssignForce</title>
@@ -32,7 +30,7 @@
 
     <div class="toastContainer">
         <div>
-            <ng-include src="'html/views/menu.html'" ng-if="location.path() !== '/login'"/>
+            <ng-include src="'html/views/menu.html'"/>
         </div>
         <div>
             <div id="view" ng-view></div>
@@ -77,6 +75,7 @@
     <script type="text/javascript" src="js/controllers/dialogs/trainerDialogController.js"></script>
     <script type="text/javascript" src="js/controllers/dialogs/deleteDialogController.js"></script>
     <script type="text/javascript" src="js/controllers/dialogs/skillDialogController.js"></script>
+    <script type="text/javascript" src="js/controllers/dialogs/batchSyncController.js"></script>
 
     <!-- Services -->
     <script type="text/javascript" src="js/services/calendarService.js"></script>
@@ -94,6 +93,8 @@
     <script type="text/javascript" src="js/services/ptoService.js"></script>
     <script type="text/javascript" src="js/services/gCalCredentialsService.js"></script>
 
+    <script type="text/javascript" src="js/services/SalesforceDBService.js"></script>
+    
     <!-- Filters -->
     <script type="text/javascript" src="js/filters/timeModeFilter.js"></script>
     <script type="text/javascript" src="js/filters/availableModeFilter.js"></script>
@@ -140,5 +141,4 @@
         }
     </style>
 </body>
-
 </html>

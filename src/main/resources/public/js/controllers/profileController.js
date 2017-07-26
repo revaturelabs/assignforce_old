@@ -5,10 +5,11 @@
 
 var assignforce = angular.module( "batchApp" );
 
-assignforce.controller( "profileCtrl", function( $scope,$resource, $http, $mdDialog, $mdToast, trainerService, roomService, skillService, s3Service, $routeParams) {
+assignforce.controller( "profileCtrl", function( $scope, $resource, $http, $mdDialog, $mdToast, $rootScope, $rootScope, trainerService, roomService, skillService, s3Service, $routeParams) {
     var pc = this;
     pc.tId = $routeParams.id; //grabs the trainer id from the url to load the page with the trainer specified
 
+    $scope.lockProfile = true;
     // functions
 
     // calls showToast method of aCtrl
@@ -188,19 +189,24 @@ assignforce.controller( "profileCtrl", function( $scope,$resource, $http, $mdDia
 
     // id is hard coded for testing. unless you click on a trainer in the trainer page.
     if(pc.tId){
+        $scope.lockProfile = false;
         trainerService.getById(pc.tId, function (response) {
             pc.trainer = response;
             pc.getAllSkills();
         }, function () {
             pc.showToast("Could not fetch trainer.");
         });
-    } else {
-        trainerService.getById(1, function (response) {
+    } else{
+      
+        var fname = $rootScope.fName;
+        var lname = $rootScope.lName;
+        trainerService.getByFirstNameAndLastName(fname, lname, function (response) {
             pc.trainer = response;
             pc.getAllSkills();
         }, function () {
             pc.showToast("Could not fetch trainer.");
         });
+            $scope.lockProfile = true;
     }
 
     //grab credentials for s3

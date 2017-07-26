@@ -1,0 +1,11 @@
+<div layout="row" flex="100" layout-padding layout-align="end center"
+     ng-init="vm.printPagination()"
+     class="pagination-desktop">
+    <md-list layout="row" ng-if="vm.pages.length > 1">
+        <md-list-item flex="none"
+                      ng-class="{active: vm.offset == num }"
+                      ng-repeat="num in vm.pages track by $index">
+            <a ng-click="vm.goToPage(num)">{{num}}</a>
+        </md-list-item>
+    </md-list>
+</div>

@@ -1,5 +1,6 @@
 package com.revature.assignforce.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.revature.assignforce.service.ActivatableObjectDaoService;
@@ -31,27 +32,27 @@ public class CurriculumCtrl {
 		// creating new curriculum object from information passed from curriculum data transfer object
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createCurriculum( @RequestBody CurriculumDTO in ) {
-	
+
 		int id = in.getCurrId();
 		String name = in.getName();
 		List<Skill> skills = in.getSkills();
-		
-		Curriculum out = new Curriculum( id, name, skills );
-		out.setCore(false);
+		boolean core = in.getCore();
+
+		Curriculum out = new Curriculum( id, name, skills, core);
 		out = currService.saveItem( out );
-		
+
 		if (out == null) {
-			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Curriculum failed to save."), HttpStatus.NOT_IMPLEMENTED);
+			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Curriculum failed to save."), HttpStatus.INTERNAL_SERVER_ERROR);
 		} else {
 			return new ResponseEntity<Curriculum>(out, HttpStatus.OK);
 		}
 	}
-	
+
 	  // RETRIEVE
 		// retrieve curriculum with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveCurriculum( @PathVariable("id") int ID ) {
-		
+
 		Curriculum out = currService.getOneItem(ID);
 		if (out == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No curriculum found of ID " + ID + "."), HttpStatus.NOT_FOUND);
@@ -59,19 +60,19 @@ public class CurriculumCtrl {
 			return new ResponseEntity<Curriculum>(out, HttpStatus.OK);
 		}
 	}
-	
+
 	  // UPDATE
 		// updating an existing curriculum object with information passed from curriculum data transfer object
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object updateCurriculum( @RequestBody CurriculumDTO in ) {
-	
-		int id = in.getCurrId();
-		String name = in.getName();
-		List<Skill> skills = in.getSkills();
+		Integer id = in.getCurrId();
+		id = (id != null)? in.getCurrId() : 0;
+		String name = (in.getName() != null)? in.getName() : "";
+		List<Skill> skills = (in.getSkills() != null)? in.getSkills() : new ArrayList<Skill>();
+		Boolean core = (in.getCore() != null)? in.getCore() : false;
 		
-		Curriculum out = new Curriculum( id, name, skills );
+		Curriculum out = new Curriculum( id, name, skills, core );
 		out.setActive(in.getActive());
-		out.setCore(in.getCore());
 		out = currService.saveItem( out );
 		
 		if (out == null) {

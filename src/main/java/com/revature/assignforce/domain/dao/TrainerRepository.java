@@ -9,5 +9,7 @@ import java.util.List;
 @Repository
 public interface TrainerRepository extends ActivatableObjectRepository<Trainer, Integer> {
 	Trainer findByFirstName(String name);
+	Trainer findByFirstNameAndLastName(String firstName, String lastName);
 	List<Trainer> findByActiveIsTrue();
+	//Trainer findById(Integer id);
 }

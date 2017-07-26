@@ -13,7 +13,7 @@ public class DefaultRoutingController {
 
     @RequestMapping(value = {"/login", "/home", "/batches", "/curriculum", "/trainers", "/locations", "/profile", "/profile/:id", "/reports", "/settings"})
     public String routeToHome(){
-        return "forward:index.html";
+        return "forward:home.html";
     }
 
     // Added for Parasol Project - Simply did what I was asked to do....    

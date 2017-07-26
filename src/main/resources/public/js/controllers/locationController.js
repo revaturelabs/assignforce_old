@@ -1,8 +1,10 @@
 
 var assignforce = angular.module("batchApp");
 
-assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, locationService, buildingService, roomService) {
+assignforce.controller("locationCtrl", function($scope, $rootScope, $filter, $mdDialog, locationService, buildingService, roomService) {
 	var lc = this;
+
+	$scope.isManager = $rootScope.role == "VP of Technology";
 
 	// functions
 	// calls showToast method of aCtrl

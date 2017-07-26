@@ -1,0 +1,10 @@
+<div layout="row" class="pagination">
+    <ttmd-pagination-mobile
+        offset="vm.model.getOffset()"
+        ng-if="vm.listCtrl.goMobile()"
+        flex="100"></ttmd-pagination-mobile>
+    <ttmd-pagination-desktop
+        offset="vm.model.getOffset()"
+        ng-if="!vm.listCtrl.goMobile()"
+        flex="100"></ttmd-pagination-desktop>
+</div>

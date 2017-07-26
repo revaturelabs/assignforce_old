@@ -4,8 +4,10 @@
 
 var assignforce = angular.module( "batchApp" );
 
-assignforce.controller("curriculaCtrl", function ($scope, curriculumService, skillService) {
+assignforce.controller("curriculaCtrl", function ($scope, $rootScope, curriculumService, skillService) {
     var cc = this;
+
+    $scope.isManager = $rootScope.role == "VP of Technology";
     // $scope.skillToggle = false;
 
     //functions
@@ -101,12 +103,60 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
         cc.focusName = undefined;
     };
 
+
+    //create a core
+    cc.createCore = function (coreForm) {
+        //show a hidden field with a list of skill to select from, a name field, and a save button
+        if(coreForm.$valid){
+            var skillList = [];
+            for(var i = 0; i < cc.selectedSkills.length; i++){
+                for(var j = 0; j < cc.skills.length; j++){
+                    if(cc.skills[j].skillId == cc.selectedSkills[i]){
+                        skillList.push(cc.skills[j]);
+                        break;
+                    }
+                }
+            }
+
+            var curric = {
+                name    : cc.coreName,
+                skills  : skillList,
+                active  : true,
+                core    : true
+            };
+
+            curriculumService.create(curric, function () {
+                cc.showToast("Core created")
+            }, function () {
+                cc.showToast("Failed to create core")
+            })
+
+            //reload curric
+            cc.curricula.push(curric);
+
+        } else {
+            cc.showToast("Missing input fields.")
+        }
+
+        cc.selectedSkills = [];
+        cc.coreName = undefined;
+    };
+
     //Used to show the create focus card
     cc.toggleFocusStatus = function () {
         if(cc.focusStatus){
             cc.focusStatus = false;
         } else {
             cc.focusStatus = true;
+        }
+    };
+
+    //Used to show the create core card
+    cc.toggleCoreStatus = function (){
+        if(cc.coreStatus) {
+            cc.coreStatus = false;
+        } else{
+            cc.coreStatus =true;
         }
     };
 
@@ -166,8 +216,10 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
     // cc.skills;
     cc.selectedSkills = [];
     cc.focusName = undefined;
+    cc.coreName = undefined; //added for add Core usecase
     cc.skillName = undefined;
     cc.focusStatus = false;
+    cc.coreStatus = false; //added for add Core usecase
     cc.skillToggle = true;
     cc.focusToggle = true;
     cc.coreToggle = true;

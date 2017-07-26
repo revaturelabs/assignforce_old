@@ -1,7 +1,8 @@
 var assignforce = angular.module( "batchApp" );
 
-assignforce.controller( "trainerCtrl", function( $scope, $mdDialog, $mdToast, $location, trainerService, s3Service, ptoService ) {
+assignforce.controller( "trainerCtrl", function( $scope, $rootScope, $mdDialog, $mdToast, $location, trainerService, s3Service, ptoService ) {
     var tc = this;
+    $scope.isManager = $rootScope.role == "VP of Technology";
 
       // functions
 
