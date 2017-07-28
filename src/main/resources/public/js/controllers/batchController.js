@@ -9,14 +9,12 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
     bc.settings = {};
 
     $scope.isManager = $rootScope.role == "VP of Technology";
-
+    //TODO: needs to be fixed so root scope is not used
     /*FUNCTIONS*/
-
     // This showToast is a function that comes from the parent
 	bc.showToast = function(message) {
     	$scope.$parent.aCtrl.showToast(message);
 	};
-	
 	// Changes form state and populates many variables
 	bc.changeState = function(newState, incomingBatch) {
 		bc.state = newState;
@@ -549,7 +547,6 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
         var sd = new Date(bc.batch.startDate);
         var ed = new Date(bc.batch.endDate);
         var unavailable = trainer.unavailabilities;
-        console.log(unavailable);
         var counter = 0;
         var One_day = 1000 * 60 * 60 * 24;
         var dif_mils = Math.abs(ed - sd);

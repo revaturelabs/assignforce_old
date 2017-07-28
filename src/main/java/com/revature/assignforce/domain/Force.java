@@ -54,7 +54,7 @@ public class Force {
                 "FROM User WHERE UserRoleId = '" + Role.ROLE_TRAINER + "'";
 
         String response = executeSalesForceQuery(auth, query);
-
+        System.out.println(response);
         return parseSalesForceQueryResponse(response);
     }
 

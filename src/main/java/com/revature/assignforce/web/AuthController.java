@@ -6,14 +6,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+
+import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/api/v2")
+@RequestMapping(value = "/auth")
 public class AuthController {
 
     @Autowired
@@ -32,6 +40,7 @@ public class AuthController {
         Employee emp = force.getCurrentEmployee(auth);
         String tk = restTemplate.getAccessToken().toString();
         emp.setAccessToken(tk);
+
         return ResponseEntity.ok(emp);
     }
 }

@@ -1,17 +1,23 @@
 
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "menuCtrl", function( $scope, $location, $rootScope, $http) {
+    assignforce.controller( "menuCtrl", function( $scope, $location, $rootScope, $http, $cookies) {
         var mc = this;
 
-        $http.get("/api/v2/userinfo")
+        $http.get("/auth/userinfo")
        .then(function(response) {
+
            $rootScope.data = response.data;
            
            $rootScope.role = response.data.roleName;
            $rootScope.token = response.data.accessToken;
            $rootScope.fName = response.data.firstName;
            $rootScope.lName = response.data.lastName;
+
+           $http.defaults.xsrfHeaderName = 'X-CSRF-Token';
+           // $httpProvider.defaults.headers.common = {''}
+           $cookies.put('XSRF-TOKEN', $rootScope.token);
+
        }, function (error) {
 
     }).then(function(){

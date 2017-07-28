@@ -1,7 +1,17 @@
 var app = angular.module("batchApp");
 
-app.service('batchService', function($resource) {
-    var Batch = $resource('api/v2/batch/:id',{id: '@id'},{ save:{method:"POST",url:"api/v2/batch"}, update:{method:'PUT',url:'api/v2/batch'} });
+app.service('batchService', function($resource, $rootScope) {
+    var Batch = $resource('api/v2/batch/:id',
+        {id: '@id'},
+        {
+            save:{method:"POST",url:"api/v2/batch"},
+            update:{method:'PUT',url:'api/v2/batch'},
+            sync:{
+                method:'PUT',
+                url:'api/v2/sfSync'}
+        }
+    );
+
     var bs = this;
 
     bs.getEmptyBatch = function(){
@@ -26,6 +36,14 @@ app.service('batchService', function($resource) {
 
     bs.delete = function(batch, success, error){
         batch.$remove(success, error);
+    }
+
+    bs.sfSyncUpdate = function(batch, success, error){
+        success.$update(function(response){
+            console.log("success");
+        }, error);
+        console.log(success);
+        console.log("syncing");
     }
 
 });

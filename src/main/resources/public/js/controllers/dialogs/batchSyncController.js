@@ -94,6 +94,7 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
         }
     }
 
+    //Pushes SalesForce information to AssignForce
     bsc.syncAF = function(){
         bsc.batchInfo.map(function(e){
             if(e.salesSelect){
@@ -107,6 +108,7 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
         //})
     }
 
+    //Pushes changes to SalesForce
     bsc.syncSF = function(){
         bsc.batchInfo.map(function(e){
             if(e.assignSelect){
@@ -114,21 +116,20 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
             }
             return null;
         });
+        batchService.sfSyncUpdate(bsc.sfb, bsc.afb);
         bsc.refresh();
     }
 
-    bsc.save = function(){
+    //saves changes to AssignForce
+    bsc.save = function() {
+        console.log(bsc.afb);
         //console.log(batchService.sfSyncUpdate);
-        batchService.sfSyncUpdate(bsc.sfb,function(){
-            batchService.afSyncUpdate(bsc.afb,bsc.sfb,function(){
+        batchService.sfSyncUpdate(bsc.sfb, bsc.afb, function () {
                 $mdDialog.hide();
-            },function(){
+            },
+            function () {
                 $mdDialog.cancel();
             });
-        },function(){
-            $mdDialog.cancel();
-        });
-    }
 
-    bsc.refresh();
+    }
 });

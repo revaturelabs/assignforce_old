@@ -31,7 +31,8 @@ app.controller("AuthCtrl", function($scope, $location, $window, $mdToast, $http,
                 // password : ac.password
             //}
         })
-            .success(function(){
+            .success(function(response){
+                console.log(response);
                 ac.loggedIn = true;
                 window.location = "home";
             })
