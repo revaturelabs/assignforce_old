@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
+import com.revature.assignforce.annotations.Authorize;
 import com.revature.assignforce.domain.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.revature.assignforce.domain.dto.BatchDTO;
 import com.revature.assignforce.domain.dto.ResponseErrorDTO;
@@ -68,7 +65,10 @@ public class BatchCtrl {
 	// transfer object
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Transactional
-	public Object createBatch(@RequestBody BatchDTO in) {
+	@Authorize
+	public Object createBatch(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+							  @RequestHeader(value="X-CSRF-TOKEN") String tokenValue,
+							  @RequestBody BatchDTO in) {
 
 		int ID = in.getID();
 		String name = in.getName();
@@ -122,7 +122,10 @@ public class BatchCtrl {
 	// RETRIEVE
 	// retrieve batch with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object retrieveBatch(@PathVariable("id") Integer ID) {
+	@Authorize
+	public Object retrieveBatch(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+								@RequestHeader(value="X-CSRF-TOKEN") String tokenValue,
+								@PathVariable("id") Integer ID) {
 
 		Batch out = batchService.getOneItem(ID);
 		if (out == null) {
