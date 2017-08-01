@@ -3,7 +3,8 @@
  */
 "use strict";
 
-describe('Unavailable Service', function() {
+describe('Unavailable Service', function($resource) {
+    var Unavailable = $resource('/api/v2/unavailable/:ID',{ID: '@ID'},{update:{method:'PUT'}})
     var batchApp;
 
     beforeEach(module("batchApp"));
@@ -16,6 +17,11 @@ describe('Unavailable Service', function() {
     })
 
     it("getEmptyUnavailableTest", function(){
-        ;
+        var testObj = batchApp.getEmptyUnavailable();
+        expect(testObj).toBeDefined();
+        expect(testObj).toBeTruthy();
+        expect(testObj).toBe(new Unavailable);
     })
+
+
 });
