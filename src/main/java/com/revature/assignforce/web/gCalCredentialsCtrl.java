@@ -2,13 +2,12 @@ package com.revature.assignforce.web;
 
 import java.util.HashMap;
 
+import com.revature.assignforce.annotations.Authorize;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v2/gCalCreds")
@@ -16,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class gCalCredentialsCtrl {
 
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object retrieveCredentials() {
+	@Authorize
+	public Object retrieveCredentials(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+									  @RequestHeader(value="X-XSRF-TOKEN") String tokenValue) {
 		String clientID = System.getenv("CLIENT_ID");
 		String apiKey = System.getenv("API_KEY");
 		String calendarID = System.getenv("CALENDAR_ID");

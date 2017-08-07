@@ -3,17 +3,14 @@ package com.revature.assignforce.web;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.revature.assignforce.annotations.Authorize;
 import com.revature.assignforce.service.ActivatableObjectDaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.revature.assignforce.domain.Curriculum;
 import com.revature.assignforce.domain.Skill;
@@ -31,8 +28,10 @@ public class CurriculumCtrl {
 	  // CREATE
 		// creating new curriculum object from information passed from curriculum data transfer object
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object createCurriculum( @RequestBody CurriculumDTO in ) {
-
+	@Authorize
+	public Object createCurriculum(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+								   @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+								   @RequestBody CurriculumDTO in ) {
 		int id = in.getCurrId();
 		String name = in.getName();
 		List<Skill> skills = in.getSkills();
@@ -51,8 +50,10 @@ public class CurriculumCtrl {
 	  // RETRIEVE
 		// retrieve curriculum with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object retrieveCurriculum( @PathVariable("id") int ID ) {
-
+	@Authorize
+	public Object retrieveCurriculum(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+									 @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+									 @PathVariable("id") int ID ) {
 		Curriculum out = currService.getOneItem(ID);
 		if (out == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No curriculum found of ID " + ID + "."), HttpStatus.NOT_FOUND);
@@ -64,7 +65,10 @@ public class CurriculumCtrl {
 	  // UPDATE
 		// updating an existing curriculum object with information passed from curriculum data transfer object
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object updateCurriculum( @RequestBody CurriculumDTO in ) {
+	@Authorize
+	public Object updateCurriculum(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+								   @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+								   @RequestBody CurriculumDTO in ) {
 		Integer id = in.getCurrId();
 		id = (id != null)? in.getCurrId() : 0;
 		String name = (in.getName() != null)? in.getName() : "";
@@ -85,8 +89,10 @@ public class CurriculumCtrl {
 	  // DELETE
 		// delete curriculum with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object deleteCurriculum( @PathVariable("id") int ID ) {
-
+	@Authorize
+	public Object deleteCurriculum(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+								   @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+								   @PathVariable("id") int ID ) {
 		currService.deleteItem(ID);
 		return new ResponseEntity<Object>(null, HttpStatus.OK);
 	}
@@ -94,7 +100,9 @@ public class CurriculumCtrl {
 	  // GET ALL
 		// retrieve all curricula
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object retrieveAllCurricula() {
+	@Authorize
+	public Object retrieveAllCurricula(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+									   @RequestHeader(value="X-XSRF-TOKEN") String tokenValue) {
 
 		List<Curriculum> all = currService.getAllItems();
 		if (all == null) {

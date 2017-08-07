@@ -14,7 +14,7 @@ public class OAuthTokenWrapper {
 
     private OAuth2RefreshToken oAuth2RefreshToken = null;
 
-    private Integer jSessionId = 0;
+    private String jSessionId = "";
 
     public OAuthTokenWrapper(){}
 
@@ -44,11 +44,11 @@ public class OAuthTokenWrapper {
         oAuth2AccessToken = token;
     }
 
-    public Integer getjSessionId() {
+    public String getjSessionId() {
         return jSessionId;
     }
 
-    public void setjSessionId(Integer jSessionId) {
+    public void setjSessionId(String jSessionId) {
         this.jSessionId = jSessionId;
     }
     public OAuth2RefreshToken getOAuth2RefreshToken() {

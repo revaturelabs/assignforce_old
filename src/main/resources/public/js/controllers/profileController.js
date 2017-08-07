@@ -5,7 +5,7 @@
 
 var assignforce = angular.module( "batchApp" );
 
-assignforce.controller( "profileCtrl", function( $scope, $resource, $http, $mdDialog, $mdToast, $rootScope, $rootScope, trainerService, roomService, skillService, s3Service, $routeParams) {
+assignforce.controller( "profileCtrl", function( $scope, $resource, $http, $mdDialog, $mdToast, employeeInfoService, trainerService, roomService, skillService, s3Service, $routeParams) {
     var pc = this;
     pc.tId = $routeParams.id; //grabs the trainer id from the url to load the page with the trainer specified
 
@@ -197,16 +197,13 @@ assignforce.controller( "profileCtrl", function( $scope, $resource, $http, $mdDi
             pc.showToast("Could not fetch trainer.");
         });
     } else{
-      
-        var fname = $rootScope.fName;
-        var lname = $rootScope.lName;
-        trainerService.getByFirstNameAndLastName(fname, lname, function (response) {
+        trainerService.getByFirstNameAndLastName(employeeInfoService.getFirstName(), employeeInfoService.getLastName(), function (response) {
             pc.trainer = response;
             pc.getAllSkills();
         }, function () {
             pc.showToast("Could not fetch trainer.");
         });
-            $scope.lockProfile = true;
+        $scope.lockProfile = true;
     }
 
     //grab credentials for s3

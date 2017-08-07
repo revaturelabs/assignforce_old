@@ -1,6 +1,6 @@
 var assignforce = angular.module("batchApp");
 
-assignforce.controller("batchCtrl", function($scope, batchService, unavailableService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, skillService, $filter, $window, $rootScope, $mdDialog) {
+assignforce.controller("batchCtrl", function($scope, $rootScope, batchService, unavailableService, employeeInfoService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, skillService, $filter, $window, employeeInfoService, $mdDialog) {
 
     var bc = this;
     bc.trainerSkillRatios = {};
@@ -8,8 +8,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
     bc.roomAvalRatios = {};
     bc.settings = {};
 
-    $scope.isManager = $rootScope.role == "VP of Technology";
-    //TODO: needs to be fixed so root scope is not used
+    $scope.isManager = employeeInfoService.getRoleName() == "VP of Technology";
     /*FUNCTIONS*/
     // This showToast is a function that comes from the parent
 	bc.showToast = function(message) {

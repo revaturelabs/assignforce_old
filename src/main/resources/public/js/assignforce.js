@@ -15,7 +15,7 @@
 
         // url routing
 		assignforce.config( function($routeProvider, $locationProvider){
-			
+
 			$routeProvider
 				.when("/login", {
 					templateUrl : "html/views/login.html",
@@ -88,5 +88,18 @@
             .primaryPalette("revBlue")
             .accentPalette("revOrange");
     });
+
+    assignforce.run(function($http, $cookies, $q, employeeInfoService){
+        $http.defaults.xsrfHeaderName = 'X-XSRF-Token';
+		employeeInfoService.getEmployeeInfo(function(response){
+			console.log(response);
+			employeeInfoService.setMe(response);
+            $cookies.put('XSRF-TOKEN', employeeInfoService.getAccessToken());
+		},
+			function (error) {
+				console.err("failed to fetch user info");
+			});
+
+	});
 
 

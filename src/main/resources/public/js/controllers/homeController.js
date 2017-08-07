@@ -1,7 +1,7 @@
 
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "homeCtrl", function( $scope, $filter, batchService, $rootScope , $resource ,trainerService, locationService, buildingService, userService ) {
+    assignforce.controller( "homeCtrl", function( $scope, $filter, $resource, batchService, trainerService, locationService, buildingService, employeeInfoService) {
         var hc = this;
 
         
@@ -153,42 +153,54 @@
 
           // page initialization
             // data gathering
-        trainerService.getAll( function(response) {
-            hc.trainers = response;
-        }, function() {
-            hc.showToast("Could not fetch trainers.");
-        });
-        
+        var trainerInterval;
+        function getTrainers() {
+            if(employeeInfoService.isLoaded()) {
+                clearInterval(trainerInterval);
+                trainerService.getAll(function (response) {
+                    hc.trainers = response;
+                }, function () {
+                    hc.showToast("Could not fetch trainers.");
+                });
+            }
+        }
+        trainerInterval = setInterval(getTrainers, 1000);
         // In this funky format because of time constraints and
         // we had to scrap the bi-directional relationships for the
         // POJO's due to problems in another sector
-        locationService.getAll( function(response) {
-            hc.locations = response;
-            buildingService.getAll( function(response) {
-				hc.buildings = response;
-				batchService.getAll(function(response) {
-					hc.batches = response;
-					hc.batches.forEach(function(batchIn) {
-						hc.buildings.forEach(function(buildingIn) {
-							buildingIn.rooms.forEach(function(roomIn) {
-								if (batchIn.room && roomIn.roomID == batchIn.room.roomID) {
-									batchIn.building = buildingIn;
-									return;
-								}
-								if (batchIn.building) return;
-							});
-							if (batchIn.building) return;
-						});
-						if (batchIn.building) return;
-                	});
-				}, function() {
-                    hc.showToast("Could not fetch batches.");
+        var interval;
+        function getBatches() {
+            if(employeeInfoService.isLoaded()) {
+                clearInterval(interval);
+                locationService.getAll(function (response) {
+                    hc.locations = response;
+                    buildingService.getAll(function (response) {
+                        hc.buildings = response;
+                        batchService.getAll(function (response) {
+                            hc.batches = response;
+                            hc.batches.forEach(function (batchIn) {
+                                hc.buildings.forEach(function (buildingIn) {
+                                    buildingIn.rooms.forEach(function (roomIn) {
+                                        if (batchIn.room && roomIn.roomID == batchIn.room.roomID) {
+                                            batchIn.building = buildingIn;
+                                            return;
+                                        }
+                                        if (batchIn.building) return;
+                                    });
+                                    if (batchIn.building) return;
+                                });
+                                if (batchIn.building) return;
+                            });
+                        }, function () {
+                            hc.showToast("Could not fetch batches.");
+                        });
+                    }, function () {
+                        hc.showToast("Could not fetch buildings.");
+                    });
+                }, function () {
+                    hc.showToast("Could not fetch locations.");
                 });
-            }, function() {
-                hc.showToast("Could not fetch buildings.");
-            });
-        }, function() {
-            hc.showToast("Could not fetch locations.");
-        });
-        
+            }
+        }
+        interval = setInterval(getBatches, 1000);
     });

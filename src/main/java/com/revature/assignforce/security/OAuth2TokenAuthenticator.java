@@ -23,14 +23,22 @@ public class OAuth2TokenAuthenticator {
                         .toString().getBytes());
     }
 
-    public Integer createSession(OAuth2AccessToken aToken,
+    public String createSession(String jSessionId,
+                                OAuth2AccessToken aToken,
                                  OAuth2Authentication anAuth){
-        Integer aSessionId = rando.nextInt();
-        theTokenStore.createSession(aSessionId, aToken, anAuth);
+        String aSessionId = String.valueOf(rando.nextInt());
+        theTokenStore.createSession(jSessionId, aToken, anAuth);
         return aSessionId;
     }
 
-    public Boolean authorize(String OAuthString, Integer sessionId){
-        return null;
+    public Boolean authorize(String oAuthString, String sessionId){
+        OAuthTokenWrapper anOAuthTokenWrapper = theTokenStore.getTokenWrapper(oAuthString);
+        Boolean flag = (anOAuthTokenWrapper != null);
+        flag = flag && sessionId.equals(anOAuthTokenWrapper.getjSessionId());
+        return flag;
+    }
+
+    public void setSessionIdFor(OAuth2AccessToken accessToken, String jSessionId) {
+        theTokenStore.setSessionIdFor(accessToken, jSessionId);
     }
 }

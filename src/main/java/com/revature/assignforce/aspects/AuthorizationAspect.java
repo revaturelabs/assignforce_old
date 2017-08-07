@@ -19,12 +19,11 @@ public class AuthorizationAspect {
 
     @Autowired
     OAuth2TokenAuthenticator theTokenAuthenticator;
+    @Around("@annotation(com.revature.assignforce.annotations.Authorize) && args(cookieSessionIdCookie, tokenValue,..)")
+    public Object authorize(ProceedingJoinPoint aJoinPoint, String tokenValue, String cookieSessionIdCookie) throws Throwable{
 
-    @Around("@annotation(com.RequestMapping) && args(oAuthString, aSessionId)")
-    public Object authorize(ProceedingJoinPoint aJoinPoint, String oAuthString, String aSessionId) throws Throwable{
-        Integer sessionId = Integer.valueOf(aSessionId);
-        if(!theTokenAuthenticator.authorize(oAuthString, sessionId)){
-            return new ResponseEntity<ResponseErrorDTO>(HttpStatus.FORBIDDEN);
+        if(!theTokenAuthenticator.authorize(tokenValue, cookieSessionIdCookie)){
+            return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Could not authorize the given CSRF token & Session ID combination."), HttpStatus.FORBIDDEN);
         }
         return aJoinPoint.proceed();
     }

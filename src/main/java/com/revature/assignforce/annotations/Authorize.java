@@ -8,4 +8,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Authorize {
+    //use this annotation to secure exposed controllers
+    //via the authorization aspect
 }

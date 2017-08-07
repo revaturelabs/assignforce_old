@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 import com.revature.assignforce.annotations.Authorize;
 import com.revature.assignforce.domain.*;
 
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.ComponentScan;
@@ -67,7 +68,7 @@ public class BatchCtrl {
 	@Transactional
 	@Authorize
 	public Object createBatch(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
-							  @RequestHeader(value="X-CSRF-TOKEN") String tokenValue,
+							  @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
 							  @RequestBody BatchDTO in) {
 
 		int ID = in.getID();
@@ -123,8 +124,8 @@ public class BatchCtrl {
 	// retrieve batch with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Authorize
-	public Object retrieveBatch(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
-								@RequestHeader(value="X-CSRF-TOKEN") String tokenValue,
+	public Object retrieveBatch(@CookieValue("JSESSIONID") String cookieSessionIdCookie,
+								@RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
 								@PathVariable("id") Integer ID) {
 
 		Batch out = batchService.getOneItem(ID);
@@ -140,7 +141,10 @@ public class BatchCtrl {
 	// delete batch with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Transactional
-	public Object deleteBatch(@PathVariable("id") int ID) {
+	@Authorize
+	public Object deleteBatch(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+							  @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+							  @PathVariable("id") int ID) {
 		Batch batch = batchService.getOneItem(ID);
 		Timestamp startDate = batch.getStartDate();
 		Timestamp endDate = batch.getEndDate();
@@ -165,7 +169,9 @@ public class BatchCtrl {
 	// GET ALL
 	// retrieve all batches
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object retrieveAllBatches() {
+	@Authorize
+	public Object retrieveAllBatches(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+									 @RequestHeader(value="X-XSRF-TOKEN") String tokenValue) {
 
 		List<Batch> all = batchService.getAllItems();
 		if (all == null) {
@@ -181,8 +187,10 @@ public class BatchCtrl {
 
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Transactional
-	public Object updateBatch(@RequestBody BatchDTO in) {
-
+	@Authorize
+	public Object updateBatch(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+							  @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+							  @RequestBody BatchDTO in) {
 		// try to get batch from database
 		Batch b = batchService.getOneItem(in.getID());
 

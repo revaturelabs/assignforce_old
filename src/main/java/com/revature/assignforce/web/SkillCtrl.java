@@ -1,5 +1,6 @@
 package com.revature.assignforce.web;
 
+import com.revature.assignforce.annotations.Authorize;
 import com.revature.assignforce.domain.Skill;
 import com.revature.assignforce.domain.dto.SkillDTO;
 import com.revature.assignforce.domain.dto.ResponseErrorDTO;
@@ -27,8 +28,10 @@ public class SkillCtrl {
     // CREATE
     // creating new curriculum object from information passed from curriculum data transfer object
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object createSkill( @RequestBody SkillDTO in ) {
-
+    @Authorize
+    public Object createSkill(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+                              @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+                              @RequestBody SkillDTO in ) {
         int ID = in.getSkillId();
         String name = in.getName();
 
@@ -45,8 +48,10 @@ public class SkillCtrl {
     // RETRIEVE
     // retrieve skill with given ID
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object retrieveSkill( @PathVariable("id") int ID ) {
-
+    @Authorize
+    public Object retrieveSkill( @CookieValue("JSESSIONID") String cookiesessionIdCookie,
+                                 @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+                                 @PathVariable("id") int ID ) {
         Skill out = skillService.getOneItem(ID);
         if (out == null) {
             return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No skill found of ID " + ID + "."), HttpStatus.NOT_FOUND);
@@ -58,8 +63,10 @@ public class SkillCtrl {
     // UPDATE
     // updating an existing skill object with information passed from skill data transfer object
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object updateSkill( @RequestBody SkillDTO in ) {
-
+    @Authorize
+    public Object updateSkill( @CookieValue("JSESSIONID") String cookiesessionIdCookie,
+                               @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+                               @RequestBody SkillDTO in ) {
         int ID = in.getSkillId();
         String name = in.getName();
 
@@ -77,8 +84,10 @@ public class SkillCtrl {
     // DELETE
     // delete skill with given ID
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object deleteSkill( @PathVariable("id") int ID ) {
-
+    @Authorize
+    public Object deleteSkill(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+                              @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+                              @PathVariable("id") int ID ) {
         skillService.deleteItem(ID);
         return new ResponseEntity<Object>(null, HttpStatus.OK);
     }
@@ -86,8 +95,9 @@ public class SkillCtrl {
     // GET ALL
     // retrieve all skills
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object retrieveAllSkills() {
-
+    @Authorize
+    public Object retrieveAllSkills(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+                                    @RequestHeader(value="X-XSRF-TOKEN") String tokenValue) {
         List<Skill> all = skillService.getAllItems();
         if (all == null) {
             return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Fetching all skills failed."), HttpStatus.NOT_FOUND);

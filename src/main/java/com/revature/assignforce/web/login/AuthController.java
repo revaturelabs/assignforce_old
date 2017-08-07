@@ -1,4 +1,4 @@
-package com.revature.assignforce.web;
+package com.revature.assignforce.web.login;
 
 import com.revature.assignforce.domain.Force;
 import com.revature.assignforce.domain.Employee;
@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,11 +32,11 @@ public class AuthController {
     private OAuth2ClientContext context;
 
     @RequestMapping(value= "/userinfo", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Employee> getInfo(OAuth2Authentication auth)
+    public ResponseEntity<Employee> getInfo(OAuth2Authentication auth, @CookieValue(value="JSESSIONID") String jSessionId)
     {
         Employee emp = force.getCurrentEmployee(auth);
         String tk = restTemplate.getAccessToken().toString();
-        theTokenAuthenticator.createSession(restTemplate.getAccessToken(), auth);
+        theTokenAuthenticator.createSession(jSessionId, restTemplate.getAccessToken(), auth);
         emp.setAccessToken(tk);
         return ResponseEntity.ok(emp);
     }

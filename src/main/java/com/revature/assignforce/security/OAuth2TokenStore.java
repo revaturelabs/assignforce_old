@@ -19,12 +19,12 @@ public class OAuth2TokenStore implements TokenStore {
         theTokens = new HashMap<String, OAuthTokenWrapper>();
     }
 
-    public void createSession(Integer aSessionId, OAuth2AccessToken aToken,
+    public void createSession(String jSessionId,
+                              OAuth2AccessToken aToken,
                               OAuth2Authentication anAuth){
         storeAccessToken(aToken, anAuth);
         OAuthTokenWrapper tokenWrapper = theTokens.get(aToken.getValue());
-        tokenWrapper.setjSessionId(aSessionId);
-
+        tokenWrapper.setjSessionId(jSessionId);
     }
 
     @Override
@@ -85,6 +85,9 @@ public class OAuth2TokenStore implements TokenStore {
         return null;
     }
 
+    public OAuthTokenWrapper getTokenWrapper(String tokenValue){
+        return theTokens.get(tokenValue);
+    }
     //NOT IMPLEMENTED
     @Override
     public Collection<OAuth2AccessToken> findTokensByClientIdAndUserName(String s, String s1) {
@@ -96,4 +99,10 @@ public class OAuth2TokenStore implements TokenStore {
     public Collection<OAuth2AccessToken> findTokensByClientId(String s) {
         return null;
     }
+
+    public void setSessionIdFor(OAuth2AccessToken accessToken, String jSessionId) {
+        theTokens.get(accessToken.getValue()).setjSessionId(jSessionId);
+    }
+
+
 }

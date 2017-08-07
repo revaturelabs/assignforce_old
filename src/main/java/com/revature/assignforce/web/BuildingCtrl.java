@@ -3,17 +3,14 @@ package com.revature.assignforce.web;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.revature.assignforce.annotations.Authorize;
 import com.revature.assignforce.service.ActivatableObjectDaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.revature.assignforce.domain.Building;
 import com.revature.assignforce.domain.Location;
@@ -33,7 +30,10 @@ public class BuildingCtrl {
 	// creating new building object from information passed from building data
 	// transfer object
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object createBuilding(@RequestBody BuildingDTO in) {
+	@Authorize
+	public Object createBuilding(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+								 @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+								 @RequestBody BuildingDTO in) {
 
 		int ID = in.getID(); //we shouldn't need the building id - it will be generated...  right?
 		String name = in.getName(); //building name
@@ -55,7 +55,10 @@ public class BuildingCtrl {
 	// RETRIEVE
 	// retrieve Building with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object retrieveBuilding(@PathVariable("id") int ID) {
+	@Authorize
+	public Object retrieveBuilding(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+								   @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+								   @PathVariable("id") int ID) {
 
 		Building out = buildingService.getOneItem(ID);
 		if (out == null) {
@@ -70,8 +73,10 @@ public class BuildingCtrl {
 	// updating an existing Building object with information passed from
 	// Building data transfer object
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object updateBuilding(@RequestBody BuildingDTO in) {
-
+	@Authorize
+	public Object updateBuilding(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+								 @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+								 @RequestBody BuildingDTO in) {
 		Integer id = in.getID();
 		id = (id != null)? id : 0;
 		String name = (in.getName() != null)? in.getName(): "";
@@ -92,7 +97,10 @@ public class BuildingCtrl {
 	// DELETE
 	// delete Building with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object deleteBuilding(@PathVariable("id") int ID) {
+	@Authorize
+	public Object deleteBuilding(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+								 @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+								 @PathVariable("id") int ID) {
 
 		buildingService.deleteItem(ID);
 		return new ResponseEntity<Object>(null, HttpStatus.OK);
@@ -101,8 +109,9 @@ public class BuildingCtrl {
 	// GET ALL
 	// retrieve all buildings
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object retrieveAllBuildings() {
-
+	@Authorize
+	public Object retrieveAllBuildings(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+									   @RequestHeader(value="X-XSRF-TOKEN") String tokenValue) {
 		List<Building> all = buildingService.getAllItems();
 		if (all == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Fetching all buildings failed."),

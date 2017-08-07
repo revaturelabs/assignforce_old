@@ -1,5 +1,6 @@
 package com.revature.assignforce.web;
 
+import com.revature.assignforce.annotations.Authorize;
 import com.revature.assignforce.domain.Setting;
 import com.revature.assignforce.domain.dto.ResponseErrorDTO;
 import com.revature.assignforce.domain.dto.SettingDTO;
@@ -26,14 +27,19 @@ public class SettingCtrl {
 
     //Create
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object createSetting(@RequestBody SettingDTO in ){
+    @Authorize
+    public Object createSetting(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+                                @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+                                @RequestBody SettingDTO in ){
         return new ResponseEntity(null, HttpStatus.NOT_IMPLEMENTED);
     }
 
     //Retrieve
     @RequestMapping(value = "/{settingId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object retrieveSetting (@PathVariable("settingId") int settingId){
-
+    @Authorize
+    public Object retrieveSetting (@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+                                   @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+                                   @PathVariable("settingId") int settingId){
         Setting setting = settingService.getOneItem(settingId);
         if(setting == null) {
             return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No Setting found of ID " + settingId +"."), HttpStatus.NOT_FOUND);
@@ -43,7 +49,9 @@ public class SettingCtrl {
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object getGlobalSettings(){
+    @Authorize
+    public Object getGlobalSettings(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+                                    @RequestHeader(value="X-XSRF-TOKEN") String tokenValue){
 
         List<Setting> settings = settingService.getAllItems();
 
@@ -58,8 +66,10 @@ public class SettingCtrl {
 
     //Update
     @RequestMapping( method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object updateSetting(@RequestBody Setting in ){
-
+    @Authorize
+    public Object updateSetting(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+                                @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+                                @RequestBody Setting in ){
         try{
             settingService.saveItem(in);
         }catch (Exception ex){
@@ -71,7 +81,9 @@ public class SettingCtrl {
 
     //Delete
     @RequestMapping(value = "/{settingId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object deleteSetting(){
+    @Authorize
+    public Object deleteSetting(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+                                @RequestHeader(value="X-XSRF-TOKEN") String tokenValue){
         return new ResponseEntity<Object>(null, HttpStatus.NOT_IMPLEMENTED);
     }
 }

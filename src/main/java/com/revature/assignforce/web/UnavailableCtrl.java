@@ -1,5 +1,6 @@
 package com.revature.assignforce.web;
 
+import com.revature.assignforce.annotations.Authorize;
 import com.revature.assignforce.domain.Unavailable;
 import com.revature.assignforce.domain.dto.UnavailableDTO;
 import com.revature.assignforce.domain.dto.ResponseErrorDTO;
@@ -31,7 +32,10 @@ public class UnavailableCtrl {
 	// CREATE
 	// creating new unavailable object from information passed from unavailable data transfer object
 	@RequestMapping(method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object createUnavailability( @RequestBody UnavailableDTO in ) {
+	@Authorize
+	public Object createUnavailability( @CookieValue("JSESSIONID") String cookiesessionIdCookie,
+										@RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+										@RequestBody UnavailableDTO in ) {
 		int ID = in.getUnavailableId();
 		Timestamp startDate = in.getStartDate();
 		Timestamp endDate = in.getEndDate();
@@ -40,7 +44,7 @@ public class UnavailableCtrl {
 		out = unavailableService.saveItem( out );
 		
 		if (out == null) {
-			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Unavailability failed to save."), HttpStatus.NOT_IMPLEMENTED);
+			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Unavailability failed to save."), HttpStatus.INTERNAL_SERVER_ERROR);
 		} else {
 			return new ResponseEntity<Unavailable>(out, HttpStatus.OK);
 		}
@@ -49,7 +53,10 @@ public class UnavailableCtrl {
 	// RETRIEVE
 	// retrieve unavailability with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object retrieveUnavailability( @PathVariable("id") int ID ) {
+	@Authorize
+	public Object retrieveUnavailability( @CookieValue("JSESSIONID") String cookiesessionIdCookie,
+										  @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+										  @PathVariable("id") int ID ) {
 		Unavailable out = unavailableService.getOneItem(ID);
 		if (out == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No unavailability found of ID " + ID + "."), HttpStatus.NOT_FOUND);
@@ -61,8 +68,10 @@ public class UnavailableCtrl {
 	// UPDATE
 	// updating an existing unavailability object with information passed from unavailable data transfer object
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object updateSkill( @RequestBody UnavailableDTO in ) {
-		
+	@Authorize
+	public Object updateSkill( @CookieValue("JSESSIONID") String cookiesessionIdCookie,
+							   @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+							   @RequestBody UnavailableDTO in ) {
 		int ID = in.getUnavailableId();
 		Timestamp startDate = in.getStartDate();
 		Timestamp endDate = in.getEndDate();
@@ -80,15 +89,19 @@ public class UnavailableCtrl {
 	// DELETE
 	// delete unavailability with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object deleteUnavailability( @PathVariable("id") int ID ) {
+	@Authorize
+	public Object deleteUnavailability( @CookieValue("JSESSIONID") String cookiesessionIdCookie,
+										@RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+										@PathVariable("id") int ID ) {
 		unavailableService.deleteItem(ID);
 		return new ResponseEntity<Object>(null, HttpStatus.OK);
 	}
 	
 	// GET ALL **PROBABLY WON'T BE USED**
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object retrieveAllUnavailabilities() {
-		
+	@Authorize
+	public Object retrieveAllUnavailabilities(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+											  @RequestHeader(value="X-XSRF-TOKEN") String tokenValue) {
 		List<Unavailable> all = unavailableService.getAllItems();
 		if (all == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Fetching all unavailabilities failed."), HttpStatus.NOT_FOUND);

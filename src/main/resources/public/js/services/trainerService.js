@@ -2,7 +2,9 @@ var app = angular.module("batchApp");
 
 app.service('trainerService', function($resource) {
     var Trainer = $resource('api/v2/trainer/:trainerId',{trainerId:'@trainerId'},{update:{method:'PUT', url:'api/v2/trainer'}});     
-    var Trainer2 = $resource('api/v2/trainer/:firstName/:lastName',{firstName: '@firstName', lastName: '@lastName'})
+    var Trainer2 = $resource('api/v2/trainer/:firstName/:lastName',
+        {firstName: '@firstName',
+            lastName: '@lastName'})
     //remove url in the put method
     var ts = this;
 

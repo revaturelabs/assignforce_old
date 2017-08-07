@@ -4,30 +4,12 @@
     assignforce.controller( "menuCtrl", function( $scope, $location, $rootScope, $http, $cookies) {
         var mc = this;
 
-        $http.get("/auth/userinfo")
-       .then(function(response) {
-
-           $rootScope.data = response.data;
-           
-           $rootScope.role = response.data.roleName;
-           $rootScope.token = response.data.accessToken;
-           $rootScope.fName = response.data.firstName;
-           $rootScope.lName = response.data.lastName;
-
-           $http.defaults.xsrfHeaderName = 'X-CSRF-Token';
-           // $httpProvider.defaults.headers.common = {''}
-           $cookies.put('XSRF-TOKEN', $rootScope.token);
-
-       }, function (error) {
-
-    }).then(function(){
         if ($rootScope.role == "Trainers"){
             $scope.toggle = true;
         }else{
             $scope.toggle = false;
         }
-    })
-            
+
 
           // functions
             // sets navbar to current page even on refresh

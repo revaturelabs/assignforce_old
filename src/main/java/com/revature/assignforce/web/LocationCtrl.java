@@ -2,17 +2,14 @@ package com.revature.assignforce.web;
 
 import java.util.List;
 
+import com.revature.assignforce.annotations.Authorize;
 import com.revature.assignforce.service.ActivatableObjectDaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.revature.assignforce.domain.Building;
 import com.revature.assignforce.domain.Location;
@@ -31,8 +28,10 @@ public class LocationCtrl {
 	// creating new location object from information passed from location data
 	// transfer object
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object createLocation(@RequestBody LocationDTO in) {
-
+	@Authorize
+	public Object createLocation(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+								 @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+								 @RequestBody LocationDTO in) {
 		int ID = in.getID();
 		String name = in.getName();
 		String city = in.getCity();
@@ -55,8 +54,10 @@ public class LocationCtrl {
 	// RETRIEVE
 	// retrieve location with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object retrieveLocation(@PathVariable("id") int ID) {
-
+	@Authorize
+	public Object retrieveLocation(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+								   @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+								   @PathVariable("id") int ID) {
 		Location out = locationService.getOneItem(ID);
 		if (out == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No location found of ID " + ID + "."),
@@ -70,8 +71,10 @@ public class LocationCtrl {
 	// updating an existing location object with information passed from
 	// location data transfer object
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object updateLocation(@RequestBody LocationDTO in) {
-
+	@Authorize
+	public Object updateLocation(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+								 @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+								 @RequestBody LocationDTO in) {
 		int ID = in.getID();
 		String name = in.getName();
 		String city = in.getCity();
@@ -93,8 +96,10 @@ public class LocationCtrl {
 	// DELETE
 	// delete location with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object deleteLocation(@PathVariable("id") int ID) {
-
+	@Authorize
+	public Object deleteLocation(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+								 @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+								 @PathVariable("id") int ID) {
 		locationService.deleteItem(ID);
 		return new ResponseEntity<Object>(null, HttpStatus.OK);
 	}
@@ -102,8 +107,9 @@ public class LocationCtrl {
 	// GET ALL
 	// retrieve all locations
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object retrieveAllLocations() {
-
+	@Authorize
+	public Object retrieveAllLocations(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+									   @RequestHeader(value="X-XSRF-TOKEN") String tokenValue) {
 		List<Location> all = locationService.getAllItems();
 		if (all == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Fetching all locations failed."),

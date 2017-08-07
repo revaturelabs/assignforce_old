@@ -2,18 +2,14 @@ package com.revature.assignforce.web;
 
 import java.util.List;
 
+import com.revature.assignforce.annotations.Authorize;
 import com.revature.assignforce.service.ActivatableObjectDaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.revature.assignforce.domain.Room;
 import com.revature.assignforce.domain.Unavailable;
@@ -31,7 +27,10 @@ public class RoomCtrl {
 	  // CREATE
 		// creating new room object from information passed from room data transfer object
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object createRoom( @RequestBody RoomDTO in ) {
+	@Authorize
+	public Object createRoom(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+							 @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+							 @RequestBody RoomDTO in ) {
 	
 		int ID = in.getRoomID();
 		String name = in.getRoomName();
@@ -52,7 +51,10 @@ public class RoomCtrl {
 	  // RETRIEVE
 		// retrieve room with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object retrieveRoom( @PathVariable("id") int ID ) {
+	@Authorize
+	public Object retrieveRoom(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+							   @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+							   @PathVariable("id") int ID ) {
 		Room out = roomService.getOneItem(ID);
 		if (out == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("No room found of ID " + ID + "."), HttpStatus.NOT_FOUND);
@@ -64,8 +66,10 @@ public class RoomCtrl {
 	  // UPDATE
 		// updating an existing room object with information passed from room data transfer object
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object updateRoom( @RequestBody RoomDTO in ) {
-		
+	@Authorize
+	public Object updateRoom( @CookieValue("JSESSIONID") String cookiesessionIdCookie,
+							  @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+							  @RequestBody RoomDTO in ) {
 		int ID = in.getRoomID();
 		String name = in.getRoomName();
 		int building = in.getBuilding();
@@ -85,7 +89,10 @@ public class RoomCtrl {
 	  // DELETE
 		// delete room with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object deleteRoom( @PathVariable("id") int ID ) {
+	@Authorize
+	public Object deleteRoom( @CookieValue("JSESSIONID") String cookiesessionIdCookie,
+							  @RequestHeader(value="X-XSRF-TOKEN") String tokenValue,
+							  @PathVariable("id") int ID ) {
 		roomService.deleteItem(ID);
 		return new ResponseEntity<Object>(null, HttpStatus.OK);
 	}
@@ -93,9 +100,10 @@ public class RoomCtrl {
 	  // GET ALL
 		// retrieve all rooms
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object retrieveAllRooms() {
+	@Authorize
+	public Object retrieveAllRooms(@CookieValue("JSESSIONID") String cookiesessionIdCookie,
+								   @RequestHeader(value="X-XSRF-TOKEN") String tokenValue) {
 		List<Room> all = roomService.getAllItems();
-
 		if (all == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Fetching all rooms failed."), HttpStatus.NOT_FOUND);
 		} else if (all.isEmpty()) {
