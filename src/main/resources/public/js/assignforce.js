@@ -92,7 +92,6 @@
     assignforce.run(function($http, $cookies, $q, employeeInfoService){
         $http.defaults.xsrfHeaderName = 'X-XSRF-Token';
 		employeeInfoService.getEmployeeInfo(function(response){
-			console.log(response);
 			employeeInfoService.setMe(response);
             $cookies.put('XSRF-TOKEN', employeeInfoService.getAccessToken());
 		},

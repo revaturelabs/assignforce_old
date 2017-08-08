@@ -1,6 +1,6 @@
 var app = angular.module("batchApp");
 
-app.service('SFService', function($resource, $rootScope, $http) {
+app.service('SFService', function($resource, $http, employeeInfoService) {
     var sfs = this;
 
     sfs.SaveSF = function(batch,succ,err){
@@ -9,9 +9,9 @@ app.service('SFService', function($resource, $rootScope, $http) {
             var fun = function(){
                 $http({
                     method: "PATCH",
-                    url: "https://revature--int1.cs17.my.salesforce.com/services/data/v40.0/sobjects/Training__c/{bsc.afb.ID}",
+                    url: "/api/v2/sfSync/{bsc.afb.ID}",
                     headers:{
-                        "Authorization" : "Bearer" + $rootScope.token
+                        "Authorization" : "Bearer" + employeeInfoService.getAccessToken()
                     },
                     data: reformatData(batch)
                 }).success(succ).error(err);
@@ -23,7 +23,7 @@ app.service('SFService', function($resource, $rootScope, $http) {
                     method: "POST",
                     url: "https://revature--int1.cs17.my.salesforce.com/services/data/v40.0/sobjects/Training__c",
                     headers:{
-                        "Authorization" : "Bearer" + $rootScope.token
+                        "Authorization" : "Bearer" + employeeInfoService.getAccessToken()
                     },
                     data: reformatData(batch)
                 }).success(function (response) {
@@ -115,9 +115,9 @@ app.service('SFService', function($resource, $rootScope, $http) {
         sfs.afBatchs = [];
         $http({
             method: "GET",
-            url: "https://revature--int1.cs17.my.salesforce.com/services/data/v40.0/sobjects/Training__c",
+            url: "/api/v2/sfSync",
             headers:{
-                "Authorization" : "Bearer" + $rootScope.token
+                "Authorization" : "Bearer" + employeeInfoService.getAccessToken()
             },
 
         }).success(function(response){

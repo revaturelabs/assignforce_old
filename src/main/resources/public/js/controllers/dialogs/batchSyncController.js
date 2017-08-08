@@ -10,11 +10,10 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
 
     SFService.getSFdata(
         function(resp){
-            console.log("AAA");
             console.log(resp);
+            bsc.sfb = resp.records;
         },
         function(resp){
-            console.log("BBB");
             console.log(resp);
         }
     );
@@ -103,9 +102,10 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
             return null;
         });
         bsc.refresh();
-        //batchService.afSyncUpdate(bsc.afb,bsc.sfb,function(){
-        //},function(){
-        //})
+        batchService.afSyncUpdate(bsc.afb,bsc.sfb,function(){
+        },function(){
+
+        })
     }
 
     //Pushes changes to SalesForce

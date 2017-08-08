@@ -41,4 +41,8 @@ public class OAuth2TokenAuthenticator {
     public void setSessionIdFor(OAuth2AccessToken accessToken, String jSessionId) {
         theTokenStore.setSessionIdFor(accessToken, jSessionId);
     }
+
+    public OAuthTokenWrapper getWrapperFor(String tokenValue){
+        return theTokenStore.getTokenWrapper(tokenValue);
+    }
 }
