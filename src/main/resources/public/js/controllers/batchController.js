@@ -1,6 +1,6 @@
 var assignforce = angular.module("batchApp");
 
-assignforce.controller("batchCtrl", function($scope, $rootScope, batchService, unavailableService, employeeInfoService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, skillService, $filter, $window, employeeInfoService, $mdDialog) {
+assignforce.controller("batchCtrl", function($scope, $rootScope, batchService, SFService, unavailableService, employeeInfoService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, skillService, $filter, $window, employeeInfoService, $mdDialog) {
 
     var bc = this;
     bc.trainerSkillRatios = {};
@@ -479,7 +479,8 @@ assignforce.controller("batchCtrl", function($scope, $rootScope, batchService, u
             locals: {
               afb: batch,
               trainers: bc.trainers,
-              curricula: bc.curricula
+              curricula: bc.curricula,
+              sfbatches: bc.sfbatches
             },
             bindToController: true,
             clickOutsideToClose: true
@@ -619,6 +620,14 @@ assignforce.controller("batchCtrl", function($scope, $rootScope, batchService, u
         bc.batches = response;
     }, function() {
         bc.showToast("Could not fetch batches.");
+    });
+
+    SFService.getSFdata(function(resp){
+        bc.sfbatches = resp.records;
+        //console.log(resp);
+    }, function(err) {
+        //console.log("ASFASDFASDFAD");
+        bc.showToast("Could not fetch Salesforce batches.");
     });
 
     skillService.getAll(function(response) {

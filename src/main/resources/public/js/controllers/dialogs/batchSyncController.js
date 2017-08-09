@@ -7,16 +7,17 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
     }
     bsc.batchInfo = [];
     bsc.sfb = batchService.getEmptyBatch();
-
-    SFService.getSFdata(
-        function(resp){
-            console.log(resp);
-            bsc.sfb = resp.records;
-        },
-        function(resp){
-            console.log(resp);
+    //console.log(bsc.sfbatches);
+    if(bsc.sfbatches){
+        for(i=0;i<bsc.sfbatches.length; i++){
+            if(bsc.sfbatches[i].Name == bsc.afb.name){
+                console.log(bsc.sfbatches[i]);
+                bsc.sfb = SFService.salesforceToAssignforce(bsc.sfbatches[i],bsc.trainers,bsc.curricula);
+                console.log(bsc.sfb);
+                break;
+            }
         }
-    );
+    }
 
     bsc.sfb.sinked = bsc.afb.sinked;
     bsc.refresh = function(){
@@ -84,6 +85,7 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
             b.style = {"background-color":(b.vfunc(bsc.afb) == b.vfunc(bsc.sfb)?"white":"lightpink")}
         });
     }
+    bsc.refresh();
 
     bsc.nullCheck = function(f,arg){
         if(arg){
@@ -102,10 +104,6 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
             return null;
         });
         bsc.refresh();
-        batchService.afSyncUpdate(bsc.afb,bsc.sfb,function(){
-        },function(){
-
-        })
     }
 
     //Pushes changes to SalesForce
@@ -116,20 +114,20 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
             }
             return null;
         });
-        batchService.sfSyncUpdate(bsc.sfb, bsc.afb);
         bsc.refresh();
     }
 
-    //saves changes to AssignForce
+    //saves changes to AssignForce & Salesforce
     bsc.save = function() {
-        console.log(bsc.afb);
+        //console.log(bsc.afb);
         //console.log(batchService.sfSyncUpdate);
+        /*
         batchService.sfSyncUpdate(bsc.sfb, bsc.afb, function () {
                 $mdDialog.hide();
             },
             function () {
                 $mdDialog.cancel();
             });
-
+        */
     }
 });

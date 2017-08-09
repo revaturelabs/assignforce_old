@@ -40,6 +40,7 @@ app.service('batchService', function($resource, $rootScope) {
     }
 
     bs.sfSyncUpdate = function(batch, success, error){
+    /*
         batch.$sync(function(response){
             console.log(response);
         },
@@ -48,6 +49,7 @@ app.service('batchService', function($resource, $rootScope) {
         });
         console.log(success);
         console.log("syncing");
+        */
     }
 
     bs.afSyncUpdate = function(batch, sucess, error){
