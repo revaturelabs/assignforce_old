@@ -18,6 +18,14 @@ md-edit-dialog {
 	background-color: #c1d6e6!important;
 }
 
+.push_down{
+  padding-top: 1%;
+}
+
+.nonsynced{
+  background-color: #e04c60!important;
+}
+
 md-edit-dialog > .md-content {
   padding: 16px 24px 0;
 }

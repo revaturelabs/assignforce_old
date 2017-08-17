@@ -7,41 +7,51 @@
         </md-toolbar>
         <md-table-container>
             <table md-table>
-
                 <thead md-head>
                     <tr md-row>
                         <th md-column>Field</th>
-                        <th md-column md-checkbox-column></th>
                         <th md-column>Assignforce Data</th>
                         <th md-column>Salesforce Data</th>
-                        <th md-column md-checkbox-column></th>
                     </tr>
                 </thead>
                 <tbody md-body>
-                    <tr md-row ng-repeat="b in bsCtrl.batch" ng-style="b.style">
-                        <td md-cell>{{b.name}}</td>
-                        <td md-cell>
-                            <md-checkbox md-no-ink ng-model="b.assignSelect" aria-label="assign check"> </md-checkbox>
-                        </td>
-                        <td md-cell>{{bsCtrl.nullCheck(b.dfunc,b.vfunc(bsCtrl.afb))}}</td>
-                        <td md-cell>{{bsCtrl.nullCheck(b.dfunc,b.vfunc(bsCtrl.sfb))}}</td>
-                        <td md-cell>
-                            <md-checkbox md-no-ink ng-model="b.salesSelect" aria-label="sales check"></md-checkbox>
-                        </td>
-                    </tr>
-                    <tr md-row>
-                        <td md-cell></td>
-                        <td md-cell></td>
-                        <td md-cell><md-button class="md-primary" ng-click="bsCtrl.syncSF()">Push to Salesforce</md-button></td>
-                        <td md-cell><md-button class="md-primary" ng-click="bsCtrl.syncAF()">Pull from Salesforce </md-button></td>
-                        <td md-cell></td>
-                    </tr>
+                  <tr md-row ng-class="bsCtrl.isSynced(bsCtrl.afb.name, bsCtrl.sfb.Name)">
+                      <td md-cell>Name: </td>
+                      <td md-cell>{{bsCtrl.afb.name}}</td>
+                      <td md-cell>{{bsCtrl.sfb.Name}}</td>
+                  </tr>
+                  <tr md-row ng-class="bsCtrl.isSynced(bsCtrl.afb.curriculum.name, bsCtrl.sfb.Skill_Type__c)">
+                      <td md-cell>Curriculum: </td>
+                      <td md-cell>{{bsCtrl.afb.curriculum.name}}
+                      <td md-cell>{{bsCtrl.sfb.Skill_Type__c}}</td>
+                  </tr>
+                  <tr md-row ng-class="bsCtrl.isSameTrainer(bsCtrl.afb.trainer, bsCtrl.sfb.Batch_Trainer__c)">
+                      <td md-cell>Trainer: </td>
+                      <td md-cell>{{bsCtrl.afb.trainer.firstName + ' ' + bsCtrl.afb.trainer.lastName}}</td>
+                      <td md-cell>{{bsCtrl.sfb.Batch_Trainer__c.Name}}</td>
+                  </tr>
+                  <tr md-row ng-class="bsCtrl.isSameTrainer(bsCtrl.afb.cotrainer, bsCtrl.sfb.Co_Trainer__c)">
+                      <td md-cell>Co-Trainer</td>
+                      <td md-cell>{{bsCtrl.afb.cotrainer.firstName + ' ' + bsCtrl.afb.cotrainer.lastName}}</td>
+                      <td md-cell>{{bsCtrl.sfb.Co_Trainer__c.Name}}</td>
+                  </tr>
+                  <tr md-row ng-class="bsCtrl.isSynced(bsCtrl.afb.startDate, bsCtrl.sfb.Batch_Start_Date__c)">
+                      <td md-cell>Start Date:</td>
+                      <td md-cell>{{bsCtrl.getDateFromTimestamp(bsCtrl.afb.startDate)}}</td>
+                      <td md-cell>{{bsCtrl.getDateFromTimestamp(bsCtrl.sfb.Batch_Start_Date__c)}}</td>
+                  </tr>
+                  <tr md-row ng-class="bsCtrl.isSynced(bsCtrl.afb.endDate, bsCtrl.sfb.Batch_End_Date__c)">
+                      <td md-cell>End Date:</td>
+                      <td md-cell>{{bsCtrl.getDateFromTimestamp(bsCtrl.afb.endDate)}}</td>
+                      <td md-cell>{{bsCtrl.getDateFromTimestamp(bsCtrl.sfb.Batch_End_Date__c)}}</td>
+                  </tr>
                 </tbody>
             </table>
         </md-table-container>
     </md-dialog-content>
     <md-dialog-actions>
         <md-button class="md-primary" ng-click="bsCtrl.save()"> Save Changes</md-button>
+        <md-button class="md-primary" ng-click="bsCtrl.stash()"> Stash Changes</md-button>
         <md-button class="md-primary" ng-click="bsCtrl.exitbdg()"> Cancel </md-button>
     </md-dialog-actions>
 </md-dialog>

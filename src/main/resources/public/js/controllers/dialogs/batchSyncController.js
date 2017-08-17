@@ -1,135 +1,92 @@
 var assignforce = angular.module( "batchApp" );
 
-assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchService, SFService){
+assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchService, SFBatchService){
     var bsc = this;
+    bsc.sfb.Co_Trainer__c = null;
+    console.log(bsc.afb);
+    console.log(bsc.sfb);
+    console.log(bsc.afb.cotrainer == bsc.sfb.Co_Trainer__c);
     bsc.exitbdg = function(){
         $mdDialog.cancel();
     }
-    bsc.batchInfo = [];
-    bsc.sfb = batchService.getEmptyBatch();
 
-    SFService.getSFdata(
-        function(resp){
-            console.log(resp);
-            bsc.sfb = resp.records;
-        },
-        function(resp){
-            console.log(resp);
+    bsc.getAssignForceBatch = function(){
+        return bsc.assignForceBatch;
+    }
+
+    function createSerializableBatch(incomingAssignforceBatch){
+        var batch = batchService.getEmptyBatch();
+        batch = batchService.getEmptyBatch();
+
+        batch.name = incomingAssignforceBatch.name;
+        batch.startDate = (incomingAssignforceBatch.startDate) ? new Date(incomingAssignforceBatch.startDate) : undefined;
+        batch.endDate = (incomingAssignforceBatch.endDate) ? new Date(incomingAssignforceBatch.endDate) : undefined;
+        batch.curriculum = (incomingAssignforceBatch.curriculum) ? incomingAssignforceBatch.curriculum.currId : undefined;
+        batch.focus = (incomingAssignforceBatch.focus) ? incomingAssignforceBatch.focus.currId : undefined;
+        batch.trainer = incomingAssignforceBatch.trainer ? incomingAssignforceBatch.trainer.trainerId : undefined;
+        batch.cotrainer = (incomingAssignforceBatch.cotrainer) ? incomingAssignforceBatch.cotrainer.trainerId : undefined;
+        batch.id = (incomingAssignforceBatch.id)? incomingAssignforceBatch.id : undefined;
+        batch.location = incomingAssignforceBatch.batchLocation ? incomingAssignforceBatch.batchLocation.locationId : undefined;
+        batch.building = incomingAssignforceBatch.batchLocation ? incomingAssignforceBatch.batchLocation.buildingId : undefined;
+        batch.room = incomingAssignforceBatch.batchLocation ? incomingAssignforceBatch.batchLocation.roomId : undefined;
+        return batch;
+    }
+
+    bsc.isSynced = function(data1, data2){
+        return (data1 === data2)? "" : "nonsynced";
+    }
+
+    bsc.isSameTrainer = function(trainer1, trainer2){
+        if(trainer1 == null && trainer2 == null){
+            return "";
         }
-    );
-
-    bsc.sfb.sinked = bsc.afb.sinked;
-    bsc.refresh = function(){
-        //vfunc - function that returns the field's value, dfunc - formats value for display, sfunc - sets field's value
-        bsc.batchInfo = [
-            {name:"Name",vfunc:function(b){return b.name;},dfunc:function(str){return str;},sfunc:function(b,v){b.name = v;}},
-            {name:"Start Date",vfunc:function(b){return b.startDate;},dfunc:function(time){return new Date(time).toDateString();},sfunc:function(b,v){b.startDate = v;}},
-            {name:"End Date",vfunc:function(b){return b.endDate;},dfunc:function(time){return new Date(time).toDateString();},sfunc:function(b,v){b.endDate = v;}},
-            {name:"Curriculum",vfunc:function(b){return b.curriculum;},dfunc:function(c){return c.name;},sfunc:function(b,v){b.curriculum = v;}},
-            {name:"Batch Status",vfunc:function(b){return b.batchStatus;},dfunc:function(bs){return bs.batchStatusName;},sfunc:function(b,v){b.batchStatus = v;}},
-            {
-                name:"Trainer",
-                vfunc:function(b){return b.trainer;},
-                dfunc:function(t){
-                    return t.firstName+" "+t.lastName;
-                },
-                sfunc:function(b,v){b.trainer = v;}
-            },
-            {
-                name:"Co-Trainer",
-                vfunc:function(b){return b.coTrainer;},
-                dfunc:function(t){
-                    return t.firstName+" "+t.lastName;
-                },
-                sfunc:function(b,v){b.coTrainer = v;}
-            },
-            {
-                name:"Skills",
-                vfunc:function(b){return b.skills;},
-                dfunc:function(s){
-                    var out;
-                    if(s.length>0){
-                        out = s[0].name;
-                    }else{
-                        out = "";
-                    }
-                    for(var i = 1; i<s.length;i++){
-                        out = out +", "+ s[i].name;
-                    }
-                    return out;
-                },
-                sfunc:function(b,v){b.skills = v;}
-            },
-            {name:"Focus",vfunc:function(b){return b.focus;},dfunc:function(f){return f.name;},sfunc:function(b,v){b.focus = v;}},
-            {
-                name:"Batch Location",
-                vfunc:function(b){return b.batchLocation;},
-                dfunc:function(l){
-                    if(l.buildingName && l.locationName){
-                        return l.buildingName+", "+l.locationName;
-                    }else if(l.buildingName){
-                        return l.buildingName;
-                    }else if(l.locationName){
-                        return l.locationName;
-                    }else{
-                        return "";
-                    }
-                },
-                sfunc:function(b,v){b.batchLocation = v;}
-            }
-          
-        ];
-
-        bsc.batchInfo.map(function(b){
-            b.style = {"background-color":(b.vfunc(bsc.afb) == b.vfunc(bsc.sfb)?"white":"lightpink")}
-        });
-    }
-
-    bsc.nullCheck = function(f,arg){
-        if(arg){
-            return f(arg);
-        }else{
-            return null;
+        if(trainer1.firstName == null && trainer1.lastName == null && trainer2.Name){
+            return ((trainer1.firstName + " " + trainer1.lastName) == trainer2.Name)? "" : "nonsynced";
         }
-    }
-
-    //Pushes SalesForce information to AssignForce
-    bsc.syncAF = function(){
-        bsc.batchInfo.map(function(e){
-            if(e.salesSelect){
-                e.sfunc(bsc.afb,e.vfunc(bsc.sfb));
-            }
-            return null;
-        });
-        bsc.refresh();
-        batchService.afSyncUpdate(bsc.afb,bsc.sfb,function(){
-        },function(){
-
-        })
-    }
-
-    //Pushes changes to SalesForce
-    bsc.syncSF = function(){
-        bsc.batchInfo.map(function(e){
-            if(e.assignSelect){
-                e.sfunc(bsc.sfb,e.vfunc(bsc.afb));
-            }
-            return null;
-        });
-        batchService.sfSyncUpdate(bsc.sfb, bsc.afb);
-        bsc.refresh();
+        return (trainer1.firstName == null && trainer1.lastName == null && trainer2.Name == null)? "" : "nonsynced";
     }
 
     //saves changes to AssignForce
     bsc.save = function() {
-        console.log(bsc.afb);
-        //console.log(batchService.sfSyncUpdate);
-        batchService.sfSyncUpdate(bsc.sfb, bsc.afb, function () {
-                $mdDialog.hide();
-            },
-            function () {
-                $mdDialog.cancel();
-            });
+        var batch = SFBatchService.replicateBatch(bsc.sfb, bsc.afb);
 
+        console.log("After");
+        SFBatchService.update(batch,
+            function(response){
+                if(bsc.sfb.Id && bsc.sfb.Id != null) {
+                    SFBatchService.get(bsc.sfb.Id,
+                        function(response){
+                            console.log(response);
+                        },
+                        function(){
+                            console.error("failed to fetch batch with Id " + bsc.sfb.Id);
+                        });
+                }else{
+                    SFBatchService.get(response.id,
+                        function(response){
+                            console.log(response);
+                        },
+                        function(){
+                            console.error("Failed to fetch newly created batch with id " + response.id);
+                        });
+                }
+                bsc.afb.id = bsc.sfb.id;
+                bsc.stash();
+            },
+            function(){
+                console.error("failed to sync");
+            })
+    }
+
+    bsc.stash = function(){
+        batchService.update(createSerializableBatch(bsc.afb), function(response){
+        },
+        function(){
+            console.error("failed to sync");
+        })
+    }
+
+    bsc.getDateFromTimestamp = function(timestamp){
+        return SFBatchService.getDateFromTimestamp(timestamp);
     }
 });

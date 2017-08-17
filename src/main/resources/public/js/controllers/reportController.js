@@ -45,7 +45,6 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
     /* DATA - Grabs all of the default settings from the DB */
     settingService.getSettingByName("reportGrads", function(response) {  // Default Grads per batch
-        console.log("default grads value" + response)
         rc.graduates = response
     }, function(){
         console.log("error-")

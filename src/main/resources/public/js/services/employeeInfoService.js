@@ -14,7 +14,6 @@ app.service('employeeInfoService', function($resource, $rootScope) {
     }
 
     eis.getEmployeeInfo = function(success, error){
-        console.log("app.run is working");
         Employee.get(success, error);
     }
 

@@ -94,6 +94,8 @@
 		employeeInfoService.getEmployeeInfo(function(response){
 			employeeInfoService.setMe(response);
             $cookies.put('XSRF-TOKEN', employeeInfoService.getAccessToken());
+            $http.defaults.headers.common.Authorization = 'Bearer ' +
+			employeeInfoService.getAccessToken();
 		},
 			function (error) {
 				console.err("failed to fetch user info");

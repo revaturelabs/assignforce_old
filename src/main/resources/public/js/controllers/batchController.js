@@ -1,12 +1,51 @@
 var assignforce = angular.module("batchApp");
 
-assignforce.controller("batchCtrl", function($scope, $rootScope, batchService, unavailableService, employeeInfoService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, skillService, $filter, $window, employeeInfoService, $mdDialog) {
+assignforce.controller("batchCtrl", function($scope, $rootScope, batchService, SFBatchService, SFTrainerService, unavailableService, employeeInfoService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, skillService, $filter, $window, employeeInfoService, $mdDialog) {
 
     var bc = this;
     bc.trainerSkillRatios = {};
     bc.trainerAvalRatios = {};
     bc.roomAvalRatios = {};
     bc.settings = {};
+    bc.sfb = SFBatchService.getEmptyBatch();
+    bc.isStashed = false;
+
+    SFBatchService.getAll(
+        function(resp){
+            bc.sfb = resp.records;
+            console.log(bc.sfb);
+            bc.sfb.map(function callback(currentValue, index, array) {
+                var batch = SFBatchService.getEmptyBatch();
+                batch.Batch_End_Date__c = currentValue.Batch_End_Date__c;
+                batch.Batch_Start_Date__c = currentValue.Batch_Start_Date__c;
+                batch.Batch_Trainer__c = currentValue.Batch_Trainer__c;
+                batch.Co_Trainer__c = currentValue.Co_Trainer__c;
+                batch.Id = currentValue.Id;
+                batch.Location__c = currentValue.Location__c;
+                batch.Name = currentValue.Name;
+                batch.Skill_Type__c = currentValue.Skill_Type__c;
+                batch.attributes = currentValue.attributes;
+                console.log(currentValue === batch);
+                SFTrainerService.getTrainerById(batch.Batch_Trainer__c,
+                    function(response){
+                        bc.sfb.Batch_Trainer__c = response.records[0];
+                    },
+                    function(){
+                        console.error(currentValue.Batch_Trainer__c)
+                    });
+            })
+        },
+        function(resp){
+        }
+    );
+
+    bc.stash = function(){
+        return !bc.isStashed;
+    }
+
+    bc.toggleStash = function(){
+        bc.isStashed = !bc.isStashed;
+    }
 
     $scope.isManager = employeeInfoService.getRoleName() == "VP of Technology";
     /*FUNCTIONS*/
@@ -210,14 +249,29 @@ assignforce.controller("batchCtrl", function($scope, $rootScope, batchService, u
                         return s.skillId === skillId;
                     });
                 });
-			    
-				batchService.create(bc.batch, function() {
-					bc.repull();
-					bc.resetForm();
-                    bc.showToast("Batch saved.");
-				}, function() {
-					bc.showToast("Failed to save batch.");
-				});
+			    if(!bc.isStashed) {
+                    SFBatchService.create(SFBatchService.replicateBatch(SFBatchService.getEmptyBatch(), bc.batch),
+                        function (response) {
+                            batchService.create(bc.batch, function () {
+                                bc.repull();
+                                bc.resetForm();
+                                bc.showToast("Batch saved.");
+                            }, function () {
+                                bc.showToast("Failed to save batch.");
+                            });
+                        },
+                        function () {
+                            bc.showToast("Failed to create the batch in Salesforce");
+                        });
+                }else{
+                    batchService.create(bc.batch, function () {
+                        bc.repull();
+                        bc.resetForm();
+                        bc.showToast("Batch saved.");
+                    }, function () {
+                        bc.showToast("Failed to save batch.");
+                    });
+                }
 				break;
 
 			case "edit":
@@ -471,13 +525,20 @@ assignforce.controller("batchCtrl", function($scope, $rootScope, batchService, u
         });
     };
 
-    bc.sync = function(batch){
+    bc.sync = function(assignForceBatch){
+        console.log(assignForceBatch);
+        var salesForceBatch = bc.sfb.reduce(function(accumulator, currentValue, currentIndex){
+            if(accumulator && accumulator.Id == assignForceBatch.Id){ return accumulator; }
+            else if(currentValue && currentValue.Id == assignForceBatch.Id){ return currentValue; }
+            else{ return batchService.getEmptyBatch(); }
+        }, batchService.getEmptyBatch());
         $mdDialog.show({
             templateUrl: "html/templates/dialogs/batchSyncDialog.html",
             controller: "batchSyncCtrl",
             controllerAs: "bsCtrl",
             locals: {
-              afb: batch,
+              afb: assignForceBatch,
+              sfb: salesForceBatch,
               trainers: bc.trainers,
               curricula: bc.curricula
             },
@@ -592,6 +653,7 @@ assignforce.controller("batchCtrl", function($scope, $rootScope, batchService, u
     bc.stateMux = {
         "create": {
             "header": "Create New Batch",
+            "check" : "Toggle Salesforce Creation",
             "submit": "Create Batch"
         },
         "edit": {
