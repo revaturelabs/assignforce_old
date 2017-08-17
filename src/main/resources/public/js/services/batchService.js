@@ -38,25 +38,4 @@ app.service('batchService', function($resource, $rootScope) {
         batch.$remove(success, error);
     }
 
-<<<<<<< HEAD
-=======
-    bs.sfSyncUpdate = function(batch, success, error){
-    /*
-        batch.$sync(function(response){
-            console.log(response);
-        },
-        function(){
-            console.log("returned error");
-        });
-        console.log(success);
-        console.log("syncing");
-        */
-    }
-
-    bs.afSyncUpdate = function(batch, sucess, error){
-
-    }
-
-
->>>>>>> 6f759717473cdd5967d1e55cdea12c0bc9e5582b
 });
