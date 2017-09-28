@@ -1070,7 +1070,7 @@ var app = angular.module('batchApp');
 				.attr('x', function(d) {return d.x+5;})
 				.text(function(d) {return d.length;});
 
-//		tlc.moveAxis();
+		tlc.moveAxis();
         if(x!=null){
             if(x.node()!=null){
                 brect
@@ -1085,19 +1085,20 @@ var app = angular.module('batchApp');
 
 	}
 
-	//function to freeze trainers names over the graph at the top of the window whenever you scroll out of the window
-//	tlc.axisDisplacement = 0
-//    tlc.moveAxis= function () {
-//        var x = document.getElementsByClassName("x axis");
-//        if(x[0]!=undefined ) {
-//            if(x[0].getBoundingClientRect().top){
-//                tlc.axisDisplacement -= x[0].getBoundingClientRect().top
-//                if(tlc.axisDisplacement <0){tlc.axisDisplacement =0;}
-//                    x[0].setAttribute("transform", "translate(0," + tlc.axisDisplacement + ")");
-//            }
-//
-//        }//else{
+//	function to freeze trainers names over the graph at the top of the window whenever you scroll out of the window
+	tlc.axisDisplacement = 0
+    tlc.moveAxis= function () {
+        var x = document.getElementsByClassName("x axis");
+        if(x[0]!=undefined ) {
+            if(x[0].getBoundingClientRect().top){
+                tlc.axisDisplacement -= x[0].getBoundingClientRect().top
+                if(tlc.axisDisplacement <0){tlc.axisDisplacement =0;}
+                    x[0].setAttribute("transform", "translate(0," + tlc.axisDisplacement + ")");
+            }
+
+        }//else{
 //            setTimeout(tlc.moveAxis,120);
-//        //}
-//    }
+        window.requestAnimationFrame(tlc.moveAxis);
+        //}
+    }
 });
