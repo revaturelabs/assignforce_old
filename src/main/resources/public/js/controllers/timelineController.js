@@ -398,7 +398,7 @@ var app = angular.module('batchApp');
 				pageY = evt.pageY;
 			});
 		}
-	});
+	};
 
 	$(".toastContainer").mouseup(function(evt){
 		// Erase the zoompoint(or move out of view)
@@ -406,7 +406,7 @@ var app = angular.module('batchApp');
 		// Remove mousemove listener from the container
 		$(".toastContainer").off("mousemove");
 		evt.stopPropagation();
-	};
+	});
 	
 
 	//Promise for the repulling of the timeline.
