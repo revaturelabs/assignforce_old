@@ -341,7 +341,7 @@ var app = angular.module('batchApp');
 	var MIN_RANGE = 1000000; // 1 minute
 
 	// Events for the timeline
-	$scope.mousedown(function(evt){
+	$scope.mousedown = function(evt){
 		evt.stopPropagation();
 
 		if(evt.offsetY > tlc.timelineFormatting.margin_top && evt.offsetY < tlc.timelineFormatting.height + tlc.timelineFormatting.margin_top){
@@ -406,7 +406,7 @@ var app = angular.module('batchApp');
 		// Remove mousemove listener from the container
 		$(".toastContainer").off("mousemove");
 		evt.stopPropagation();
-	});
+	};
 	
 
 	//Promise for the repulling of the timeline.
