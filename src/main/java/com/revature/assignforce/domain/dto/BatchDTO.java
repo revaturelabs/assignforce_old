@@ -5,20 +5,35 @@ import java.util.List;
 
 import com.revature.assignforce.domain.BatchLocation;
 import com.revature.assignforce.domain.Skill;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
+@ApiModel("BatchDTO")
 public class BatchDTO {
 
+	@ApiModelProperty(notes = "The Batch ID")
 	private int ID;
+	@ApiModelProperty(notes = "The name of the batch")
 	private String name;
+	@ApiModelProperty(notes = "The curriculum assigned to the batch")
 	private int curriculum;
+	@ApiModelProperty(notes = "The topic the batch will focus on")
 	private int focus;
+	@ApiModelProperty(notes = "The trainer that will be assigned to the batch")
 	private int trainer;
+	@ApiModelProperty(notes = "The Co-trainer that will be assigned to the batch")
 	private int cotrainer;
+	@ApiModelProperty(notes = "the physical location the batch will be assigned to")
 	private int location;
+	@ApiModelProperty(notes = "The physical building the batch will be assigned to")
 	private int building;
+	@ApiModelProperty(notes = "The physical room the batch will be assigned to")
 	private int room;
+	@ApiModelProperty(notes = "The date the batch starts training")
 	private Timestamp startDate;
+	@ApiModelProperty(notes = "The date the batch stopped training")
 	private Timestamp endDate;
+	@ApiModelProperty(notes = "The list of technical skills")
 	private List<Skill> skills;
 
 	public BatchDTO(){}

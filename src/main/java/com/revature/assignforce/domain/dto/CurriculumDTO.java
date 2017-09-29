@@ -3,13 +3,21 @@ package com.revature.assignforce.domain.dto;
 import java.util.List;
 
 import com.revature.assignforce.domain.Skill;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
+@ApiModel("CurriculumDTO")
 public class CurriculumDTO {
 
+	@ApiModelProperty(notes = "The Curriculum ID")
 	private int currId;
+	@ApiModelProperty(notes = "The Curriculum Name")
 	private String name;
+	@ApiModelProperty(notes = "A list of curriculum skills")
 	private List<Skill> skills;
+	@ApiModelProperty(notes = "A boolean used to mark a curriculum active or not")
 	private Boolean active;
+	@ApiModelProperty(notes = "A boolean used to mark a curriculum core or not")
 	private Boolean core;
 	
 	public int getCurrId() {

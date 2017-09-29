@@ -1,11 +1,14 @@
 package com.revature.assignforce.domain.dto;
 
+import io.swagger.annotations.ApiModel;
+
 import java.sql.Timestamp;
 import java.util.Calendar;
 
 /**
  * Created by Nick Edwards on 3/2/2017.
  */
+@ApiModel("UnavailableDTO")
 public class UnavailableDTO {
 
 	private int ID;

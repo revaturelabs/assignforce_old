@@ -1,11 +1,14 @@
 package com.revature.assignforce.domain.dto;
 
+import io.swagger.annotations.ApiModel;
+
 /**
  * Created by Zach Nelson on 3/21/2017.
  *
  * For use with the temporary authenticate solution.
  * Safe to delete once Parasol is implemented.
  */
+@ApiModel("LoginDTO")
 public class LoginDTO {
 
     private String username;
