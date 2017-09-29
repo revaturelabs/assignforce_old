@@ -1,6 +1,7 @@
 package com.revature.assignforce.domain.dto;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * Created by Zach Nelson on 2/9/2017.
@@ -8,8 +9,11 @@ import io.swagger.annotations.ApiModel;
 @ApiModel("SkillDTO")
 public class SkillDTO {
 
+    @ApiModelProperty(notes = "The skill ID")
     private int skillId;
+    @ApiModelProperty(notes = "The skill name")
     private String name;
+    @ApiModelProperty(notes = "A boolean that marks the skill active or not")
     private Boolean active;
 
     public int getSkillId() {

@@ -6,17 +6,26 @@ import com.revature.assignforce.domain.Certification;
 import com.revature.assignforce.domain.Skill;
 import com.revature.assignforce.domain.Unavailable;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel("TrainerDTO")
 public class TrainerDTO {
 
+	@ApiModelProperty(notes = "The trainer ID")
 	private int trainerId;
+	@ApiModelProperty(notes = "The trainers first name")
 	private String firstName;
+	@ApiModelProperty(notes = "The trainers last name")
 	private String lastName;
+	@ApiModelProperty(notes = "A list of the trainers skills ")
 	private List<Skill> skills;
+	@ApiModelProperty(notes = "A list of the trainers certifications")
 	private List<Certification> certifications;
+	@ApiModelProperty(notes = "A list of the trainers unavailabilities ")
 	private List<Unavailable> unavailabilities;
+	@ApiModelProperty(notes = "A boolean that marks the trainer active or not")
 	private Boolean active;
+	@ApiModelProperty(notes = "The trainers resume ")
 	private String resume;
 	
 	public int getTrainerId() {

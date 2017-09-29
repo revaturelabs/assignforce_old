@@ -1,6 +1,7 @@
 package com.revature.assignforce.domain.dto;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -11,8 +12,11 @@ import java.util.Calendar;
 @ApiModel("UnavailableDTO")
 public class UnavailableDTO {
 
+	@ApiModelProperty(notes = "The unavailable ID ")
 	private int ID;
+	@ApiModelProperty(notes = "The start date of unavailability")
 	private Timestamp startDate;
+	@ApiModelProperty(notes = "The end date of unavailability")
 	private Timestamp endDate;
 
 	public int getUnavailableId() {
