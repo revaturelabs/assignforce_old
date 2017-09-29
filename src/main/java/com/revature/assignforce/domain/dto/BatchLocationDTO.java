@@ -1,15 +1,25 @@
 package com.revature.assignforce.domain.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Created by August Duet on 4/10/2017.
  */
+@ApiModel("BatchLocationDTO")
 public class BatchLocationDTO {
 
+    @ApiModelProperty(notes = "The Location ID")
     private Integer locationId;
+    @ApiModelProperty(notes = "The name of the location")
     private String locationName;
+    @ApiModelProperty(notes = "The building ID")
     private Integer buildingId;
+    @ApiModelProperty(notes = "The name of the Building")
     private String buildingName;
+    @ApiModelProperty(notes = "The room ID")
     private Integer roomId;
+    @ApiModelProperty(notes = "The Name of the room")
     private String roomName;
 
     public BatchLocationDTO(){}

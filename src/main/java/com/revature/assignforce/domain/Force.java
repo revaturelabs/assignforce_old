@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 @Component
+
 public class Force {
     private static final String REST_VERSION = "40.0";
 

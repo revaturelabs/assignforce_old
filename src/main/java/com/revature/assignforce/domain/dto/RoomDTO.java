@@ -4,7 +4,9 @@ import java.util.List;
 
 import com.revature.assignforce.domain.Batch;
 import com.revature.assignforce.domain.Unavailable;
+import io.swagger.annotations.ApiModel;
 
+@ApiModel("RoomDTO")
 public class RoomDTO {
 
 	// batches list may be unrequired.

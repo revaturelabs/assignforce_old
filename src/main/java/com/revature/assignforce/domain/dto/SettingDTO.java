@@ -1,8 +1,11 @@
 package com.revature.assignforce.domain.dto;
 
+import io.swagger.annotations.ApiModel;
+
 /**
  * Created by lazar on 2/8/2017.
  */
+@ApiModel("SettingDTO")
 public class SettingDTO {
     private int settingId;
     private String settingName;

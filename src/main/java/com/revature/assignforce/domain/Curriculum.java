@@ -17,6 +17,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "CURRICULUM")
+
 public class Curriculum implements Activatable{
 
 	@Id

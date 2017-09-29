@@ -3,14 +3,23 @@ package com.revature.assignforce.domain.dto;
 import java.util.List;
 
 import com.revature.assignforce.domain.Building;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
+@ApiModel("LocationDTO")
 public class LocationDTO {
 
+	@ApiModelProperty(notes = "The location ID")
 	private int ID;
+	@ApiModelProperty(notes = "The location name")
 	private String name;
+	@ApiModelProperty(notes = "The location city")
 	private String city;
+	@ApiModelProperty(notes = "The location state")
 	private String state;
+	@ApiModelProperty(notes = "A list of buildings at the location")
 	private List<Building> buildings;
+	@ApiModelProperty(notes = "A boolean used to mark a location active or not")
 	private Boolean active;
 
 	public Boolean getActive() {

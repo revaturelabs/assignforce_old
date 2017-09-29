@@ -5,6 +5,8 @@ import com.revature.assignforce.domain.dto.UnavailableDTO;
 import com.revature.assignforce.domain.dto.ResponseErrorDTO;
 import com.revature.assignforce.service.DaoService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v2/unavailable")
 @ComponentScan(basePackages="com.revature.assignforce.service")
+@Api(value = "Unavailable Controller", description = "Operations regarding unavailable data")
 public class UnavailableCtrl {
 	
 	@Autowired
@@ -31,6 +34,7 @@ public class UnavailableCtrl {
 	// CREATE
 	// creating new unavailable object from information passed from unavailable data transfer object
 	@RequestMapping(method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Create an Unavailable ", response = Unavailable.class)
 	public Object createUnavailability( @RequestBody UnavailableDTO in ) {
 		int ID = in.getUnavailableId();
 		Timestamp startDate = in.getStartDate();
@@ -49,6 +53,7 @@ public class UnavailableCtrl {
 	// RETRIEVE
 	// retrieve unavailability with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Get an Unavailable with a given ID", response = Unavailable.class)
 	public Object retrieveUnavailability( @PathVariable("id") int ID ) {
 		Unavailable out = unavailableService.getOneItem(ID);
 		if (out == null) {
@@ -61,6 +66,7 @@ public class UnavailableCtrl {
 	// UPDATE
 	// updating an existing unavailability object with information passed from unavailable data transfer object
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Update an unavailability ", response = Unavailable.class)
 	public Object updateSkill( @RequestBody UnavailableDTO in ) {
 		
 		int ID = in.getUnavailableId();
@@ -80,6 +86,7 @@ public class UnavailableCtrl {
 	// DELETE
 	// delete unavailability with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Delete an unavailability ", response = Unavailable.class)
 	public Object deleteUnavailability( @PathVariable("id") int ID ) {
 		unavailableService.deleteItem(ID);
 		return new ResponseEntity<Object>(null, HttpStatus.OK);
@@ -87,6 +94,7 @@ public class UnavailableCtrl {
 	
 	// GET ALL **PROBABLY WON'T BE USED**
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Retrieve all unavailabilities ", response = Unavailable.class)
 	public Object retrieveAllUnavailabilities() {
 		
 		List<Unavailable> all = unavailableService.getAllItems();

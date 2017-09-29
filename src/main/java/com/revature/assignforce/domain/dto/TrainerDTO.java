@@ -5,7 +5,9 @@ import java.util.List;
 import com.revature.assignforce.domain.Certification;
 import com.revature.assignforce.domain.Skill;
 import com.revature.assignforce.domain.Unavailable;
+import io.swagger.annotations.ApiModel;
 
+@ApiModel("TrainerDTO")
 public class TrainerDTO {
 
 	private int trainerId;
