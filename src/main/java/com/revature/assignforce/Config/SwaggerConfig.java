@@ -1,4 +1,4 @@
-package com.revature.assignforce.swagger;
+package com.revature.assignforce.Config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
