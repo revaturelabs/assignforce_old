@@ -24,6 +24,7 @@ import com.revature.assignforce.domain.dto.ResponseErrorDTO;
 @RestController
 @RequestMapping("/api/v2/building")
 @ComponentScan(basePackages = "com.revature.assignforce.service")
+
 public class BuildingCtrl {
 
 	@Autowired
