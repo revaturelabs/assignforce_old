@@ -9,11 +9,11 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel("SettingDTO")
 public class SettingDTO {
 
-    @ApiModelProperty(notes = "The setting ID")
+    @ApiModelProperty(notes = "The setting ID", name = "settingId", dataType = "int")
     private int settingId;
-    @ApiModelProperty(notes = "The setting name")
+    @ApiModelProperty(notes = "The setting name", name = "settingName", dataType = "String")
     private String settingName;
-    @ApiModelProperty(notes = "The setting value number")
+    @ApiModelProperty(notes = "The setting value number", name = "setttingValue", dataType = "int")
     private int settingValue;
 
     //ID

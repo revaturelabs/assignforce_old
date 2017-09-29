@@ -9,13 +9,13 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel("CertificationDTO")
 public class CertificationDTO {
 
-    @ApiModelProperty(notes = "The certification ID")
+    @ApiModelProperty(notes = "The certification ID", name = "ID", dataType = "int")
     private int id;
-    @ApiModelProperty(notes = "The name of the certification")
+    @ApiModelProperty(notes = "The name of the certification", name = "name", dataType = "String")
     private String name;
-    @ApiModelProperty(notes = "The certification file")
+    @ApiModelProperty(notes = "The certification file", name = "file", dataType = "String")
     private String file;
-    @ApiModelProperty(notes = "the certification trainer number")
+    @ApiModelProperty(notes = "the certification trainer number", name = "trainer", dataType = "int")
     private int trainer;
 
 

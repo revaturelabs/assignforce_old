@@ -9,17 +9,17 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel("LocationDTO")
 public class LocationDTO {
 
-	@ApiModelProperty(notes = "The location ID")
+	@ApiModelProperty(notes = "The location ID", name = "ID", dataType = "int")
 	private int ID;
-	@ApiModelProperty(notes = "The location name")
+	@ApiModelProperty(notes = "The location name", name = "name", dataType = "String")
 	private String name;
-	@ApiModelProperty(notes = "The location city")
+	@ApiModelProperty(notes = "The location city", name = "city", dataType = "String")
 	private String city;
-	@ApiModelProperty(notes = "The location state")
+	@ApiModelProperty(notes = "The location state", name = "state", dataType = "String")
 	private String state;
-	@ApiModelProperty(notes = "A list of buildings at the location")
+	@ApiModelProperty(notes = "A list of buildings at the location", name = "buildings", dataType = "List<Building>")
 	private List<Building> buildings;
-	@ApiModelProperty(notes = "A boolean used to mark a location active or not")
+	@ApiModelProperty(notes = "A boolean used to mark a location active or not", name = "active", dataType = "Boolean")
 	private Boolean active;
 
 	public Boolean getActive() {

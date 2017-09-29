@@ -10,15 +10,15 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel("Batch")
 public class BuildingDTO {
 
-	@ApiModelProperty(notes = "The building ID")
+	@ApiModelProperty(notes = "The building ID", name = "ID", dataType = "int")
 	private int ID;
-	@ApiModelProperty(notes = "The name of the building")
+	@ApiModelProperty(notes = "The name of the building", name = "name", dataType = "String")
 	private String name;
-	@ApiModelProperty(notes = "The location of the building")
+	@ApiModelProperty(notes = "The location of the building", name = "location", dataType = "int")
 	private int location;
-	@ApiModelProperty(notes = "A list of Rooms in the building")
+	@ApiModelProperty(notes = "A list of Rooms in the building", name = "rooms", dataType = "List<room>")
 	private List<Room> rooms;
-	@ApiModelProperty(notes = "A boolean used to mark a building active or not")
+	@ApiModelProperty(notes = "A boolean used to mark a building active or not", name = "active", dataType = "Boolean")
 	private Boolean active;
 
 	public int getID() {

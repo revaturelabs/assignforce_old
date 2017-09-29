@@ -9,11 +9,11 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel("SkillDTO")
 public class SkillDTO {
 
-    @ApiModelProperty(notes = "The skill ID")
+    @ApiModelProperty(notes = "The skill ID", name = "skillId", dataType = "int")
     private int skillId;
-    @ApiModelProperty(notes = "The skill name")
+    @ApiModelProperty(notes = "The skill name", name = "name", dataType = "String")
     private String name;
-    @ApiModelProperty(notes = "A boolean that marks the skill active or not")
+    @ApiModelProperty(notes = "A boolean that marks the skill active or not", name = "active", dataType = "Boolean")
     private Boolean active;
 
     public int getSkillId() {
