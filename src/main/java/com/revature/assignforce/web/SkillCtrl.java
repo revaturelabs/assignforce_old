@@ -4,6 +4,8 @@ import com.revature.assignforce.domain.Skill;
 import com.revature.assignforce.domain.dto.SkillDTO;
 import com.revature.assignforce.domain.dto.ResponseErrorDTO;
 import com.revature.assignforce.service.ActivatableObjectDaoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v2/skill")
 @ComponentScan(basePackages="com.revature.assignforce.service")
+@Api(value = "Skill Controller", description = "Operations regarding Skillz(such as the ability to do a Backflip)")
 public class SkillCtrl {
 
     @Autowired
@@ -27,6 +30,7 @@ public class SkillCtrl {
     // CREATE
     // creating new curriculum object from information passed from curriculum data transfer object
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Create a skill", response = ResponseEntity.class)
     public Object createSkill( @RequestBody SkillDTO in ) {
 
         int ID = in.getSkillId();
@@ -45,6 +49,7 @@ public class SkillCtrl {
     // RETRIEVE
     // retrieve skill with given ID
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Get a skill of a given ID", response = ResponseEntity.class)
     public Object retrieveSkill( @PathVariable("id") int ID ) {
 
         Skill out = skillService.getOneItem(ID);
@@ -58,6 +63,7 @@ public class SkillCtrl {
     // UPDATE
     // updating an existing skill object with information passed from skill data transfer object
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Update a skill", response = ResponseEntity.class)
     public Object updateSkill( @RequestBody SkillDTO in ) {
 
         int ID = in.getSkillId();
@@ -77,6 +83,7 @@ public class SkillCtrl {
     // DELETE
     // delete skill with given ID
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Delete a skill", response = ResponseEntity.class)
     public Object deleteSkill( @PathVariable("id") int ID ) {
 
         skillService.deleteItem(ID);
@@ -86,6 +93,7 @@ public class SkillCtrl {
     // GET ALL
     // retrieve all skills
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Retrieve all Skills", response = ResponseEntity.class)
     public Object retrieveAllSkills() {
 
         List<Skill> all = skillService.getAllItems();

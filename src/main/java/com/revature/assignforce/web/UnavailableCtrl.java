@@ -25,7 +25,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v2/unavailable")
 @ComponentScan(basePackages="com.revature.assignforce.service")
-@Api(value = "Unavailable Controller", description = "Operations reguarding unavailable data")
+@Api(value = "Unavailable Controller", description = "Operations regarding unavailable data")
 public class UnavailableCtrl {
 	
 	@Autowired

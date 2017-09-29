@@ -21,7 +21,7 @@ import com.revature.assignforce.domain.dto.TrainerDTO;
 
 @RestController
 @RequestMapping("/api/v2/trainer")
-@Api(value = "Trainer Controller", description = "Operations reguarding trainers")
+@Api(value = "Trainer Controller", description = "Operations regarding trainers")
 public class TrainerCtrl {
 
 	@Autowired
