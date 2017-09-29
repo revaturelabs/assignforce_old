@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -14,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Table(name = "BATCH", uniqueConstraints = {
 		@UniqueConstraint(columnNames = "BATCH_LOCATION")
 })
+@ApiModel("Batch")
 public class Batch {
 
 	@Id
