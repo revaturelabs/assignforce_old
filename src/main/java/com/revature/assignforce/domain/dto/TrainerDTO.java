@@ -8,7 +8,7 @@ import com.revature.assignforce.domain.Unavailable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("TrainerDTO")
+@ApiModel("Trainer")
 public class TrainerDTO {
 
 	@ApiModelProperty(notes = "The trainer ID", name = "trainerId", dataType = "int")

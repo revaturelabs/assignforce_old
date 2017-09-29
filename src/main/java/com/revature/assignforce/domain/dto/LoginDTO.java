@@ -9,7 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
  * For use with the temporary authenticate solution.
  * Safe to delete once Parasol is implemented.
  */
-@ApiModel("LoginDTO")
+@ApiModel("Login")
 public class LoginDTO {
 
     @ApiModelProperty(notes = "The username used at login", name = "username", dataType = "String")

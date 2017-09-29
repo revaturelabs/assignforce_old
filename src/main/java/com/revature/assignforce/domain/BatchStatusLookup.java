@@ -12,7 +12,6 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "BATCH_STATUS_LOOKUP")
-@ApiModel("Batch")
 public class BatchStatusLookup {
 
 	@Id

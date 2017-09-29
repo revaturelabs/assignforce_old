@@ -7,7 +7,7 @@ import com.revature.assignforce.domain.Room;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("Batch")
+@ApiModel("Building")
 public class BuildingDTO {
 
 	@ApiModelProperty(notes = "The building ID", name = "ID", dataType = "int")

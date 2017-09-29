@@ -6,7 +6,7 @@ import com.revature.assignforce.domain.Building;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("LocationDTO")
+@ApiModel("Location")
 public class LocationDTO {
 
 	@ApiModelProperty(notes = "The location ID", name = "ID", dataType = "int")

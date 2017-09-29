@@ -15,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Table(name = "BATCH", uniqueConstraints = {
 		@UniqueConstraint(columnNames = "BATCH_LOCATION")
 })
-@ApiModel("Batch")
 public class Batch {
 
 	@Id

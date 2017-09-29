@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * Created by August Duet on 4/10/2017.
  */
-@ApiModel("BatchLocationDTO")
+@ApiModel("BatchLocation")
 public class BatchLocationDTO {
 
     @ApiModelProperty(notes = "The Location ID", name = "ID", dataType = "int")

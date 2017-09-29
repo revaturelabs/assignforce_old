@@ -7,7 +7,7 @@ import com.revature.assignforce.domain.Unavailable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("RoomDTO")
+@ApiModel("Room")
 public class RoomDTO {
 
 	// batches list may be unrequired.

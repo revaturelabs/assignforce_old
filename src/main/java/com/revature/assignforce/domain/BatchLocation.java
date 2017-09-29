@@ -10,7 +10,6 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="BATCH_LOCATION")
-@ApiModel("Batch")
 public class BatchLocation {
     @Id
     @Column(name = "ID")

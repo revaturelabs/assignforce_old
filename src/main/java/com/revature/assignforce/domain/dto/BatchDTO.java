@@ -8,7 +8,7 @@ import com.revature.assignforce.domain.Skill;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("BatchDTO")
+@ApiModel("Batch")
 public class BatchDTO {
 
 	@ApiModelProperty(notes = "The Batch ID", name = "ID", dataType = "int")

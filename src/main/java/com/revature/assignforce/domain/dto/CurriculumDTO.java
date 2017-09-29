@@ -6,7 +6,7 @@ import com.revature.assignforce.domain.Skill;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("CurriculumDTO")
+@ApiModel("Curriculum")
 public class CurriculumDTO {
 
 	@ApiModelProperty(notes = "The Curriculum ID", name = "currID", dataType = "int")

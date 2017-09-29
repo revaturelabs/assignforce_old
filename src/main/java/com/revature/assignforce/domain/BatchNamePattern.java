@@ -9,7 +9,6 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "BATCH_NAME_PATTERN")
-@ApiModel("Batch")
 public class BatchNamePattern {
 
     @Id

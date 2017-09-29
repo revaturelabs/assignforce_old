@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * Created by lazar on 2/8/2017.
  */
-@ApiModel("SettingDTO")
+@ApiModel("Setting")
 public class SettingDTO {
 
     @ApiModelProperty(notes = "The setting ID", name = "settingId", dataType = "int")

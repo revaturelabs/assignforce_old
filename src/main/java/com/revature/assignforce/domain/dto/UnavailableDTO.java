@@ -9,7 +9,7 @@ import java.util.Calendar;
 /**
  * Created by Nick Edwards on 3/2/2017.
  */
-@ApiModel("UnavailableDTO")
+@ApiModel("Unavailable")
 public class UnavailableDTO {
 
 	@ApiModelProperty(notes = "The unavailable ID", name = "ID", dataType = "int")
