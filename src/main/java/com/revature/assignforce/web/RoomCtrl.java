@@ -3,6 +3,8 @@ package com.revature.assignforce.web;
 import java.util.List;
 
 import com.revature.assignforce.service.ActivatableObjectDaoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,7 @@ import com.revature.assignforce.domain.dto.RoomDTO;
 @RestController
 @RequestMapping("/api/v2/room")
 @ComponentScan(basePackages="com.revature.assignforce.service")
+@Api(value = "Room Controller", description = "Operations regarding rooms")
 public class RoomCtrl {
 
 	@Autowired
@@ -31,6 +34,7 @@ public class RoomCtrl {
 	  // CREATE
 		// creating new room object from information passed from room data transfer object
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Create a Room", response = ResponseEntity.class)
 	public Object createRoom( @RequestBody RoomDTO in ) {
 	
 		int ID = in.getRoomID();
@@ -52,6 +56,7 @@ public class RoomCtrl {
 	  // RETRIEVE
 		// retrieve room with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Get a Room of a given ID", response = ResponseEntity.class)
 	public Object retrieveRoom( @PathVariable("id") int ID ) {
 		Room out = roomService.getOneItem(ID);
 		if (out == null) {
@@ -64,6 +69,7 @@ public class RoomCtrl {
 	  // UPDATE
 		// updating an existing room object with information passed from room data transfer object
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Update a Room", response = ResponseEntity.class)
 	public Object updateRoom( @RequestBody RoomDTO in ) {
 		
 		int ID = in.getRoomID();
@@ -85,6 +91,7 @@ public class RoomCtrl {
 	  // DELETE
 		// delete room with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Delete a Room", response = ResponseEntity.class)
 	public Object deleteRoom( @PathVariable("id") int ID ) {
 		roomService.deleteItem(ID);
 		return new ResponseEntity<Object>(null, HttpStatus.OK);
@@ -93,6 +100,7 @@ public class RoomCtrl {
 	  // GET ALL
 		// retrieve all rooms
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Retrieve All Rooms", response = ResponseEntity.class)
 	public Object retrieveAllRooms() {
 		List<Room> all = roomService.getAllItems();
 
