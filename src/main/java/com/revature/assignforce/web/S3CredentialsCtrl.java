@@ -1,6 +1,9 @@
 package com.revature.assignforce.web;
 
 import java.util.HashMap;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,9 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v2/s3Creds")
 @ComponentScan(basePackages="com.revature.assignforce.service")
+@Api(value = "S3Credentials Controller", description = "Used to retrieve Credentials")
 public class S3CredentialsCtrl {
 
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Retrieves Credentials", response = ResponseEntity.class)
 	public Object retrieveCredentials() {
 		//grabs the S3 info name, accessId, and secretAccessId from your environment variables
 		String s3ID = System.getenv("S3_ID");
