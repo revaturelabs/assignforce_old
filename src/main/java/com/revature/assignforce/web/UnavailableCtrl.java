@@ -40,7 +40,7 @@ public class UnavailableCtrl {
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully received Unavailable information"),
 			@ApiResponse(code=400, message ="Bad Request, the information recieved maybe invalid"),
-			@ApiResponse(code=500, message ="Cannot retrieve Unavailable")
+			@ApiResponse(code=500, message ="Cannot create Unavailable")
 	})
 	public Object createUnavailability( @RequestBody UnavailableDTO in ) {
 		int ID = in.getUnavailableId();
