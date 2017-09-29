@@ -4,10 +4,10 @@ var app = angular.module('batchApp');
 
 /*--------------------------CONTROLLER---------------------------*/
 
-app.controller("TimelineCtrl", function($scope, $window, batchService, calendarService, trainerService, curriculumService, settingService, locationService, buildingService){
+ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarService, trainerService, curriculumService, settingService, locationService, buildingService){
 	
     var tlc = this;
-    
+
     //For displaying toast messages.
     tlc.showToast = function( message ){
         $scope.$parent.aCtrl.showToast( message );
@@ -341,7 +341,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	var MIN_RANGE = 1000000; // 1 minute
 
 	// Events for the timeline
-	$("#timeline").mousedown(function(evt){
+	$scope.mousedown = function(evt){
 		evt.stopPropagation();
 
 		if(evt.offsetY > tlc.timelineFormatting.margin_top && evt.offsetY < tlc.timelineFormatting.height + tlc.timelineFormatting.margin_top){
@@ -398,7 +398,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 				pageY = evt.pageY;
 			});
 		}
-	});
+	};
 
 	$(".toastContainer").mouseup(function(evt){
 		// Erase the zoompoint(or move out of view)
@@ -903,7 +903,8 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
             */
 
         var x = svg.append('g')
-            .attr('class','x axis');
+            .attr('class','x axis')
+            .attr('style', 'position: -webkit-sticky; position: sticky');
             //.call(xAxis);
 
         var brect = x.append('rect');
@@ -1070,29 +1071,34 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 				.text(function(d) {return d.length;});
 
 		tlc.moveAxis();
-
-        brect
-            .attr('class','axisrect')
-            .attr('transform','translate('+(timelineFormatting.margin_left/2)+',-'+x.node().getBoundingClientRect().height+')')
-            .attr('width',x.node().getBoundingClientRect().width+timelineFormatting.margin_left/2)
-            .attr('height',x.node().getBoundingClientRect().height)
-            .style('fill','white');
+        if(x!=null){
+            if(x.node()!=null){
+                brect
+                    .attr('class','axisrect')
+                    .attr('transform','translate('+(timelineFormatting.margin_left/2)+',-'+x.node().getBoundingClientRect().height+')')
+                    .attr('width',x.node().getBoundingClientRect().width+timelineFormatting.margin_left/2)
+                    .attr('height',x.node().getBoundingClientRect().height)
+                    .style('fill','white');
+            }
+        }
 
 
 	}
 
-	//function to freeze trainers names over the graph at the top of the window whenever you scroll out of the window
+//	function to freeze trainers names over the graph at the top of the window whenever you scroll out of the window
 	tlc.axisDisplacement = 0
     tlc.moveAxis= function () {
         var x = document.getElementsByClassName("x axis");
-        if(x[0].getBoundingClientRect().top) {
-        	tlc.axisDisplacement -= x[0].getBoundingClientRect().top
-			if(tlc.axisDisplacement <0){tlc.axisDisplacement =0;}
-                x[0].setAttribute("transform", "translate(0," + tlc.axisDisplacement + ")");
+        if(x[0]!=undefined ) {
+            if(x[0].getBoundingClientRect().top){
+                tlc.axisDisplacement -= x[0].getBoundingClientRect().top
+                if(tlc.axisDisplacement <0){tlc.axisDisplacement =0;}
+                    x[0].setAttribute("transform", "translate(0," + tlc.axisDisplacement + ")");
+            }
 
         }//else{
-            setTimeout(tlc.moveAxis,120);
+//            setTimeout(tlc.moveAxis,120);
+        window.requestAnimationFrame(tlc.moveAxis);
         //}
     }
-
 });
