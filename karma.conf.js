@@ -50,7 +50,8 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['spec'],
+    // dots and junit are for CI
+    reporters: ['spec','dots', 'junit'],
 
 
     // web server port
@@ -72,7 +73,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome'],
+    browsers: ['phantomjs'],
 
 
     // Continuous Integration mode
@@ -81,6 +82,12 @@ module.exports = function(config) {
 
     // Concurrency level
     // how many browser should be started simultaneous
-    concurrency: Infinity
+    concurrency: Infinity,
+
+    // sets the location of the junit reporter,
+    junitReporter: {
+        outputFile: './target/js-test-results.xml'
+    }
+
   })
 }
