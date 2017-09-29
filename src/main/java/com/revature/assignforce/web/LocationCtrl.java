@@ -26,7 +26,7 @@ import com.revature.assignforce.domain.dto.ResponseErrorDTO;
 @RestController
 @RequestMapping("/api/v2/location")
 @ComponentScan(basePackages = "com.revature.assignforce.service")
-@Api(value = "Location Controller", description = "Operations regarding rooms")
+@Api(value = "Location Controller", description = "Operations regarding Locations")
 public class LocationCtrl {
 
 	@Autowired
