@@ -5,16 +5,22 @@ import java.util.List;
 import com.revature.assignforce.domain.Batch;
 import com.revature.assignforce.domain.Unavailable;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel("RoomDTO")
 public class RoomDTO {
 
 	// batches list may be unrequired.
 	// currently, update room is broken, just trying to figure out why.
+	@ApiModelProperty(notes = "The room ID")
 	private int roomID;
+	@ApiModelProperty(notes = "The room name")
 	private String roomName;
+	@ApiModelProperty(notes = "The building number the room belongs to")
 	private int building;
+	@ApiModelProperty(notes = "A list of unavailabilities")
 	private List<Unavailable> unavailabilities;
+	@ApiModelProperty(notes = "A boolean that marks the room active or not")
 	private boolean active;
 	
 	public int getRoomID() {

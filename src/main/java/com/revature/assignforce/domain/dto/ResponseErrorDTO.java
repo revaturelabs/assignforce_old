@@ -1,10 +1,12 @@
 package com.revature.assignforce.domain.dto;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel("ResponseErrorDTO")
 public class ResponseErrorDTO {
 
+	@ApiModelProperty(notes = "The current error message")
 	private String errorMessage;
 
 	public ResponseErrorDTO() {
