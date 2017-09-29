@@ -12,11 +12,11 @@ import java.util.Calendar;
 @ApiModel("UnavailableDTO")
 public class UnavailableDTO {
 
-	@ApiModelProperty(notes = "The unavailable ID ")
+	@ApiModelProperty(notes = "The unavailable ID", name = "ID", dataType = "int")
 	private int ID;
-	@ApiModelProperty(notes = "The start date of unavailability")
+	@ApiModelProperty(notes = "The start date of unavailability", name = "startDate", dataType = "Timestamp")
 	private Timestamp startDate;
-	@ApiModelProperty(notes = "The end date of unavailability")
+	@ApiModelProperty(notes = "The end date of unavailability", name = "endDate", dataType = "Timestamp")
 	private Timestamp endDate;
 
 	public int getUnavailableId() {

@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel("ResponseErrorDTO")
 public class ResponseErrorDTO {
 
-	@ApiModelProperty(notes = "The current error message")
+	@ApiModelProperty(notes = "The current error message", name = "errorMessage", dataType = "String")
 	private String errorMessage;
 
 	public ResponseErrorDTO() {

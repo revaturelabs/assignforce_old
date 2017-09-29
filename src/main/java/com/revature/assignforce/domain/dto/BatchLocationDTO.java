@@ -9,17 +9,17 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel("BatchLocationDTO")
 public class BatchLocationDTO {
 
-    @ApiModelProperty(notes = "The Location ID")
+    @ApiModelProperty(notes = "The Location ID", name = "ID", dataType = "int")
     private Integer locationId;
-    @ApiModelProperty(notes = "The name of the location")
+    @ApiModelProperty(notes = "The name of the location", name = "locationName", dataType = "String")
     private String locationName;
-    @ApiModelProperty(notes = "The building ID")
+    @ApiModelProperty(notes = "The building ID", name = "buildingId", dataType = "Integer")
     private Integer buildingId;
-    @ApiModelProperty(notes = "The name of the Building")
+    @ApiModelProperty(notes = "The name of the Building", name = "buildingName", dataType = "String")
     private String buildingName;
-    @ApiModelProperty(notes = "The room ID")
+    @ApiModelProperty(notes = "The room ID", name = "roomId", dataType = "Integer")
     private Integer roomId;
-    @ApiModelProperty(notes = "The Name of the room")
+    @ApiModelProperty(notes = "The Name of the room", name = "roomName", dataType = "String")
     private String roomName;
 
     public BatchLocationDTO(){}

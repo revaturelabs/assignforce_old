@@ -11,21 +11,21 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel("TrainerDTO")
 public class TrainerDTO {
 
-	@ApiModelProperty(notes = "The trainer ID")
+	@ApiModelProperty(notes = "The trainer ID", name = "trainerId", dataType = "int")
 	private int trainerId;
-	@ApiModelProperty(notes = "The trainers first name")
+	@ApiModelProperty(notes = "The trainers first name", name = "firstName", dataType = "String")
 	private String firstName;
-	@ApiModelProperty(notes = "The trainers last name")
+	@ApiModelProperty(notes = "The trainers last name", name = "lastName", dataType = "String")
 	private String lastName;
-	@ApiModelProperty(notes = "A list of the trainers skills ")
+	@ApiModelProperty(notes = "A list of the trainers skills ", name = "skills", dataType = "List<skill>")
 	private List<Skill> skills;
-	@ApiModelProperty(notes = "A list of the trainers certifications")
+	@ApiModelProperty(notes = "A list of the trainers certifications", name = "certifications", dataType = "List<certification>")
 	private List<Certification> certifications;
-	@ApiModelProperty(notes = "A list of the trainers unavailabilities ")
+	@ApiModelProperty(notes = "A list of the trainers unavailabilities ", name = "unavailabilities", dataType = "List<unavailable>")
 	private List<Unavailable> unavailabilities;
-	@ApiModelProperty(notes = "A boolean that marks the trainer active or not")
+	@ApiModelProperty(notes = "A boolean that marks the trainer active or not", name = "active", dataType = "boolean")
 	private Boolean active;
-	@ApiModelProperty(notes = "The trainers resume ")
+	@ApiModelProperty(notes = "The trainers resume ", name = "resume", dataType = "String")
 	private String resume;
 	
 	public int getTrainerId() {

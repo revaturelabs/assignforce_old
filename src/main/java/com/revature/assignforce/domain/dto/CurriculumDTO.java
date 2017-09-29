@@ -9,7 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel("CurriculumDTO")
 public class CurriculumDTO {
 
-	@ApiModelProperty(notes = "The Curriculum ID")
+	@ApiModelProperty(notes = "The Curriculum ID", name = "currID", dataType = "int")
 	private int currId;
 	@ApiModelProperty(notes = "The Curriculum Name")
 	private String name;

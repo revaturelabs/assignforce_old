@@ -12,9 +12,9 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel("LoginDTO")
 public class LoginDTO {
 
-    @ApiModelProperty(notes = "The username used at login")
+    @ApiModelProperty(notes = "The username used at login", name = "username", dataType = "String")
     private String username;
-    @ApiModelProperty(notes = "The Password used at login")
+    @ApiModelProperty(notes = "The Password used at login", name = "password", dataType = "String")
     private String password;
 
     public String getUsername() {
