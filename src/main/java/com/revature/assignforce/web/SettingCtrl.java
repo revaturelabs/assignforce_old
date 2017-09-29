@@ -4,6 +4,8 @@ import com.revature.assignforce.domain.Setting;
 import com.revature.assignforce.domain.dto.ResponseErrorDTO;
 import com.revature.assignforce.domain.dto.SettingDTO;
 import com.revature.assignforce.service.DaoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
@@ -20,18 +22,21 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v2/setting")
 @ComponentScan(basePackages = "com.revature.assignforce.service")
+@Api(value = "Setting Controller", description = "Operations regarding settings")
 public class SettingCtrl {
     @Autowired
     DaoService<Setting, Integer> settingService;
 
     //Create
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Create a Setting", response = ResponseEntity.class)
     public Object createSetting(@RequestBody SettingDTO in ){
         return new ResponseEntity(null, HttpStatus.NOT_IMPLEMENTED);
     }
 
     //Retrieve
     @RequestMapping(value = "/{settingId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Get a Setting based on an ID", response = ResponseEntity.class)
     public Object retrieveSetting (@PathVariable("settingId") int settingId){
 
         Setting setting = settingService.getOneItem(settingId);
@@ -43,6 +48,7 @@ public class SettingCtrl {
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Gets all Settings", response = ResponseEntity.class)
     public Object getGlobalSettings(){
 
         List<Setting> settings = settingService.getAllItems();
@@ -58,6 +64,7 @@ public class SettingCtrl {
 
     //Update
     @RequestMapping( method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Update a Setting", response = ResponseEntity.class)
     public Object updateSetting(@RequestBody Setting in ){
 
         try{
@@ -71,6 +78,7 @@ public class SettingCtrl {
 
     //Delete
     @RequestMapping(value = "/{settingId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Delete a Setting", response = ResponseEntity.class)
     public Object deleteSetting(){
         return new ResponseEntity<Object>(null, HttpStatus.NOT_IMPLEMENTED);
     }
