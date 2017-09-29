@@ -6,10 +6,17 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.ValidationMode;
 import javax.transaction.Transactional;
 
 import com.revature.assignforce.domain.*;
 
+import com.revature.assignforce.service.ActivatableObjectDaoService;
+import com.revature.assignforce.service.BatchLocationDaoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.ComponentScan;
@@ -34,6 +41,7 @@ import com.revature.assignforce.service.DaoService;
 @RestController
 @RequestMapping("/api/v2/batch")
 @ComponentScan(basePackages = "com.revature.assignforce.service")
+@Api(value = "Batch Controller", description = "CRUD with Batches")
 public class BatchCtrl {
 
 	@PersistenceContext
@@ -66,6 +74,12 @@ public class BatchCtrl {
 	// CREATE
 	// creating new batch object from information passed from batch data
 	// transfer object
+	@ApiOperation(value = "Create a branch", response = BatchLocationDaoService.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully Created a Batch"),
+			@ApiResponse(code=400, message ="Bad Request, BatchDTO"),
+			@ApiResponse(code=500, message ="Cannot retrieve batch")
+	})
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Transactional
 	public Object createBatch(@RequestBody BatchDTO in) {
@@ -119,6 +133,12 @@ public class BatchCtrl {
 		}
 	}
 
+	@ApiOperation(value = "Retrieve a batch", response = BatchLocationDaoService.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully retrieved a Batch"),
+			@ApiResponse(code=400, message ="Bad Request, BatchDTO"),
+			@ApiResponse(code=500, message ="Cannot create batch")
+	})
 	// RETRIEVE
 	// retrieve batch with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
