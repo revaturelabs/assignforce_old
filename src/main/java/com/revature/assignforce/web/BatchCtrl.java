@@ -12,6 +12,7 @@ import javax.transaction.Transactional;
 import com.revature.assignforce.domain.*;
 
 import com.revature.assignforce.service.ActivatableObjectDaoService;
+import com.revature.assignforce.service.BatchDaoService;
 import com.revature.assignforce.service.BatchLocationDaoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -74,7 +75,7 @@ public class BatchCtrl {
 	// CREATE
 	// creating new batch object from information passed from batch data
 	// transfer object
-	@ApiOperation(value = "Create a branch", response = BatchLocationDaoService.class)
+	@ApiOperation(value = "Create a branch", response = BatchDaoService.class)
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully Created a Batch"),
 			@ApiResponse(code=400, message ="Bad Request, BatchDTO"),
@@ -133,7 +134,7 @@ public class BatchCtrl {
 		}
 	}
 
-	@ApiOperation(value = "Retrieve a batch", response = BatchLocationDaoService.class)
+	@ApiOperation(value = "Retrieve a batch", response = BatchDaoService.class)
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully retrieved a Batch"),
 			@ApiResponse(code=400, message ="Bad Request, BatchDTO"),
@@ -155,6 +156,12 @@ public class BatchCtrl {
 
 	// DELETE
 	// delete batch with given ID
+	@ApiOperation(value = "Delete a batch", response = BatchDaoService.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully Deleted a Batch"),
+			@ApiResponse(code=400, message ="Bad Request, ID"),
+			@ApiResponse(code=500, message ="Cannot delete batch")
+	})
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Transactional
 	public Object deleteBatch(@PathVariable("id") int ID) {
@@ -181,6 +188,12 @@ public class BatchCtrl {
 
 	// GET ALL
 	// retrieve all batches
+	@ApiOperation(value = "Retrieve all batches", response = BatchDaoService.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully retrieved all batches"),
+			@ApiResponse(code=400, message ="Bad Request"),
+			@ApiResponse(code=500, message ="Cannot retrieve all batches")
+	})
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveAllBatches() {
 
@@ -195,7 +208,12 @@ public class BatchCtrl {
 			return new ResponseEntity<List<Batch>>(all, HttpStatus.OK);
 		}
 	}
-
+	@ApiOperation(value = "Update a batch", response = BatchDaoService.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully updated a batch"),
+			@ApiResponse(code=400, message ="Bad Request, BATCHDTO"),
+			@ApiResponse(code=500, message ="Cannot update batch")
+	})
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Transactional
 	public Object updateBatch(@RequestBody BatchDTO in) {
@@ -271,7 +289,12 @@ public class BatchCtrl {
 
 		return new ResponseEntity<Batch>(b, HttpStatus.OK);
 	}
-
+	@ApiOperation(value = "Create an Unavailabilities", response = BatchDaoService.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully created an unavailabilities"),
+			@ApiResponse(code=400, message ="Bad Request"),
+			@ApiResponse(code=500, message ="Cannot create an unavailability")
+	})
 	@Transactional
 	void createUnavailabilities(Trainer trainer, Room room, Timestamp startDate, Timestamp endDate) {
 		Unavailable unavailable = new Unavailable(startDate, endDate);
@@ -291,7 +314,12 @@ public class BatchCtrl {
 			roomService.saveItem(room);
 		}
 	}
-
+	@ApiOperation(value = "Remove an Unavailabilities", response = BatchDaoService.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully removed an unavailabilities"),
+			@ApiResponse(code=400, message ="Bad Request"),
+			@ApiResponse(code=500, message ="Cannot remove an unavailability")
+	})
 	@Transactional
 	void removeUnavailabilities(Trainer trainer, Room room, Timestamp startDate, Timestamp endDate) {
 		Unavailable unavailableToRemove;
