@@ -1,5 +1,7 @@
 package com.revature.assignforce.domain;
 
+import io.swagger.annotations.ApiModel;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,6 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "BATCH_STATUS_LOOKUP")
+@ApiModel("Batch")
 public class BatchStatusLookup {
 
 	@Id

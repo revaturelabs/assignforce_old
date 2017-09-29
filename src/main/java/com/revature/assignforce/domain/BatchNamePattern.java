@@ -1,5 +1,7 @@
 package com.revature.assignforce.domain;
 
+import io.swagger.annotations.ApiModel;
+
 import javax.persistence.*;
 
 /**
@@ -7,6 +9,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "BATCH_NAME_PATTERN")
+@ApiModel("Batch")
 public class BatchNamePattern {
 
     @Id
