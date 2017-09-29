@@ -208,6 +208,8 @@ public class BatchCtrl {
 			return new ResponseEntity<List<Batch>>(all, HttpStatus.OK);
 		}
 	}
+
+
 	@ApiOperation(value = "Update a batch", response = BatchDaoService.class)
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully updated a batch"),
@@ -289,6 +291,8 @@ public class BatchCtrl {
 
 		return new ResponseEntity<Batch>(b, HttpStatus.OK);
 	}
+
+
 	@ApiOperation(value = "Create an Unavailabilities", response = BatchDaoService.class)
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully created an unavailabilities"),
@@ -314,6 +318,10 @@ public class BatchCtrl {
 			roomService.saveItem(room);
 		}
 	}
+
+
+
+
 	@ApiOperation(value = "Remove an Unavailabilities", response = BatchDaoService.class)
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully removed an unavailabilities"),
