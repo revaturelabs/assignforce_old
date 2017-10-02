@@ -19,6 +19,8 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     rc.totalNetBatch = 0;               // Total number of .NET batches within 'cardArr'.
     rc.totalSDETBatch = 0;              // Total number of SDET batches within 'cardArr'.
     rc.totalJavaBatch = 0;              // Total number of Java batches within 'cardArr'.
+    rc.totalSalesforceBatch = 0;              // Total number of Java batches within 'cardArr'.
+    rc.totalBigDataBatch = 0;              // Total number of Java batches within 'cardArr'.
     rc.totalCumulativeBatches = 0;      // Total number of required batches within 'cardArr'.
 
     // The 'newObj' object, and it's assignments, are used to generate
@@ -444,6 +446,8 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         rc.totalJavaBatch = 0;
         rc.totalNetBatch = 0;
         rc.totalSDETBatch = 0;
+        rc.totalSalesforceBatch = 0;
+        rc.totalBigDataBatch = 0;
         rc.totalCumulativeBatches = 0;
 
         for (var x in rc.cardArr){
@@ -464,6 +468,20 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
                     case 3 :   //Switch case for SDET Batches
                         rc.totalSDETBatch += rc.cardArr[x].requiredBatches;
+                        rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
+                        break;
+
+                    case 4 :   //Switch case for Salesforce Batches
+                        rc.totalSalesforceBatch += rc.cardArr[x].requiredBatches;
+                        rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
+                        break;
+
+                    case 164 :   //Switch case for Big Data Batches
+                        rc.totalBigDataBatch += rc.cardArr[x].requiredBatches;
+                        rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
+                        break;
+
+                    case 105 :   //Switch case for Custom Batches
                         rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
                         break;
 
