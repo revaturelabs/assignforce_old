@@ -909,9 +909,9 @@ var app = angular.module('batchApp');
             .attr('style', 'position: -webkit-sticky; position: sticky');
             //.call(xAxis);
 
-        var brect = x.append('rect');
+        var brect = xLine.append('rect');
 
-        x.call(xAxis);
+        xLine.call(xAxis);
 
 
 
@@ -1074,12 +1074,12 @@ var app = angular.module('batchApp');
 
 		tlc.moveAxis();
         if(x!==null){
-            if(x.node()!=null){
+            if(xLine.node()!=null){
                 brect
                     .attr('class','axisrect')
-                    .attr('transform','translate('+(timelineFormatting.margin_left/2)+',-'+x.node().getBoundingClientRect().height+')')
-                    .attr('width',x.node().getBoundingClientRect().width+timelineFormatting.margin_left/2)
-                    .attr('height',x.node().getBoundingClientRect().height)
+                    .attr('transform','translate('+(timelineFormatting.margin_left/2)+',-'+xLine.node().getBoundingClientRect().height+')')
+                    .attr('width',xLine.node().getBoundingClientRect().width+timelineFormatting.margin_left/2)
+                    .attr('height',xLine.node().getBoundingClientRect().height)
                     .style('fill','white');
             }
         }
