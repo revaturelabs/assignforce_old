@@ -471,7 +471,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
                         rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
                         break;
 
-                    case 4 :   //Switch case for Salesforce Batches
+                    case 150 :   //Switch case for Salesforce Batches
                         rc.totalSalesforceBatch += rc.cardArr[x].requiredBatches;
                         rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
                         break;
