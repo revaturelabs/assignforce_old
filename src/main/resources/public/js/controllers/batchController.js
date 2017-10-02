@@ -506,7 +506,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
         })
     }
 
-    bc.syncColor = function(batch){
+    bc.syncColor = function(){
         return {"background-color":"red"};
     }
     //calculates the presentage of time that a room is available for use

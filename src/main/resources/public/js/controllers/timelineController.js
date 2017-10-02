@@ -1091,7 +1091,6 @@ var app = angular.module('batchApp');
 	tlc.axisDisplacement = 0
     tlc.moveAxis= function () {
         var x = document.getElementsByClassName("x axis");
-        if(x[0]!==undefined ) {
             if(x[0].getBoundingClientRect().top){
                 tlc.axisDisplacement -= x[0].getBoundingClientRect().top
                 if(tlc.axisDisplacement <0){tlc.axisDisplacement =0;}
