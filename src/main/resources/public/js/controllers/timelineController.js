@@ -4,7 +4,7 @@ var app = angular.module('batchApp');
 
 /*--------------------------CONTROLLER---------------------------*/
 
- app.controller("TimelineCtrl", function($scope, $window, batchService, calendarService, trainerService, curriculumService, settingService, locationService, buildingService){
+ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarService, trainerService, curriculumService, settingService, locationService, buildingService)){
 	
     var tlc = this;
 
