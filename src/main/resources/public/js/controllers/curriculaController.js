@@ -7,8 +7,7 @@ var assignforce = angular.module( "batchApp" );
 assignforce.controller("curriculaCtrl", function ($scope, $rootScope, curriculumService, skillService) {
     var cc = this;
 
-    $scope.isManager = $rootScope.role == "VP of Technology";
-    // $scope.skillToggle = false;
+    $scope.isManager = $rootScope.role === "VP of Technology";
 
     //functions
 
@@ -72,7 +71,7 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, curriculum
             var skillList = [];
             for(var i = 0; i < cc.selectedSkills.length; i++){
                 for(var j = 0; j < cc.skills.length; j++){
-                    if(cc.skills[j].skillId == cc.selectedSkills[i]){
+                    if(cc.skills[j].skillId === cc.selectedSkills[i]){
                         skillList.push(cc.skills[j]);
                         break;
                     }
@@ -212,8 +211,6 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, curriculum
     });
 
     //variables
-    // cc.curricula;
-    // cc.skills;
     cc.selectedSkills = [];
     cc.focusName = undefined;
     cc.coreName = undefined; //added for add Core usecase
