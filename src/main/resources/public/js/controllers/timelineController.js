@@ -4,7 +4,7 @@ var app = angular.module('batchApp');
 
 /*--------------------------CONTROLLER---------------------------*/
 
- app.controller("TimelineCtrl", function($scope, $window, batchService, calendarService, trainerService, curriculumService, settingService, locationService, buildingService)){
+ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarService, trainerService, curriculumService, settingService, locationService, buildingService){
 	
     var tlc = this;
 
@@ -1097,7 +1097,7 @@ var app = angular.module('batchApp');
                     x[0].setAttribute("transform", "translate(0," + tlc.axisDisplacement + ")");
             }
 
-        }//else{
+        //else{
         window.requestAnimationFrame(tlc.moveAxis);
         //}
     }
