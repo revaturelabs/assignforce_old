@@ -53,7 +53,6 @@ module.exports = function(config) {
     // dots and junit are for CI
     reporters: ['spec','dots', 'junit'],
 
-
     // web server port
     port: 9876,
 

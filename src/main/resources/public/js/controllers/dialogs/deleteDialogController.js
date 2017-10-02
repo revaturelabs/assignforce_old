@@ -21,8 +21,10 @@ assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeou
         }
         
         // 1 location and 1 room || 1 location and 1 building
-        if (dc.summary.locations > 0 && ((dc.summary.buildings == 0 && dc.summary.rooms > 0) || (dc.summary.buildings > 0 && dc.summary.rooms == 0))){
-        	title += " and ";
+        if (dc.summary.locations > 0){
+            if((dc.summary.buildings === 0 && dc.summary.rooms > 0) || (dc.summary.buildings > 0 && dc.summary.rooms === 0))){
+        	    title += " and ";
+        	}
         }
 
         // + Buildings
@@ -55,14 +57,14 @@ assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeou
     };
 
     dc.deleteHelper = function( delList ) {
-        if (delList.length == 0) {
+        if (delList.length === 0) {
             $mdDialog.hide();
             return;
         }
 
         delList.forEach(function(obj){
 
-            if(obj.buildings != undefined){ //location
+            if(obj.buildings !== undefined){ //location
                 for(var j = 0; j < obj.buildings.length; j++){
                     deleteBuildings(obj.buildings);
                 }
@@ -74,7 +76,7 @@ assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeou
                 	//Unable to inactivate location
                 });
                 
-            } else if(obj.rooms != undefined){ //building
+            } else if(obj.rooms !== undefined){ //building
                 for(var k = 0; k < obj.rooms.length; k++){
                     deleteRooms(obj.rooms);
                 }

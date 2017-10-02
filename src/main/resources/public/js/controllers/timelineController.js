@@ -49,25 +49,25 @@ var app = angular.module('batchApp');
     //Filter removes batches that don't have a matching curriculum to the selected view by the user.
     tlc.removeUnmatchingCurriculum = function(batch)
     {
-    	return (tlc.selectedCurriculum == 0 || (!tlc.isUndefinedOrNull(batch.curriculum) && (batch.curriculum.currId == tlc.selectedCurriculum)));
+    	return (tlc.selectedCurriculum === 0 || (!tlc.isUndefinedOrNull(batch.curriculum) && (batch.curriculum.currId === tlc.selectedCurriculum)));
     };
     
     //Filter removes batches that don't have a matching location to the selected view by the user.
     tlc.removeUnmatchingLocation = function(batch)
     {
-    	return (tlc.selectedLocation == 0 || (!tlc.isUndefinedOrNull(batch.location) && (batch.location.id == tlc.selectedLocation)));
+    	return (tlc.selectedLocation === 0 || (!tlc.isUndefinedOrNull(batch.location) && (batch.location.id === tlc.selectedLocation)));
     };
     
     //Filter removes batches that don't have a matching building to the selected view by the user.
     tlc.removeUnmatchingBuilding = function(batch)
     {
-    	return (tlc.selectedBuilding == 0 || (!tlc.isUndefinedOrNull(batch.building) && (batch.building.id == tlc.selectedBuilding)));
+    	return (tlc.selectedBuilding === 0 || (!tlc.isUndefinedOrNull(batch.building) && (batch.building.id === tlc.selectedBuilding)));
     };
     
     //Filter removes batches that don't have a matching focus to the selected view by the user.
     tlc.removeUnmatchingFocus = function(batch)
     {
-    	return (tlc.selectedFocus == 0 || (!tlc.isUndefinedOrNull(batch.focus) && (batch.focus.currId == tlc.selectedFocus)));
+    	return (tlc.selectedFocus === 0 || (!tlc.isUndefinedOrNull(batch.focus) && (batch.focus.currId === tlc.selectedFocus)));
     };
     
     //Filter removes batches who don't have any matching trainers.
@@ -84,10 +84,10 @@ var app = angular.module('batchApp');
     tlc.removeTrainersOutOfPage = function(trainer) {
 		var trainerIndex = tlc.trainers.findIndex(function (d)
 		{
-			return (d == trainer);
+			return (d === trainer);
 		});
 		
-		var trainerDisplayed = (tlc.trainerListEndIndex == 0 || (trainerIndex > -1 && trainerIndex >= tlc.trainerListStartIndex && trainerIndex < tlc.trainerListEndIndex));
+		var trainerDisplayed = (tlc.trainerListEndIndex === 0 || (trainerIndex > -1 && trainerIndex >= tlc.trainerListStartIndex && trainerIndex < tlc.trainerListEndIndex));
 		
         return trainerDisplayed;
     };
@@ -96,7 +96,7 @@ var app = angular.module('batchApp');
     tlc.removeBatchlessTrainers = function(trainer) {
 		var trainerIndex = tlc.filteredBatches.findIndex(function (d)
 		{
-			return (d.trainer.trainerId == parseInt(trainer.substring(1, trainer.indexOf(')'))));
+			return (d.trainer.trainerId === parseInt(trainer.substring(1, trainer.indexOf(')'))));
 		});
 		
         return (trainerIndex > -1);
@@ -231,7 +231,7 @@ var app = angular.module('batchApp');
 	        	if (!tlc.isUndefinedOrNull(b.room))
 	        	{
 	        		var building = tlc.buildings.find(function(building){
-	        			return (building.id == b.room.building);
+	        			return (building.id === b.room.building);
 	        		});
 	        		
 	        		if (building)
@@ -239,7 +239,7 @@ var app = angular.module('batchApp');
 	        			b.building = building;
 	        			
 		        		var location = tlc.locations.find(function(location){
-		        			return (location.id == b.building.location);
+		        			return (location.id === b.building.location);
 		        		});
 	        			
 	        			if (location)
@@ -275,7 +275,7 @@ var app = angular.module('batchApp');
 	tlc.getSelectedLocation = function()
 	{
 		var location = tlc.locations.find(function(l){
-			return (l.id == tlc.selectedLocation);
+			return (l.id === tlc.selectedLocation);
 		});
 		
 		return location;
@@ -564,10 +564,10 @@ var app = angular.module('batchApp');
 	};
 	
 	//Status of the previous page button.  Enabled/Disabled.
-	tlc.previousPageButtonStatus = function(useFilteredTrainers)
+	tlc.previousPageButtonStatus = function()
 	{
 		//True = disabled, false = enabled.
-		if (tlc.trainerListStartIndex == 0 || tlc.realTrainersPerPage == 0) { 
+		if (tlc.trainerListStartIndex === 0 || tlc.realTrainersPerPage === 0) {
 			tlc.previousPageButtonDisabled = true; 
 		}
 		else { 
@@ -593,7 +593,7 @@ var app = angular.module('batchApp');
 		var numTrainers = (trainerList ? trainerList.length : 0);
 		
 		//True = disabled, false = enabled.
-		if (tlc.trainerListStartIndex + tlc.realTrainersPerPage >= numTrainers || tlc.realTrainersPerPage == 0) { 
+		if (tlc.trainerListStartIndex + tlc.realTrainersPerPage >= numTrainers || tlc.realTrainersPerPage === 0) {
 			tlc.nextPageButtonDisabled = true;
 		}
 		else { tlc.nextPageButtonDisabled = false; }
@@ -606,7 +606,15 @@ var app = angular.module('batchApp');
 	//Conditions on which to use the filtered list of batches, for requisite functions.
 	tlc.useFilteredBatches = function()
 	{
-		return (tlc.hideConcludedBatches || tlc.hideFocuslessBatches || tlc.selectedCurriculum > 0 || tlc.selectedFocus > 0 || tlc.selectedLocation > 0 || tlc.selectedBuilding > 0);
+		if(tlc.hideConcludedBatches || tlc.hideFocuslessBatches || tlc.selectedCurriculum > 0 || tlc.selectedFocus > 0){
+		    return true;
+		}
+		else if(tlc.selectedLocation > 0 || tlc.selectedBuilding > 0){
+		    return true;
+		}
+		else{
+		    return false;
+		};
 	}
 	
 	//Refilters the data for the timeline.
@@ -894,15 +902,9 @@ var app = angular.module('batchApp');
 		svg.append('g')
 			.attr('class','rectangles');
 
-        /*
-        svg.append('rect')
-            .attr('class','axisrect')
-            .attr('width',100)
-            .attr('height',100)
-            .style('fill','red');
-            */
 
-        var x = svg.append('g')
+
+        var xLine = svg.append('g')
             .attr('class','x axis')
             .attr('style', 'position: -webkit-sticky; position: sticky');
             //.call(xAxis);
@@ -1071,7 +1073,7 @@ var app = angular.module('batchApp');
 				.text(function(d) {return d.length;});
 
 		tlc.moveAxis();
-        if(x!=null){
+        if(x!==null){
             if(x.node()!=null){
                 brect
                     .attr('class','axisrect')
@@ -1089,7 +1091,7 @@ var app = angular.module('batchApp');
 	tlc.axisDisplacement = 0
     tlc.moveAxis= function () {
         var x = document.getElementsByClassName("x axis");
-        if(x[0]!=undefined ) {
+        if(x[0]!==undefined ) {
             if(x[0].getBoundingClientRect().top){
                 tlc.axisDisplacement -= x[0].getBoundingClientRect().top
                 if(tlc.axisDisplacement <0){tlc.axisDisplacement =0;}
@@ -1097,7 +1099,6 @@ var app = angular.module('batchApp');
             }
 
         }//else{
-//            setTimeout(tlc.moveAxis,120);
         window.requestAnimationFrame(tlc.moveAxis);
         //}
     }
