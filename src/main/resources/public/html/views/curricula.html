@@ -11,6 +11,12 @@
                 <div class="md-toolbar-tools">
                     <span>Core Curricula</span>
                     <span flex></span>
+
+                    <md-button class="md-icon-button" ng-click="$event.stopPropagation();cCtrl.createCore" style="margin: 12px 6px;" >
+                        <md-tooltip class="md-title"> Add New Card </md-tooltip>
+                        <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
+                    </md-button>
+
                     <md-button class="md-icon-button" ng-click="cCtrl.toggleCoreStatus()" ng-show="isManager">
                         <md-tooltip class="md-title"> Create Core</md-tooltip>
                         <i class="material-icons">add_circle</i>
