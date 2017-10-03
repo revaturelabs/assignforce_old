@@ -1,5 +1,4 @@
 var app = angular.module("batchApp");
-var app = angular.module("batchApp");
 
 app.service('trainerService', function($resource) {
     var Trainer = $resource('api/v2/trainer/:trainerId',{trainerId:'@trainerId'},{update:{method:'PUT', url:'api/v2/trainer'}});     
