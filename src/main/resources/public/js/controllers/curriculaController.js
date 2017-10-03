@@ -101,6 +101,7 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, curriculum
     };
     //create a focus
     //I want to fix this to be readable - Sam
+    //TODO
     cc.createFocus = function (focusForm) {
 
         cc.createCurriculum(focusForm,false);
@@ -109,6 +110,7 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, curriculum
     };
 
     //create a core
+    //TODO
     cc.createCore = function (coreForm) {
         cc.createCurriculum(coreForm,true);
         cc.coreName = undefined;

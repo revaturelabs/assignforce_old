@@ -12,8 +12,9 @@
                     <span>Core Curricula</span>
                     <span flex></span>
 
-                    <md-button class="md-icon-button" ng-click="$event.stopPropagation();cCtrl.createCore" style="margin: 12px 6px;" >
-                        <md-tooltip class="md-title"> Add New Card </md-tooltip>
+                    <!--Add New Curriculum Button-->
+                    <md-button class="md-icon-button" ng-click="$event.stopPropagation();cCtrl.createCore()" style="margin: 12px 6px;" >
+                        <md-tooltip class="md-title"> Add New Curriculum </md-tooltip>
                         <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
                     </md-button>
 
@@ -74,6 +75,13 @@
                 <div class="md-toolbar-tools">
                     <span>Focuses</span>
                     <span flex></span>
+
+                    <!--Add New Focus Button-->
+                    <md-button class="md-icon-button" ng-click="$event.stopPropagation();cCtrl.createFocus()" style="margin: 12px 6px;" >
+                        <md-tooltip class="md-title"> Add New Focus</md-tooltip>
+                        <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
+                    </md-button>
+
                     <md-button class="md-icon-button" ng-click="cCtrl.toggleFocusStatus()" ng-show="isManager">
                         <md-tooltip class="md-title"> Create Focus</md-tooltip>
                         <i class="material-icons">add_circle</i>
