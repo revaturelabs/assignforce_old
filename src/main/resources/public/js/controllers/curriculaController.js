@@ -4,7 +4,7 @@
 
 var assignforce = angular.module( "batchApp" );
 
-assignforce.controller("curriculaCtrl", function ($scope, $rootScope, curriculumService, skillService) {
+assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog, curriculumService, skillService) {
     var cc = this;
 
     $scope.isManager = $rootScope.role == "VP of Technology";
@@ -185,6 +185,35 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, curriculum
         cc.showToast("Could not fetch skills.")
     });
 
+    //Show Edit Curriculum Dialog
+    $scope.showCurriculum = function(event) {
+       var confirm = $mdDialog.confirm()
+          .title('Are you sure to delete the record?')
+          .textContent('Record will be deleted permanently.')
+          .ariaLabel('TutorialsPoint.com')
+          .targetEvent(event)
+          .ok('Yes')
+          .cancel('No');
+    };
+
+    //Show Edit Focus Dialog
+    $scope.showFocus = function(event) {
+       $mdDialog.show ({
+          clickOutsideToClose: true,
+          scope: $scope,
+          preserveScope: true,
+          template: '<md-dialog>' +
+                      '  <md-dialog-content>' +
+                      '     Welcome to TutorialsPoint.com' +
+                      '  </md-dialog-content>' +
+                      '</md-dialog>',
+          controller: function DialogController($scope, $mdDialog) {
+             $scope.closeDialog = function() {
+                $mdDialog.hide();
+             }
+          }
+       });
+    };
     //variables
     // cc.curricula;
     // cc.skills;
