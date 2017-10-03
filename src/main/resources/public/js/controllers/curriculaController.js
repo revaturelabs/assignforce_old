@@ -187,14 +187,14 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
 
     //Show Edit Curriculum Dialog
     $scope.showCurriculum = function(event) {
-        var confirm = $mdDialog.confirm()
+        var prompt = $mdDialog.prompt()
           .title('Edit Curriculum')
-          .textContent('Record will be deleted permanently.')
-          .ariaLabel('Iteration6')
-          .targetEvent(event)
+          .placeholder('skillName')
+          .ariaLabel('skillName')
+          .initialValue('New Skill')
           .ok('Save')
           .cancel('Cancel');
-       $mdDialog.show(confirm);
+       $mdDialog.show(prompt);
     };
 
     //Show Edit Focus Dialog
