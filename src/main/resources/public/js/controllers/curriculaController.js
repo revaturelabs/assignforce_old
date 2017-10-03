@@ -4,7 +4,7 @@
 
 var assignforce = angular.module( "batchApp" );
 
-assignforce.controller("curriculaCtrl", function ($scope, $rootScope, curriculumService, skillService) {
+assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog, curriculumService, skillService) {
     var cc = this;
 
     $scope.isManager = $rootScope.role == "VP of Technology";
@@ -185,6 +185,23 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, curriculum
         cc.showToast("Could not fetch skills.")
     });
 
+    //Show Edit Curriculum Dialog
+    $scope.showCurriculum = function(event) {
+        var confirm = $mdDialog.confirm()
+          .title('Edit Curriculum')
+          .textContent('Record will be deleted permanently.')
+          .ariaLabel('Iteration6')
+          .targetEvent(event)
+          .ok('Save')
+          .cancel('Cancel');
+       $mdDialog.show(confirm);
+    };
+
+    //Show Edit Focus Dialog
+    //TODO similar to above showCurriculum
+    $scope.showFocus = function(event) {
+
+    };
     //variables
     // cc.curricula;
     // cc.skills;
