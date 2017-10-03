@@ -546,7 +546,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
     bc.calcTrainerAvalibilityRatio = function(trainer){
         var sd = new Date(bc.batch.startDate);
         var ed = new Date(bc.batch.endDate);
-        var unavailable = trainer.unavailabilities;
+        var unavailable = trainer.unavailabilities; //where does unavailabilities come from
         console.log(unavailable);
         var counter = 0;
         var One_day = 1000 * 60 * 60 * 24;
@@ -559,10 +559,10 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
             for (var j=0; j < unavailable.length; j++){
                 var Rsd = new Date(unavailable[j].startDate);
                 var Red = new Date(unavailable[j].endDate);
-                var curDay = new Date(Rsd.getFullYear(), Rsd.getMonth(), Rsd.getDate() + 1);
+                var curDay = new Date(Rsd.getFullYear(), Rsd.getMonth(), Rsd.getDate() + 1); //date in the iteration of the days off
                 for (var i = 0; i < dayCount; i++){
                     if (curDay >= sd && curDay < ed){
-                        counter++;
+                        counter++; //unavailable
                     };
                     curDay = new Date(curDay.getFullYear(), curDay.getMonth(), curDay.getDate() +1);
                     if (!(curDay >= Rsd && curDay < Red)){
@@ -573,7 +573,11 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
         }else{
             return 100;
         }
-        return 100- (Math.floor((counter/dayCount)*100));
+        var result =  100- (Math.floor((counter/dayCount)*100));
+        if (result < 0 ) {
+            result = 0;
+        }
+        return result;
     }
 
 
