@@ -1,4 +1,4 @@
-let assignforce = angular.module("batchApp");
+//let assignforce = angular.module("batchApp");
 
 const oneDayInMs = 1000 * 60 * 60 * 24;
 
@@ -552,7 +552,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
             .map((day) => {
                 let status = unavailable
                     .map((range) => inRange(day,range.startDate,range.endDate) )
-                    .reduce((a,b) => a||b);
+                    .reduce((a,b) => a||b, false);
                 return status? 0:1;
             })
             .reduce((a,b) => a+b);
