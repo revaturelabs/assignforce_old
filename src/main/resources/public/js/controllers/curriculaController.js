@@ -187,32 +187,20 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
 
     //Show Edit Curriculum Dialog
     $scope.showCurriculum = function(event) {
-       var confirm = $mdDialog.confirm()
-          .title('Are you sure to delete the record?')
+        var confirm = $mdDialog.confirm()
+          .title('Edit Curriculum')
           .textContent('Record will be deleted permanently.')
-          .ariaLabel('TutorialsPoint.com')
+          .ariaLabel('Iteration6')
           .targetEvent(event)
-          .ok('Yes')
-          .cancel('No');
+          .ok('Save')
+          .cancel('Cancel');
+       $mdDialog.show(confirm);
     };
 
     //Show Edit Focus Dialog
+    //TODO similar to above showCurriculum
     $scope.showFocus = function(event) {
-       $mdDialog.show ({
-          clickOutsideToClose: true,
-          scope: $scope,
-          preserveScope: true,
-          template: '<md-dialog>' +
-                      '  <md-dialog-content>' +
-                      '     Welcome to TutorialsPoint.com' +
-                      '  </md-dialog-content>' +
-                      '</md-dialog>',
-          controller: function DialogController($scope, $mdDialog) {
-             $scope.closeDialog = function() {
-                $mdDialog.hide();
-             }
-          }
-       });
+
     };
     //variables
     // cc.curricula;
