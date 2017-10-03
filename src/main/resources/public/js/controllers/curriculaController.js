@@ -101,7 +101,6 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
     };
     //create a focus
     //I want to fix this to be readable - Sam
-    //TODO
     cc.createFocus = function (focusForm) {
 
         cc.createCurriculum(focusForm,false);
@@ -188,13 +187,15 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
     //Show Edit Curriculum Dialog
     $scope.showCurriculum = function(event) {
         var prompt = $mdDialog.prompt()
-          .title('Edit Curriculum')
+          .title('New Curriculum')
           .placeholder('skillName')
           .ariaLabel('skillName')
-          .initialValue('New Skill')
+          .initialValue('Skill Name')
           .ok('Save')
           .cancel('Cancel');
-       $mdDialog.show(prompt);
+       $mdDialog.show(prompt).then(function(result){
+            curriculumService.create(result);
+       });
     };
 
     //Show Edit Focus Dialog
