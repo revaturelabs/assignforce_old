@@ -1,3 +1,4 @@
+//used to test
 describe('authContr', function(){
 
     beforeEach(module('batchApp'));
