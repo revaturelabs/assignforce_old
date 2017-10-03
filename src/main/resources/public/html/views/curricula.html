@@ -67,12 +67,15 @@
                 <md-list>
                     <md-list-item class="md-2-line" ng-repeat="curr in cCtrl.curricula | activeItem" ng-if="curr.core == true">
                         <div layout="column">
-                            <h3><md-button class="md-icon-button" ng-click="" style="padding-bottom: 45px;" >
-                                <md-tooltip class="md-title"> Edit Curricula </md-tooltip>
-                                <md-icon><i class="material-icons" style="font-size: 17px" >&#xE150;</i></md-icon>
-                            </md-button><b>{{curr.name}}</b></h3>
+                            <h3><b>{{curr.name}}</b></h3>
                             <p style="font-size: 20px; margin-left: 50px;"> <i>Skills: </i>{{ curr.skills.map(cCtrl.joinObjArrayByName).join(", ");}}</p>
                         </div>
+                        <md-divider></md-divider>
+                        <span flex></span>
+                            <md-button class="md-icon-button" ng-click="cCtrl.editcurricula(curr)">
+                                <md-tooltip class="md-title"> Edit Curricula </md-tooltip>
+                                <i class="material-icons revOrange"> edit </i>
+                            </md-button>
                     </md-list-item>
                 </md-list>
             </md-card-content>
@@ -124,20 +127,14 @@
                 <md-list>
                     <md-list-item class="md-2-line" ng-repeat="curr in cCtrl.curricula | activeItem" ng-if="curr.core == false" class="md-2-line">
                         <div layout="column">
-                            <h3><md-button class="md-icon-button" ng-click="" style="padding-bottom: 45px;" >
-                                <md-tooltip class="md-title"> Edit Focus </md-tooltip>
-                                <md-icon><i class="material-icons" style="font-size: 17px" >&#xE150;</i></md-icon>
-                            </md-button><b>{{curr.name}}</b></h3>
+                            <h3><b>{{curr.name}}</b></h3>
                             <p style="font-size: 20px; margin-left: 50px;"><i>Skills: </i> {{ curr.skills.map(cCtrl.joinObjArrayByName).join(", ");}}</p>
                         </div>
+                        <md-divider></md-divider>
                         <span flex></span>
-                        <!--<md-button class="md-icon-button" ng-click="cCtrl.editFocus(curr)">-->
-                        <!--<md-tooltip class="md-title"> Edit Focus </md-tooltip>-->
-                        <!--<i class="material-icons revOrange"> edit </i>-->
-                        <!--</md-button>-->
-                        <md-button class="md-icon-button" ng-click="cCtrl.removeFocus(curr)" ng-show="isManager">
-                            <md-tooltip class="md-title"> Remove Focus </md-tooltip>
-                            <i class="material-icons revOrange">remove_circle</i>
+                        <md-button class="md-icon-button" ng-click="cCtrl.editFocus(curr)">
+                        <md-tooltip class="md-title"> Edit Focus </md-tooltip>
+                        <i class="material-icons revOrange"> edit </i>
                         </md-button>
                     </md-list-item>
                 </md-list>
