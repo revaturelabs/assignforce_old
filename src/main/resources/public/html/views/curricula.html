@@ -66,13 +66,12 @@
 
                 <md-list>
                     <md-list-item class="md-2-line" ng-repeat="curr in cCtrl.curricula | activeItem" ng-if="curr.core == true">
-                        <div class="md-list-item-text" layout="column" style="">
-
+                        <div layout="column">
                             <h3><md-button class="md-icon-button" ng-click="" style="padding-bottom: 45px;" >
                                 <md-tooltip class="md-title"> Edit Curricula </md-tooltip>
                                 <md-icon><i class="material-icons" style="font-size: 17px" >&#xE150;</i></md-icon>
-                            </md-button>{{curr.name}}</h3>
-                            <p>Skills: {{ curr.skills.map(cCtrl.joinObjArrayByName).join(", ");}}</p>
+                            </md-button><b>{{curr.name}}</b></h3>
+                            <p style="font-size: 20px; margin-left: 50px;"> <i>Skills: </i>{{ curr.skills.map(cCtrl.joinObjArrayByName).join(", ");}}</p>
                         </div>
                     </md-list-item>
                 </md-list>
@@ -123,13 +122,13 @@
                     </form>
                 </md-card>
                 <md-list>
-                    <md-list-item ng-repeat="curr in cCtrl.curricula | activeItem" ng-if="curr.core == false" class="md-2-line">
-                        <div class="md-list-item-text" layout="column">
+                    <md-list-item class="md-2-line" ng-repeat="curr in cCtrl.curricula | activeItem" ng-if="curr.core == false" class="md-2-line">
+                        <div layout="column">
                             <h3><md-button class="md-icon-button" ng-click="" style="padding-bottom: 45px;" >
                                 <md-tooltip class="md-title"> Edit Focus </md-tooltip>
                                 <md-icon><i class="material-icons" style="font-size: 17px" >&#xE150;</i></md-icon>
-                            </md-button>{{curr.name}}</h3>
-                            <p>Skills: {{ curr.skills.map(cCtrl.joinObjArrayByName).join(", ");}}</p>
+                            </md-button><b>{{curr.name}}</b></h3>
+                            <p style="font-size: 20px; margin-left: 50px;"><i>Skills: </i> {{ curr.skills.map(cCtrl.joinObjArrayByName).join(", ");}}</p>
                         </div>
                         <span flex></span>
                         <!--<md-button class="md-icon-button" ng-click="cCtrl.editFocus(curr)">-->
