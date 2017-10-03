@@ -10,9 +10,8 @@ describe('authContr', function(){
     it("practice test", function(){
         var $scope = {};
         var controller = $controller('settingsCtrl', { $scope: $scope });
-        $scope.poo.settings = 'ass';
-        $scope.check('buns');
-        expect($scope.poo.settings).not.toBe('ass');
+        $scope.settings = 'test';
+        expect($scope.settings).toBe('test');
     });
 
 
