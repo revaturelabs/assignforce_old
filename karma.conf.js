@@ -32,7 +32,8 @@ module.exports = function(config) {
         './node_modules/ngcsv/ngcsv.js',
         './src/main/resources/public/js/assignforce.js',
         './src/main/resources/public/js/services/*Service.js',
-        './src/test/resources/specs/*.spec.js'
+        './src/test/resources/specs/*.spec.js',
+        './src/main/resources/public/js/controllers/settingsController.js'
     ],
 
 

@@ -3,6 +3,7 @@ var assignforce = angular.module( "batchApp");
 
 assignforce.controller("settingsCtrl", function ($scope, $rootScope, settingService, locationService) {
     var sc = this;
+    $scope.poo = sc;
 
     $scope.isManager = $rootScope.role === "VP of Technology";
 
@@ -65,4 +66,7 @@ assignforce.controller("settingsCtrl", function ($scope, $rootScope, settingServ
     sc.defaultLocation;
     sc.settings;
     sc.locations;
+    $scope.check = function(settingChange){
+        sc.settings = settingChange;
+    }
 });

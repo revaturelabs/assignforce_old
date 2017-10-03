@@ -1,5 +1,5 @@
-
-	var assignforce = angular.module( "batchApp", ['ngRoute', 'ngAnimate', 'ngAria', 'ngResource', 'ngMaterial', 'md.data.table', 'ngCsv']);
+    // ngcsv injectable dependency ommitted
+	var assignforce = angular.module( "batchApp", ['ngRoute', 'ngAnimate', 'ngAria', 'ngResource', 'ngMaterial', 'md.data.table' ]);
 
           // global constants
         assignforce.constant( "secWeek", 604800000 )
