@@ -57,7 +57,11 @@
                 <md-list>
                     <md-list-item class="md-2-line" md-ink-ripple ng-repeat="curr in cCtrl.curricula | activeItem" ng-if="curr.core == true">
                         <div class="md-list-item-text" layout="column">
-                            <h3>{{curr.name}}</h3>
+
+                            <h3><md-button class="md-icon-button" ng-click="$event.stopPropagation();cCtrl.createCore" style="margin: 12px 6px;" >
+                                <md-tooltip class="md-title"> Edit Skill </md-tooltip>
+                                <md-icon md-svg-icon="img/edit-pencil.png"> </md-icon>
+                            </md-button>{{curr.name}}</h3>
                             <p>Skills: {{ curr.skills.map(cCtrl.joinObjArrayByName).join(", ");}}</p>
                         </div>
                     </md-list-item>
