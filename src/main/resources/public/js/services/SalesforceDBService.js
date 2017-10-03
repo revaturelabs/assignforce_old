@@ -5,7 +5,36 @@ app.service('SFService', function($resource, $rootScope, $http) {
 
     sfs.SaveSF = function(batch,succ,err){
         //send to sf
-    
+        //TODO: refactor
+        if (batch.SALESFORCEID != null) { //already has a sf id number
+            var fun = function(){
+                $http({
+                    method: "PATCH",
+                    url: "https://revature--int1.cs17.my.salesforce.com/services/data/v40.0/sobjects/Training__c/{bsc.afb.ID}",
+                    headers:{
+                        "Authorization" : "Bearer" + $rootScope.token
+                    },
+                    data: reformatData(batch)
+                }).success(succ).error(err);
+
+            }
+        }else{ //has not been updated in sf
+            var fun = function sendData(){
+                $http({
+                    method: "POST",
+                    url: "https://revature--int1.cs17.my.salesforce.com/services/data/v40.0/sobjects/Training__c",
+                    headers:{
+                        "Authorization" : "Bearer" + $rootScope.token
+                    },
+                    data: reformatData(batch)
+                }).success(function (response) {
+                    batch.SALESFORCEID = response.id;
+                    succ(response);
+                }).error(err);
+            }
+        }
+    }
+
     sfs.reformatData= function(batch){
         //reformat af batch info to match sf
         var course;
