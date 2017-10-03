@@ -50,13 +50,8 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-<<<<<<< HEAD
-    // dots and junit are for CI
-    reporters: ['spec'],
-=======
     reporters: ['spec'],
 
->>>>>>> parent of a8c62f45... attempting to setup fullstack CI
 
     // web server port
     port: 9876,
