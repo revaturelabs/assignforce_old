@@ -74,7 +74,7 @@ var app = angular.module('batchApp');
     tlc.removeIrrelevantBatches = function(batch) {
 		var trainerIndex = tlc.filteredTrainers.findIndex(function (d)
 		{
-			return (d == $scope.trainerColumnName(batch.trainer));
+			return (d === $scope.trainerColumnName(batch.trainer));
 		});
 		
         return (trainerIndex > -1);
@@ -1073,18 +1073,14 @@ var app = angular.module('batchApp');
 				.text(function(d) {return d.length;});
 
 		tlc.moveAxis();
-        if(x!==null){
-            if(xLine.node()!=null){
-                brect
-                    .attr('class','axisrect')
-                    .attr('transform','translate('+(timelineFormatting.margin_left/2)+',-'+xLine.node().getBoundingClientRect().height+')')
-                    .attr('width',xLine.node().getBoundingClientRect().width+timelineFormatting.margin_left/2)
-                    .attr('height',xLine.node().getBoundingClientRect().height)
-                    .style('fill','white');
-            }
+        if(x!==null && xLine.node()!=null){
+            brect
+                .attr('class','axisrect')
+                .attr('transform','translate('+(timelineFormatting.margin_left/2)+',-'+xLine.node().getBoundingClientRect().height+')')
+                .attr('width',xLine.node().getBoundingClientRect().width+timelineFormatting.margin_left/2)
+                .attr('height',xLine.node().getBoundingClientRect().height)
+                .style('fill','white');
         }
-
-
 	}
 
 //	function to freeze trainers names over the graph at the top of the window whenever you scroll out of the window
