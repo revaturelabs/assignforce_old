@@ -5,7 +5,7 @@
 
 var assignforce = angular.module( "batchApp" );
 
-assignforce.controller( "profileCtrl", function( $scope, $resource, $http, $mdDialog, $mdToast, $rootScope, $rootScope, trainerService, roomService, skillService, s3Service, $routeParams) {
+assignforce.controller( "profileCtrl", function( $scope, $resource, $http, $mdDialog, $mdToast, $rootScope, trainerService, roomService, skillService, s3Service, $routeParams) {
     var pc = this;
     pc.tId = $routeParams.id; //grabs the trainer id from the url to load the page with the trainer specified
 
@@ -73,7 +73,7 @@ assignforce.controller( "profileCtrl", function( $scope, $resource, $http, $mdDi
     pc.addSkill = function (skill) {
         //add the skill to the trainer skill array
         for(var i = 0; i < pc.skills.length; i++){
-            if(pc.skills[i].name == skill){
+            if(pc.skills[i].name === skill){
                 pc.trainer.skills.push(pc.skills[i]);
                 break;
             }
@@ -81,7 +81,7 @@ assignforce.controller( "profileCtrl", function( $scope, $resource, $http, $mdDi
 
         //remove the same skill from the skill list array
         for(var index = 0; index < pc.skillsList.length; index++){
-            if(pc.skillsList[index] == skill){
+            if(pc.skillsList[index] === skill){
                 pc.skillsList.splice(index, 1);
                 break;
             }
@@ -91,7 +91,7 @@ assignforce.controller( "profileCtrl", function( $scope, $resource, $http, $mdDi
     //remove a trainer skill on the bottom
     pc.removeSkill = function (skill) {
         for(var i = 0; i < pc.trainer.skills.length; i++){
-            if(pc.trainer.skills[i] == skill){
+            if(pc.trainer.skills[i] === skill){
                 pc.skillsList.push(skill.name);
                 pc.trainer.skills.splice(i, 1);
                 break;
@@ -154,7 +154,7 @@ assignforce.controller( "profileCtrl", function( $scope, $resource, $http, $mdDi
     //remove a certification from a trainer(need to remove the certification from the certification Table)
     pc.removeCertification = function (cert) {
         for (var i = 0; i < pc.trainer.certifications.length; i++){
-            if(cert.name == pc.trainer.certifications[i].name){
+            if(cert.name === pc.trainer.certifications[i].name){
                 pc.trainer.certifications.splice(i,1);
             }
         }
@@ -223,7 +223,7 @@ assignforce.controller( "profileCtrl", function( $scope, $resource, $http, $mdDi
             var status = true;
             for(var i = 0; i < pc.skills.length; i++) {
                 for(var j = 0; j < pc.trainer.skills.length; j++) {
-                    if (pc.trainer.skills[j].skillId == pc.skills[i].skillId){
+                    if (pc.trainer.skills[j].skillId === pc.skills[i].skillId){
                         status = false;
                         break;
                     }

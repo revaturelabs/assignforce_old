@@ -42,39 +42,34 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     rc.toggleBatch = true;    // Used to hide and show batch gen card
     rc.toggleGrad = true;     // Used to hide and show graduates card
     rc.toggleIncoming = true; // Used to hide and show trainees card
-    // rc.initIncoming = false;
-    // rc.initGrad = false;
+
+
 
     /* DATA - Grabs all of the default settings from the DB */
     settingService.getSettingByName("reportGrads", function(response) {  // Default Grads per batch
-        console.log("default grads value" + response)
+
         rc.graduates = response
     }, function(){
         console.log("error-")
     });
     settingService.getSettingByName("batchLength", function(response) {  // Default length of batches
-        console.log("default batch length" + response)
+
         rc.batchLength = response
-    }, function(){
-        console.log("error-")
     });
     settingService.getSettingByName("reportIncomingGrads", function(response) {  // Default trainees per batch
-        console.log("default incoming trainees value" + response)
+
         rc.incoming = response
-    }, function(){
-        console.log("error-")
     });
+
     settingService.getSettingByName("minBatchSize", function(response){  // Default minimum size for a batch
-        console.log("default minimum batch size" + response)
+
         rc.minBatchSize = response
-    }, function(){
-        console.log("error-")
     });
+
+
     settingService.getSettingByName("maxBatchSize", function(response){  // Default max size for a batch
-        console.log("default maximum batch size" + response)
+
         rc.maxBatchSize = response
-    }, function(){
-        console.log("error-")
     });
 
     /* DATA - Gets all of the batches from the DB */
@@ -222,9 +217,9 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
                 var sonarSeparationOfComplexity = rc.batches[x]['curriculum'].name;
                 var testToPassSonarQubeAndThisIfStatement = (
                     curriculum &&
-                    (date.getMonth() == month) &&
-                    (date.getFullYear() == rc.year) &&
-                    (rc.batches[x]['curriculum'].currId == curriculum.currId)
+                    (date.getMonth() === month) &&
+                    (date.getFullYear() === rc.year) &&
+                    (rc.batches[x]['curriculum'].currId === curriculum.currId)
                 );
 
                 if (sonarSeparationOfComplexity && testToPassSonarQubeAndThisIfStatement) {
@@ -252,9 +247,9 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
                 var sonarSeparationOfComplexity = rc.batches[x]['curriculum'].name;
                 var testToPassSonarQubeAndThisIfStatement = (
                     curriculum &&
-                    (date.getMonth() == month) &&
-                    (date.getFullYear() == rc.year) &&
-                    (rc.batches[x]['curriculum'].currId == curriculum.currId)
+                    (date.getMonth() === month) &&
+                    (date.getFullYear() === rc.year) &&
+                    (rc.batches[x]['curriculum'].currId === curriculum.currId)
                 );
 
 
@@ -321,7 +316,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
             var date;
             angular.forEach(rc.batches, function (batch) {
                 date = new Date(batch.endDate);
-                if ((date.getMonth() == month) && (date.getFullYear() == rc.year) && (batch.curriculum)) {
+                if ((date.getMonth() === month) && (date.getFullYear() === rc.year) && (batch.curriculum)) {
                     total2 += rc.incoming;
                 }
             });
@@ -336,20 +331,27 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         var tempDate = new Date(requiredDate);
 
         // Initializes a start date variable and assigns it the value in 'requiredDate'.
-        var sDate = ( requiredDate == undefined ) ? (new Date()) : requiredDate;
+        var sDate = ( requiredDate === undefined ) ? (new Date()) : requiredDate;
 
         // Subtract 10 weeks from the 'requiredDate' to determine the 'startDate'.  **Using 11 week default.
         sDate.setDate( sDate.getDate() - ( 7 * (rc.batchLength)));
 
         // This code segment allows for the batch start date to be pushed to the closest Monday.
         switch(sDate.getDay()){
-            case 0 :    sDate.setDate( sDate.getDate() + 1 ); break;
-            case 1 :    sDate.setDate( sDate.getDate() + 0 ); break;
-            case 2 :    sDate.setDate( sDate.getDate() - 1 ); break;
-            case 3 :    sDate.setDate( sDate.getDate() - 2 ); break;
-            case 4 :    sDate.setDate( sDate.getDate() - 3 ); break;
-            case 5 :    sDate.setDate( sDate.getDate() - 4 ); break;
-            case 6 :    sDate.setDate( sDate.getDate() - 5 ); break;
+            case 0 :    sDate.setDate( sDate.getDate() + 1 );
+            break;
+            case 1 :    sDate.setDate( sDate.getDate() + 0 );
+            break;
+            case 2 :    sDate.setDate( sDate.getDate() - 1 );
+            break;
+            case 3 :    sDate.setDate( sDate.getDate() - 2 );
+            break;
+            case 4 :    sDate.setDate( sDate.getDate() - 3 );
+            break;
+            case 5 :    sDate.setDate( sDate.getDate() - 4 );
+            break;
+            case 6 :    sDate.setDate( sDate.getDate() - 5 );
+            break;
             default:    break;
         }
 
@@ -453,7 +455,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         for (var x in rc.cardArr){
             if(!(angular.isUndefined(rc.cardArr[x].batchType))){
 
-                batchVal = rc.cardArr[x].batchType.currId;
+                var batchVal = rc.cardArr[x].batchType.currId;
 
                 switch(batchVal){
                     case 1 :   //Switch case for Java Batches
@@ -497,15 +499,15 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         var flagArr = [ 0, 0, 0 ];
         var count = 0;
 
-        if  ( !( rc.cardArr[index].requiredGrads == undefined ) && !( rc.cardArr[index].reqDate == undefined ) && !( rc.cardArr[index].batchType == undefined ) ) {
+        if  ( !( rc.cardArr[index].requiredGrads === undefined ) && !( rc.cardArr[index].reqDate === undefined ) && !( rc.cardArr[index].batchType === undefined ) ) {
             canSubmit = 0;
             rc.errMsg = "";
         }else{
-            if( rc.cardArr[index].requiredGrads == undefined ){
+            if( rc.cardArr[index].requiredGrads === undefined ){
                 rc.errMsg = "Requires Trainee's.";
                 flagArr[0] = 1;
             }
-            if( rc.cardArr[index].reqDate == undefined ) {
+            if( rc.cardArr[index].reqDate === undefined ) {
                 rc.errMsg = "Requires Hire Date.";
                 flagArr[1] = 1;
             }
@@ -515,7 +517,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
                 flagArr[1] = 1;
             }
             //Ensures the batch type is selected.
-            if( rc.cardArr[index].batchType == undefined ) {
+            if( rc.cardArr[index].batchType === undefined ) {
                 rc.errMsg = "Invalid Batch Type.";
                 flagArr[2] = 1;
             }
@@ -526,7 +528,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         //Checks if multiple inputs are missing or invalid.
         //Sets the error message to the appropriate phrase, if multiple inputs are missing.
         for ( var x in flagArr ){
-            if( flagArr[x] == 1 ){
+            if( flagArr[x] === 1 ){
                 count = count + 1;
                 if ( count > 1 ){
                     rc.errMsg = "Multiple Inputs Required.";
@@ -543,7 +545,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         // Determines whether or not the user is allowed to create batches.
         var canSubmit = rc.submittionValidityAssertion( index );
 
-        if ( canSubmit == 0 ) {
+        if ( canSubmit === 0 ) {
             //Create a batch object in the Reports Controller, using the batchService.
             rc.newBatch = batchService.getEmptyBatch();
 
@@ -586,7 +588,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
             if( rc.cardArr.hasOwnProperty(index) ) {
                 // Determines whether or not the user is allowed to create batches.
                 canSubmit = rc.submittionValidityAssertion( index );
-                if ( canSubmit == 0 ) {
+                if ( canSubmit === 0 ) {
                     //Create a batch object in the Reports Controller, using the batchService.
                     rc.newBatch = batchService.getEmptyBatch();
 

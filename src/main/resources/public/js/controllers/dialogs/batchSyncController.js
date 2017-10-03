@@ -8,16 +8,6 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
     bsc.batchInfo = [];
     bsc.sfb = batchService.getEmptyBatch();
 
-    SFService.getSFdata(
-        function(resp){
-            console.log("AAA");
-            console.log(resp);
-        },
-        function(resp){
-            console.log("BBB");
-            console.log(resp);
-        }
-    );
 
     bsc.sfb.sinked = bsc.afb.sinked;
     bsc.refresh = function(){
@@ -82,7 +72,7 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
         ];
 
         bsc.batchInfo.map(function(b){
-            b.style = {"background-color":(b.vfunc(bsc.afb) == b.vfunc(bsc.sfb)?"white":"lightpink")}
+            b.style = {"background-color":(b.vfunc(bsc.afb) === b.vfunc(bsc.sfb)?"white":"lightpink")}
         });
     }
 
@@ -118,7 +108,6 @@ assignforce.controller( "batchSyncCtrl", function( $scope, $mdDialog, batchServi
     }
 
     bsc.save = function(){
-        //console.log(batchService.sfSyncUpdate);
         batchService.sfSyncUpdate(bsc.sfb,function(){
             batchService.afSyncUpdate(bsc.afb,bsc.sfb,function(){
                 $mdDialog.hide();

@@ -1,7 +1,7 @@
 
     var assignforce = angular.module( "batchApp" );
 
-    assignforce.controller( "homeCtrl", function( $scope, $filter, batchService, $rootScope , $resource ,trainerService, locationService, buildingService, userService ) {
+    assignforce.controller( "homeCtrl", function( $scope, $filter, batchService, $rootScope , $resource ,trainerService, locationService, buildingService) {
         var hc = this;
 
         
@@ -34,10 +34,10 @@
                 }
             } 
                 // length based on availability (trainers)
-            if (typeof paramLow == "string") {
-                if (paramLow.toLowerCase() == "available") {
+            if (typeof paramLow === "string") {
+                if (paramLow.toLowerCase() === "available") {
                     return 100;
-                } else if (paramLow.toLowerCase() == "unavailable") {
+                } else if (paramLow.toLowerCase() === "unavailable") {
                     return 0;
                 }
             } 
@@ -78,7 +78,7 @@
 
             var numAv = 0;
             rooms.forEach(function(room) {
-               if (hc.checkAvailability(room.unavailable) == "Available") {
+               if (hc.checkAvailability(room.unavailable) === "Available") {
                    numAv++;
                }
             });
@@ -111,16 +111,18 @@
                 var location = "";
                 hc.buildings.forEach(function(buildingIn){
                 	buildingIn.rooms.forEach(function(roomIn){
-                		if (batch.room && roomIn.roomID == batch.room.roomID){
+                		if (batch.room && roomIn.roomID === batch.room.roomID){
                     		building = buildingIn;
                     		return;
                     	}                		
                 	});
-                	if (building) return;                	
+                	if (building){
+                	    return;
+                	}
                 });
                 hc.locations.forEach(function(locationIn){
                 	locationIn.buildings.forEach(function(buildingIn){
-                		if(building && buildingIn.id == building.id){
+                		if(building && buildingIn.id === building.id){
                 			location = locationIn.name;
                 		}
                 	})
@@ -171,15 +173,21 @@
 					hc.batches.forEach(function(batchIn) {
 						hc.buildings.forEach(function(buildingIn) {
 							buildingIn.rooms.forEach(function(roomIn) {
-								if (batchIn.room && roomIn.roomID == batchIn.room.roomID) {
+								if (batchIn.room && roomIn.roomID === batchIn.room.roomID) {
 									batchIn.building = buildingIn;
 									return;
 								}
-								if (batchIn.building) return;
+								if (batchIn.building){
+								    return;
+								}
 							});
-							if (batchIn.building) return;
+							if (batchIn.building){
+							    return;
+							}
 						});
-						if (batchIn.building) return;
+						if (batchIn.building){
+						    return;
+						}
                 	});
 				}, function() {
                     hc.showToast("Could not fetch batches.");

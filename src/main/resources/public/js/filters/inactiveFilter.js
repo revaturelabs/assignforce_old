@@ -6,7 +6,7 @@ var assignforce = angular.module( "batchApp" );
 assignforce.filter( "inactiveItem", function(){
     return function(items){
 
-        if (items == undefined) {
+        if (items === undefined) {
             return items;
         }
 
