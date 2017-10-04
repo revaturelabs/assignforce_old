@@ -14,7 +14,7 @@ describe('settingsControllerTest', function(){
     });
     //checks if the dummy function resetSettings() works
     describe("resetSettingsTest", function(){
-        it("case1", function(){
+        it("resetSettings should set the settings to placeholder", function(){
             $scope.self.settings = 'test';
             $scope.self.resetSettings();
             expect($scope.self.settings).toBe('placeholder');
@@ -22,7 +22,7 @@ describe('settingsControllerTest', function(){
     });
     //case is meant to check if getBuildings() populates $scope.self.buildings with strings
     describe("getBuildingsTest", function(){
-        it("case1", function(){
+        it("getBuildingsTest should move the buildings in the default location into the buildings variable", function(){
             $scope.self.defaultLocation = 'test';
             var testSample = ['placeholder1', 'placeholder2', 'placeholder3'];
             $scope.self.defaultLocation.buildings = testSample;

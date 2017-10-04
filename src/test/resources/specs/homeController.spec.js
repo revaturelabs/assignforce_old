@@ -4,6 +4,7 @@ describe('homeControllerTest', function(){
     var ctrl;
     var actual;
     var should;
+    var shouldNot;
 
     beforeEach(function(){
         module('batchApp');
@@ -147,5 +148,12 @@ describe('homeControllerTest', function(){
             should = 2;
             expect(actual).toBe(should);
         });
+    });
+    describe('formatBatchesTest', function(){
+            it('case1', function(){
+                actual = $scope.self.formatBatches();
+                shouldNot = [];
+                expect(actual).not.toBe(shouldNot);
+            });
     });
 });
