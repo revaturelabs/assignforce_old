@@ -365,7 +365,7 @@ var app = angular.module('batchApp');
 			tlc.projectTimeline(mousedownY);
 			
 			// Fire when there is a mousemove event on the #timeline element
-			$(".toastContainer").mousemove(function(evt){
+			$scope.mousemove = function(evt){
 
 				// Prevent text highlighting
 				evt.preventDefault();
@@ -396,17 +396,17 @@ var app = angular.module('batchApp');
 			    
 				// Update the last coordinate of the mouse
 				pageY = evt.pageY;
-			});
+			};
 		}
 	};
 
-	$(".toastContainer").mouseup(function(evt){
+	$scope.mouseup = function(evt){
 		// Erase the zoompoint(or move out of view)
 		tlc.projectTimeline(-100);
 		// Remove mousemove listener from the container
 		$(".toastContainer").off("mousemove");
 		evt.stopPropagation();
-	});
+	};
 	
 
 	//Promise for the repulling of the timeline.
@@ -1085,14 +1085,16 @@ var app = angular.module('batchApp');
 
 //	function to freeze trainers names over the graph at the top of the window whenever you scroll out of the window
 	tlc.axisDisplacement = 0
+	//TODO: refactor
     tlc.moveAxis= function () {
         var x = document.getElementsByClassName("x axis");
+         if(x[0] != undefined){
             if(x[0].getBoundingClientRect().top){
                 tlc.axisDisplacement -= x[0].getBoundingClientRect().top
                 if(tlc.axisDisplacement <0){tlc.axisDisplacement =0;}
                     x[0].setAttribute("transform", "translate(0," + tlc.axisDisplacement + ")");
             }
-
+         }
         //else{
         window.requestAnimationFrame(tlc.moveAxis);
         //}
