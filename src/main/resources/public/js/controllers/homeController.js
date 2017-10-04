@@ -2,18 +2,21 @@
     var assignforce = angular.module( "batchApp" );
 
     assignforce.controller( "homeCtrl", function( $scope, $filter, batchService, $rootScope , $resource ,trainerService, locationService, buildingService) {
+        var hc = this;
+        $scope.self = hc;
+
+
           // functions
             // calls showToast method of aCtrl
-        $scope.showToast = function( message ) {
+        hc.showToast = function( message ) {
             $scope.$parent.aCtrl.showToast( message );
         };
 
             // determine length of progress indicators
-        //testable1
-        $scope.calcProgress = function( paramLow, paramHigh ) {
+        hc.calcProgress = function( paramLow, paramHigh ) {
 
               // magnitude and type of parameters are used to determine mode
-              // length based on current time (batches)
+                // length based on current time (batches)
             if (paramLow > 1000000) {
 
                 var today = new Date().getTime();
@@ -36,8 +39,7 @@
                     return 100;
                 } else if (paramLow.toLowerCase() === "unavailable") {
                     return 0;
-                }
-                else{
+                }else{
                     return NaN;
                 }
             } 
@@ -52,8 +54,7 @@
         };
 
             // checks given dates and determines if trainer/room is currently available
-        //testable2
-        $scope.checkAvailability = function(dates) {
+        hc.checkAvailability = function(dates) {
             
             if (!dates) {
                 return "Available";
@@ -71,8 +72,7 @@
         };
 
             // returns number of currently available rooms in location
-        //testable3
-        $scope.findRoomsAvailable = function(rooms) {
+        hc.findRoomsAvailable = function(rooms) {
             
             if (!rooms) {
                 return 0;
@@ -80,7 +80,7 @@
 
             var numAv = 0;
             rooms.forEach(function(room) {
-               if ($scope.checkAvailability(room.unavailable) === "Available") {
+               if (hc.checkAvailability(room.unavailable) === "Available") {
                    numAv++;
                }
             });
@@ -88,8 +88,7 @@
         };
 
             // organizes batch data to a format conforming to CSV format
-        //testable4
-        $scope.formatBatches = function() {
+        hc.formatBatches = function() {
             var formatted = [];
             formatted.push( [
                 "Name",
@@ -102,7 +101,7 @@
                 "Start date",
                 "End date"
             ] );
-            $scope.batches.forEach( function(batch) {
+            hc.batches.forEach( function(batch) {
                 var name       = ( batch.name       ) ? batch.name                                                 : "";
                 var curriculum = ( batch.curriculum ) ? batch.curriculum.name                                      : "";
                 var trainer    = ( batch.trainer    ) ? batch.trainer.firstName + " " + batch.trainer.lastName     : "";
@@ -112,7 +111,7 @@
                 var room       = ( batch.room       ) ? batch.room.roomName : "";
                 var building = "";
                 var location = "";
-                $scope.buildings.forEach(function(buildingIn){
+                hc.buildings.forEach(function(buildingIn){
                 	buildingIn.rooms.forEach(function(roomIn){
                 		if (batch.room && roomIn.roomID === batch.room.roomID){
                     		building = buildingIn;
@@ -123,7 +122,7 @@
                 	    return;
                 	}
                 });
-                $scope.locations.forEach(function(locationIn){
+                hc.locations.forEach(function(locationIn){
                 	locationIn.buildings.forEach(function(buildingIn){
                 		if(building && buildingIn.id === building.id){
                 			location = locationIn.name;
@@ -139,18 +138,16 @@
         };
 
           // data
+        hc.batchOrder = "startDate";
+        hc.batchFilter = "All";
 
-        //testable5
-        $scope.batchOrder = "startDate";
-        $scope.batchFilter = "All";
-
-        $scope.trainerOrder = "firstName";
-        $scope.trainerFilter = "All";
+        hc.trainerOrder = "firstName";
+        hc.trainerFilter = "All";
         
-        $scope.locationOrder = "name";
-        $scope.locationFilter = "Current";
+        hc.locationOrder = "name";
+        hc.locationFilter = "Current";
 
-        $scope.filterMux = { Active  : { mode  : "active",
+        hc.filterMux = { Active  : { mode  : "active",
                                      params: {} },
                          Upcoming: { mode  : "upcoming",
                                      params: { numWeeks: 2} },
@@ -161,22 +158,22 @@
           // page initialization
             // data gathering
         trainerService.getAll( function(response) {
-            $scope.trainers = response;
+            hc.trainers = response;
         }, function() {
-            $scope.showToast("Could not fetch trainers.");
+            hc.showToast("Could not fetch trainers.");
         });
         
         // In this funky format because of time constraints and
         // we had to scrap the bi-directional relationships for the
         // POJO's due to problems in another sector
         locationService.getAll( function(response) {
-            $scope.locations = response;
+            hc.locations = response;
             buildingService.getAll( function(response) {
-				$scope.buildings = response;
+				hc.buildings = response;
 				batchService.getAll(function(response) {
-					$scope.batches = response;
-					$scope.batches.forEach(function(batchIn) {
-						$scope.buildings.forEach(function(buildingIn) {
+					hc.batches = response;
+					hc.batches.forEach(function(batchIn) {
+						hc.buildings.forEach(function(buildingIn) {
 							buildingIn.rooms.forEach(function(roomIn) {
 								if (batchIn.room && roomIn.roomID === batchIn.room.roomID) {
 									batchIn.building = buildingIn;
@@ -195,13 +192,13 @@
 						}
                 	});
 				}, function() {
-                    $scope.showToast("Could not fetch batches.");
+                    hc.showToast("Could not fetch batches.");
                 });
             }, function() {
-                $scope.showToast("Could not fetch buildings.");
+                hc.showToast("Could not fetch buildings.");
             });
         }, function() {
-            $scope.showToast("Could not fetch locations.");
+            hc.showToast("Could not fetch locations.");
         });
         
     });

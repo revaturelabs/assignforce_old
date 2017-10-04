@@ -2,6 +2,9 @@ describe('homeControllerTest', function(){
     var $controller;
     var $scope = {};
     var ctrl;
+    var actual;
+    var should;
+
     beforeEach(function(){
         module('batchApp');
         inject(function(_$controller_){
@@ -10,47 +13,139 @@ describe('homeControllerTest', function(){
         });
         ctrl = $controller('homeCtrl', { $scope: $scope });
     });
-    describe("testable1", function(){
+    describe('calcProgressTest', function(){
+            var param1;
+            var param2;
             it("case1", function(){
-                var result = $scope.calcProgress(100, 50);
-                expect(result).toBe(100);
+                param1 = 100;
+                param2 = 50;
+                actual = $scope.self.calcProgress(param1, param2);
+                should = 100;
+                expect(actual).toBe(should);
             });
             it("case2", function(){
-                var result = $scope.calcProgress(50, 100);
-                expect(result).toBe(50/100);
+                param1 = 50;
+                param2 = 100;
+                actual = $scope.self.calcProgress(param1, param2);
+                should = param1/param2;
+                expect(actual).toBe(should);
             });
             it("case3", function(){
-                var result = $scope.calcProgress(-10, 100);
-                expect(result).toBe(0);
+                param1 = -10;
+                param2 = 100;
+                actual = $scope.self.calcProgress(param1, param2);
+                should = 0;
+                expect(actual).toBe(should);
             });
 
             it("case4", function(){
-                var result = $scope.calcProgress(0, 0);
-                expect(isNaN(result)).toBe(true);
+                param1 = 0;
+                param2 = 0;
+                actual = $scope.self.calcProgress(param1, param2);
+                should = true;
+                expect(isNaN(actual)).toBe(should);
             });
             it("case5", function(){
-                var result = $scope.calcProgress(50, 100);
-                expect(result).toBe(50/100);
+                param1 = 'AVAILABLE';
+                param2 = 'anything';
+                actual = $scope.self.calcProgress(param1, param2);
+                should = 100;
+                expect(actual).toBe(should);
             });
             it("case6", function(){
-                var result = $scope.calcProgress('AVAILABLE', 'anything');
-                expect(result).toBe(100);
+                param1 = 'UNAVAILABLE';
+                param2 = 'anything';
+                actual = $scope.self.calcProgress(param1, param2);
+                should = 0;
+                expect(actual).toBe(should);
             });
             it("case7", function(){
-                var result = $scope.calcProgress('UNAVAILABLE', 'anything');
-                expect(result).toBe(0);
+                param1 = 'OTHER';
+                param2 = 'anything';
+                actual = $scope.self.calcProgress('OTHER', 'anything');
+                should = true;
+                expect(isNaN(actual)).toBe(should);
             });
             it("case8", function(){
-                var result = $scope.calcProgress('OTHER', 'anything');
-                expect(isNaN(result)).toBe(true);
+                var today = new Date().getTime();
+                param1 = today-1000000;
+                param2 = today+1000000;
+                actual = $scope.self.calcProgress(param1, param2);
+                should = (100*(today-param1)/(param2-param1)).toFixed(5);
+                expect(actual).toBe(should);
+                x=100;
             });
-            it("case8", function(){
-                var result = $scope.calcProgress('OTHER', 'anything');
-                expect(isNaN(result)).toBe(true);
+            it("case9", function(){
+                var today = new Date().getTime();
+                param1 = today-2000000;
+                param2 = today-1000000;
+                actual = $scope.self.calcProgress(param1, param2);
+                should = 100;
+                expect(actual).toBe(should);
             });
-            it("case8", function(){
-                var result = $scope.calcProgress('OTHER', 'anything');
-                expect(isNaN(result)).toBe(true);
+            it("case10", function(){
+                var today = new Date().getTime();
+                param1 = today+1000000;
+                param2 = today+2000000;
+                actual = $scope.self.calcProgress(param1, param2);
+                should = 0;
+                expect(actual).toBe(should);
             });
+            it("case11", function(){
+                var today = new Date().getTime();
+                param1 = today;
+                param2 = today;
+                actual = $scope.self.calcProgress(param1, param2);
+                should = true;
+                expect(isNaN(actual)).toBe(should);
+            });
+    });
+    describe('checkAvailabilityTest', function(){
+        var now;
+        var start;
+        var end;
+        var param1;
+        it('case1', function(){
+             now = new Date().getTime();
+             start = now-1000000;
+             end = now+1000000;
+             param1 = [{startDate: start, endDate: end}]
+             actual = $scope.self.checkAvailability(param1);
+             should = 'Unavailable';
+             expect(actual).toBe(should);
+        });
+        it('case2', function(){
+            param1 = null;
+            actual = $scope.self.checkAvailability(param1);
+            should = 'Available';
+            expect(actual).toBe(should);
+        });
+        it('case3', function(){
+            now = new Date().getTime();
+            start = now+1000000;
+            end = now+2000000;
+            param1 = [{startDate: start, endDate: end}];
+            actual = $scope.self.checkAvailability(param1);
+            should = 'Available';
+            expect(actual).toBe(should);
+        });
+    });
+    describe('findRoomsAvailableTest', function(){
+        var param1;
+        it('case1', function(){
+            param1 = null;
+            actual = $scope.self.findRoomsAvailable(param1);
+            should = 0;
+            expect(actual).toBe(should);
+        });
+        it('case2', function(){
+            now = new Date().getTime();
+            start = now-1000000;
+            end = now+1000000;
+            param1 = [{startDate: start, endDate: end}, {startDate: start, endDate: end}];
+            actual = $scope.self.findRoomsAvailable(param1);
+            should = 2;
+            expect(actual).toBe(should);
+        });
     });
 });

@@ -6,22 +6,22 @@ var app = angular.module("batchApp");
 app.constant("ADAPTER_URL", 'api/v2/authorize?redirect_url  =');
 app.controller("AuthCtrl", function($scope, $location, $window, $mdToast, $http, $rootScope){
 
+    var ac = this;
 
-    $scope.loginError = false;
-    $scope.loggedIn = false;
-    $scope.username = '';
-    $scope.password = '';
+    ac.loginError = false;
+    ac.loggedIn = false;
+    ac.username = '';
+    ac.password = '';
 
 
     // global function available to all other controllers (as they are all children of authCtrl) to create toast messages
-
-    $scope.showToast = function( message ) {
+    ac.showToast = function( message ) {
         $mdToast.show( $mdToast.simple().textContent( message ).action("OKAY").position("top right").highlightAction(true) );
     }
 
     $rootScope.location = $location;
 
-    $scope.login = function(){
+    ac.login = function(){
 
         $http({
             method :  "POST",
@@ -32,12 +32,12 @@ app.controller("AuthCtrl", function($scope, $location, $window, $mdToast, $http,
             //}
         })
             .success(function(){
-                $scope.loggedIn = true;
+                ac.loggedIn = true;
                 window.location = "home";
             })
             .error(function(){
                 window.location = "login";
-                $scope.loginError = true;
+                ac.loginError = true;
                 // ac.username = '';
                 // ac.password = '';
             });

@@ -2,98 +2,101 @@ var assignforce = angular.module("batchApp");
 
 assignforce.controller("reportCtrl", function($scope, skillService, trainerService, settingService, batchService, curriculumService, monthList) {
 
+    var rc = this;
     var chart1, chart2, canSubmit;
-    $scope.data = [];
-    $scope.newTable = [];
+    rc.data = [];
+    rc.newTable = [];
 
 
 
     /**************************************************************************
      *                                            RETRIEVE DATA & SET VALUES
      *************************************************************************/
-    $scope.year = new Date().getFullYear(); // Gets current year
-    $scope.today = new Date();              // The current date.
-    $scope.reqDate = new Date();            // The date Trainee's are needed by.
-    $scope.startDate = new Date();          // Batch(s) StartDate variable.
-    $scope.totalNetBatch = 0;               // Total number of .NET batches within 'cardArr'.
-    $scope.totalSDETBatch = 0;              // Total number of SDET batches within 'cardArr'.
-    $scope.totalJavaBatch = 0;              // Total number of Java batches within 'cardArr'.
-    $scope.totalSalesforceBatch = 0;              // Total number of Java batches within 'cardArr'.
-    $scope.totalBigDataBatch = 0;              // Total number of Java batches within 'cardArr'.
-    $scope.totalCumulativeBatches = 0;      // Total number of required batches within 'cardArr'.
+    rc.year = new Date().getFullYear(); // Gets current year
+    rc.today = new Date();              // The current date.
+    rc.reqDate = new Date();            // The date Trainee's are needed by.
+    rc.startDate = new Date();          // Batch(s) StartDate variable.
+    rc.totalNetBatch = 0;               // Total number of .NET batches within 'cardArr'.
+    rc.totalSDETBatch = 0;              // Total number of SDET batches within 'cardArr'.
+    rc.totalJavaBatch = 0;              // Total number of Java batches within 'cardArr'.
+    rc.totalSalesforceBatch = 0;              // Total number of Java batches within 'cardArr'.
+    rc.totalBigDataBatch = 0;              // Total number of Java batches within 'cardArr'.
+    rc.totalCumulativeBatches = 0;      // Total number of required batches within 'cardArr'.
 
     // The 'newObj' object, and it's assignments, are used to generate
     // new objects to be placed within the 'cardArr' array object.
-    $scope.newObj = {};
-    $scope.newObj.requiredGrads = $scope.requiredGrads;
-    $scope.newObj.reqDate = $scope.reqDate;
-    $scope.newObj.requiredBatches = $scope.requiredBatches;
-    $scope.newObj.startDate = $scope.startDate;
-    $scope.newObj.formattedStartDate = $scope.formattedStartDate;
-    $scope.newObj.batchType = $scope.batchType;
+    rc.newObj = {};
+    rc.newObj.requiredGrads = rc.requiredGrads;
+    rc.newObj.reqDate = rc.reqDate;
+    rc.newObj.requiredBatches = rc.requiredBatches;
+    rc.newObj.startDate = rc.startDate;
+    rc.newObj.formattedStartDate = rc.formattedStartDate;
+    rc.newObj.batchType = rc.batchType;
 
-    $scope.cardArr = [$scope.newObj];   // Array of Required Trainee batch generation objects.
+    rc.cardArr = [rc.newObj];   // Array of Required Trainee batch generation objects.
 
-    $scope.currOrder = "name";
+    rc.currOrder = "name";
 
-    $scope.monthList = monthList;
+    rc.monthList = monthList;
 
-    $scope.toggleBatch = true;    // Used to hide and show batch gen card
-    $scope.toggleGrad = true;     // Used to hide and show graduates card
-    $scope.toggleIncoming = true; // Used to hide and show trainees card
+    rc.toggleBatch = true;    // Used to hide and show batch gen card
+    rc.toggleGrad = true;     // Used to hide and show graduates card
+    rc.toggleIncoming = true; // Used to hide and show trainees card
 
 
 
     /* DATA - Grabs all of the default settings from the DB */
     settingService.getSettingByName("reportGrads", function(response) {  // Default Grads per batch
 
-        $scope.graduates = response
+        rc.graduates = response
+    }, function(){
+        console.log("error-")
     });
     settingService.getSettingByName("batchLength", function(response) {  // Default length of batches
 
-        $scope.batchLength = response
+        rc.batchLength = response
     });
     settingService.getSettingByName("reportIncomingGrads", function(response) {  // Default trainees per batch
 
-        $scope.incoming = response
+        rc.incoming = response
     });
 
     settingService.getSettingByName("minBatchSize", function(response){  // Default minimum size for a batch
 
-        $scope.minBatchSize = response
+        rc.minBatchSize = response
     });
 
 
     settingService.getSettingByName("maxBatchSize", function(response){  // Default max size for a batch
 
-        $scope.maxBatchSize = response
+        rc.maxBatchSize = response
     });
 
     /* DATA - Gets all of the batches from the DB */
     batchService.getAll(function(response) {
-        $scope.batches = response;
+        rc.batches = response;
     }, function() {
-        $scope.showToast("Could not fetch batches.");
+        rc.showToast("Could not fetch batches.");
     });
 
     /* DATA - Gets all of the curriculum from the DB */
     curriculumService.getAll(function(response) {
         var temp = response;
-        $scope.curricula = temp.filter(function(t){
+        rc.curricula = temp.filter(function(t){
             return (t.core);
         });
-        $scope.focuses = temp.filter(function(t){
+        rc.focuses = temp.filter(function(t){
             return !(t.core);
         });
     }, function() {
-        $scope.showToast("Could not fetch curricula.");
+        rc.showToast("Could not fetch curricula.");
     });
 
     /* DATA - Gets all of the trainers from the DB */
     trainerService.getAll(function(response) {
-        $scope.trainers = response;
+        rc.trainers = response;
     }, function() {
-        $scope.showToast("Could not fetch trainers.");
+        rc.showToast("Could not fetch trainers.");
     });
 
 
@@ -102,13 +105,13 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
      *                                                              FUNCTIONS
      *************************************************************************/
     /* FUNCTION - Calls showToast method of aCtrl */
-    $scope.showToast = function(message) {
+    rc.showToast = function(message) {
         $scope.$parent.aCtrl.showToast(message);
     };
 
 
     /* FUNCTION - Formats data to be exported as .csv file */
-    $scope.export = function() {
+    rc.export = function() {
         var formatted = [];
         formatted.push([
             "Curriculum",
@@ -126,10 +129,10 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
             "December",
             "Total"
         ]);
-        angular.forEach($scope.curricula, function(curr) {
+        angular.forEach(rc.curricula, function(curr) {
             var year = [curr.name];
             var sum = 0;
-            $scope.currSummary(curr).forEach(function(month) {
+            rc.currSummary(curr).forEach(function(month) {
                 year.push(month);
                 sum += month;
             });
@@ -141,7 +144,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         var totalMonth = ["Total"];
         var sumTotal = 0;
         for (var i = 0; i < 12; i++) {
-            var ttl = $scope.sumMonth(i);
+            var ttl = rc.sumMonth(i);
             totalMonth.push(ttl);
             sumTotal += ttl;
         }
@@ -151,7 +154,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
         return formatted;
     };
-    $scope.export2 = function() {
+    rc.export2 = function() {
         var formatted = [];
         formatted.push([
             "Curriculum",
@@ -169,10 +172,10 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
             "December",
             "Total"
         ]);
-        angular.forEach($scope.curricula, function(curr) {
+        angular.forEach(rc.curricula, function(curr) {
             var year = [curr.name];
             var sum = 0;
-            $scope.currSummary2(curr).forEach(function(month) {
+            rc.currSummary2(curr).forEach(function(month) {
                 year.push(month);
                 sum += month;
             });
@@ -184,7 +187,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         var totalMonth = ["Total"];
         var sumTotal = 0;
         for (var i = 0; i < 12; i++) {
-            var ttl = $scope.sumMonth2(i);
+            var ttl = rc.sumMonth2(i);
             totalMonth.push(ttl);
             sumTotal += ttl;
         }
@@ -197,7 +200,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
 
     /* FUNCTION - Summarizes graduate output of given curriculum for chosen year */
-    $scope.currSummary = function(curriculum) {
+    rc.currSummary = function(curriculum) {
 
         var summary = [];
         var total;
@@ -207,20 +210,20 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
             total = 0;
 
-            for (var x = 0; x < $scope.batches.length; x++) {
+            for (var x = 0; x < rc.batches.length; x++) {
 
-                date = new Date($scope.batches[x]['endDate']);
+                date = new Date(rc.batches[x]['endDate']);
 
-                var sonarSeparationOfComplexity = $scope.batches[x]['curriculum'].name;
+                var sonarSeparationOfComplexity = rc.batches[x]['curriculum'].name;
                 var testToPassSonarQubeAndThisIfStatement = (
                     curriculum &&
                     (date.getMonth() === month) &&
-                    (date.getFullYear() === $scope.year) &&
-                    ($scope.batches[x]['curriculum'].currId === curriculum.currId)
+                    (date.getFullYear() === rc.year) &&
+                    (rc.batches[x]['curriculum'].currId === curriculum.currId)
                 );
 
                 if (sonarSeparationOfComplexity && testToPassSonarQubeAndThisIfStatement) {
-                    total += $scope.graduates;
+                    total += rc.graduates;
                 }
             }
             summary.push(total);
@@ -228,7 +231,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
         return summary;
     };
-    $scope.currSummary2 = function(curriculum) {
+    rc.currSummary2 = function(curriculum) {
 
         var summary2 = [];
         var total2;
@@ -238,20 +241,20 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
             total2 = 0;
 
-            for (var x = 0; x < $scope.batches.length; x++) {
-                date = new Date($scope.batches[x]['endDate']);
+            for (var x = 0; x < rc.batches.length; x++) {
+                date = new Date(rc.batches[x]['endDate']);
 
-                var sonarSeparationOfComplexity = $scope.batches[x]['curriculum'].name;
+                var sonarSeparationOfComplexity = rc.batches[x]['curriculum'].name;
                 var testToPassSonarQubeAndThisIfStatement = (
                     curriculum &&
                     (date.getMonth() === month) &&
-                    (date.getFullYear() === $scope.year) &&
-                    ($scope.batches[x]['curriculum'].currId === curriculum.currId)
+                    (date.getFullYear() === rc.year) &&
+                    (rc.batches[x]['curriculum'].currId === curriculum.currId)
                 );
 
 
                 if (sonarSeparationOfComplexity && testToPassSonarQubeAndThisIfStatement) {
-                    total2 += $scope.incoming;
+                    total2 += rc.incoming;
                 }
             }
             summary2.push(total2);
@@ -261,29 +264,29 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
 
     /* FUNCTION - Sums months for given curriculum in chosen year */
-    $scope.sumCurrYear = function(total, num) {
+    rc.sumCurrYear = function(total, num) {
         return total + num;
     };
 
 
     /* FUNCTION - Sums all curricula for the year */
-    $scope.sumYear = function() {
+    rc.sumYear = function() {
 
         var total = 0;
         var summary;
-        angular.forEach($scope.curricula, function(curr) {
-            summary = $scope.currSummary(curr);
-            total += summary.reduce($scope.sumCurrYear);
+        angular.forEach(rc.curricula, function(curr) {
+            summary = rc.currSummary(curr);
+            total += summary.reduce(rc.sumCurrYear);
         });
         return total;
     };
-    $scope.sumYear2 = function() {
+    rc.sumYear2 = function() {
 
         var total2 = 0;
         var summary;
-        angular.forEach($scope.curricula, function(curr) {
-            summary = $scope.currSummary2(curr);
-            total2 += summary.reduce($scope.sumCurrYear);
+        angular.forEach(rc.curricula, function(curr) {
+            summary = rc.currSummary2(curr);
+            total2 += summary.reduce(rc.sumCurrYear);
         });
         return total2;
     };
@@ -291,30 +294,30 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
 
     /* FUNCTION - Sums monthly total over all curricula */
-    $scope.sumMonth = function (month) {
+    rc.sumMonth = function (month) {
 
-        if ($scope.batches) {
+        if (rc.batches) {
             var total = 0;
             var date;
-            angular.forEach($scope.batches, function (batch) {
+            angular.forEach(rc.batches, function (batch) {
                 date = new Date(batch.endDate);
-                if ((date.getMonth() === month) && (date.getFullYear() === $scope.year) && (batch.curriculum)) {
-                    total += $scope.graduates;
+                if ((date.getMonth() == month) && (date.getFullYear() == rc.year) && (batch.curriculum)) {
+                    total += rc.graduates;
                 }
 
             });
             return total;
         }
     };
-    $scope.sumMonth2 = function (month) {
+    rc.sumMonth2 = function (month) {
 
-        if ($scope.batches) {
+        if (rc.batches) {
             var total2 = 0;
             var date;
-            angular.forEach($scope.batches, function (batch) {
+            angular.forEach(rc.batches, function (batch) {
                 date = new Date(batch.endDate);
-                if ((date.getMonth() === month) && (date.getFullYear() === $scope.year) && (batch.curriculum)) {
-                    total2 += $scope.incoming;
+                if ((date.getMonth() === month) && (date.getFullYear() === rc.year) && (batch.curriculum)) {
+                    total2 += rc.incoming;
                 }
             });
             return total2;
@@ -323,7 +326,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
 
     /* FUNCTION - This method will compute the required batch start date, given a required hire date */
-    $scope.calcStartDate = function(requiredDate, index){
+    rc.calcStartDate = function(requiredDate, index){
 
         var tempDate = new Date(requiredDate);
 
@@ -331,7 +334,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         var sDate = ( requiredDate === undefined ) ? (new Date()) : requiredDate;
 
         // Subtract 10 weeks from the 'requiredDate' to determine the 'startDate'.  **Using 11 week default.
-        sDate.setDate( sDate.getDate() - ( 7 * ($scope.batchLength)));
+        sDate.setDate( sDate.getDate() - ( 7 * (rc.batchLength)));
 
         // This code segment allows for the batch start date to be pushed to the closest Monday.
         switch(sDate.getDay()){
@@ -358,43 +361,43 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         var formattedDate = monthList[sDate.getMonth()] + "-" + sDate.getDate() + "-" + sDate.getFullYear() + " (" + wkDayArr[sDate.getDay()] +")";
 
         //Assigns tempDate to the objects 'reqDate'
-        $scope.cardArr[index].reqDate = tempDate;
+        rc.cardArr[index].reqDate = tempDate;
 
         //Sets the 'startDate' within 'cardArr', @ the index value, equal to the un-formatted start date.
         //This value is used when creating specific batches from the card pannel.
-        $scope.cardArr[index].startDate = sDate;
+        rc.cardArr[index].startDate = sDate;
 
         //Sets the 'startdate' within 'cardArr', @ the 'index' value, equal to the formatted Date.
-        $scope.cardArr[index].formattedStartDate = formattedDate;
+        rc.cardArr[index].formattedStartDate = formattedDate;
     };
 
 
     /* FUNCTION - This method will compute the number of batches needed
      *            to be made, given the number of required Trainee's. */
-    $scope.calcReqBatch = function(requiredTrainees, index){
+    rc.calcReqBatch = function(requiredTrainees, index){
 
         //Compute the total number of Batches estimated.
         var neededBatches = Math.ceil(requiredTrainees/15);
 
         /*  Sets the reportsController's 'requiredBatches' data value in each index
          *  of the 'cardArr' to the computed 'neededBatches' values. */
-        $scope.cardArr[index].requiredBatches = neededBatches;
+        rc.cardArr[index].requiredBatches = neededBatches;
 
         //Calculates the total number of desired batches, across all sections.
-        $scope.cumulativeBatches();
+        rc.cumulativeBatches();
     };
 
 
 
     /* FUNCTION - This method will assign the particular card objects
      *            'btchType' variable to the selected value. */
-    $scope.assignCurr = function(bType, index){
+    rc.assignCurr = function(bType, index){
 
-        $scope.cardArr[index].batchType = bType;
+        rc.cardArr[index].batchType = bType;
 
-        if($scope.cardArr[index].requiredGrads > 0) {
+        if(rc.cardArr[index].requiredGrads > 0) {
 
-            $scope.cumulativeBatches();
+            rc.cumulativeBatches();
 
         }
     };
@@ -404,19 +407,19 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     /* FUNCTION - This method will add another card to the cardArr object,
      *            ultimately generating another card in the 'required Trainee's'
      *            tab in the Reports tab. */
-    $scope.genCard = function(){
+    rc.genCard = function(){
 
         var temp = {};
 
-        temp.requiredGrads = $scope.requiredGrads;
+        temp.requiredGrads = rc.requiredGrads;
         temp.reqDate = new Date();
-        temp.requiredBatches = $scope.requiredBatches;
-        temp.startDate = $scope.startDate;
-        temp.formattedStartDate = $scope.formattedStartDate;
-        temp.batchType = $scope.batchType;
+        temp.requiredBatches = rc.requiredBatches;
+        temp.startDate = rc.startDate;
+        temp.formattedStartDate = rc.formattedStartDate;
+        temp.batchType = rc.batchType;
 
         //pushes the value onto the end of the array.
-        $scope.cardArr.push(temp);
+        rc.cardArr.push(temp);
 
     };
 
@@ -425,9 +428,9 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     /* FUNCTION - This method will delete/remove a 'card' in the cardArr
      *            object, at a given index.  The deleted 'card' will no
      *            longer be displayed on the reports tab. */
-    $scope.removeCardClick = function(index){
-        $scope.cardArr.splice(index, 1);  // Removes a card object from the array index
-        $scope.cumulativeBatches();       // Re-evaluates the cumulative batches.
+    rc.removeCardClick = function(index){
+        rc.cardArr.splice(index, 1);  // Removes a card object from the array index
+        rc.cumulativeBatches();       // Re-evaluates the cumulative batches.
     };
 
 
@@ -440,48 +443,48 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
      * FUNCTION - This method will generate the sum of all batch types held
      *            within the 'cardArr' variable, ultimately displaying them
      *            in the 'master card' on the reports tab. */
-    $scope.cumulativeBatches = function(){
+    rc.cumulativeBatches = function(){
 
-        $scope.totalJavaBatch = 0;
-        $scope.totalNetBatch = 0;
-        $scope.totalSDETBatch = 0;
-        $scope.totalSalesforceBatch = 0;
-        $scope.totalBigDataBatch = 0;
-        $scope.totalCumulativeBatches = 0;
+        rc.totalJavaBatch = 0;
+        rc.totalNetBatch = 0;
+        rc.totalSDETBatch = 0;
+        rc.totalSalesforceBatch = 0;
+        rc.totalBigDataBatch = 0;
+        rc.totalCumulativeBatches = 0;
 
-        for (var x in $scope.cardArr){
-            if(!(angular.isUndefined($scope.cardArr[x].batchType))){
+        for (var x in rc.cardArr){
+            if(!(angular.isUndefined(rc.cardArr[x].batchType))){
 
-                var batchVal = $scope.cardArr[x].batchType.currId;
+                var batchVal = rc.cardArr[x].batchType.currId;
 
                 switch(batchVal){
                     case 1 :   //Switch case for Java Batches
-                        $scope.totalJavaBatch += $scope.cardArr[x].requiredBatches;
-                        $scope.totalCumulativeBatches += $scope.cardArr[x].requiredBatches;
+                        rc.totalJavaBatch += rc.cardArr[x].requiredBatches;
+                        rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
                         break;
 
                     case 2 :   //Switch case for .Net Batches
-                        $scope.totalNetBatch += $scope.cardArr[x].requiredBatches;
-                        $scope.totalCumulativeBatches += $scope.cardArr[x].requiredBatches;
+                        rc.totalNetBatch += rc.cardArr[x].requiredBatches;
+                        rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
                         break;
 
                     case 3 :   //Switch case for SDET Batches
-                        $scope.totalSDETBatch += $scope.cardArr[x].requiredBatches;
-                        $scope.totalCumulativeBatches += $scope.cardArr[x].requiredBatches;
+                        rc.totalSDETBatch += rc.cardArr[x].requiredBatches;
+                        rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
                         break;
 
                     case 150 :   //Switch case for Salesforce Batches
-                        $scope.totalSalesforceBatch += $scope.cardArr[x].requiredBatches;
-                        $scope.totalCumulativeBatches += $scope.cardArr[x].requiredBatches;
+                        rc.totalSalesforceBatch += rc.cardArr[x].requiredBatches;
+                        rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
                         break;
 
                     case 164 :   //Switch case for Big Data Batches
-                        $scope.totalBigDataBatch += $scope.cardArr[x].requiredBatches;
-                        $scope.totalCumulativeBatches += $scope.cardArr[x].requiredBatches;
+                        rc.totalBigDataBatch += rc.cardArr[x].requiredBatches;
+                        rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
                         break;
 
                     case 105 :   //Switch case for Custom Batches
-                        $scope.totalCumulativeBatches += $scope.cardArr[x].requiredBatches;
+                        rc.totalCumulativeBatches += rc.cardArr[x].requiredBatches;
                         break;
 
                     default:    break;
@@ -492,30 +495,30 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
 
     /* FUNCTION - This method will assert that batches have valid credentials for submission. */
-    $scope.submittionValidityAssertion = function( index ){
+    rc.submittionValidityAssertion = function( index ){
         var flagArr = [ 0, 0, 0 ];
         var count = 0;
 
-        if  ( !( $scope.cardArr[index].requiredGrads === undefined ) && !( $scope.cardArr[index].reqDate === undefined ) && !( $scope.cardArr[index].batchType === undefined ) ) {
+        if  ( !( rc.cardArr[index].requiredGrads === undefined ) && !( rc.cardArr[index].reqDate === undefined ) && !( rc.cardArr[index].batchType === undefined ) ) {
             canSubmit = 0;
-            $scope.errMsg = "";
+            rc.errMsg = "";
         }else{
-            if( $scope.cardArr[index].requiredGrads === undefined ){
-                $scope.errMsg = "Requires Trainee's.";
+            if( rc.cardArr[index].requiredGrads === undefined ){
+                rc.errMsg = "Requires Trainee's.";
                 flagArr[0] = 1;
             }
-            if( $scope.cardArr[index].reqDate === undefined ) {
-                $scope.errMsg = "Requires Hire Date.";
+            if( rc.cardArr[index].reqDate === undefined ) {
+                rc.errMsg = "Requires Hire Date.";
                 flagArr[1] = 1;
             }
             //Ensures that the start date can't occur before the current date.
-            if( $scope.cardArr[index].startDate <= $scope.today ){
-                $scope.errMsg = "Invalid Hire Date.";
+            if( rc.cardArr[index].startDate <= rc.today ){
+                rc.errMsg = "Invalid Hire Date.";
                 flagArr[1] = 1;
             }
             //Ensures the batch type is selected.
-            if( $scope.cardArr[index].batchType === undefined ) {
-                $scope.errMsg = "Invalid Batch Type.";
+            if( rc.cardArr[index].batchType === undefined ) {
+                rc.errMsg = "Invalid Batch Type.";
                 flagArr[2] = 1;
             }
 
@@ -528,7 +531,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
             if( flagArr[x] === 1 ){
                 count = count + 1;
                 if ( count > 1 ){
-                    $scope.errMsg = "Multiple Inputs Required.";
+                    rc.errMsg = "Multiple Inputs Required.";
                 }
             }
         }
@@ -538,122 +541,122 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
     /* FUNCTION - This method will generate a new 'card' in the cardArr object,
      *            which will be displayed to the user on the reports tab. */
-    $scope.createBatchClick = function( index ) {
+    rc.createBatchClick = function( index ) {
         // Determines whether or not the user is allowed to create batches.
-        var canSubmit = $scope.submittionValidityAssertion( index );
+        var canSubmit = rc.submittionValidityAssertion( index );
 
         if ( canSubmit === 0 ) {
             //Create a batch object in the Reports Controller, using the batchService.
-            $scope.newBatch = batchService.getEmptyBatch();
+            rc.newBatch = batchService.getEmptyBatch();
 
             //Declare a generic name for batch objects being created.
             var dName = " - ";
 
-            for (var i = 0; i < $scope.cardArr[index].requiredBatches; i++){
+            for (var i = 0; i < rc.cardArr[index].requiredBatches; i++){
 
                 //Assigns the 'generic name' the batch object.
-                $scope.newBatch.name = dName;
+                rc.newBatch.name = dName;
 
                 //Assigns the 'start date' to the batch object.
-                $scope.newBatch.startDate = $scope.cardArr[index].startDate;
+                rc.newBatch.startDate = rc.cardArr[index].startDate;
 
                 //Assigns the 'end date' to the batch object.
-                $scope.newBatch.endDate = $scope.cardArr[index].reqDate;
+                rc.newBatch.endDate = rc.cardArr[index].reqDate;
 
                 //Assigns the 'id' value of the Curriculum ('batch type' variable) to the batch object.
-                $scope.newBatch.curriculum = $scope.cardArr[index].batchType.currId;
+                rc.newBatch.curriculum = rc.cardArr[index].batchType.currId;
 
                 //add the default location
                 settingService.getSettingByName("defaultLocation", function(setting){
-                    $scope.newBatch.location = setting;
+                    rc.newBatch.location = setting;
                 }, null)
 
                 //Create batch method called here...
-                batchService.create($scope.newBatch, success, error);
+                batchService.create(rc.newBatch, success, error);
             }
         }
-        function success(){ $scope.showToast("Successfully Created Batch");}
-        function error()  { $scope.showToast("Failed to Create Batch");}
+        function success(){ rc.showToast("Successfully Created Batch");}
+        function error()  { rc.showToast("Failed to Create Batch");}
     };
 
 
     /* FUNCTION - This method will generate all batches contained within all cards, in the 'cardArr' array object. */
-    $scope.createAllBatchClick = function(){
+    rc.createAllBatchClick = function(){
 
         // Create 'can submit' flag here.  '0' implies successful submit, '1' implies submission failure. Default to 1 value.
-        for ( var index in $scope.cardArr ) {
-            if( $scope.cardArr.hasOwnProperty(index) ) {
+        for ( var index in rc.cardArr ) {
+            if( rc.cardArr.hasOwnProperty(index) ) {
                 // Determines whether or not the user is allowed to create batches.
-                canSubmit = $scope.submittionValidityAssertion( index );
+                canSubmit = rc.submittionValidityAssertion( index );
                 if ( canSubmit === 0 ) {
                     //Create a batch object in the Reports Controller, using the batchService.
-                    $scope.newBatch = batchService.getEmptyBatch();
+                    rc.newBatch = batchService.getEmptyBatch();
 
                     //Declare a generic name for batch objects being created.
                     var dName = " - ";
 
-                    for ( var i = 0; i < $scope.cardArr[index].requiredBatches; i++ ) {
+                    for ( var i = 0; i < rc.cardArr[index].requiredBatches; i++ ) {
 
                         //Assigns the 'generic name' the batch object.
-                        $scope.newBatch.name = dName;
+                        rc.newBatch.name = dName;
 
                         //Assigns the 'start date' to the batch object.
-                        $scope.newBatch.startDate = $scope.cardArr[index].startDate;
+                        rc.newBatch.startDate = rc.cardArr[index].startDate;
 
                         //Assigns the 'end date' to the batch object.
-                        $scope.newBatch.endDate = $scope.cardArr[index].reqDate;
+                        rc.newBatch.endDate = rc.cardArr[index].reqDate;
 
                         //Assigns the 'id' value of the Curriculum ('batch type' variable) to
                         //  to the batch object.
-                        $scope.newBatch.curriculum = $scope.cardArr[index].batchType.currId;
+                        rc.newBatch.curriculum = rc.cardArr[index].batchType.currId;
 
                         //Create batch method called here...
-                        batchService.create($scope.newBatch, success, error);
+                        batchService.create(rc.newBatch, success, error);
                     }
                 }
             }
         }
-        function success(){$scope.showToast("All Batches Created");}
-        function error()  {$scope.showToast("Failed to Create Batches");}
+        function success(){rc.showToast("All Batches Created");}
+        function error()  {rc.showToast("Failed to Create Batches");}
     };
 
 
 
     /* FUNCTION - Toggle sections on page up and down */
-    $scope.toggleCrateBatchToolbar = function () {
-        $scope.initBatchCreate = true;
+    rc.toggleCrateBatchToolbar = function () {
+        rc.initBatchCreate = true;
 
-        if($scope.toggleBatch){
-            $scope.toggleBatch = false;
+        if(rc.toggleBatch){
+            rc.toggleBatch = false;
             $("#batchArrow").text("keyboard_arrow_down");
         } else {
-            $scope.toggleBatch = true;
+            rc.toggleBatch = true;
             $("#batchArrow").text("keyboard_arrow_up");
         }
 
         $('#batchCreate').slideToggle();
     };
-    $scope.toggleGradToolbar = function () {
-        $scope.initGrad = true;
+    rc.toggleGradToolbar = function () {
+        rc.initGrad = true;
 
-        if($scope.toggleGrad){
-            $scope.toggleGrad = false;
+        if(rc.toggleGrad){
+            rc.toggleGrad = false;
             $("#gradArrow").text("keyboard_arrow_down");
         } else {
-            $scope.toggleGrad = true;
+            rc.toggleGrad = true;
             $("#gradArrow").text("keyboard_arrow_up");
         }
 
         $('#gradTable').slideToggle();
     };
-    $scope.toggleIncomingToolbar = function () {
-        $scope.initIncoming = true;
+    rc.toggleIncomingToolbar = function () {
+        rc.initIncoming = true;
 
-        if($scope.toggleIncoming){
-            $scope.toggleIncoming = false;
+        if(rc.toggleIncoming){
+            rc.toggleIncoming = false;
             $("#incArrow").text("keyboard_arrow_down");
         } else {
-            $scope.toggleIncoming = true;
+            rc.toggleIncoming = true;
             $("#incArrow").text("keyboard_arrow_up");
         }
 
@@ -662,14 +665,14 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
 
     /* FUNCTION - Generates JSON object containing the info contained inside grad graph */
-    $scope.graphData = function() {
+    rc.graphData = function() {
         var series = [];
 
-        angular.forEach($scope.curricula, function (curr) {
+        angular.forEach(rc.curricula, function (curr) {
             var empty = {};
             var data = [];
             empty.name = curr.name;
-            $scope.currSummary(curr).forEach(function (month) {
+            rc.currSummary(curr).forEach(function (month) {
                 data.push(month);
             });
 
@@ -681,14 +684,14 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
 
     /* FUNCTION - Generates JSON object containing the info contained inside incoming/trainee graph */
-    $scope.graphData2 = function() {
+    rc.graphData2 = function() {
         var series = [];
 
-        angular.forEach($scope.curricula, function(curr) {
+        angular.forEach(rc.curricula, function(curr) {
             var empty = {};
             var data = [];
             empty.name = curr.name;
-            $scope.currSummary2(curr).forEach(function(month) {
+            rc.currSummary2(curr).forEach(function(month) {
                 data.push(month);
             });
 
@@ -709,7 +712,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
                     load: function () {
 
                         setInterval(function () {
-                            var data = $scope.graphData();
+                            var data = rc.graphData();
 
                             for(var d = 0; d<chart1.series.length; d++) {
                                 chart1.series[d].setData(data[d].data, true, true, true);
@@ -746,7 +749,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
                     borderWidth: 0
                 }
             },
-            series: $scope.graphData()
+            series: rc.graphData()
         });
     };
 
@@ -761,7 +764,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
                     load: function () {
 
                         setInterval(function () {
-                            var data = $scope.graphData2();
+                            var data = rc.graphData2();
 
                             for(var d = 0; d<chart2.series.length; d++) {
                                 chart2.series[d].setData(data[d].data, true, true, true);
@@ -801,7 +804,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
                     enabled: true
                 }
             },
-            series: $scope.graphData2()
+            series: rc.graphData2()
         });
     };
 });

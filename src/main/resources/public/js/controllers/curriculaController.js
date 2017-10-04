@@ -5,43 +5,44 @@
 var assignforce = angular.module( "batchApp" );
 
 assignforce.controller("curriculaCtrl", function ($scope, $rootScope, curriculumService, skillService) {
-    
+    var cc = this;
+
     $scope.isManager = $rootScope.role === "VP of Technology";
 
     //functions
 
     //calls showToast method of aCtrl
-    $scope.showToast = function ( message ) {
+    cc.showToast = function ( message ) {
         $scope.$parent.aCtrl.showToast( message )
     };
 
     //create a skill and add it to the database
-    $scope.createSkill = function (skillForm) {
+    cc.createSkill = function (skillForm) {
         if(skillForm.$valid) {
             var skill = skillService.getEmptySkill();
-            skill.name = $scope.skillName;
+            skill.name = cc.skillName;
             skill.skillId = 0;
             skill.active = true;
 
             skillService.update(skill, function () {
-                $scope.showToast("Skill Created")
+                cc.showToast("Skill Created")
             }, function () {
-                $scope.showToast("Failed to create skill")
+                cc.showToast("Failed to create skill")
             })
         } else {
-            $scope.showToast("Missing input fields.")
+            cc.showToast("Missing input fields.")
         }
 
-        $scope.skillName = undefined;
+        cc.skillName = undefined;
     };
 
     //hides and shows the skill card's content when called
-    $scope.toggleSkillToolbar = function () {
-        if($scope.skillToggle){
-            $scope.skillToggle = false;
+    cc.toggleSkillToolbar = function () {
+        if(cc.skillToggle){
+            cc.skillToggle = false;
             $("#skillArrow").text("keyboard_arrow_down");
         } else {
-            $scope.skillToggle = true;
+            cc.skillToggle = true;
             $("#skillArrow").text("keyboard_arrow_up");
         }
 
@@ -49,12 +50,12 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, curriculum
     };
 
     //hides and shows the core card's content when called
-    $scope.toggleCoreToolbar = function () {
-        if($scope.coreToggle){
-            $scope.coreToggle = false;
+    cc.toggleCoreToolbar = function () {
+        if(cc.coreToggle){
+            cc.coreToggle = false;
             $("#coreArrow").text("keyboard_arrow_down");
         } else {
-            $scope.coreToggle = true;
+            cc.coreToggle = true;
             $("#coreArrow").text("keyboard_arrow_up");
         }
 
@@ -62,81 +63,81 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, curriculum
     };
 
     //focus functions
-    $scope.createCurriculum = function (focusForm,isCore) {
+    cc.createCurriculum = function (focusForm,isCore) {
 
         //show a hidden field with a list of skill to select from, a name field, and a save button
         if(focusForm.$valid){
 
-            let selectedSkills = $scope.selectedSkills.map((x) => {
+            let selectedSkills = cc.selectedSkills.map((x) => {
                 return parseInt(x);
             });
-            let skillList = $scope.skills
+            let skillList = cc.skills
                 .filter( (skill) => selectedSkills.includes(skill.skillId) );
 
             let curriculum = {
-                name    : isCore?$scope.coreName:$scope.focusName,
+                name    : isCore?cc.coreName:cc.focusName,
                 skills  : skillList,
                 active  : true,
                 core    : isCore
             };
 
             curriculumService.create(curriculum, function () {
-                $scope.showToast("" + isCore? "Core":"Focus" +" created")
+                cc.showToast("" + isCore? "Core":"Focus" +" created")
             }, function () {
-                $scope.showToast("Failed to create " + isCore? "core":"focus")
+                cc.showToast("Failed to create " + isCore? "core":"focus")
             })
 
             //reload curriculum
-            $scope.curricula.push(curriculum);
+            cc.curricula.push(curriculum);
 
         } else {
-            $scope.showToast("Missing input fields.")
+            cc.showToast("Missing input fields.")
         }
 
-        $scope.selectedSkills = [];
-        $scope.focusName = undefined;
+        cc.selectedSkills = [];
+        cc.focusName = undefined;
 
     };
     //create a focus
     //I want to fix this to be readable - Sam
-    $scope.createFocus = function (focusForm) {
+    cc.createFocus = function (focusForm) {
 
-        $scope.createCurriculum(focusForm,false);
-        $scope.focusName = undefined;
+        cc.createCurriculum(focusForm,false);
+        cc.focusName = undefined;
 
     };
 
     //create a core
-    $scope.createCore = function (coreForm) {
-        $scope.createCurriculum(coreForm,true);
-        $scope.coreName = undefined;
+    cc.createCore = function (coreForm) {
+        cc.createCurriculum(coreForm,true);
+        cc.coreName = undefined;
     };
 
     //Used to show the create focus card
-    $scope.toggleFocusStatus = function () {
-        if($scope.focusStatus){
-            $scope.focusStatus = false;
+    cc.toggleFocusStatus = function () {
+        if(cc.focusStatus){
+            cc.focusStatus = false;
         } else {
-            $scope.focusStatus = true;
+            cc.focusStatus = true;
         }
     };
 
     //Used to show the create core card
-    $scope.toggleCoreStatus = function (){
-        if($scope.coreStatus) {
-            $scope.coreStatus = false;
+    cc.toggleCoreStatus = function (){
+        if(cc.coreStatus) {
+            cc.coreStatus = false;
         } else{
-            $scope.coreStatus =true;
+            cc.coreStatus =true;
         }
     };
 
     //hides and shows the focus card's content when called
-    $scope.toggleFocusToolbar = function () {
-        if($scope.focusToggle){
-            $scope.focusToggle = false;
+    cc.toggleFocusToolbar = function () {
+        if(cc.focusToggle){
+            cc.focusToggle = false;
             $("#focusArrow").text("keyboard_arrow_down");
         } else {
-            $scope.focusToggle = true;
+            cc.focusToggle = true;
             $("#focusArrow").text("keyboard_arrow_up");
         }
 
@@ -144,24 +145,24 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, curriculum
     };
 
     //removes a focus
-    $scope.removeFocus = function (curr) {
+    cc.removeFocus = function (curr) {
         curr.active = false;
         curriculumService.update(curr, function () {
-            $scope.showToast("Removed focus successfully")
+            cc.showToast("Removed focus successfully")
         }, function () {
-            $scope.showToast("Unable to remove focus")
+            cc.showToast("Unable to remove focus")
         })
     };
 
     //started the code for editing a focus. to be finished at a later time
-    $scope.editFocus = function (focus) {
-        $scope.focusName = focus.name;
-        $scope.selectedSkills = focus.skills;
-        $scope.focusStatus = true;
+    cc.editFocus = function (focus) {
+        cc.focusName = focus.name;
+        cc.selectedSkills = focus.skills;
+        cc.focusStatus = true;
     };
 
     //used to join the skills together
-    $scope.joinObjArrayByName = function(elem) {
+    cc.joinObjArrayByName = function(elem) {
         return elem.name;
     };
 
@@ -169,27 +170,27 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, curriculum
 
     //Grabs all Curricula
     curriculumService.getAll(function (response) {
-        $scope.curricula = response;
+        cc.curricula = response;
     }, function () {
-        $scope.showToast("Could not fetch curricula.");
+        cc.showToast("Could not fetch curricula.");
     });
 
     //Grabs all Skills
     skillService.getAll(function (response) {
-        $scope.skills = response;
+        cc.skills = response;
     }, function () {
-        $scope.showToast("Could not fetch skills.")
+        cc.showToast("Could not fetch skills.")
     });
 
     //variables
-    $scope.selectedSkills = [];
-    $scope.focusName = undefined;
-    $scope.coreName = undefined; //added for add Core usecase
-    $scope.skillName = undefined;
-    $scope.focusStatus = false;
-    $scope.coreStatus = false; //added for add Core usecase
-    $scope.skillToggle = true;
-    $scope.focusToggle = true;
-    $scope.coreToggle = true;
+    cc.selectedSkills = [];
+    cc.focusName = undefined;
+    cc.coreName = undefined; //added for add Core usecase
+    cc.skillName = undefined;
+    cc.focusStatus = false;
+    cc.coreStatus = false; //added for add Core usecase
+    cc.skillToggle = true;
+    cc.focusToggle = true;
+    cc.coreToggle = true;
 
 });

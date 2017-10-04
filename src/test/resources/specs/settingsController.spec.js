@@ -15,19 +15,19 @@ describe('settingsControllerTest', function(){
     //checks if the dummy function resetSettings() works
     describe("resetSettingsTest", function(){
         it("case1", function(){
-            $scope.settings = 'test';
-            $scope.resetSettings();
-            expect($scope.settings).toBe('placeholder');
+            $scope.self.settings = 'test';
+            $scope.self.resetSettings();
+            expect($scope.self.settings).toBe('placeholder');
         });
     });
-    //case is meant to check if getBuildings() populates $scope.buildings with strings
+    //case is meant to check if getBuildings() populates $scope.self.buildings with strings
     describe("getBuildingsTest", function(){
         it("case1", function(){
-            $scope.defaultLocation = 'test';
+            $scope.self.defaultLocation = 'test';
             var testSample = ['placeholder1', 'placeholder2', 'placeholder3'];
-            $scope.defaultLocation.buildings = testSample;
-            $scope.getBuildings();
-            expect($scope.buildings).toBe(testSample);
+            $scope.self.defaultLocation.buildings = testSample;
+            $scope.self.getBuildings();
+            expect($scope.self.buildings).toBe(testSample);
         });
     });
 
