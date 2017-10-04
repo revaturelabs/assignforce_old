@@ -104,6 +104,8 @@ app.service('ptoService', function ($resource, $mdDialog, gCalService, $http) {
             }).error(function() {
                 console.log("not logged in");
                 window.location = "/google";
+
+
             });
     //        gapi.client.load('calendar', 'v3', function(){ // load the calendar api (version 3)
     //            var request = gapi.client.calendar.events.insert({

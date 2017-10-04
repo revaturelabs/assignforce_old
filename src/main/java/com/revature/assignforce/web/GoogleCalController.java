@@ -2,6 +2,7 @@ package com.revature.assignforce.web;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.client.http.HttpResponse;
 import com.google.api.client.json.Json;
 import com.google.api.services.calendar.model.CalendarListEntry;
 import com.google.api.services.calendar.model.EventDateTime;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -59,6 +61,8 @@ public class GoogleCalController {
     @Value("${google.client.redirectUri}")
     private String redirectURI;
 
+    @Value("${google.calendar.id}")
+    private String googleCalendarId;
     private Set<Event> events = new HashSet<>();
 
     @Autowired
@@ -116,7 +120,7 @@ public class GoogleCalController {
         return authorizationUrl.build();
     }
     @RequestMapping(value = "/api/v2/addEvent")
-    private String addEvent(@RequestBody String json) throws Exception {
+    private String addEvent(@RequestBody String json, HttpServletResponse res) throws Exception {
         System.out.println("INSIDE ADD EVENT BRUH!!!!!!!!!!!!!!!");
         System.out.println("This is the json string send from angular: "  + json);
         ObjectMapper mapper = new ObjectMapper();
@@ -125,8 +129,14 @@ public class GoogleCalController {
         String startDate = node.get("start").get("date").textValue();
         String endDate =  node.get("end").get("date").textValue();
         Event event = newEvent(name, startDate, endDate);
-        Event result = client.events().insert("5qson8h19ikisfa137b1bsbjrc@group.calendar.google.com",event).execute();
-        return "redirect:/";
+        try {
+            Event result = client.events().insert(googleCalendarId, event).execute();
+            return "redirect:/";
+        }catch (NullPointerException e){
+            res.sendError(500);
+        }
+        return null;
+
     }
     private Event newEvent(String name,String startDate, String endDate) {
         Event event = new Event();
