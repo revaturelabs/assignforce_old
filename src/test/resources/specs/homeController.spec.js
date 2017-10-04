@@ -19,21 +19,21 @@ describe('homeControllerTest', function(){
             it("case1", function(){
                 param1 = 100;
                 param2 = 50;
-                actual = $scope.calcProgress(param1, param2);
+                actual = $scope.self.calcProgress(param1, param2);
                 should = 100;
                 expect(actual).toBe(should);
             });
             it("case2", function(){
                 param1 = 50;
                 param2 = 100;
-                actual = $scope.calcProgress(param1, param2);
+                actual = $scope.self.calcProgress(param1, param2);
                 should = param1/param2;
                 expect(actual).toBe(should);
             });
             it("case3", function(){
                 param1 = -10;
                 param2 = 100;
-                actual = $scope.calcProgress(param1, param2);
+                actual = $scope.self.calcProgress(param1, param2);
                 should = 0;
                 expect(actual).toBe(should);
             });
@@ -41,28 +41,28 @@ describe('homeControllerTest', function(){
             it("case4", function(){
                 param1 = 0;
                 param2 = 0;
-                actual = $scope.calcProgress(param1, param2);
+                actual = $scope.self.calcProgress(param1, param2);
                 should = true;
                 expect(isNaN(actual)).toBe(should);
             });
             it("case5", function(){
                 param1 = 'AVAILABLE';
                 param2 = 'anything';
-                actual = $scope.calcProgress(param1, param2);
+                actual = $scope.self.calcProgress(param1, param2);
                 should = 100;
                 expect(actual).toBe(should);
             });
             it("case6", function(){
                 param1 = 'UNAVAILABLE';
                 param2 = 'anything';
-                actual = $scope.calcProgress(param1, param2);
+                actual = $scope.self.calcProgress(param1, param2);
                 should = 0;
                 expect(actual).toBe(should);
             });
             it("case7", function(){
                 param1 = 'OTHER';
                 param2 = 'anything';
-                actual = $scope.calcProgress('OTHER', 'anything');
+                actual = $scope.self.calcProgress('OTHER', 'anything');
                 should = true;
                 expect(isNaN(actual)).toBe(should);
             });
@@ -70,7 +70,7 @@ describe('homeControllerTest', function(){
                 var today = new Date().getTime();
                 param1 = today-1000000;
                 param2 = today+1000000;
-                actual = $scope.calcProgress(param1, param2);
+                actual = $scope.self.calcProgress(param1, param2);
                 should = (100*(today-param1)/(param2-param1)).toFixed(5);
                 expect(actual).toBe(should);
                 x=100;
@@ -79,7 +79,7 @@ describe('homeControllerTest', function(){
                 var today = new Date().getTime();
                 param1 = today-2000000;
                 param2 = today-1000000;
-                actual = $scope.calcProgress(param1, param2);
+                actual = $scope.self.calcProgress(param1, param2);
                 should = 100;
                 expect(actual).toBe(should);
             });
@@ -87,7 +87,7 @@ describe('homeControllerTest', function(){
                 var today = new Date().getTime();
                 param1 = today+1000000;
                 param2 = today+2000000;
-                actual = $scope.calcProgress(param1, param2);
+                actual = $scope.self.calcProgress(param1, param2);
                 should = 0;
                 expect(actual).toBe(should);
             });
@@ -95,7 +95,7 @@ describe('homeControllerTest', function(){
                 var today = new Date().getTime();
                 param1 = today;
                 param2 = today;
-                actual = $scope.calcProgress(param1, param2);
+                actual = $scope.self.calcProgress(param1, param2);
                 should = true;
                 expect(isNaN(actual)).toBe(should);
             });
@@ -110,13 +110,13 @@ describe('homeControllerTest', function(){
              start = now-1000000;
              end = now+1000000;
              param1 = [{startDate: start, endDate: end}]
-             actual = $scope.checkAvailability(param1);
+             actual = $scope.self.checkAvailability(param1);
              should = 'Unavailable';
              expect(actual).toBe(should);
         });
         it('case2', function(){
             param1 = null;
-            actual = $scope.checkAvailability(param1);
+            actual = $scope.self.checkAvailability(param1);
             should = 'Available';
             expect(actual).toBe(should);
         });
@@ -125,10 +125,27 @@ describe('homeControllerTest', function(){
             start = now+1000000;
             end = now+2000000;
             param1 = [{startDate: start, endDate: end}];
-            actual = $scope.checkAvailability(param1);
+            actual = $scope.self.checkAvailability(param1);
             should = 'Available';
             expect(actual).toBe(should);
         });
     });
-    describe('')
+    describe('findRoomsAvailableTest', function(){
+        var param1;
+        it('case1', function(){
+            param1 = null;
+            actual = $scope.self.findRoomsAvailable(param1);
+            should = 0;
+            expect(actual).toBe(should);
+        });
+        it('case2', function(){
+            now = new Date().getTime();
+            start = now-1000000;
+            end = now+1000000;
+            param1 = [{startDate: start, endDate: end}, {startDate: start, endDate: end}];
+            actual = $scope.self.findRoomsAvailable(param1);
+            should = 2;
+            expect(actual).toBe(should);
+        });
+    });
 });
