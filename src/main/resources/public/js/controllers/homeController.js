@@ -27,7 +27,7 @@
                 } else if ( percent > 100 ) {
                     return 100;
                 } else {
-                    return (today * 100 / diff).toFixed(5);
+                    return percent;
                 }
             } 
                 // length based on availability (trainers)
@@ -140,7 +140,6 @@
 
           // data
 
-        //testable5
         $scope.batchOrder = "startDate";
         $scope.batchFilter = "All";
 
