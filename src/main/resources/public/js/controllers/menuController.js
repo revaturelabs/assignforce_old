@@ -4,7 +4,7 @@
     assignforce.controller( "menuCtrl", function( $scope, $location, $rootScope, $http) {
         var mc = this;
 
-        $http.get("/api/v2/userinfo")
+        $http.get("/auth/userinfo")
        .then(function(response) {
            $rootScope.data = response.data;
            

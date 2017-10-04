@@ -62,7 +62,7 @@ public class GoogleCalController {
     private Set<Event> events = new HashSet<>();
 
     @Autowired
-    private static UnavailableRepository UDAO;
+    private UnavailableRepository UDAO;
 
     public void setEvents(Set<Event> events) {
         this.events = events;
@@ -95,7 +95,7 @@ public class GoogleCalController {
         return "redirect:/";
     }
 
-    @RequestMapping(value = "/googleStatus", method = RequestMethod.GET, params = "code")
+    @RequestMapping(value = "/api/v2/googleStatus", method = RequestMethod.GET, params = "code")
     public boolean googleStatus(@RequestParam(value = "code") String code) {
         return (client != null);
     }
@@ -115,8 +115,8 @@ public class GoogleCalController {
         System.out.println("cal authorizationUrl->" + authorizationUrl);
         return authorizationUrl.build();
     }
-    @RequestMapping(value = "/addEvent")
-    private String addEvent(@RequestBody String json) throws IOException {
+    @RequestMapping(value = "/api/v2/addEvent")
+    private String addEvent(@RequestBody String json) throws Exception {
         System.out.println("INSIDE ADD EVENT BRUH!!!!!!!!!!!!!!!");
         System.out.println("This is the json string send from angular: "  + json);
         ObjectMapper mapper = new ObjectMapper();
@@ -128,8 +128,7 @@ public class GoogleCalController {
         Event result = client.events().insert("5qson8h19ikisfa137b1bsbjrc@group.calendar.google.com",event).execute();
         return "redirect:/";
     }
-
-    private static Event newEvent(String name,String startDate, String endDate) {
+    private Event newEvent(String name,String startDate, String endDate) {
         Event event = new Event();
         String pattern = "yyyy-MM-dd";
         Date startdate = null;

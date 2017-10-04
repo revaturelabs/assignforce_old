@@ -1,6 +1,6 @@
 var app = angular.module("batchApp");
 
-app.service('ptoService', function ($resource, $mdDialog, gCalService) {
+app.service('ptoService', function ($resource, $mdDialog, gCalService, $http) {
 
     var ptos = this;
 
@@ -95,12 +95,15 @@ app.service('ptoService', function ($resource, $mdDialog, gCalService) {
             };
             $http({
                 method : 'POST',
-                url : '/addEvent',
+                url : 'api/v2/addEvent',
                 contentType: 'application/json',
                 data : JSON.stringify(resource)
-            }).then(function() {
+            }).success(function() {
                 $mdDialog.cancel();
                 showCalendar();
+            }).error(function() {
+                console.log("not logged in");
+                window.location = "/google";
             });
     //        gapi.client.load('calendar', 'v3', function(){ // load the calendar api (version 3)
     //            var request = gapi.client.calendar.events.insert({
