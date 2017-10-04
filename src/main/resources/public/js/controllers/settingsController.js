@@ -10,11 +10,9 @@ assignforce.controller("settingsCtrl", function ($scope, $rootScope, settingServ
     $scope.showToast = function (message) {
         $scope.$parent.aCtrl.showToast(message);
     };
-
+    //testable1
     $scope.resetSettings = function () {
-        settingService.getAll(function(response){
-            $scope.settings = response;
-        })
+        $scope.settings = null;
     };
 
     $scope.updateSettings = function () {
@@ -24,6 +22,7 @@ assignforce.controller("settingsCtrl", function ($scope, $rootScope, settingServ
     };
 
     //get all locations
+    //testable2
     $scope.getLocations = function() {
         locationService.getAll(function (response) {
             $scope.locations = response;
@@ -41,7 +40,7 @@ assignforce.controller("settingsCtrl", function ($scope, $rootScope, settingServ
             $scope.showToast("could not fetch locations.");
         });
     };
-    
+    //testable3
     $scope.getBuildings = function(){
 
     	$scope.buildings = [];

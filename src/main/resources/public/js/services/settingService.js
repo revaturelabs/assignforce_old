@@ -7,34 +7,33 @@ var app = angular.module("batchApp");
 app.service('settingService', function ($resource) {
 
     var Setting = $resource('api/v2/setting/:settingId', {settingId: '@settingId'},{update:{method:'PUT', url:'api/v2/setting'}});
-    var ss = this;
-    ss.settings = null;
+    $scope.settings = null;
 
-    ss.getGlobal = function (success, error) {
-        if(ss.settings){
-            success(ss.settings);
+    $scope.getGlobal = function (success, error) {
+        if($scope.settings){
+            success($scope.settings);
             return;
         }
         Setting.query(function(response){
-            ss.settings = response[0];
-            success(ss.settings)
+            $scope.settings = response[0];
+            success($scope.settings)
         }, error);
     };
 
-    ss.getSettingByName = function(name, success, error){
-        if(ss.settings && ss.settings[name]){
-            success(ss.settings[name])
+    $scope.getSettingByName = function(name, success, error){
+        if($scope.settings && $scope.settings[name]){
+            success($scope.settings[name])
             return;
         }
 
-        ss.getGlobal(function(settings){
-            success(ss.settings[name])
+        $scope.getGlobal(function(settings){
+            success($scope.settings[name])
         }, error)
     }
 
-    ss.update = function (setting, success, error) {
+    $scope.update = function (setting, success, error) {
         setting.$update(function(response){
-            ss.settings = setting;
+            $scope.settings = setting;
             success();
         }, error);
     };
