@@ -8,23 +8,23 @@ app.controller("AuthCtrl", function($scope, $location, $window, $mdToast, $http,
 
     var ac = this;
 
-    ac.loginError = false;
-    ac.loggedIn = false;
+    ac.loginerror = false;
+    ac.loggedin = false;
     ac.username = '';
     ac.password = '';
 
 
-    // global function available to all other controllers (as they are all children of authCtrl) to create toast messages
-    ac.showToast = function( message ) {
-        $mdToast.show( $mdToast.simple().textContent( message ).action("OKAY").position("top right").highlightAction(true) );
+    // global function available to all other controllers (as they are all children of authctrl) to create toast messages
+    ac.showtoast = function( message ) {
+        $mdtoast.show( $mdtoast.simple().textcontent( message ).action("okay").position("top right").highlightaction(true) );
     }
 
-    $rootScope.location = $location;
+    $rootscope.location = $location;
 
     ac.login = function(){
 
         $http({
-            method :  "POST",
+            method :  "post",
             url    :  "api/v2/auth",
             //data   :  {
                 // username : ac.username,
@@ -32,12 +32,12 @@ app.controller("AuthCtrl", function($scope, $location, $window, $mdToast, $http,
             //}
         })
             .success(function(){
-                ac.loggedIn = true;
+                ac.loggedin = true;
                 window.location = "home";
             })
             .error(function(){
                 window.location = "login";
-                ac.loginError = true;
+                ac.loginerror = true;
                 // ac.username = '';
                 // ac.password = '';
             });

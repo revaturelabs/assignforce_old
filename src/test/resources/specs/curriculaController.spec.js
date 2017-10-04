@@ -1,4 +1,5 @@
-xdescribe('curriculaCtrl', function () {
+//testing this curriculaCtrl
+describe('curriculaCtrl', function () {
     var mockScope = {};
     var controller;
     var cc;
@@ -14,7 +15,7 @@ xdescribe('curriculaCtrl', function () {
 
     }));
 
-    xdescribe('cc.toggleSkillToolbar', function () {
+    describe('cc.toggleSkillToolbar', function () {
        it("sets the skillToggle variable to false if it is true", function(){
            controller.skillToggle = true;
            controller.toggleSkillToolbar();

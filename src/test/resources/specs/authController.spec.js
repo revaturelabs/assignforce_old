@@ -1,4 +1,4 @@
-describe('authController', function(){
+xdescribe('authController', function(){
     var apple;
 //    beforeEach(function () {
 //            module('batchApp');

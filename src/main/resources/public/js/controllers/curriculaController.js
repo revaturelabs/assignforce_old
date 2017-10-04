@@ -1,13 +1,8 @@
-/**
- * Created by lazaro on 2/22/2017.
- */
-
 var assignforce = angular.module( "batchApp" );
 
-assignforce.controller("curriculaCtrl", function ($scope, $rootScope, curriculumService, skillService) {
+assignforce.controller("curriculaCtrl", function ($scope, curriculumService, skillService) {
     var cc = this;
-
-    $scope.isManager = $rootScope.role === "VP of Technology";
+    // $scope.skillToggle = false;
 
     //functions
 
@@ -63,28 +58,32 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, curriculum
     };
 
     //focus functions
-    cc.createCurriculum = function (focusForm,isCore) {
-
+    //create a focus
+    //I want to fix this to be readable - Sam
+    cc.createFocus = function (focusForm) {
         //show a hidden field with a list of skill to select from, a name field, and a save button
         if(focusForm.$valid){
+            var skillList = [];
+            for(var i = 0; i < cc.selectedSkills.length; i++){
+                for(var j = 0; j < cc.skills.length; j++){
+                    if(cc.skills[j].skillId == cc.selectedSkills[i]){
+                        skillList.push(cc.skills[j]);
+                        break;
+                    }
+                }
+            }
 
-            let selectedSkills = cc.selectedSkills.map((x) => {
-                return parseInt(x);
-            });
-            let skillList = cc.skills
-                .filter( (skill) => selectedSkills.includes(skill.skillId) );
-
-            let curriculum = {
-                name    : isCore?cc.coreName:cc.focusName,
+            var curriculum = {
+                name    : cc.focusName,
                 skills  : skillList,
                 active  : true,
-                core    : isCore
+                core    : false
             };
 
             curriculumService.create(curriculum, function () {
-                cc.showToast("" + isCore? "Core":"Focus" +" created")
+                cc.showToast("Focus created")
             }, function () {
-                cc.showToast("Failed to create " + isCore? "core":"focus")
+                cc.showToast("Failed to create focus")
             })
 
             //reload curriculum
@@ -96,21 +95,6 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, curriculum
 
         cc.selectedSkills = [];
         cc.focusName = undefined;
-
-    };
-    //create a focus
-    //I want to fix this to be readable - Sam
-    cc.createFocus = function (focusForm) {
-
-        cc.createCurriculum(focusForm,false);
-        cc.focusName = undefined;
-
-    };
-
-    //create a core
-    cc.createCore = function (coreForm) {
-        cc.createCurriculum(coreForm,true);
-        cc.coreName = undefined;
     };
 
     //Used to show the create focus card
@@ -119,15 +103,6 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, curriculum
             cc.focusStatus = false;
         } else {
             cc.focusStatus = true;
-        }
-    };
-
-    //Used to show the create core card
-    cc.toggleCoreStatus = function (){
-        if(cc.coreStatus) {
-            cc.coreStatus = false;
-        } else{
-            cc.coreStatus =true;
         }
     };
 
@@ -183,12 +158,12 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, curriculum
     });
 
     //variables
+    // cc.curricula;
+    // cc.skills;
     cc.selectedSkills = [];
     cc.focusName = undefined;
-    cc.coreName = undefined; //added for add Core usecase
     cc.skillName = undefined;
     cc.focusStatus = false;
-    cc.coreStatus = false; //added for add Core usecase
     cc.skillToggle = true;
     cc.focusToggle = true;
     cc.coreToggle = true;
