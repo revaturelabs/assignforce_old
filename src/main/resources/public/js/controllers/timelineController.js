@@ -633,6 +633,7 @@ var app = angular.module('batchApp');
 		
 		if (tlc.hideFocuslessBatches)
 		{
+			//TODO
 			tlc.filteredBatches = tlc.filteredBatches
 				.filter(tlc.removeFocusless);
 		}
