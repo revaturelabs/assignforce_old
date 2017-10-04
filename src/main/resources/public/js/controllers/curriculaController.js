@@ -215,11 +215,12 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
     $scope.showCurriculum = function(event) {
         var prompt = $mdDialog.prompt()
           .title('New Curriculum')
-          .placeholder('skillName')
-          .ariaLabel('skillName')
-          .initialValue('Skill Name')
-          .ok('Save')
-          .cancel('Cancel');
+          .placeholder('curriculumName')
+          .ariaLabel('curriculumName')
+          .initialValue('Curriculum Name')
+          .ok('Create')
+          .cancel('Cancel')
+          .targetEvent(event);
        $mdDialog.show(prompt).then(function(result){
             var curric = {
                 name    : result,
@@ -232,13 +233,36 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
             }, function () {
                 cc.showToast("You're not authorized Scrub")
             })
+
+            cc.curricula.push(curric);
        });
     };
 
     //Show Edit Focus Dialog
-    //TODO similar to above showCurriculum
     $scope.showFocus = function(event) {
+        var prompt = $mdDialog.prompt()
+          .title('New Focus')
+          .placeholder('focusName')
+          .ariaLabel('focusName')
+          .initialValue('Focus Name')
+          .ok('Create')
+          .cancel('Cancel')
+          .targetEvent(event);
+       $mdDialog.show(prompt).then(function(result){
+            var curric = {
+                name    : result,
+                skills  : {},
+                active  : true,
+                core    : false
+            };
+            curriculumService.create(curric, function () {
+                cc.showToast("Focus created")
+            }, function () {
+                cc.showToast("You're not authorized Scrub")
+            })
 
+            cc.curricula.push(curric);
+       });
     };
     //variables
     // cc.curricula;
