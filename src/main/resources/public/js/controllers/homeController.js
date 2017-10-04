@@ -3,8 +3,8 @@
 
     assignforce.controller( "homeCtrl", function( $scope, $filter, batchService, $rootScope , $resource ,trainerService, locationService, buildingService) {
         var hc = this;
+        $scope.self = hc;
 
-        
 
           // functions
             // calls showToast method of aCtrl
@@ -39,6 +39,8 @@
                     return 100;
                 } else if (paramLow.toLowerCase() === "unavailable") {
                     return 0;
+                }else{
+                    return NaN;
                 }
             } 
                 // length based on simple division (locations)

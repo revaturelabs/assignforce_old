@@ -49,6 +49,8 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     settingService.getSettingByName("reportGrads", function(response) {  // Default Grads per batch
 
         rc.graduates = response
+    }, function(){
+        console.log("error-")
     });
     settingService.getSettingByName("batchLength", function(response) {  // Default length of batches
 
@@ -299,7 +301,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
             var date;
             angular.forEach(rc.batches, function (batch) {
                 date = new Date(batch.endDate);
-                if ((date.getMonth() === month) && (date.getFullYear() === rc.year) && (batch.curriculum)) {
+                if ((date.getMonth() == month) && (date.getFullYear() == rc.year) && (batch.curriculum)) {
                     total += rc.graduates;
                 }
 

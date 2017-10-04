@@ -35,7 +35,8 @@ module.exports = function(config) {
         './src/test/resources/specs/*.spec.js',
         './src/main/resources/public/js/controllers/batchController.js',
         './src/main/resources/public/js/controllers/curriculaController.js',
-        './src/main/resources/public/js/controllers/settingsController.js'
+        './src/main/resources/public/js/controllers/settingsController.js',
+        './src/main/resources/public/js/controllers/homeController.js'
     ],
 
 

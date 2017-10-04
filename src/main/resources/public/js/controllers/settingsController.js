@@ -3,6 +3,7 @@ var assignforce = angular.module( "batchApp");
 
 assignforce.controller("settingsCtrl", function ($scope, settingService, locationService) {
     var sc = this;
+    $scope.self = sc;
 
     //functions
         //calls Show Toast method of aCtrl
@@ -11,9 +12,7 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
     };
 
     sc.resetSettings = function () {
-        settingService.getAll(function(response){
-            sc.settings = response;
-        })
+        sc.settings = 'placeholder';
     };
 
     sc.updateSettings = function () {
@@ -40,7 +39,6 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
             sc.showToast("could not fetch locations.");
         });
     };
-
     sc.getBuildings = function(){
         console.log("getting buildings")
     	sc.buildings = [];
