@@ -150,4 +150,8 @@ assignforce.controller( "trainerCtrl", function( $scope, $rootScope, $mdDialog, 
         tc.showToast("Could not fetch trainers.");
     });
 
+    tc.googleAuth = function() {
+        window.location = "/google";
+    }
+
 });//end trainer controller
