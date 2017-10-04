@@ -4,16 +4,23 @@ var assignforce = angular.module( "batchApp");
 assignforce.controller("settingsCtrl", function ($scope, $rootScope, settingService, locationService) {
 
     $scope.isManager = $rootScope.role === "VP of Technology";
-
     //functions
         //calls Show Toast method of aCtrl
     $scope.showToast = function (message) {
         $scope.$parent.aCtrl.showToast(message);
     };
+
+
+    //note: resetSettings's function body was taken out
+    //because it called a non-existent function in settingsController.js
+    //restore the function body if needed
+
     //testable1
     $scope.resetSettings = function () {
-        $scope.settings = null;
+        $scope.settings = 'placeholder';
     };
+
+
 
     $scope.updateSettings = function () {
         settingService.update($scope.settings, function(){
@@ -22,7 +29,6 @@ assignforce.controller("settingsCtrl", function ($scope, $rootScope, settingServ
     };
 
     //get all locations
-    //testable2
     $scope.getLocations = function() {
         locationService.getAll(function (response) {
             $scope.locations = response;
@@ -40,7 +46,7 @@ assignforce.controller("settingsCtrl", function ($scope, $rootScope, settingServ
             $scope.showToast("could not fetch locations.");
         });
     };
-    //testable3
+    //testable2
     $scope.getBuildings = function(){
 
     	$scope.buildings = [];
