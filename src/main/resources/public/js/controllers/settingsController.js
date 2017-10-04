@@ -50,10 +50,9 @@ assignforce.controller("settingsCtrl", function ($scope, $rootScope, settingServ
     $scope.getBuildings = function(){
 
     	$scope.buildings = [];
-    	angular.forEach($scope.defaultLocation.buildings, function(building){
-
+    	angular.forEach($scope.defaultLocation.buildings, function(value){
     		$scope.buildings.push(building);
-    	})
+    	});
     };
 
     //Get all Settings
