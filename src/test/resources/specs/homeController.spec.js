@@ -1,4 +1,4 @@
-xdescribe('authControllerTest', function(){
+describe('homeControllerTest', function(){
     var $controller;
     var $scope = {};
     var ctrl;
@@ -8,7 +8,7 @@ xdescribe('authControllerTest', function(){
                 // The injector unwraps the underscores (_) from around the parameter names when matching
                 $controller = _$controller_;
         });
-        ctrl = $controller('settingsCtrl', { $scope: $scope });
+        ctrl = $controller('homeCtrl', { $scope: $scope });
     });
     describe("testable1", function(){
             it("case1", function(){
@@ -26,15 +26,31 @@ xdescribe('authControllerTest', function(){
 
             it("case4", function(){
                 var result = $scope.calcProgress(0, 0);
-                expect(result).toBe(undefined);
+                expect(isNaN(result)).toBe(true);
             });
             it("case5", function(){
                 var result = $scope.calcProgress(50, 100);
                 expect(result).toBe(50/100);
             });
             it("case6", function(){
-                var result = $scope.calcProgress(50, 100);
-                expect(result).toBe(50/100);
+                var result = $scope.calcProgress('AVAILABLE', 'anything');
+                expect(result).toBe(100);
+            });
+            it("case7", function(){
+                var result = $scope.calcProgress('UNAVAILABLE', 'anything');
+                expect(result).toBe(0);
+            });
+            it("case8", function(){
+                var result = $scope.calcProgress('OTHER', 'anything');
+                expect(isNaN(result)).toBe(true);
+            });
+            it("case8", function(){
+                var result = $scope.calcProgress('OTHER', 'anything');
+                expect(isNaN(result)).toBe(true);
+            });
+            it("case8", function(){
+                var result = $scope.calcProgress('OTHER', 'anything');
+                expect(isNaN(result)).toBe(true);
             });
     });
 });

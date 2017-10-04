@@ -13,7 +13,7 @@ describe('settingsControllerTest', function(){
         ctrl = $controller('settingsCtrl', { $scope: $scope });
     });
     //checks if the dummy function resetSettings() works
-    describe("testable1", function(){
+    describe("resetSettingsTest", function(){
         it("case1", function(){
             $scope.settings = 'test';
             $scope.resetSettings();
@@ -21,7 +21,7 @@ describe('settingsControllerTest', function(){
         });
     });
     //case is meant to check if getBuildings() populates $scope.buildings with strings
-    describe("testable2", function(){
+    describe("getBuildingsTest", function(){
         it("case1", function(){
             $scope.defaultLocation = 'test';
             var testSample = ['placeholder1', 'placeholder2', 'placeholder3'];

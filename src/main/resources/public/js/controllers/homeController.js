@@ -37,6 +37,9 @@
                 } else if (paramLow.toLowerCase() === "unavailable") {
                     return 0;
                 }
+                else{
+                    return NaN;
+                }
             } 
                 // length based on simple division (locations)
             if (paramLow / paramHigh > 1) {
