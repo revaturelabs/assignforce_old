@@ -168,7 +168,7 @@ public class BatchCtrlTest {
         given(trainerService.getOneItem(anyInt())).willReturn(coTrainer);
         given(batchService.saveItem(any(Batch.class))).willReturn(null);
         mvc.perform(post("/api/v2/batch")
-                .with(csrf().asHeader())
+                .with(csrf().useInvalidToken().asHeader())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonMaker.toJsonString(batchDTO)))
                     .andExpect(status().isInternalServerError());

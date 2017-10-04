@@ -38,6 +38,7 @@ public class Force {
     @SuppressWarnings("unchecked")
     public Employee getCurrentEmployee(OAuth2Authentication auth) {
         HashMap<String, String> details = (HashMap<String, String>) auth.getUserAuthentication().getDetails();
+        System.out.println(details.toString());
         String query = "SELECT Id, Name, CommunityNickname, FirstName, LastName, Email, FullPhotoUrl, SmallPhotoUrl, " +
                 "UserRole.Id, UserRole.Name " +
                 "FROM User WHERE Id = '" + details.get("user_id") + "'";

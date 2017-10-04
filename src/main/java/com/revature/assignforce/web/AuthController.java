@@ -30,8 +30,18 @@ public class AuthController {
     public ResponseEntity<Employee> getInfo(OAuth2Authentication auth)
     {
         Employee emp = force.getCurrentEmployee(auth);
+        System.out.println("This is the emp role name: " + emp.getRoleName());
         String tk = restTemplate.getAccessToken().toString();
         emp.setAccessToken(tk);
         return ResponseEntity.ok(emp);
     }
+
+    @RequestMapping(value= "/userRoleinfo")
+    public String getUserRoleInfo(OAuth2Authentication auth)
+    {
+        Employee emp = force.getCurrentEmployee(auth);
+        return emp.getRoleName();
+    }
+
+
 }

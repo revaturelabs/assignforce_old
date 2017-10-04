@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -66,6 +67,7 @@ public class BatchCtrl {
 	// CREATE
 	// creating new batch object from information passed from batch data
 	// transfer object
+	@PreAuthorize()
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Transactional
 	public Object createBatch(@RequestBody BatchDTO in) {
