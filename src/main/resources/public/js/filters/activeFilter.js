@@ -4,7 +4,7 @@
     assignforce.filter( "activeItem", function(){
         return function(items){
 
-            if (items == undefined) {
+            if (items === undefined) {
                 return items;
             }
 
