@@ -1,49 +1,39 @@
-var assignforce = angular.module( "batchApp" );
-
 var app = angular.module('batchApp');
 
 /*--------------------------CONTROLLER---------------------------*/
 
- app.controller("TimelineCtrl", function($scope, $window, batchService, calendarService, trainerService, curriculumService, settingService, locationService, buildingService){
+ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarService, trainerService, curriculumService, settingService, locationService, buildingService, utilService){
 	
-    var tlc = this;
+    let tlc = this;
 
     //For displaying toast messages.
     tlc.showToast = function( message ){
         $scope.$parent.aCtrl.showToast( message );
     };
     
-    //For checking if something is undefined or null.
     tlc.isUndefinedOrNull = function(obj)
     {
     	return (angular.isUndefined(obj) || obj === null || !obj);
-    }
+    };
     
-    //For checking if something is a valid number or not.
     tlc.isNaN = function(obj)
     {
     	return (!angular.isNumber(obj) || isNaN(parseInt(obj)));
-    }
+    };
     
-    //Filter removes batches that don't have any assigned trainers.
-    tlc.removeNoTrainer = function(batch) {
+    tlc.batchHasTrainer = function(batch) {
         return (!tlc.isUndefinedOrNull(batch.trainer));
     };
     
-    //Filter removes batches that have already concluded.
-    tlc.removeConcluded = function(batch) {
+    tlc.batchHasNotConcluded = function(batch) {
         return (batch.endDate > tlc.currentDate);
     };
     
-    //Filter removes batches whose dates don't exist.
-    tlc.removeDateless = function(batch) {
+    tlc.batchHasDate = function(batch) {
         return (!tlc.isUndefinedOrNull(batch.startDate) && !tlc.isUndefinedOrNull(batch.endDate));
     };
-    
-    
-    //Filter removes batches whose date range fall outside the view of the timeline.
-    tlc.removeOutOfDateRange = function(batch) {
-    	return ((new Date(batch.startDate) <= tlc.maxDate) && (new Date(batch.endDate) >= tlc.minDate));
+    tlc.batchIsInDateRange = function(batch, start, end) {
+    	return ((new Date(batch.startDate) <= end) && (new Date(batch.endDate) >= start));
     };
     
     //Filter removes batches that don't have a matching curriculum to the selected view by the user.
@@ -155,7 +145,7 @@ var app = angular.module('batchApp');
 		{
 			tlc.oldMinDate = new Date(tlc.minDate);
 		}
-	}
+	};
 	
 	//Ensures the end date selection is valid, and forces it to reset if not.
 	tlc.validateEndDate = function()
@@ -169,7 +159,7 @@ var app = angular.module('batchApp');
 		{
 			tlc.oldMaxDate = new Date(tlc.maxDate);
 		}
-	}
+	};
 
 	//Set the min and max dates based on the batches.
 	//Also grabs the length of the longest trainer name.
@@ -223,77 +213,69 @@ var app = angular.module('batchApp');
 	//Fetches all the batches for the controller  Also attaches their location and building information if possible.
 	tlc.getAllBatches = new Promise(function(resolve)
 	{
-	    batchService.getAll( function(response) {
-	        tlc.batches = response;
-	        tlc.getDateRange(false);
-	        
-	        tlc.batches.forEach(function(b){
-	        	if (!tlc.isUndefinedOrNull(b.room))
-	        	{
-	        		var building = tlc.buildings.find(function(building){
-	        			return (building.id === b.room.building);
-	        		});
-	        		
-	        		if (building)
-	        		{
-	        			b.building = building;
-	        			
-		        		var location = tlc.locations.find(function(location){
-		        			return (location.id === b.building.location);
-		        		});
-	        			
-	        			if (location)
-	        			{
-	        				b.location = location;
-	        			}
-	        			else
-		        		{
-			        		b.location = undefined;
-		        		}
-	        		}
-	        		else
-	        		{
-		        		b.building = undefined;
-		        		b.location = undefined;
-	        		}
-	        	}
-	        	else
-	        	{
-	        		b.building = undefined;
-	        		b.location = undefined;
-	        	}
-	        });
-	        
-	        resolve(1);
-	    }, function() {
-	    	tlc.showToast("Timeline:  Could not fetch batches.");
-	    	resolve(0);
-	    });
-	});
-	
-	//Returns the location object selected in the filter dropdown.
-	tlc.getSelectedLocation = function()
-	{
-		var location = tlc.locations.find(function(l){
-			return (l.id === tlc.selectedLocation);
-		});
-		
-		return location;
-	}
+		batchService.getAll( function(response) {
+			tlc.batches = response;
+			tlc.getDateRange(false);
 
+			tlc.batches.forEach(function(b){
+				if (!tlc.isUndefinedOrNull(b.room))
+				{
+					var building = tlc.buildings.find(function(building){
+						return (building.id === b.room.building);
+					});
 
-	//Fetches all the trainers for the controller.
-	tlc.getAllTrainers = new Promise(function(resolve)
-	{
-	    trainerService.getAll( function(response) {
-			tlc.trainers = response.map(function(trainer){return $scope.trainerColumnName(trainer)});
+					if (building)
+					{
+						b.building = building;
+
+						var location = tlc.locations.find(function(location){
+							return (location.id === b.building.location);
+						});
+
+						if (location)
+						{
+							b.location = location;
+						}
+						else
+						{
+							b.location = undefined;
+						}
+					}
+					else
+					{
+						b.building = undefined;
+						b.location = undefined;
+					}
+				}
+				else
+				{
+					b.building = undefined;
+					b.location = undefined;
+				}
+			});
 
 			resolve(1);
-	    }, function() {
-	    	tlc.showToast("Timeline:  Could not fetch trainers.");
-	    	resolve(0);
-	    });
+		}, function() {
+			tlc.showToast("Timeline:  Could not fetch batches.");
+			resolve(0);
+		});
 	});
+	 //Fetches all the trainers for the controller.
+	 tlc.getAllTrainers = new Promise(function(resolve)
+	 {
+		 trainerService.getAll( function(response) {
+			 tlc.trainers = response;
+
+			 resolve(1);
+		 }, function() {
+			 tlc.showToast("Timeline:  Could not fetch trainers.");
+			 resolve(0);
+		 });
+	 });
+
+
+
+
     
 	//Fetches all the curricula for the controller.
     curriculumService.getAll( function(response) {
@@ -335,6 +317,16 @@ var app = angular.module('batchApp');
 	$scope.$on("repullTimeline", function(){
 		tlc.repull();
 	});
+
+     //Returns the location object selected in the filter dropdown.
+     tlc.getSelectedLocation = function()
+     {
+         var location = tlc.locations.find(function(l){
+             return (l.id === tlc.selectedLocation);
+         });
+
+         return location;
+     }
 
 	// Range values for timeline in milliseconds
 	var MAX_RANGE = 126140000000000; // 4000 years
@@ -623,17 +615,26 @@ var app = angular.module('batchApp');
 		tlc.filteredTrainers = tlc.trainers;
 
 		if(tlc.batches) {
-            tlc.filteredBatches = tlc.batches.filter(tlc.removeNoTrainer).filter(tlc.removeDateless).filter(tlc.removeOutOfDateRange).filter(tlc.removeUnmatchingCurriculum).filter(tlc.removeUnmatchingFocus).filter(tlc.removeUnmatchingLocation).filter(tlc.removeUnmatchingBuilding);
+            tlc.filteredBatches = tlc.batches
+				.filter(tlc.batchHasTrainer)
+				.filter(tlc.batchHasDate())
+				.filter((b) => tlc.batchIsInDateRange(b,tlc.minDate,tlc.maxDate))
+				.filter(tlc.removeUnmatchingCurriculum)
+				.filter(tlc.removeUnmatchingFocus)
+				.filter(tlc.removeUnmatchingLocation)
+				.filter(tlc.removeUnmatchingBuilding);
         }
 		
 		if (tlc.hideConcludedBatches)
 		{
-			tlc.filteredBatches = tlc.filteredBatches.filter(tlc.removeConcluded);
+			tlc.filteredBatches = tlc.filteredBatches
+				.filter(tlc.batchHasNotConcluded());
 		}
 		
 		if (tlc.hideFocuslessBatches)
 		{
-			tlc.filteredBatches = tlc.filteredBatches.filter(tlc.removeFocusless);
+			tlc.filteredBatches = tlc.filteredBatches
+				.filter(tlc.removeFocusless);
 		}
 		
 		if (tlc.hideBatchlessTrainers)
@@ -653,13 +654,10 @@ var app = angular.module('batchApp');
 		//Sorts the trainer column names based on id.
 		tlc.filteredTrainers.sort(function(a,b)
 		{
-			var aID = parseInt(a.substring(1, a.indexOf(')')));
-			var bID = parseInt(b.substring(1, b.indexOf(')')));
-			
-			if(aID < bID){ 
+			if(a.trainerID < b.trainerID){
 				return -1; 
 			}
-			else if(aID > bID){ 
+			else if(a.trainerID > b.trainerID){
 				return 1; 
 			}
 			return 0;
@@ -675,36 +673,36 @@ var app = angular.module('batchApp');
 	//Generates the string used in the columns
 	$scope.trainerColumnName = function(trainer)
 	{
-		return ("(" + trainer.trainerId + ")" + " " + trainer.firstName + " " + trainer.lastName);
+		return (trainer.firstName + " " + trainer.lastName);
 	};
 
 	// Draw timeline
 	$scope.projectTimeline = function(timelineFormatting, minDate, maxDate, yCoord, timelineData, parentScope, numWeeks, trainerNames){
 		
 		//Define Scales
-		var colorScale = d3.scale.category20();
+		let colorScale = d3.scale.category20();
 		
-		var yScale = d3.time.scale()
+		let yScale = d3.time.scale()
 			.domain([minDate, maxDate])
 			.range([0,timelineFormatting.height]);
 		
-		var xScale = d3.scale.ordinal()
+		let xScale = d3.scale.ordinal()
 			.domain(trainerNames)
 			.rangePoints([timelineFormatting.xPadding, timelineFormatting.width - timelineFormatting.xPadding]);
 		
 		//Define axis
-		var yAxis = d3.svg.axis()
+		let yAxis = d3.svg.axis()
 			.scale(yScale)
 			.orient('left')
 			.tickSize(2);
 		
-		var xAxis = d3.svg.axis()
+		let xAxis = d3.svg.axis()
 			.scale(xScale)
 			.orient('top')
 			.tickSize(6,0);
 		
 		//Used to create line breaks in table word data.
-		var wrap = function (text, width) {
+		let wrap = function (text, width) {
 			  text.each(function() {
 				    var el = d3.select(this),
 				        words = el.text().split(/\s+/).reverse(),
@@ -716,7 +714,7 @@ var app = angular.module('batchApp');
 				        y = el.attr("y"),
 				        dy = parseFloat(el.attr("dy")),
 				        tspan = el.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
-				    
+
 				    while (word = words.pop()) {
 				      line.push(word);
 				      tspan.text(line.join(" "));
@@ -729,7 +727,7 @@ var app = angular.module('batchApp');
 				    }
 				  });
 				};
-		
+		//
 		//Sort data for Timeline
 		
 		timelineData.sort(function(a,b){
@@ -774,6 +772,8 @@ var app = angular.module('batchApp');
 		//Create timeline
 	    var svg = d3.select("#timeline");
 	    svg.selectAll("*").remove();
+
+
 	    
 	    //Tooltip setup.
 		var tip = d3.tip()
@@ -806,11 +806,15 @@ var app = angular.module('batchApp');
 				.attr('height',timelineFormatting.height + timelineFormatting.margin_bottom + timelineFormatting.margin_top)
 			.append('g')
 				.attr('transform','translate('+timelineFormatting.margin_left+','+timelineFormatting.margin_top+')');
-				
-		svg.call(tip);
-		
 
-		
+        var xLine = svg.append('g')
+            .attr('class','x axis')
+            .attr('id','x axis')
+            .style('position','sticky')
+
+        svg.call(tip);
+
+
 		svg.append('g')
 			.attr('class','y axis')
 			.call(yAxis);
@@ -904,9 +908,7 @@ var app = angular.module('batchApp');
 
 
 
-        var xLine = svg.append('g')
-            .attr('class','x axis')
-            .attr('style', 'position: -webkit-sticky; position: sticky');
+
             //.call(xAxis);
 
         var brect = xLine.append('rect');
@@ -1073,7 +1075,7 @@ var app = angular.module('batchApp');
 				.text(function(d) {return d.length;});
 
 		tlc.moveAxis();
-        if(x!==null && xLine.node()!=null){
+        if(x!==null && xLine.node()!==null){
             brect
                 .attr('class','axisrect')
                 .attr('transform','translate('+(timelineFormatting.margin_left/2)+',-'+xLine.node().getBoundingClientRect().height+')')
@@ -1084,19 +1086,18 @@ var app = angular.module('batchApp');
 	}
 
 //	function to freeze trainers names over the graph at the top of the window whenever you scroll out of the window
-	tlc.axisDisplacement = 0
-	//TODO: refactor
+	tlc.axisDisplacement = 0;
     tlc.moveAxis= function () {
-        var x = document.getElementsByClassName("x axis");
-         if(x[0] != undefined){
-            if(x[0].getBoundingClientRect().top){
-                tlc.axisDisplacement -= x[0].getBoundingClientRect().top
-                if(tlc.axisDisplacement <0){tlc.axisDisplacement =0;}
-                    x[0].setAttribute("transform", "translate(0," + tlc.axisDisplacement + ")");
-            }
-         }
-        //else{
-        window.requestAnimationFrame(tlc.moveAxis);
-        //}
+        // let x = document.getElementById("x axis");
+        //  if(x !== undefined){
+        //     if(x.getBoundingClientRect().top){
+        //         tlc.axisDisplacement -= x.getBoundingClientRect().top
+        //         if(tlc.axisDisplacement <0){tlc.axisDisplacement =0;}
+        //             x.setAttribute("transform", "translate(0," + tlc.axisDisplacement + ")");
+        //     }
+        //  }
+        // //else{
+        // window.requestAnimationFrame(tlc.moveAxis);
+        // //}
     }
 });
