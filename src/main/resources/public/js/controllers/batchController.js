@@ -372,8 +372,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
     /* Table checkbox functions */
     //****Does this still function?****\\
     bc.toggleAll = function() {
-        if (bc.batchesSelected.length =
-        == bc.batches.length) {
+        if (bc.batchesSelected.length === bc.batches.length) {
             bc.batchesSelected = [];
         } else {
             bc.batchesSelected = bc.batches;

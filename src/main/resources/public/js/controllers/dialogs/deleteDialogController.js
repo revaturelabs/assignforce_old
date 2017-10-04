@@ -22,7 +22,7 @@ assignforce.controller( "deleteDialogCtrl", function( $scope, $mdDialog, $timeou
         
         // 1 location and 1 room || 1 location and 1 building
         if (dc.summary.locations > 0){
-            if((dc.summary.buildings === 0 && dc.summary.rooms > 0) || (dc.summary.buildings > 0 && dc.summary.rooms === 0))){
+            if(((dc.summary.buildings === 0 && dc.summary.rooms > 0) || (dc.summary.buildings > 0 && dc.summary.rooms === 0))){
         	    title += " and ";
         	}
         }
