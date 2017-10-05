@@ -16,10 +16,10 @@ describe('batchServiceTest', function() {
         httpBackend.verifyNoOutstandingRequest();
     });
     describe('getEmptyBatchTest', function(){
-        it('should return an empty batch', function() {
-            should = null;
-            actual = batchService.getEmptyBatch();
-            expect(actual).not.toBe(should);
-        });
+           it('should return an empty batch', function() {
+               should = null;
+               actual = batchService.getEmptyBatch();
+               expect(actual).not.toBe(should);
+            });
     });
 });

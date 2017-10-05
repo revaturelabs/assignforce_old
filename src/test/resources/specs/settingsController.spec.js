@@ -26,12 +26,12 @@ describe('settingsControllerTest', function(){
         });
     });
     //case is meant to check if getBuildings() populates ctrl.buildings with strings
-    xdescribe("getBuildingsTest", function(){
+    describe("getBuildingsTest", function(){
         it("should move the buildings in the default location into the buildings variable", function(){
-            should = ctrl.buildings;
+            shouldNot = ctrl.buildings;
             ctrl.getBuildings();
             actual = ctrl.buildings;
-            expect(actual).not.toBe(should);
+            expect(actual).not.toBe(shouldNot);
         });
     });
 });
