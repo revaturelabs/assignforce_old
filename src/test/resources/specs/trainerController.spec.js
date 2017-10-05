@@ -26,9 +26,8 @@ describe('trainerControllerTest', function(){
     //this function is used to add a trainer by popping up a dialog box
     describe("addTrainerTest", function(){
         it("TEST", function(){
-            $scope.self.settings = 'test';
-            $scope.self.resetSettings();
-            expect($scope.self.settings).toBe('placeholder');
+            ctrl.
+            expect().toBe();
         });
     });
 
@@ -43,9 +42,8 @@ describe('trainerControllerTest', function(){
     //connects to aws s3 to grab an object
     describe("grabS3ResumeTest", function(){
         it("TEST", function(){
-            $scope.self.settings = 'test';
-            $scope.self.resetSettings();
-            expect($scope.self.settings).toBe('placeholder');
+            ctrl.
+            expect().toBe();
         });
     });
 
@@ -60,9 +58,8 @@ describe('trainerControllerTest', function(){
     // reformats how an array of objects is joined
     describe("joinObjArrayByNameTest", function(){
         it("TEST", function(){
-            $scope.self.settings = 'test';
-            $scope.self.resetSettings();
-            expect($scope.self.settings).toBe('placeholder');
+            ctrl.
+            expect().toBe();
         });
     });
 
@@ -77,9 +74,8 @@ describe('trainerControllerTest', function(){
     // queries the database for trainers. to be called after a change to the trainers array
     describe("rePullTrainersTest", function(){
         it("TEST", function(){
-            $scope.self.settings = 'test';
-            $scope.self.resetSettings();
-            expect($scope.self.settings).toBe('placeholder');
+            ctrl.
+            expect().toBe();
         });
     });
 
@@ -94,9 +90,8 @@ describe('trainerControllerTest', function(){
     //make comment here...
     describe("showCalendarTest", function(){
         it("TEST", function(){
-            $scope.self.settings = 'test';
-            $scope.self.resetSettings();
-            expect($scope.self.settings).toBe('placeholder');
+            ctrl.
+            expect().toBe();
         });
     });
 
@@ -111,9 +106,8 @@ describe('trainerControllerTest', function(){
     //make comment here...
     describe("showPTODialogTest", function(){
         it("TEST", function(){
-            $scope.self.settings = 'test';
-            $scope.self.resetSettings();
-            expect($scope.self.settings).toBe('placeholder');
+            ctrl.
+            expect().toBe();
         });
     });
 
