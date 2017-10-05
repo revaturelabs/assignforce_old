@@ -95,18 +95,25 @@ app.service('ptoService', function ($resource, $mdDialog, gCalService, $http) {
             };
             $http({
                 method : 'POST',
-                url : 'api/v2/addEvent',
+                url : 'api/v2/test',
                 contentType: 'application/json',
                 data : JSON.stringify(resource)
             }).success(function() {
                 $mdDialog.cancel();
                 showCalendar();
-            }).error(function() {
-                console.log("not logged in");
-                window.location = "/google";
-
-
             });
+//            $http({
+//                method : 'POST',
+//                url : 'api/v2/google/addEvent',
+//                contentType: 'application/json',
+//                data : JSON.stringify(resource)
+//            }).success(function() {
+//                $mdDialog.cancel();
+//                showCalendar();
+//            }).error(function() {
+//                console.log("not logged in");
+//                window.location = "/api/v2/google/google";
+//            });
     //        gapi.client.load('calendar', 'v3', function(){ // load the calendar api (version 3)
     //            var request = gapi.client.calendar.events.insert({
     //                'calendarId': creds.CalendarID,

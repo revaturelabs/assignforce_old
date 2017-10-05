@@ -72,13 +72,13 @@ public class GoogleCalController {
         this.events = events;
     }
 
-    @RequestMapping(value = "/google", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/v2/google/google", method = RequestMethod.GET)
     public RedirectView googleConnectionStatus(HttpServletRequest request) throws Exception {
         System.out.println("inside googleConnectionStatus");
         return new RedirectView(authorize());
     }
 
-    @RequestMapping(value = "/google", method = RequestMethod.GET, params = "code")
+    @RequestMapping(value = "/api/v2/google/google", method = RequestMethod.GET, params = "code")
     public String oauth2Callback(@RequestParam(value = "code") String code) {
         System.out.println("inside oauth2Callback");
         com.google.api.services.calendar.model.Events eventList;
@@ -119,7 +119,7 @@ public class GoogleCalController {
         System.out.println("cal authorizationUrl->" + authorizationUrl);
         return authorizationUrl.build();
     }
-    @RequestMapping(value = "/api/v2/addEvent")
+    @RequestMapping(value = "/api/v2/google/addEvent")
     private String addEvent(@RequestBody String json, HttpServletResponse res) throws Exception {
         System.out.println("INSIDE ADD EVENT BRUH!!!!!!!!!!!!!!!");
         System.out.println("This is the json string send from angular: "  + json);
@@ -163,5 +163,13 @@ public class GoogleCalController {
         u.setEndDate(t);
         UDAO.save(u);
         return event;
+    }
+
+    @RequestMapping(value = "/api/v2/test")
+    private String test(@RequestBody String json) throws Exception {
+        System.out.println("Post PASSED BRAH!!!!!!!!!!!!!!!");
+        System.out.println("This is the json string send from angular: "  + json);
+        return null;
+
     }
 }

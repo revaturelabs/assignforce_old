@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
@@ -17,6 +18,7 @@ import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResour
  * Application Entry Point
  */
 @SpringBootApplication
+@EnableGlobalMethodSecurity
 @EnableJpaRepositories(basePackages={"com.revature.assignforce.domain.dao"})
 @EntityScan("com.revature.assignforce.domain")
 @EnableOAuth2Sso

@@ -151,7 +151,7 @@ assignforce.controller( "trainerCtrl", function( $scope, $rootScope, $mdDialog, 
     });
 
     tc.googleAuth = function() {
-        window.location = "/google";
+        window.location = "api/v2/google/google";
     }
 
 });//end trainer controller

@@ -12,8 +12,11 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
-@RequestMapping(value = "/auth")
+
 public class AuthController {
 
     @Autowired
@@ -26,21 +29,27 @@ public class AuthController {
     @Autowired
     private OAuth2ClientContext context;
 
-    @RequestMapping(value= "/userinfo", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value= "auth/userinfo", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Employee> getInfo(OAuth2Authentication auth)
     {
         Employee emp = force.getCurrentEmployee(auth);
         System.out.println("This is the emp role name: " + emp.getRoleName());
         String tk = restTemplate.getAccessToken().toString();
         emp.setAccessToken(tk);
+
+//        req.getSession().setAttribute("auth", auth);
+        System.out.println(auth.toString());
+
         return ResponseEntity.ok(emp);
     }
 
-    @RequestMapping(value= "/userRoleinfo")
-    public String getUserRoleInfo(OAuth2Authentication auth)
+
+    @RequestMapping(value= "api/v2/userRoleinfo")
+    public void getUserRoleInfo(OAuth2Authentication auth)
     {
-        Employee emp = force.getCurrentEmployee(auth);
-        return emp.getRoleName();
+        //Employee emp = force.getCurrentEmployee(auth);
+//        System.out.println("This is auth from userroleinfo: " + auth.toString());
+        //return emp.getRoleName();
     }
 
 
