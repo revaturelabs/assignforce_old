@@ -7,7 +7,7 @@ app.service('batchService', function($resource) {
     bs.getEmptyBatch = function(){
     	return new Batch();
     };
-    
+
     bs.create = function(batch, success, error){
         batch.$save(success, error);
     };

@@ -1,5 +1,5 @@
 //batch spec.js for protractor
-xdescribe('batchService', function() {
+describe('batchServiceTest', function() {
     var batchService, httpBackend;
 
     beforeEach(function () {
