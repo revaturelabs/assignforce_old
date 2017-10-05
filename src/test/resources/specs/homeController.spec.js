@@ -4,6 +4,7 @@ xdescribe('homeControllerTest', function(){
     var ctrl;
     var actual;
     var should;
+    var shouldNot;
 
     beforeEach(function(){
         module('batchApp');
@@ -16,21 +17,21 @@ xdescribe('homeControllerTest', function(){
     describe('calcProgressTest', function(){
             var param1;
             var param2;
-            it("case1", function(){
+            it("tests where param1>param2, should be 100", function(){
                 param1 = 100;
                 param2 = 50;
                 actual = $scope.self.calcProgress(param1, param2);
                 should = 100;
                 expect(actual).toBe(should);
             });
-            it("case2", function(){
+            it("tests where param1<=param2, should be param1/param2", function(){
                 param1 = 50;
                 param2 = 100;
                 actual = $scope.self.calcProgress(param1, param2);
                 should = param1/param2;
                 expect(actual).toBe(should);
             });
-            it("case3", function(){
+            it("tests where param1<0, should be 0", function(){
                 param1 = -10;
                 param2 = 100;
                 actual = $scope.self.calcProgress(param1, param2);
@@ -38,44 +39,43 @@ xdescribe('homeControllerTest', function(){
                 expect(actual).toBe(should);
             });
 
-            it("case4", function(){
+            it("tests divide by zero, should be true, if actual is NaN", function(){
                 param1 = 0;
                 param2 = 0;
                 actual = $scope.self.calcProgress(param1, param2);
                 should = true;
                 expect(isNaN(actual)).toBe(should);
             });
-            it("case5", function(){
+            it("tests where param1 is available, should be 100", function(){
                 param1 = 'AVAILABLE';
                 param2 = 'anything';
                 actual = $scope.self.calcProgress(param1, param2);
                 should = 100;
                 expect(actual).toBe(should);
             });
-            it("case6", function(){
+            it("tests where param1 is unavailable, should be 0", function(){
                 param1 = 'UNAVAILABLE';
                 param2 = 'anything';
                 actual = $scope.self.calcProgress(param1, param2);
                 should = 0;
                 expect(actual).toBe(should);
             });
-            it("case7", function(){
+            it("tests where param1 is something else, should be true if actual is NaN", function(){
                 param1 = 'OTHER';
                 param2 = 'anything';
                 actual = $scope.self.calcProgress('OTHER', 'anything');
                 should = true;
                 expect(isNaN(actual)).toBe(should);
             });
-            it("case8", function(){
+            it("tests where today falls inbetween the date range of param1 and param2, should be that big equation", function(){
                 var today = new Date().getTime();
                 param1 = today-1000000;
                 param2 = today+1000000;
                 actual = $scope.self.calcProgress(param1, param2);
                 should = (100*(today-param1)/(param2-param1)).toFixed(5);
                 expect(actual).toBe(should);
-                x=100;
             });
-            it("case9", function(){
+            it("tests where today is after the date range of param1 and param2, should be 100", function(){
                 var today = new Date().getTime();
                 param1 = today-2000000;
                 param2 = today-1000000;
@@ -83,7 +83,7 @@ xdescribe('homeControllerTest', function(){
                 should = 100;
                 expect(actual).toBe(should);
             });
-            it("case10", function(){
+            it("tests where today is before the data range of param1 and param2, should be 0", function(){
                 var today = new Date().getTime();
                 param1 = today+1000000;
                 param2 = today+2000000;
@@ -91,7 +91,7 @@ xdescribe('homeControllerTest', function(){
                 should = 0;
                 expect(actual).toBe(should);
             });
-            it("case11", function(){
+            it("tests where the start date(param1) and end date(param2) are equal, should be true if actual is NaN", function(){
                 var today = new Date().getTime();
                 param1 = today;
                 param2 = today;
@@ -105,7 +105,7 @@ xdescribe('homeControllerTest', function(){
         var start;
         var end;
         var param1;
-        it('case1', function(){
+        it('tests where now is between start and end, should be Unavailable', function(){
              now = new Date().getTime();
              start = now-1000000;
              end = now+1000000;
@@ -114,13 +114,13 @@ xdescribe('homeControllerTest', function(){
              should = 'Unavailable';
              expect(actual).toBe(should);
         });
-        it('case2', function(){
+        it('tests where param1 is null, should be Available', function(){
             param1 = null;
             actual = $scope.self.checkAvailability(param1);
             should = 'Available';
             expect(actual).toBe(should);
         });
-        it('case3', function(){
+        it('tests where now does not fall between any dates, should be Available', function(){
             now = new Date().getTime();
             start = now+1000000;
             end = now+2000000;
@@ -132,13 +132,13 @@ xdescribe('homeControllerTest', function(){
     });
     describe('findRoomsAvailableTest', function(){
         var param1;
-        it('case1', function(){
+        it('tests where param1 is null, should be 0', function(){
             param1 = null;
             actual = $scope.self.findRoomsAvailable(param1);
             should = 0;
             expect(actual).toBe(should);
         });
-        it('case2', function(){
+        it('tests where the param1 has dates available, should be 2', function(){
             now = new Date().getTime();
             start = now-1000000;
             end = now+1000000;
@@ -147,5 +147,12 @@ xdescribe('homeControllerTest', function(){
             should = 2;
             expect(actual).toBe(should);
         });
+    });
+    xdescribe('formatBatchesTest', function(){
+            it('should return a populated array, and shouldNot return an empty array', function(){
+                actual = $scope.self.formatBatches();
+                shouldNot = [];
+                expect(actual).not.toBe(shouldNot);
+            });
     });
 });

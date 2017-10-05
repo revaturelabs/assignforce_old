@@ -3,6 +3,9 @@ xdescribe('settingsControllerTest', function(){
     var $controller;
     var $scope = {};
     var ctrl;
+    var should;
+    var shouldNot;
+    var actual;
 
     beforeEach(function(){
         module('batchApp');
@@ -14,21 +17,21 @@ xdescribe('settingsControllerTest', function(){
     });
     //checks if the dummy function resetSettings() works
     describe("resetSettingsTest", function(){
-        it("case1", function(){
-            $scope.self.settings = 'test';
-            $scope.self.resetSettings();
-            expect($scope.self.settings).toBe('placeholder');
+        it("should set the settings to placeholder", function(){
+            ctrl.settings = 'test';
+            ctrl.resetSettings();
+            actual = ctrl.settings;
+            should = 'placeholder';
+            expect(actual).toBe(should);
         });
     });
-    //case is meant to check if getBuildings() populates $scope.self.buildings with strings
+    //case is meant to check if getBuildings() populates ctrl.buildings with strings
     describe("getBuildingsTest", function(){
-        it("case1", function(){
-            $scope.self.defaultLocation = 'test';
-            var testSample = ['placeholder1', 'placeholder2', 'placeholder3'];
-            $scope.self.defaultLocation.buildings = testSample;
-            $scope.self.getBuildings();
-            expect($scope.self.buildings).toBe(testSample);
+        it("should move the buildings in the default location into the buildings variable", function(){
+            shouldNot = ctrl.buildings;
+            ctrl.getBuildings();
+            actual = ctrl.buildings;
+            expect(actual).not.toBe(shouldNot);
         });
     });
-
 });

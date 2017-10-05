@@ -3,7 +3,8 @@ var assignforce = angular.module( "batchApp");
 
 assignforce.controller("settingsCtrl", function ($scope, settingService, locationService) {
     var sc = this;
-    $scope.self = sc;
+    sc.buildings = [];
+    sc.defaultLocation = {};
 
     //functions
         //calls Show Toast method of aCtrl
