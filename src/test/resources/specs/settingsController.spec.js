@@ -34,4 +34,11 @@ describe('settingsControllerTest', function(){
             expect(actual).not.toBe(shouldNot);
         });
     });
+    //lol watermelons
+    describe("checkWatermelonTest", function(){
+        it("should tell us that watermelon is not rutabega", function(){
+            var rutabega = "rutabega";
+            expect(ctrl.watermelon).not.toBe(rutabega);
+        })
+    })
 });
