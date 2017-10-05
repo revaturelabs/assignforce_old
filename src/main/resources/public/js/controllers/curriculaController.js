@@ -187,29 +187,7 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
     $scope.showCurriculum = function(event) {
        $mdDialog.show({
             targetEvent: event,
-            template:
-            '<md-dialog>' +
-            '   <md-dialog-content>' +
-            '       <form name = curriculumForm>' +
-            '           <h3>Core Curriculum</h3>' +
-            '	        <md-input-container>' +
-            '		        <label>Curriculum Name</label>' +
-            '		        <input name="curriculumName" ng-model="coreN" ng-init= "New Curriculum">' +
-            '           </md-input-container>' +
-            '           <br>' +
-            '	        <md-input-container>' +
-            '		        <h5>Skill Selection</h5>' +
-            '               <select ng-model="skillz" multiple="multiple">' +
-            '                   <option ng-repeat="x in skills">{{x.name}}</option>' +
-            '               </select>' +
-            '           </md-input-container>' +
-            '       </form>' +
-            '   </md-dialog-content>' +
-            '   <md-dialog-actions>' +
-            '       <md-button ng-click="cancel()" class="md-primary">Cancel</md-button>' +
-            '       <md-button ng-click="createCore()" class="md-primary">Save</md-button>' +
-            '   </md-dialog-actions>' +
-            '</md-dialog>',
+            templateUrl : "html/templates/dialogs/coreCurriculumFormDialog.html",
             locals: {
                        skills: $rootScope.skills
                      },
@@ -218,11 +196,10 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
        function DialogController($scope, $mdDialog, skills) {
 
            $scope.skills = skills;
-
            $scope.cancel = function() {
             $mdDialog.cancel();
            }
-           $scope.createCore = function() {
+           $scope.createCore = function(x) {
                 var curric = {
                            name    : $scope.coreN,
                            skills  : $scope.skillz,
@@ -265,6 +242,20 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
             })
 
             cc.curricula.push(curric);
+       });
+
+       $('option').mousedown(function(e) {
+           e.preventDefault();
+           var originalScrollTop = $(this).parent().scrollTop();
+           console.log(originalScrollTop);
+           $(this).prop('selected', $(this).prop('selected') ? false : true);
+           var self = this;
+           $(this).parent().focus();
+           setTimeout(function() {
+               $(self).parent().scrollTop(originalScrollTop);
+           }, 0);
+
+           return false;
        });
     };
     //variables

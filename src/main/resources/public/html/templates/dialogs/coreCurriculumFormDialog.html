@@ -1,0 +1,21 @@
+<md-dialog>
+       <md-dialog-content>
+               <form name = curriculumForm>
+                       <h3>Core Curriculum</h3>
+            	        <md-input-container>
+                		        <label>Curriculum Name</label>
+                		        <input name="curriculumName" ng-model="coreN">
+                           </md-input-container>
+                       <br>
+            	        <md-input-container>
+                		        <h5>Skill Selection</h5>
+                               <select ng-model="skillz" multiple ng-options="x.name for x in skills">
+                                   </select>
+                           </md-input-container>
+                   </form>
+           </md-dialog-content>
+       <md-dialog-actions>
+               <md-button ng-click="cancel()" class="md-primary">Cancel</md-button>
+               <md-button ng-click="createCore()" class="md-primary">Save</md-button>
+           </md-dialog-actions>
+    </md-dialog>
