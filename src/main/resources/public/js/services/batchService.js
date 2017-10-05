@@ -9,7 +9,7 @@ app.service('batchService', function($resource) {
     };
 
     bs.create = function(batch, success, error){
-        batch.$save(success, error);
+        Batch.$save(success, error);
     };
 
     bs.getAll = function(success, error) {
