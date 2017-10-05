@@ -1,4 +1,3 @@
-
 <md-card>
 
     <md-content>
@@ -65,10 +64,10 @@
                         </div>
                         <md-divider></md-divider>
                         <span flex></span>
-                            <md-button class="md-icon-button" ng-click="cCtrl.editcurricula(curr)">
-                                <md-tooltip class="md-title"> Edit Curricula </md-tooltip>
-                                <i class="material-icons revOrange"> edit </i>
-                            </md-button>
+                        <md-button class="md-icon-button" ng-click="showCurriculum($event)">
+                            <md-tooltip class="md-title"> Edit Curricula </md-tooltip>
+                            <i class="material-icons revOrange"> edit </i>
+                        </md-button>
                     </md-list-item>
                 </md-list>
             </md-card-content>
@@ -124,10 +123,10 @@
                             <p>Skills: {{ curr.skills.map(cCtrl.joinObjArrayByName).join(", ");}}</p>
                         </div>
                         <span flex></span>
-                        <!--<md-button class="md-icon-button" ng-click="cCtrl.editFocus(curr)">-->
-                        <!--<md-tooltip class="md-title"> Edit Focus </md-tooltip>-->
-                        <!--<i class="material-icons revOrange"> edit </i>-->
-                        <!--</md-button>-->
+                        <md-button class="md-icon-button" ng-click="showFocus($event)">
+                        <md-tooltip class="md-title"> Edit Focus </md-tooltip>
+                        <i class="material-icons revOrange"> edit </i>
+                        </md-button>
                         <md-button class="md-icon-button" ng-click="cCtrl.removeFocus(curr)" ng-show="isManager">
                             <md-tooltip class="md-title"> Remove Focus </md-tooltip>
                             <i class="material-icons revOrange">remove_circle</i>
