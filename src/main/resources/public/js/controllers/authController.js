@@ -19,7 +19,7 @@ app.controller("AuthCtrl", function($scope, $location, $window, $mdToast, $http,
         $mdtoast.show( $mdtoast.simple().textcontent( message ).action("okay").position("top right").highlightaction(true) );
     }
 
-    $rootscope.location = $location;
+    $rootScope.location = $location;
 
     ac.login = function(){
 

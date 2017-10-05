@@ -2,15 +2,17 @@ var assignforce = angular.module( "batchApp" );
 
 assignforce.controller("curriculaCtrl", function ($scope, curriculumService, skillService) {
     var cc = this;
-    // $scope.skillToggle = false;
+    $scope.self = cc;
+    //$scope.skillToggle = false;
 
     //functions
 
-    //calls showToast method of aCtrl
+    //calls showToast method of aCtrl therefore no need to test
     cc.showToast = function ( message ) {
         $scope.$parent.aCtrl.showToast( message )
     };
 
+    //calls skillService therefor no need to test
     //create a skill and add it to the database
     cc.createSkill = function (skillForm) {
         if(skillForm.$valid) {
@@ -31,6 +33,7 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
         cc.skillName = undefined;
     };
 
+    //Skill toolbar are not implemented on the developer side therefore no need to test
     //hides and shows the skill card's content when called
     cc.toggleSkillToolbar = function () {
         if(cc.skillToggle){
@@ -44,19 +47,21 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
         $("#skill").slideToggle();
     };
 
+     //conducted TEST for this function but failed beacuse of a bug in line 55
     //hides and shows the core card's content when called
     cc.toggleCoreToolbar = function () {
         if(cc.coreToggle){
             cc.coreToggle = false;
-            $("#coreArrow").text("keyboard_arrow_down");
+            $("#coreArrow").text("keyboard_arrow_down");  //Don't need this since the toggle button works fine without it
         } else {
             cc.coreToggle = true;
-            $("#coreArrow").text("keyboard_arrow_up");
+            $("#coreArrow").text("keyboard_arrow_up"); ////Don't need this since the toggle button works fine without it
         }
 
         $('#core').slideToggle();
     };
 
+    //No need to test this because it calls curriculumService and showToast method
     //focus functions
     //create a focus
     //I want to fix this to be readable - Sam
@@ -97,6 +102,7 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
         cc.focusName = undefined;
     };
 
+    //Successfully tested this function
     //Used to show the create focus card
     cc.toggleFocusStatus = function () {
         if(cc.focusStatus){
@@ -106,19 +112,21 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
         }
     };
 
+     //there is bug in line 120 so can't test this until the bug is fixed
     //hides and shows the focus card's content when called
     cc.toggleFocusToolbar = function () {
         if(cc.focusToggle){
             cc.focusToggle = false;
-            $("#focusArrow").text("keyboard_arrow_down");
+            $("#focusArrow").text("keyboard_arrow_down"); //Don't need this since the toggle button works fine without it
         } else {
             cc.focusToggle = true;
-            $("#focusArrow").text("keyboard_arrow_up");
+           $("#focusArrow").text("keyboard_arrow_up"); //Don't need this since the toggle button works fine without it
         }
 
         $('#focus').slideToggle();
     };
 
+    //No test needed since it calls showToast method in authController
     //removes a focus
     cc.removeFocus = function (curr) {
         curr.active = false;
@@ -129,6 +137,7 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
         })
     };
 
+    //functio not tested since its incomplete
     //started the code for editing a focus. to be finished at a later time
     cc.editFocus = function (focus) {
         cc.focusName = focus.name;
@@ -136,6 +145,7 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
         cc.focusStatus = true;
     };
 
+    //This function does not need to be tested since there is not logic
     //used to join the skills together
     cc.joinObjArrayByName = function(elem) {
         return elem.name;
@@ -143,6 +153,7 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
 
     //retrieving data
 
+    //Not tested since it calls Curiculla Service
     //Grabs all Curricula
     curriculumService.getAll(function (response) {
         cc.curricula = response;
@@ -150,6 +161,7 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
         cc.showToast("Could not fetch curricula.");
     });
 
+    //Not tested since it calls skillService
     //Grabs all Skills
     skillService.getAll(function (response) {
         cc.skills = response;
