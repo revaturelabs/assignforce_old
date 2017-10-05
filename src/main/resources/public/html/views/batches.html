@@ -305,15 +305,15 @@
                 <div class="batchView" ng-if="(tlCtrl.batches != undefined) && (tlCtrl.trainers != undefined)">
                     <div class="md-padding" layout="columns">
                         <md-input-container flex="none">
-                            <label> Start Date </label>
-                            <md-datepicker ng-model="tlCtrl.minDate" md-current-view="year" md-open-on-focus md-hide-icons="calendar" ng-change="tlCtrl.validateStartDate(); tlCtrl.filterTimelineData(false); tlCtrl.changeTrainersPerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.projectTimelineOnly()"> </md-datepicker>
+                            <label> Start Date  </label>
+                            <md-datepicker  ng-model="StartDate" ng-model-options="{ getterSetter: true }" md-min-date="minimumDate()" md-max-date="EndDate()" md-current-view="year" md-open-on-focus md-hide-icons="calendar" ng-change="setEndDateToOneQuarter()" ng-blur="projectTimeline(-100)"> </md-datepicker>
                         </md-input-container>
                         
                         <div flex> </div>
 
                         <md-input-container flex="none">
                             <label> End Date </label>
-                            <md-datepicker ng-model="tlCtrl.maxDate" md-current-view="year" md-open-on-focus md-hide-icons="calendar" ng-change="tlCtrl.validateEndDate(); tlCtrl.filterTimelineData(false); tlCtrl.changeTrainersPerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.projectTimelineOnly()"> </md-datepicker>
+                            <md-datepicker ng-model="EndDate" ng-model-options="{ getterSetter: true }" md-min-date="StartDate()" md-max-date="maximumDate()" md-current-view="year" md-open-on-focus md-hide-icons="calendar" ng-blur="projectTimeline(-100)"> </md-datepicker>
                         </md-input-container>
                         
                         <div flex> </div>

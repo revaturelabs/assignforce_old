@@ -30,6 +30,16 @@ app.service('utilService', function(){
                     }
                     return days;
                 }
+            },
+        functions:
+            {
+                zip: (a1,a2,call) =>
+                {
+                    if (a1.length > a2.length)
+                        return util.functions.zip(a2,a1,call);
+                    return a1.map((e,i) => call(e,a2[i]));
+                }
+
             }
     };
 
