@@ -187,13 +187,13 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
     $scope.showCurriculum = function(event) {
        $mdDialog.show({
             targetEvent: event,
-            templateUrl : "html/templates/dialogs/coreCurriculumFormDialog.html",
+            templateUrl : "html/templates/dialogs/curriculumFormDialog.html",
             locals: {
                        skills: $rootScope.skills
                      },
-            controller: DialogController
+            controller: CoreDialogController
        });
-       function DialogController($scope, $mdDialog, skills) {
+       function CoreDialogController($scope, $mdDialog, skills) {
 
            $scope.skills = skills;
            $scope.cancel = function() {
@@ -220,44 +220,39 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
 
     //Show Edit Focus Dialog
     $scope.showFocus = function(event) {
-        var prompt = $mdDialog.prompt()
-          .title('New Focus')
-          .placeholder('focusName')
-          .ariaLabel('focusName')
-          .initialValue('Focus Name')
-          .ok('Create')
-          .cancel('Cancel')
-          .targetEvent(event);
-       $mdDialog.show(prompt).then(function(result){
-            var curric = {
-                name    : result,
-                skills  : {},
-                active  : true,
-                core    : false
-            };
-            curriculumService.create(curric, function () {
-                cc.showToast("Focus created")
-            }, function () {
-                cc.showToast("You're not authorized Scrub")
-            })
-
-            cc.curricula.push(curric);
+       $mdDialog.show({
+            targetEvent: event,
+            templateUrl : "html/templates/dialogs/curriculumFormDialog.html",
+            locals: {
+                       skills: $rootScope.skills
+                     },
+            controller: FocusDialogController
        });
+       function FocusDialogController($scope, $mdDialog, skills) {
 
-       $('option').mousedown(function(e) {
-           e.preventDefault();
-           var originalScrollTop = $(this).parent().scrollTop();
-           console.log(originalScrollTop);
-           $(this).prop('selected', $(this).prop('selected') ? false : true);
-           var self = this;
-           $(this).parent().focus();
-           setTimeout(function() {
-               $(self).parent().scrollTop(originalScrollTop);
-           }, 0);
+           $scope.skills = skills;
+           $scope.cancel = function() {
+            $mdDialog.cancel();
+           }
+           $scope.createCore = function(x) {
+                var curric = {
+                           name    : $scope.coreN,
+                           skills  : $scope.skillz,
+                           active  : true,
+                           core    : false
+                       };
+                       curriculumService.create(curric, function () {
+                           cc.showToast("Focus created")
+                       }, function () {
+                           cc.showToast("You're not authorized Scrub")
+                       })
 
-           return false;
-       });
+                       cc.curricula.push(curric);
+                $mdDialog.hide();
+           }
+       }
     };
+
     //variables
     cc.selectedSkills = [];
     cc.focusName = undefined;
