@@ -6,9 +6,9 @@ describe('trainerControllerTest', function(){
 
      //functions within the trainerController
      //
-     //    Total     tested
-     -----------------------------
-     //     13          0
+     //    Total     completed      tests
+     //--------------------------------------
+     //     12          1             1
 
 
 
@@ -23,107 +23,128 @@ describe('trainerControllerTest', function(){
     });
 
 
-    //this function is used to add a trainer by popping up a dialog box
-    describe("addTrainerTest", function(){
-        it("TEST", function(){
-            ctrl.
-            expect().toBe();
-        });
-    });
-
     //deactivates a single trainer
     describe("removeTrainerTest", function(){
-        it("TEST", function(){
-            ctrl.
-            expect().toBe();
+        it("Tests to make sure the trainerRM.active is being marked as false", function(){
+            var trainerRM = {};
+            ctrl.removeTrainer(trainerRM)
+            actual = trainerRM.active;
+            should = false;
+            expect(actual).toBe(should);
         });
     });
 
     //connects to aws s3 to grab an object
     describe("grabS3ResumeTest", function(){
-        it("TEST", function(){
-            ctrl.
-            expect().toBe();
-        });
-    });
+        it("Tests to make sure it returns if the filename is null", function(){
+            var trainer = {};
+            trainer.resume = null;
+            ctrl.grabS3Resume(trainer)
+            actual = ctrl.url;
+            should =  ctrl.url === undefined;
+            expect(actual).toBe(should);
 
-    // activates a trainer
-    describe("activateTrainerTest", function(){
-        it("TEST", function(){
-            ctrl.
-            expect().toBe();
+            //check to see if tc.url is undefined or not
         });
     });
-
-    // reformats how an array of objects is joined
-    describe("joinObjArrayByNameTest", function(){
-        it("TEST", function(){
-            ctrl.
-            expect().toBe();
-        });
-    });
-
-    // redirects the url to go to the profile page
-    // appends the trainer id so that the profile page can load that id in
-    describe("goToTrainerTest", function(){
-        it("TEST", function(){
-            ctrl.
-            expect().toBe();
-        });
-    });
-    // queries the database for trainers. to be called after a change to the trainers array
-    describe("rePullTrainersTest", function(){
-        it("TEST", function(){
-            ctrl.
-            expect().toBe();
-        });
-    });
-
-    //make comment here...
-    describe("convertUnavailabilityTest", function(){
-        it("TEST", function(){
-            ctrl.
-            expect().toBe();
-        });
-    });
-
-    //make comment here...
-    describe("showCalendarTest", function(){
-        it("TEST", function(){
-            ctrl.
-            expect().toBe();
-        });
-    });
-
-    //make comment here...
-    describe("hideCalendarTest", function(){
-        it("TEST", function(){
-            ctrl.
-            expect().toBe();
-        });
-    });
-
-    //make comment here...
-    describe("showPTODialogTest", function(){
-        it("TEST", function(){
-            ctrl.
-            expect().toBe();
-        });
-    });
-
-    // get the S3 bucket credentials and store them in creds using the s3Service
-    describe("getCredsTest", function(){
-        it("TEST", function(){
-            ctrl.
-            expect().toBe();
-        });
-    });
-
-    // gets all trainers and stores them in variable trainers
-    describe("getAllTest", function(){
-        it("TEST", function(){
-            ctrl.
-            expect().toBe();
-        });
-    });
+//
+//    // activates a trainer
+//    xdescribe("activateTrainerTest", function(){
+//        it("TEST", function(){
+//            ctrl.
+//            actual = ;
+//            should = ;
+//            expect(actual).toBe(should);
+//        });
+//    });
+//
+//    // reformats how an array of objects is joined
+//    xdescribe("joinObjArrayByNameTest", function(){
+//        it("TEST", function(){
+//            ctrl.
+//            actual = ;
+//            should = ;
+//            expect(actual).toBe(should);
+//        });
+//    });
+//
+//    // redirects the url to go to the profile page
+//    // appends the trainer id so that the profile page can load that id in
+//    xdescribe("goToTrainerTest", function(){
+//        it("TEST", function(){
+//            ctrl.
+//            actual = ;
+//            should = ;
+//            expect(actual).toBe(should);
+//        });
+//    });
+//    // queries the database for trainers. to be called after a change to the trainers array
+//    xdescribe("rePullTrainersTest", function(){
+//        it("TEST", function(){
+//            ctrl.
+//            actual = ;
+//            should = ;
+//            expect(actual).toBe(should);
+//        });
+//    });
+//
+//    //make comment here...
+//    xdescribe("convertUnavailabilityTest", function(){
+//        it("TEST", function(){
+//            ctrl.
+//            actual = ;
+//            should = ;
+//            expect(actual).toBe(should);
+//        });
+//    });
+//
+//    //make comment here...
+//    xdescribe("showCalendarTest", function(){
+//        it("TEST", function(){
+//            ctrl.
+//            actual = ;
+//            should = ;
+//            expect(actual).toBe(should);
+//        });
+//    });
+//
+//    //make comment here...
+//    xdescribe("hideCalendarTest", function(){
+//        it("TEST", function(){
+//            ctrl.
+//            actual = ;
+//            should = ;
+//            expect(actual).toBe(should);
+//        });
+//    });
+//
+//    //make comment here...
+//    xdescribe("showPTODialogTest", function(){
+//        it("TEST", function(){
+//            ctrl.
+//            actual = ;
+//            should = ;
+//            expect(actual).toBe(should);
+//        });
+//    });
+//
+//    // get the S3 bucket credentials and store them in creds using the s3Service
+//    xdescribe("getCredsTest", function(){
+//        it("TEST", function(){
+//            ctrl.
+//            actual = ;
+//            should = ;
+//            expect(actual).toBe(should);
+//        });
+//    });
+//
+//    // gets all trainers and stores them in variable trainers
+//    xdescribe("getAllTest", function(){
+//        it("TEST", function(){
+//            ctrl.
+//            actual = ;
+//            should = ;
+//            expect(actual).toBe(should);
+//        });
+//    });
 });
