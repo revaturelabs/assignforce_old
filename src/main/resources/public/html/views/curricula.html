@@ -1,13 +1,4 @@
-<html lang = "en">
-<head>
-    <script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-    <script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
-    <script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
-    <script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
-
-</head>
-<body >
-<div>
+<md-card>
     <md-content>
         <md-toolbar layout="columns">
             <div class="md-toolbar-tools">
@@ -17,8 +8,8 @@
         <!--content for core Curricula-->
         <md-card>
             <md-toolbar class="md-primary md-hue-2">
-                <div class="md-toolbar-tools" >
-                    <span>Core Curricula</span>
+                <div class="md-toolbar-tools">
+                    <span>Core Curricula </span>
                     <span flex></span>
 
                     <!--Add New Curriculum Button-->
@@ -65,10 +56,10 @@
                 <!--content ending for adding core-->
 
                 <md-list>
-                    <md-list-item class="md-2-line" ng-repeat="curr in cCtrl.curricula | activeItem" ng-if="curr.core == true">
-                        <div layout="column">
-                            <h3><b>{{curr.name}}</b></h3>
-                            <p style="font-size: 20px; margin-left: 50px;"> <i>Skills: </i>{{ curr.skills.map(cCtrl.joinObjArrayByName).join(", ");}}</p>
+                    <md-list-item class="md-2-line" md-ink-ripple ng-repeat="curr in cCtrl.curricula | activeItem" ng-if="curr.core == true">
+                        <div class="md-list-item-text" layout="column">
+                            <h3>{{curr.name}}</h3>
+                            <p>Skills: {{ curr.skills.map(cCtrl.joinObjArrayByName).join(", ");}}</p>
                         </div>
                         <md-divider></md-divider>
                         <span flex></span>
@@ -125,16 +116,19 @@
                     </form>
                 </md-card>
                 <md-list>
-                    <md-list-item class="md-2-line" ng-repeat="curr in cCtrl.curricula | activeItem" ng-if="curr.core == false" class="md-2-line">
-                        <div layout="column">
-                            <h3><b>{{curr.name}}</b></h3>
-                            <p style="font-size: 20px; margin-left: 50px;"><i>Skills: </i> {{ curr.skills.map(cCtrl.joinObjArrayByName).join(", ");}}</p>
+                    <md-list-item ng-repeat="curr in cCtrl.curricula | activeItem" ng-if="curr.core == false" class="md-2-line" md-ink-ripple="#ff0000">
+                        <div class="md-list-item-text" layout="column">
+                            <h3>{{curr.name}}</h3>
+                            <p>Skills: {{ curr.skills.map(cCtrl.joinObjArrayByName).join(", ");}}</p>
                         </div>
-                        <md-divider></md-divider>
                         <span flex></span>
-                        <md-button class="md-icon-button" ng-click="cCtrl.editFocus(curr)">
-                        <md-tooltip class="md-title"> Edit Focus </md-tooltip>
-                        <i class="material-icons revOrange"> edit </i>
+                        <!--<md-button class="md-icon-button" ng-click="cCtrl.editFocus(curr)">-->
+                        <!--<md-tooltip class="md-title"> Edit Focus </md-tooltip>-->
+                        <!--<i class="material-icons revOrange"> edit </i>-->
+                        <!--</md-button>-->
+                        <md-button class="md-icon-button" ng-click="cCtrl.removeFocus(curr)" ng-show="isManager">
+                            <md-tooltip class="md-title"> Remove Focus </md-tooltip>
+                            <i class="material-icons revOrange">remove_circle</i>
                         </md-button>
                     </md-list-item>
                 </md-list>
@@ -175,8 +169,5 @@
             <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
             <div flex="100"> &nbsp; </div>
         </div>
-
     </md-content>
-</div>
-</body>
-</html>
+</md-card>
