@@ -35,13 +35,13 @@ describe('trainerControllerTest', function(){
     });
 
     //connects to aws s3 to grab an object
-    describe("grabS3ResumeTest", function(){
+    xdescribe("grabS3ResumeTest", function(){
         it("Tests to make sure it returns if the filename is null", function(){
             var trainer = {};
             trainer.resume = null;
             ctrl.grabS3Resume(trainer)
             actual = ctrl.url;
-            should =  ctrl.url === undefined;
+            should = undefined;
             expect(actual).toBe(should);
 
             //check to see if tc.url is undefined or not
@@ -49,7 +49,7 @@ describe('trainerControllerTest', function(){
     });
 //
 //    // activates a trainer
-//    xdescribe("activateTrainerTest", function(){
+//    describe("activateTrainerTest", function(){
 //        it("TEST", function(){
 //            ctrl.
 //            actual = ;
@@ -57,94 +57,34 @@ describe('trainerControllerTest', function(){
 //            expect(actual).toBe(should);
 //        });
 //    });
-//
-//    // reformats how an array of objects is joined
-//    xdescribe("joinObjArrayByNameTest", function(){
-//        it("TEST", function(){
-//            ctrl.
-//            actual = ;
-//            should = ;
-//            expect(actual).toBe(should);
-//        });
-//    });
-//
-//    // redirects the url to go to the profile page
-//    // appends the trainer id so that the profile page can load that id in
-//    xdescribe("goToTrainerTest", function(){
-//        it("TEST", function(){
-//            ctrl.
-//            actual = ;
-//            should = ;
-//            expect(actual).toBe(should);
-//        });
-//    });
-//    // queries the database for trainers. to be called after a change to the trainers array
-//    xdescribe("rePullTrainersTest", function(){
-//        it("TEST", function(){
-//            ctrl.
-//            actual = ;
-//            should = ;
-//            expect(actual).toBe(should);
-//        });
-//    });
-//
-//    //make comment here...
-//    xdescribe("convertUnavailabilityTest", function(){
-//        it("TEST", function(){
-//            ctrl.
-//            actual = ;
-//            should = ;
-//            expect(actual).toBe(should);
-//        });
-//    });
-//
-//    //make comment here...
-//    xdescribe("showCalendarTest", function(){
-//        it("TEST", function(){
-//            ctrl.
-//            actual = ;
-//            should = ;
-//            expect(actual).toBe(should);
-//        });
-//    });
-//
-//    //make comment here...
-//    xdescribe("hideCalendarTest", function(){
-//        it("TEST", function(){
-//            ctrl.
-//            actual = ;
-//            should = ;
-//            expect(actual).toBe(should);
-//        });
-//    });
-//
-//    //make comment here...
-//    xdescribe("showPTODialogTest", function(){
-//        it("TEST", function(){
-//            ctrl.
-//            actual = ;
-//            should = ;
-//            expect(actual).toBe(should);
-//        });
-//    });
-//
-//    // get the S3 bucket credentials and store them in creds using the s3Service
-//    xdescribe("getCredsTest", function(){
-//        it("TEST", function(){
-//            ctrl.
-//            actual = ;
-//            should = ;
-//            expect(actual).toBe(should);
-//        });
-//    });
-//
-//    // gets all trainers and stores them in variable trainers
-//    xdescribe("getAllTest", function(){
-//        it("TEST", function(){
-//            ctrl.
-//            actual = ;
-//            should = ;
-//            expect(actual).toBe(should);
-//        });
-//    });
+
+    // reformats how an array of objects is joined
+    describe("joinObjArrayByNameTest", function(){
+        it("Testing to see if null is returned", function(){
+            var elem = {};
+            elem.name = null;
+            actual = ctrl.joinObjArrayByName(elem);
+            should = null;
+            expect(actual).toBe(should);
+        });
+        it("Testing to see if 45 is returned", function(){
+            var elem = {};
+            elem.name = 45;
+            actual = ctrl.joinObjArrayByName(elem);
+            should = 45;
+            expect(actual).toBe(should);
+        });
+    });
+
+    //make comment here...
+    describe("convertUnavailabilityTest", function(){
+        it("TEST", function(){
+            var incoming = "October 13, 2014 11:13:00";
+            var date = new Date;
+            actual = ctrl.convertUnavailability(incoming);
+            should = new Date("October 13, 2014 11:13:00");
+            expect(actual).toBe(should);
+        });
+    });
+
 });
