@@ -5,7 +5,6 @@
         var hc = this;
 
 
-
           // functions
             // calls showToast method of aCtrl
         hc.showToast = function( message ) {
