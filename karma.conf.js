@@ -31,11 +31,9 @@ module.exports = function(config) {
         './node_modules/angular-material-data-table/dist/md-data-table.js',
         './node_modules/ngcsv/ngcsv.js',
         './src/main/resources/public/js/assignforce.js',
-        './src/main/resources/public/js/services/*Service.js',
+        './src/main/resources/public/js/services/*',
         './src/test/resources/specs/*.spec.js',
-        './src/main/resources/public/js/controllers/settingsController.js',
-        './src/main/resources/public/js/controllers/homeController.js',
-        './src/main/resources/public/js/controllers/trainerController.js'
+        './src/main/resources/public/js/controllers/*'
     ],
 
 
