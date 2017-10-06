@@ -1,4 +1,4 @@
-xdescribe('homeControllerTest', function(){
+describe('homeControllerTest', function(){
     var $controller;
     var $scope = {};
     var ctrl;
