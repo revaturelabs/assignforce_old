@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.revature.assignforce.domain.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
@@ -28,8 +29,8 @@ public class Force {
     }
 
     @SuppressWarnings("unchecked")
-    public String restUrl(OAuth2Authentication auth, String url) {
-        HashMap<String, Object> details = (HashMap<String, Object>) auth.getUserAuthentication().getDetails();
+    public String restUrl(Authentication auth, String url) {
+        HashMap<String, Object> details = (HashMap<String, Object>) auth.getDetails();
         HashMap<String, String> urls = (HashMap<String, String>) details.get("urls");
 
         return urls.get(url).replace("{version}", REST_VERSION);
@@ -37,7 +38,11 @@ public class Force {
 
     @SuppressWarnings("unchecked")
     public Employee getCurrentEmployee(OAuth2Authentication auth) {
-        HashMap<String, String> details = (HashMap<String, String>) auth.getUserAuthentication().getDetails();
+        return getCurrentEmployee(auth.getUserAuthentication());
+    }
+
+    public Employee getCurrentEmployee(Authentication auth) {
+        HashMap<String, String> details = (HashMap<String, String>) auth.getDetails();
         System.out.println(details.toString());
         String query = "SELECT Id, Name, CommunityNickname, FirstName, LastName, Email, FullPhotoUrl, SmallPhotoUrl, " +
                 "UserRole.Id, UserRole.Name " +
@@ -49,18 +54,18 @@ public class Force {
         return employees.get(0);
     }
 
-    public List<Employee> getTrainers(OAuth2Authentication auth) {
-        String query = "SELECT Id, Name, CommunityNickname, FirstName, LastName, Email, FullPhotoUrl, SmallPhotoUrl, " +
-                "UserRole.Id, UserRole.Name " +
-                "FROM User WHERE UserRoleId = '" + Role.ROLE_TRAINER + "'";
+//    public List<Employee> getTrainers(OAuth2Authentication auth) {
+//        String query = "SELECT Id, Name, CommunityNickname, FirstName, LastName, Email, FullPhotoUrl, SmallPhotoUrl, " +
+//                "UserRole.Id, UserRole.Name " +
+//                "FROM User WHERE UserRoleId = '" + Role.ROLE_TRAINER + "'";
+//
+//        String response = executeSalesForceQuery(auth, query);
+//
+//        return parseSalesForceQueryResponse(response);
+//    }
 
-        String response = executeSalesForceQuery(auth, query);
 
-        return parseSalesForceQueryResponse(response);
-    }
-
-
-    private String executeSalesForceQuery(OAuth2Authentication auth, String query) {
+    private String executeSalesForceQuery(Authentication auth, String query) {
         String url = restUrl(auth, "query") + "?q={q}";
 
         Map<String, String> params = new HashMap<>();

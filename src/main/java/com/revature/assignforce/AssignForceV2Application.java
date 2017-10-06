@@ -18,7 +18,7 @@ import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResour
  * Application Entry Point
  */
 @SpringBootApplication
-@EnableGlobalMethodSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableJpaRepositories(basePackages={"com.revature.assignforce.domain.dao"})
 @EntityScan("com.revature.assignforce.domain")
 @EnableOAuth2Sso

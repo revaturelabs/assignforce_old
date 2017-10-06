@@ -49,7 +49,7 @@ public class AuthController {
     public void getUserRoleInfo(OAuth2Authentication auth)
     {
         //Employee emp = force.getCurrentEmployee(auth);
-//        System.out.println("This is auth from userroleinfo: " + auth.toString());
+        System.out.println("This is auth from userroleinfo: " + auth.toString());
         //return emp.getRoleName();
     }
 

@@ -19,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 
@@ -165,10 +166,9 @@ public class BatchCtrl {
 
 	// GET ALL
 	// retrieve all batches
-
+	@PostAuthorize("hasPermission(returnObject, 'Trainers')")
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object retrieveAllBatches(OAuth2Authentication auth) {
-		System.out.println("Inside Batch Controller: " + auth.toString());
+	public Object retrieveAllBatches() {
 		List<Batch> all = batchService.getAllItems();
 		if (all == null) {
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("Fetching all batches failed."),
