@@ -5,30 +5,46 @@ import com.revature.assignforce.domain.Force;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
-
+@Component
 public class CustomSecurity implements PermissionEvaluator {
     @Autowired
-    Force force;
+    private Force force;
+
+    private HashMap<String, List<String>> permissions;
+
+    private ArrayList<String> addPrivilages(String... args){
+        ArrayList<String> privilages = new ArrayList<>();
+        for(String s: args){
+            privilages.add(s);
+        }
+        return privilages;
+    }
+
+    public CustomSecurity() {
+        permissions = new HashMap<>();
+        permissions.put("Trainers", addPrivilages("basic", "trainer_profile"));
+        permissions.put("VP of Technology", addPrivilages("basic", "manager"));
+    }
 
     @Override
     public boolean hasPermission(Authentication auth, Object targetDomainObject, Object permission) {
-        boolean hasPermission = false;
         if (auth != null && permission instanceof String) {
-//            HashMap<String, String> details = (HashMap<String, String>)auth.getDetails();
             System.out.println(auth.toString());
-            Employee e = force.getCurrentEmployee(auth);
-
-//            System.out.println(details.toString());
-//            String role = details.get("roleName");
-//            System.out.println("The " + targetDomainObject + " Is:" + role);
-            if(e.getRoleName().equals((String)permission))
-                hasPermission = true;
+            Employee e = force.getCurrentEmployee((OAuth2Authentication) auth);
+            for(String s : permissions.get(e.getRoleName()))
+                if(s.equals((String)permission))
+                    return true;
         }
-        return hasPermission;
+        return false;
     }
 
     @Override
