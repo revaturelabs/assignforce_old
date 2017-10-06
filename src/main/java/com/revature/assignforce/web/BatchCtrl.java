@@ -78,6 +78,7 @@ public class BatchCtrl {
 	// CREATE
 	// creating new batch object from information passed from batch data
 	// transfer object
+	@PreAuthorize("hasPermission('', 'manager')")
 	@ApiOperation(value = "Create a branch", response = BatchDaoService.class)
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully Created a Batch"),
@@ -137,6 +138,7 @@ public class BatchCtrl {
 		}
 	}
 
+	@PreAuthorize("hasPermission('', 'manager')")
 	@ApiOperation(value = "Retrieve a batch", response = BatchDaoService.class)
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully retrieved a Batch"),
@@ -159,6 +161,7 @@ public class BatchCtrl {
 
 	// DELETE
 	// delete batch with given ID
+	@PreAuthorize("hasPermission('', 'manager')")
 	@ApiOperation(value = "Delete a batch", response = BatchDaoService.class)
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully Deleted a Batch"),
@@ -213,7 +216,7 @@ public class BatchCtrl {
 		}
 	}
 
-
+	@PreAuthorize("hasPermission('', 'manager')")
 	@ApiOperation(value = "Update a batch", response = BatchDaoService.class)
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully updated a batch"),
@@ -296,7 +299,7 @@ public class BatchCtrl {
 		return new ResponseEntity<Batch>(b, HttpStatus.OK);
 	}
 
-
+	@PreAuthorize("hasPermission('', 'basic')")
 	@ApiOperation(value = "Create an Unavailabilities", response = BatchDaoService.class)
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully created an unavailabilities"),
@@ -323,9 +326,7 @@ public class BatchCtrl {
 		}
 	}
 
-
-
-
+	@PreAuthorize("hasPermission('', 'manager')")
 	@ApiOperation(value = "Remove an Unavailabilities", response = BatchDaoService.class)
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully removed an unavailabilities"),

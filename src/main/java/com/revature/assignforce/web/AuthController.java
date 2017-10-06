@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.hibernate4.SpringSessionContext;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
@@ -23,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping(value = "/api/v2")
 @Api(value = "Authorization Controller", description = "Authorization Controller")
 public class AuthController {
 
@@ -38,13 +38,14 @@ public class AuthController {
     private OAuth2ClientContext context;
 
 
+    @PreAuthorize("hasPermission('', 'basic')")
     @ApiOperation(value = "Gets information of Employee", response= ActivatableObjectDaoService.class)
     @ApiResponses({
             @ApiResponse(code=200, message ="Successfully received employee information"),
             @ApiResponse(code=400, message ="Bad Request, the information recieved maybe invalid"),
             @ApiResponse(code=500, message ="Cannot retrieve Employee information")
     })
-    @RequestMapping(value= "/userinfo", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value= "/auth/userinfo", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Employee> getInfo(OAuth2Authentication auth)
     {
         Employee emp = force.getCurrentEmployee(auth);
@@ -57,7 +58,7 @@ public class AuthController {
         return ResponseEntity.ok(emp);
     }
 
-
+    @PreAuthorize("hasPermission('', 'basic')")
     @RequestMapping(value= "api/v2/userRoleinfo")
     public void getUserRoleInfo(OAuth2Authentication auth)
     {

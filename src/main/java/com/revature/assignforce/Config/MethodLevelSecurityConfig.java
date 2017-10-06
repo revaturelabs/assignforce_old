@@ -11,21 +11,11 @@ import org.springframework.security.config.annotation.method.configuration.Globa
 
 @Configuration
 @EnableAutoConfiguration
-public class MethodLevelSecurityConfig {//extends GlobalMethodSecurityConfiguration {
-
-//    @Override
+public class MethodLevelSecurityConfig {
     @Bean
     protected MethodSecurityExpressionHandler createExpressionHandler() {
         DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
         expressionHandler.setPermissionEvaluator(new CustomSecurity());
         return expressionHandler;
     }
-
-//    @Bean
-//    public DefaultMethodSecurityExpressionHandler expressionHandler()
-//    {
-//        DefaultMethodSecurityExpressionHandler handler = new DefaultMethodSecurityExpressionHandler();
-//        handler.setPermissionEvaluator(new CustomSecurity());
-//        return handler;
-//    }
 }
