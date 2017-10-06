@@ -5,6 +5,7 @@ app.service('SFService', function($resource, $rootScope, $http) {
 
     sfs.SaveSF = function(batch,succ,err){
         //send to sf
+        //TODO: refactor
         if (batch.SALESFORCEID != null) { //already has a sf id number
             var fun = function(){
                 $http({
@@ -31,9 +32,9 @@ app.service('SFService', function($resource, $rootScope, $http) {
                     succ(response);
                 }).error(err);
             }
-        }     
-    }  
-    
+        }
+    }
+
     sfs.reformatData= function(batch){
         //reformat af batch info to match sf
         var course;
@@ -81,8 +82,8 @@ app.service('SFService', function($resource, $rootScope, $http) {
             default:
                 cname = sfBatch.Skill_Type_c;
         }
-        for(i=0;i<curricula.length;i++){
-            if(curricula[i].name == cname){
+        for(var i=0;i<curricula.length;i++){
+            if(curricula[i].name === cname){
                 cur = curricula[i];
                 break;
             }
@@ -92,7 +93,7 @@ app.service('SFService', function($resource, $rootScope, $http) {
             var tname = curricula.Batch_Trainer_c.split(" ");
             if(tname.length>=2){
                 for(i=0;i<trainers.length;i++){
-                    if(trainers[i].firstName == tname[0] && trainers[i].lastName == tname[1]){
+                    if(trainers[i].firstName === tname[0] && trainers[i].lastName === tname[1]){
                         trainer = trainers[i];
                         break;
                     }
@@ -121,15 +122,10 @@ app.service('SFService', function($resource, $rootScope, $http) {
             },
 
         }).success(function(response){
-            // sfs.sfBatchs = response;
-            // succ(response);
-            //sfs.afBatchs= salesforceToAssignforce(response);
-            //succ(afs.afBatchs);
             succ(response);
 
         }).error(function (response){
             err(response);
-        }) 
-        //return sfs.sfBatchs;
+        })
     };
 });

@@ -4,10 +4,10 @@ var app = angular.module('batchApp');
 
 /*--------------------------CONTROLLER---------------------------*/
 
-app.controller("TimelineCtrl", function($scope, $window, batchService, calendarService, trainerService, curriculumService, settingService, locationService, buildingService){
+ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarService, trainerService, curriculumService, settingService, locationService, buildingService){
 	
     var tlc = this;
-    
+
     //For displaying toast messages.
     tlc.showToast = function( message ){
         $scope.$parent.aCtrl.showToast( message );
@@ -49,32 +49,32 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     //Filter removes batches that don't have a matching curriculum to the selected view by the user.
     tlc.removeUnmatchingCurriculum = function(batch)
     {
-    	return (tlc.selectedCurriculum == 0 || (!tlc.isUndefinedOrNull(batch.curriculum) && (batch.curriculum.currId == tlc.selectedCurriculum)));
+    	return (tlc.selectedCurriculum === 0 || (!tlc.isUndefinedOrNull(batch.curriculum) && (batch.curriculum.currId === tlc.selectedCurriculum)));
     };
     
     //Filter removes batches that don't have a matching location to the selected view by the user.
     tlc.removeUnmatchingLocation = function(batch)
     {
-    	return (tlc.selectedLocation == 0 || (!tlc.isUndefinedOrNull(batch.location) && (batch.location.id == tlc.selectedLocation)));
+    	return (tlc.selectedLocation === 0 || (!tlc.isUndefinedOrNull(batch.location) && (batch.location.id === tlc.selectedLocation)));
     };
     
     //Filter removes batches that don't have a matching building to the selected view by the user.
     tlc.removeUnmatchingBuilding = function(batch)
     {
-    	return (tlc.selectedBuilding == 0 || (!tlc.isUndefinedOrNull(batch.building) && (batch.building.id == tlc.selectedBuilding)));
+    	return (tlc.selectedBuilding === 0 || (!tlc.isUndefinedOrNull(batch.building) && (batch.building.id === tlc.selectedBuilding)));
     };
     
     //Filter removes batches that don't have a matching focus to the selected view by the user.
     tlc.removeUnmatchingFocus = function(batch)
     {
-    	return (tlc.selectedFocus == 0 || (!tlc.isUndefinedOrNull(batch.focus) && (batch.focus.currId == tlc.selectedFocus)));
+    	return (tlc.selectedFocus === 0 || (!tlc.isUndefinedOrNull(batch.focus) && (batch.focus.currId === tlc.selectedFocus)));
     };
     
     //Filter removes batches who don't have any matching trainers.
     tlc.removeIrrelevantBatches = function(batch) {
 		var trainerIndex = tlc.filteredTrainers.findIndex(function (d)
 		{
-			return (d == $scope.trainerColumnName(batch.trainer));
+			return (d === $scope.trainerColumnName(batch.trainer));
 		});
 		
         return (trainerIndex > -1);
@@ -84,10 +84,10 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     tlc.removeTrainersOutOfPage = function(trainer) {
 		var trainerIndex = tlc.trainers.findIndex(function (d)
 		{
-			return (d == trainer);
+			return (d === trainer);
 		});
 		
-		var trainerDisplayed = (tlc.trainerListEndIndex == 0 || (trainerIndex > -1 && trainerIndex >= tlc.trainerListStartIndex && trainerIndex < tlc.trainerListEndIndex));
+		var trainerDisplayed = (tlc.trainerListEndIndex === 0 || (trainerIndex > -1 && trainerIndex >= tlc.trainerListStartIndex && trainerIndex < tlc.trainerListEndIndex));
 		
         return trainerDisplayed;
     };
@@ -96,7 +96,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
     tlc.removeBatchlessTrainers = function(trainer) {
 		var trainerIndex = tlc.filteredBatches.findIndex(function (d)
 		{
-			return (d.trainer.trainerId == parseInt(trainer.substring(1, trainer.indexOf(')'))));
+			return (d.trainer.trainerId === parseInt(trainer.substring(1, trainer.indexOf(')'))));
 		});
 		
         return (trainerIndex > -1);
@@ -231,7 +231,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	        	if (!tlc.isUndefinedOrNull(b.room))
 	        	{
 	        		var building = tlc.buildings.find(function(building){
-	        			return (building.id == b.room.building);
+	        			return (building.id === b.room.building);
 	        		});
 	        		
 	        		if (building)
@@ -239,7 +239,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	        			b.building = building;
 	        			
 		        		var location = tlc.locations.find(function(location){
-		        			return (location.id == b.building.location);
+		        			return (location.id === b.building.location);
 		        		});
 	        			
 	        			if (location)
@@ -275,7 +275,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	tlc.getSelectedLocation = function()
 	{
 		var location = tlc.locations.find(function(l){
-			return (l.id == tlc.selectedLocation);
+			return (l.id === tlc.selectedLocation);
 		});
 		
 		return location;
@@ -341,7 +341,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	var MIN_RANGE = 1000000; // 1 minute
 
 	// Events for the timeline
-	$("#timeline").mousedown(function(evt){
+	$scope.mousedown = function(evt){
 		evt.stopPropagation();
 
 		if(evt.offsetY > tlc.timelineFormatting.margin_top && evt.offsetY < tlc.timelineFormatting.height + tlc.timelineFormatting.margin_top){
@@ -365,7 +365,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 			tlc.projectTimeline(mousedownY);
 			
 			// Fire when there is a mousemove event on the #timeline element
-			$(".toastContainer").mousemove(function(evt){
+			$scope.mousemove = function(evt){
 
 				// Prevent text highlighting
 				evt.preventDefault();
@@ -396,17 +396,17 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 			    
 				// Update the last coordinate of the mouse
 				pageY = evt.pageY;
-			});
+			};
 		}
-	});
+	};
 
-	$(".toastContainer").mouseup(function(evt){
+	$scope.mouseup = function(evt){
 		// Erase the zoompoint(or move out of view)
 		tlc.projectTimeline(-100);
 		// Remove mousemove listener from the container
 		$(".toastContainer").off("mousemove");
 		evt.stopPropagation();
-	});
+	};
 	
 
 	//Promise for the repulling of the timeline.
@@ -564,10 +564,10 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	};
 	
 	//Status of the previous page button.  Enabled/Disabled.
-	tlc.previousPageButtonStatus = function(useFilteredTrainers)
+	tlc.previousPageButtonStatus = function()
 	{
 		//True = disabled, false = enabled.
-		if (tlc.trainerListStartIndex == 0 || tlc.realTrainersPerPage == 0) { 
+		if (tlc.trainerListStartIndex === 0 || tlc.realTrainersPerPage === 0) {
 			tlc.previousPageButtonDisabled = true; 
 		}
 		else { 
@@ -593,7 +593,7 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		var numTrainers = (trainerList ? trainerList.length : 0);
 		
 		//True = disabled, false = enabled.
-		if (tlc.trainerListStartIndex + tlc.realTrainersPerPage >= numTrainers || tlc.realTrainersPerPage == 0) { 
+		if (tlc.trainerListStartIndex + tlc.realTrainersPerPage >= numTrainers || tlc.realTrainersPerPage === 0) {
 			tlc.nextPageButtonDisabled = true;
 		}
 		else { tlc.nextPageButtonDisabled = false; }
@@ -606,7 +606,15 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 	//Conditions on which to use the filtered list of batches, for requisite functions.
 	tlc.useFilteredBatches = function()
 	{
-		return (tlc.hideConcludedBatches || tlc.hideFocuslessBatches || tlc.selectedCurriculum > 0 || tlc.selectedFocus > 0 || tlc.selectedLocation > 0 || tlc.selectedBuilding > 0);
+		if(tlc.hideConcludedBatches || tlc.hideFocuslessBatches || tlc.selectedCurriculum > 0 || tlc.selectedFocus > 0){
+		    return true;
+		}
+		else if(tlc.selectedLocation > 0 || tlc.selectedBuilding > 0){
+		    return true;
+		}
+		else{
+		    return false;
+		};
 	}
 	
 	//Refilters the data for the timeline.
@@ -894,21 +902,16 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 		svg.append('g')
 			.attr('class','rectangles');
 
-        /*
-        svg.append('rect')
-            .attr('class','axisrect')
-            .attr('width',100)
-            .attr('height',100)
-            .style('fill','red');
-            */
 
-        var x = svg.append('g')
-            .attr('class','x axis');
+
+        var xLine = svg.append('g')
+            .attr('class','x axis')
+            .attr('style', 'position: -webkit-sticky; position: sticky');
             //.call(xAxis);
 
-        var brect = x.append('rect');
+        var brect = xLine.append('rect');
 
-        x.call(xAxis);
+        xLine.call(xAxis);
 
 
 
@@ -1070,29 +1073,30 @@ app.controller("TimelineCtrl", function($scope, $window, batchService, calendarS
 				.text(function(d) {return d.length;});
 
 		tlc.moveAxis();
-
-        brect
-            .attr('class','axisrect')
-            .attr('transform','translate('+(timelineFormatting.margin_left/2)+',-'+x.node().getBoundingClientRect().height+')')
-            .attr('width',x.node().getBoundingClientRect().width+timelineFormatting.margin_left/2)
-            .attr('height',x.node().getBoundingClientRect().height)
-            .style('fill','white');
-
-
+        if(x!==null && xLine.node()!=null){
+            brect
+                .attr('class','axisrect')
+                .attr('transform','translate('+(timelineFormatting.margin_left/2)+',-'+xLine.node().getBoundingClientRect().height+')')
+                .attr('width',xLine.node().getBoundingClientRect().width+timelineFormatting.margin_left/2)
+                .attr('height',xLine.node().getBoundingClientRect().height)
+                .style('fill','white');
+        }
 	}
 
-	//function to freeze trainers names over the graph at the top of the window whenever you scroll out of the window
+//	function to freeze trainers names over the graph at the top of the window whenever you scroll out of the window
 	tlc.axisDisplacement = 0
+	//TODO: refactor
     tlc.moveAxis= function () {
         var x = document.getElementsByClassName("x axis");
-        if(x[0].getBoundingClientRect().top) {
-        	tlc.axisDisplacement -= x[0].getBoundingClientRect().top
-			if(tlc.axisDisplacement <0){tlc.axisDisplacement =0;}
-                x[0].setAttribute("transform", "translate(0," + tlc.axisDisplacement + ")");
-
-        }//else{
-            setTimeout(tlc.moveAxis,120);
+         if(x[0] != undefined){
+            if(x[0].getBoundingClientRect().top){
+                tlc.axisDisplacement -= x[0].getBoundingClientRect().top
+                if(tlc.axisDisplacement <0){tlc.axisDisplacement =0;}
+                    x[0].setAttribute("transform", "translate(0," + tlc.axisDisplacement + ")");
+            }
+         }
+        //else{
+        window.requestAnimationFrame(tlc.moveAxis);
         //}
     }
-
 });
