@@ -3,6 +3,7 @@ package com.revature.assignforce.web;
 import com.revature.assignforce.AssignForceV2Application;
 import com.revature.assignforce.domain.Location;
 import com.revature.assignforce.domain.dto.LocationDTO;
+import com.revature.assignforce.security.CustomSecurity;
 import com.revature.assignforce.service.ActivatableObjectDaoService;
 import com.revature.assignforce.utils.JsonMaker;
 import org.junit.After;
@@ -81,6 +82,9 @@ public class LocationCtrlTest {
     @MockBean
     ActivatableObjectDaoService<Location, Integer> locationService;
 
+    @MockBean
+    CustomSecurity customSecurity;
+
 
     @Before
     public void setUp() throws Exception {
@@ -94,6 +98,7 @@ public class LocationCtrlTest {
 
         locationTest = new Location(locationDTO.getID(),locationDTO.getName(),locationDTO.getCity(),
                 locationDTO.getState(),locationDTO.getBuildings(),locationDTO.getActive());
+        given(customSecurity.hasPermission(any(),any(),any())).willReturn(true);
 
     }
 

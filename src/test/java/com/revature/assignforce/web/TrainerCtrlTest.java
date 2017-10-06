@@ -4,6 +4,7 @@ import com.revature.assignforce.AssignForceV2Application;
 import com.revature.assignforce.domain.Skill;
 import com.revature.assignforce.domain.Trainer;
 import com.revature.assignforce.domain.dto.TrainerDTO;
+import com.revature.assignforce.security.CustomSecurity;
 import com.revature.assignforce.service.TrainerDaoService;
 import com.revature.assignforce.utils.JsonMaker;
 import org.junit.After;
@@ -49,6 +50,9 @@ public class TrainerCtrlTest {
     @MockBean
     TrainerDaoService trainerService;
 
+    @MockBean
+    CustomSecurity customSecurity;
+
     private Trainer testTrainer = null;
 
     private JsonMaker jsonMaker = new JsonMaker();
@@ -80,6 +84,7 @@ public class TrainerCtrlTest {
                 trainerDTO.getLastName(), trainerDTO.getResume(),
                 trainerDTO.getUnavailabilities(), trainerDTO.getSkills(),
                 trainerDTO.getCertifications());
+        given(customSecurity.hasPermission(any(),any(),any())).willReturn(true);
     }
 
     @After
