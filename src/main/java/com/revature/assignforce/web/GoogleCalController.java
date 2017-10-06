@@ -47,7 +47,7 @@ import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
 
 @Controller
-@Api(value = "Google Calendar Controller", description = "CRUD with the google Calendar")
+@Api(value = "Google Calendar Controller", description = "CRUD with the google API")
 public class GoogleCalController {
 
     private final static Log logger = LogFactory.getLog(GoogleCalController.class);
@@ -94,7 +94,7 @@ public class GoogleCalController {
     @ApiResponses({
             @ApiResponse(code=200, message ="Successfully redirected"),
             @ApiResponse(code=400, message ="Bad Request, something broke"),
-            @ApiResponse(code=500, message ="Cannot redirect ")
+            @ApiResponse(code=500, message ="Cannot receive the token due to a server error ")
     })
     @RequestMapping(value = "/api/v2/google/google", method = RequestMethod.GET, params = "code")
     public String oauth2Callback(@RequestParam(value = "code") String code) {
@@ -169,14 +169,6 @@ public class GoogleCalController {
         return null;
 
     }
-
-    @ApiOperation(value = "new event", response = String.class )
-    @ApiResponses({
-            @ApiResponse(code=200, message ="Successfully new an event"),
-            @ApiResponse(code=400, message ="Bad Request, something broke"),
-            @ApiResponse(code=500, message ="Cannot create a new event due to a server error")
-    })
-    @RequestMapping(value = "/api/v2/google/newEvent")
     private Event newEvent(String name,String startDate, String endDate) {
         Event event = new Event();
         String pattern = "yyyy-MM-dd";
@@ -204,12 +196,6 @@ public class GoogleCalController {
         return event;
     }
 
-    @ApiOperation(value = "test method", response = String.class)
-    @ApiResponses({
-            @ApiResponse(code=200, message ="Successfully ran a test"),
-            @ApiResponse(code=400, message ="Bad Request, Something broke"),
-            @ApiResponse(code=500, message ="Cannot test, you failed")
-    })
     @RequestMapping(value = "/api/v2/test")
     private String test(@RequestBody String json) throws Exception {
         System.out.println("Post PASSED BRAH!!!!!!!!!!!!!!!");
