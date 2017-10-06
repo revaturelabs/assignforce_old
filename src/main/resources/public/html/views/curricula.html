@@ -14,7 +14,7 @@
                     <span flex></span>
 
                     <!--Add New Curriculum Button-->
-                    <md-button class="md-icon-button" ng-click="showCurriculum($event)" style="margin: 12px 6px;" >
+                    <md-button class="md-icon-button" ng-click="showAddCore($event)" style="margin: 12px 6px;" >
                         <md-tooltip class="md-title"> Add New Curriculum </md-tooltip>
                         <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
                     </md-button>
@@ -64,9 +64,13 @@
                         </div>
                         <md-divider></md-divider>
                         <span flex></span>
-                        <md-button class="md-icon-button" ng-click="showCurriculum($event)">
+                        <md-button class="md-icon-button" ng-click="showAddCore($event)">
                             <md-tooltip class="md-title"> Edit Curricula </md-tooltip>
                             <i class="material-icons revOrange"> edit </i>
+                        </md-button>
+                        <md-button class="md-icon-button" ng-click="cCtrl.removeCore(curr)">
+                            <md-tooltip class="md-title"> Remove Focus </md-tooltip>
+                            <i class="material-icons revOrange">remove_circle</i>
                         </md-button>
                     </md-list-item>
                 </md-list>
@@ -80,7 +84,7 @@
                     <span flex></span>
 
                     <!--Add New Focus Button-->
-                    <md-button class="md-icon-button" ng-click="showFocus($event)" style="margin: 12px 6px;" >
+                    <md-button class="md-icon-button" ng-click="showAddFocus($event)" style="margin: 12px 6px;" >
                         <md-tooltip class="md-title"> Add New Focus</md-tooltip>
                         <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
                     </md-button>
@@ -123,11 +127,11 @@
                             <p>Skills: {{ curr.skills.map(cCtrl.joinObjArrayByName).join(", ");}}</p>
                         </div>
                         <span flex></span>
-                        <md-button class="md-icon-button" ng-click="showFocus($event)">
+                        <md-button class="md-icon-button" ng-click="showAddFocus($event)">
                         <md-tooltip class="md-title"> Edit Focus </md-tooltip>
                         <i class="material-icons revOrange"> edit </i>
                         </md-button>
-                        <md-button class="md-icon-button" ng-click="cCtrl.removeFocus(curr)" ng-show="isManager">
+                        <md-button class="md-icon-button" ng-click="cCtrl.removeFocus(curr)">
                             <md-tooltip class="md-title"> Remove Focus </md-tooltip>
                             <i class="material-icons revOrange">remove_circle</i>
                         </md-button>

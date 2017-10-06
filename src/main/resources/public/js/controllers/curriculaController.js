@@ -154,6 +154,16 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
         })
     };
 
+    //removes a core
+        cc.removeCore = function (curr) {
+            curr.active = false;
+            curriculumService.update(curr, function () {
+                cc.showToast("Removed core successfully")
+            }, function () {
+                cc.showToast("Unable to remove core")
+            })
+        };
+
     //started the code for editing a focus. to be finished at a later time
     cc.editFocus = function (focus) {
         cc.focusName = focus.name;
@@ -183,8 +193,8 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
         cc.showToast("Could not fetch skills.")
     });
 
-    //Show Edit Curriculum Dialog
-    $scope.showCurriculum = function(event) {
+    //Show Add Core Dialog
+    $scope.showAddCore = function(event) {
        $mdDialog.show({
             targetEvent: event,
             templateUrl : "html/templates/dialogs/curriculumFormDialog.html",
@@ -218,8 +228,8 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
        }
     };
 
-    //Show Edit Focus Dialog
-    $scope.showFocus = function(event) {
+    //Show Add Focus Dialog
+    $scope.showAddFocus = function(event) {
        $mdDialog.show({
             targetEvent: event,
             templateUrl : "html/templates/dialogs/curriculumFormDialog.html",
@@ -231,6 +241,50 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
        function FocusDialogController($scope, $mdDialog, skills) {
 
            $scope.skills = skills;
+           $scope.cancel = function() {
+            $mdDialog.cancel();
+           }
+           $scope.createCore = function(x) {
+                var curric = {
+                           name    : $scope.coreN,
+                           skills  : $scope.skillz,
+                           active  : true,
+                           core    : false
+                       };
+                       curriculumService.create(curric, function () {
+                           cc.showToast("Focus created")
+                       }, function () {
+                           cc.showToast("You're not authorized Scrub")
+                       })
+
+                       cc.curricula.push(curric);
+                $mdDialog.hide();
+           }
+       }
+    };
+
+    //Show Edit Curriculum Dialog
+    $scope.showEditCurriculum = function(event,curr) {
+       $mdDialog.show({
+            targetEvent: event,
+            templateUrl : "html/templates/dialogs/curriculumFormDialog.html",
+            locals: {
+                       skills: $rootScope.skills,
+                       cName: curr.name,
+                       cSkills: curr.skills,
+                       cActive: curr.active,
+                       cCore: curr.core
+                     },
+            controller: EditCurriculumDialogController
+       });
+       function EditCurriculumDialogController($scope, $mdDialog, skills, cName, cSkills, cActive, cCore) {
+
+           $scope.skills = skills;
+           $scope.cName = cName;
+           $scope.cSkills = cskills;
+           $scope.cActive = cActive;
+           $scope.cCore = cCore;
+
            $scope.cancel = function() {
             $mdDialog.cancel();
            }
