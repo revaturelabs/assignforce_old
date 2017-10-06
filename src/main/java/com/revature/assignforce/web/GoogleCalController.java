@@ -8,6 +8,11 @@ import com.google.api.services.calendar.model.CalendarListEntry;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.revature.assignforce.domain.Unavailable;
 import com.revature.assignforce.domain.dao.UnavailableRepository;
+import com.revature.assignforce.service.BatchDaoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +47,7 @@ import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
 
 @Controller
+@Api(value = "Google Calendar Controller", description = "CRUD with the google API")
 public class GoogleCalController {
 
     private final static Log logger = LogFactory.getLog(GoogleCalController.class);
@@ -72,12 +78,24 @@ public class GoogleCalController {
         this.events = events;
     }
 
+    @ApiOperation(value = "redirect the view")
+    @ApiResponses({
+            @ApiResponse(code=200, message ="Successfully authorized the redirection of the view"),
+            @ApiResponse(code=400, message ="Bad Request, something broke"),
+            @ApiResponse(code=500, message ="Cannot authorize the redirect view ")
+    })
     @RequestMapping(value = "/api/v2/google/google", method = RequestMethod.GET)
     public RedirectView googleConnectionStatus(HttpServletRequest request) throws Exception {
         System.out.println("inside googleConnectionStatus");
         return new RedirectView(authorize());
     }
 
+    @ApiOperation(value = "outh2 callback", response = String.class )
+    @ApiResponses({
+            @ApiResponse(code=200, message ="Successfully redirected"),
+            @ApiResponse(code=400, message ="Bad Request, something broke"),
+            @ApiResponse(code=500, message ="Cannot receive the token due to a server error ")
+    })
     @RequestMapping(value = "/api/v2/google/google", method = RequestMethod.GET, params = "code")
     public String oauth2Callback(@RequestParam(value = "code") String code) {
         System.out.println("inside oauth2Callback");
@@ -99,6 +117,12 @@ public class GoogleCalController {
         return "redirect:/";
     }
 
+    @ApiOperation(value = "google status", response = String.class)
+    @ApiResponses({
+            @ApiResponse(code=200, message ="Successfully retrieved the google status"),
+            @ApiResponse(code=400, message ="Bad Request, something broke"),
+            @ApiResponse(code=500, message ="Cannot retrieve the google status")
+    })
     @RequestMapping(value = "/api/v2/google/googleStatus")
     public void googleStatus() {
         System.out.println(client.toString());
@@ -119,6 +143,13 @@ public class GoogleCalController {
         System.out.println("cal authorizationUrl->" + authorizationUrl);
         return authorizationUrl.build();
     }
+
+    @ApiOperation(value = "add event", response = String.class )
+    @ApiResponses({
+            @ApiResponse(code=200, message ="Successfully added an event"),
+            @ApiResponse(code=400, message ="Bad Request, something broke"),
+            @ApiResponse(code=500, message ="Cannot add an event due to a server error")
+    })
     @RequestMapping(value = "/api/v2/google/addEvent")
     private String addEvent(@RequestBody String json, HttpServletResponse res) throws Exception {
         System.out.println("INSIDE ADD EVENT BRUH!!!!!!!!!!!!!!!");
