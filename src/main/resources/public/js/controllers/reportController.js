@@ -495,7 +495,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
 
     /* FUNCTION - This method will assert that batches have valid credentials for submission. */
-    rc.submittionValidityAssertion = function( index ){
+    rc.submissionValidityAssertion = function( index ){
         var flagArr = [ 0, 0, 0 ];
         var count = 0;
 
@@ -543,7 +543,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
      *            which will be displayed to the user on the reports tab. */
     rc.createBatchClick = function( index ) {
         // Determines whether or not the user is allowed to create batches.
-        var canSubmit = rc.submittionValidityAssertion( index );
+        var canSubmit = rc.submissionValidityAssertion( index );
 
         if ( canSubmit === 0 ) {
             //Create a batch object in the Reports Controller, using the batchService.
@@ -587,7 +587,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         for ( var index in rc.cardArr ) {
             if( rc.cardArr.hasOwnProperty(index) ) {
                 // Determines whether or not the user is allowed to create batches.
-                canSubmit = rc.submittionValidityAssertion( index );
+                canSubmit = rc.submissionValidityAssertion( index );
                 if ( canSubmit === 0 ) {
                     //Create a batch object in the Reports Controller, using the batchService.
                     rc.newBatch = batchService.getEmptyBatch();
