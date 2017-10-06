@@ -166,7 +166,7 @@ public class BatchCtrl {
 
 	// GET ALL
 	// retrieve all batches
-	@PostAuthorize("hasPermission(returnObject, 'Trainers')")
+//	@PreAuthorize("hasPermission('', 'Trainers')")
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveAllBatches() {
 		List<Batch> all = batchService.getAllItems();

@@ -6,9 +6,12 @@ import com.revature.assignforce.domain.Certification;
 import com.revature.assignforce.service.ActivatableObjectDaoService;
 import com.revature.assignforce.service.TrainerDaoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 
 import com.revature.assignforce.domain.Skill;
@@ -19,6 +22,8 @@ import com.revature.assignforce.domain.dto.TrainerDTO;
 
 @RestController
 @RequestMapping("/api/v2/trainer")
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@EnableAspectJAutoProxy
 public class TrainerCtrl {
 
 	@Autowired
@@ -50,6 +55,7 @@ public class TrainerCtrl {
 
 	  // RETRIEVE
 		// retrieve trainer with given ID
+	@PreAuthorize("hasPermission(#ID, 'Trainers')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveTrainer( @PathVariable("id") int ID ) {
 
