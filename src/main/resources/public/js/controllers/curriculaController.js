@@ -7,8 +7,7 @@ var assignforce = angular.module( "batchApp" );
 assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog, curriculumService, skillService) {
     var cc = this;
 
-    $scope.isManager = $rootScope.role == "VP of Technology";
-    // $scope.skillToggle = false;
+    $scope.isManager = $rootScope.role === "VP of Technology";
 
     //functions
 
@@ -64,20 +63,10 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
     };
 
     //focus functions
-    //create a focus
-    //I want to fix this to be readable - Sam
-    cc.createFocus = function (focusForm) {
+    cc.createCurriculum = function (focusForm,isCore) {
+
         //show a hidden field with a list of skill to select from, a name field, and a save button
         if(focusForm.$valid){
-            var skillList = [];
-            for(var i = 0; i < cc.selectedSkills.length; i++){
-                for(var j = 0; j < cc.skills.length; j++){
-                    if(cc.skills[j].skillId == cc.selectedSkills[i]){
-                        skillList.push(cc.skills[j]);
-                        break;
-                    }
-                }
-            }
 
             let selectedSkills = cc.selectedSkills.map((x) => {
                 return parseInt(x);
@@ -89,7 +78,7 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
                 name    : isCore?cc.coreName:cc.focusName,
                 skills  : skillList,
                 active  : true,
-                core    : false
+                core    : isCore
             };
 
             curriculumService.create(curriculum, function () {
@@ -210,19 +199,24 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
             targetEvent: event,
             templateUrl : "html/templates/dialogs/curriculumFormDialog.html",
             locals: {
-                       skills: $rootScope.skills
+                       skills: $rootScope.skills,
+                       curricI: {
+                            name: "Core Name"
+                       }
                      },
             controller: CoreDialogController
        });
-       function CoreDialogController($scope, $mdDialog, skills) {
+       function CoreDialogController($scope, $mdDialog, skills, curricI) {
 
            $scope.skills = skills;
+           $scope.curricI = curricI;
+
            $scope.cancel = function() {
             $mdDialog.cancel();
            }
            $scope.saveCurriculum = function(x) {
                 var curric = {
-                           name    : $scope.coreN,
+                           name    : $scope.curricI.name,
                            skills  : $scope.skillz,
                            active  : true,
                            core    : true
@@ -245,19 +239,24 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
             targetEvent: event,
             templateUrl : "html/templates/dialogs/curriculumFormDialog.html",
             locals: {
-                       skills: $rootScope.skills
+                       skills: $rootScope.skills,
+                       curricI: {
+                                   name: "Focus Name"
+                              }
                      },
             controller: FocusDialogController
        });
-       function FocusDialogController($scope, $mdDialog, skills) {
+       function FocusDialogController($scope, $mdDialog, skills, curricI) {
 
-           $scope.skills = skills;
+          $scope.skills = skills;
+          $scope.curricI = curricI;
+
            $scope.cancel = function() {
             $mdDialog.cancel();
            }
            $scope.saveCurriculum = function(x) {
                 var curric = {
-                           name    : $scope.coreN,
+                           name    :  $scope.curricI.name,
                            skills  : $scope.skillz,
                            active  : true,
                            core    : false
@@ -281,29 +280,29 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
             templateUrl : "html/templates/dialogs/curriculumFormDialog.html",
             locals: {
                        skills: $rootScope.skills,
-                       curri: curr
+                       curricI: curr
                      },
             controller: EditCurriculumDialogController
        });
-       function EditCurriculumDialogController($scope, $mdDialog, skills, curri) {
+       function EditCurriculumDialogController($scope, $mdDialog, skills, curricI) {
 
            $scope.skills = skills;
-           $scope.curri = curri;
+           $scope.curricI = curricI;
 
            $scope.cancel = function() {
             $mdDialog.cancel();
            }
            $scope.saveCurriculum = function(x) {
-               $scope.curri.name = $scope.coreN;
-               $scope.curri.skills = $scope.skillz;
-               curriculumService.update($scope.curri, function () {
+               $scope.curricI.name = $scope.coreN;
+               $scope.curricI.skills = $scope.skillz;
+               curriculumService.update($scope.curricI, function () {
                    cc.showToast("Curriculum updated")
                }, function () {
                    cc.showToast("You're not authorized Scrub")
                })
 
-               cc.curricula.push($scope.curri);
-               $mdDialog.hide();
+               cc.curricula.push($scope.curricI);
+                $mdDialog.hide();
            }
        }
     };
