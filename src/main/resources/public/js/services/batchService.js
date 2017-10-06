@@ -27,5 +27,8 @@ app.service('batchService', function($resource) {
     bs.delete = function(batch, success, error){
         batch.$remove(success, error);
     }
+    bs.getBatch = function () {
+        return Batch;
+    };
 
-});
+})
