@@ -1,4 +1,4 @@
-xdescribe('curriculaCtrl', function () {
+describe('curriculaCtrl', function () {
     var mockScope = {};
     var controller;
     var cc;

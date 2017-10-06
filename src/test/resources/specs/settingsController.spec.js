@@ -1,5 +1,5 @@
 //used to test
-xdescribe('settingsControllerTest', function(){
+describe('settingsControllerTest', function(){
     var $controller;
     var $scope = {};
     var ctrl;
