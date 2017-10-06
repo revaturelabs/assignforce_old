@@ -15,13 +15,13 @@ assignforce.controller("bldgDialogCtrl", function($scope, $mdDialog,
 
 		if (isValid) {
 
-			if (bdc.state == "edit") {
+			if (bdc.state === "edit") {
 				buildingService.update( bdc.building, function () {
                     $mdDialog.hide();
                 }, function () {
                     $mdDialog.cancel();
                 });
-			} else if (bdc.state == "create") {
+			} else if (bdc.state === "create") {
 				bdc.building.location = bdc.location.id; //saves the location id reference to building
 
 				buildingService.create(bdc.building, function() {

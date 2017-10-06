@@ -13,7 +13,7 @@ assignforce.controller("trainerDialogCtrl", function ($scope, $mdDialog, trainer
     //save new
     tdc.save = function (isValid) {
     	
-            if (isValid && tdc.state == "create"){
+            if (isValid && tdc.state === "create"){
                 trainerService.create(tdc.trainer, function () {
                     $mdDialog.hide();
                 }, function () {

@@ -24,7 +24,7 @@ app.service( "calendarService", function(){
     cs.createDate = function(ms){
         var date = new Date(ms).toDateString();
 
-        if(date == "Invalid Date"){
+        if(date === "Invalid Date"){
             return "";
         }
         return date;
