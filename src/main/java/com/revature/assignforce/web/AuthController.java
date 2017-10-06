@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping(value = "/api/v2")
-@Api(value = "Authorization Controller", tags = "Auhtorization Controller")
+@Api(value = "Authorization Controller", description = "Authorization Controller")
 public class AuthController {
 
     @Autowired
