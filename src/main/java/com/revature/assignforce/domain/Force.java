@@ -19,7 +19,7 @@ import java.util.*;
 public class Force {
     private static final String REST_VERSION = "40.0";
 
-    @Autowired
+
     public OAuth2RestTemplate restTemplate;
 
     @Autowired

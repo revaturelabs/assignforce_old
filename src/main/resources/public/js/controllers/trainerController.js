@@ -1,6 +1,6 @@
 var assignforce = angular.module( "batchApp" );
 
-assignforce.controller( "trainerCtrl", function( $scope, $rootScope, $mdDialog, $mdToast, $location, trainerService, s3Service, ptoService ) {
+assignforce.controller( "trainerCtrl", function( $scope, $rootScope, $mdDialog, $mdToast, $location, trainerService, s3Service, ptoService, $http) {
     var tc = this;
     $scope.isManager = $rootScope.role === "VP of Technology";
 
@@ -117,6 +117,9 @@ assignforce.controller( "trainerCtrl", function( $scope, $rootScope, $mdDialog, 
     };
 
     tc.showCalendar = function(){
+        $http.get("/api/v2/google/googleStatus").error(function() {
+             window.location = "/api/v2/google/google";
+        });
         ptoService.authorize();
     };
 

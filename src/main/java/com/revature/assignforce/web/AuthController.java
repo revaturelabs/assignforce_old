@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.hibernate4.SpringSessionContext;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -36,7 +38,6 @@ public class AuthController {
         System.out.println("This is the emp role name: " + emp.getRoleName());
         String tk = restTemplate.getAccessToken().toString();
         emp.setAccessToken(tk);
-
 //        req.getSession().setAttribute("auth", auth);
         System.out.println(auth.toString());
 

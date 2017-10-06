@@ -99,9 +99,9 @@ public class GoogleCalController {
         return "redirect:/";
     }
 
-    @RequestMapping(value = "/api/v2/googleStatus", method = RequestMethod.GET, params = "code")
-    public boolean googleStatus(@RequestParam(value = "code") String code) {
-        return (client != null);
+    @RequestMapping(value = "/api/v2/google/googleStatus")
+    public void googleStatus() {
+        System.out.println(client.toString());
     }
 
     private String authorize() throws Exception {
