@@ -41,7 +41,6 @@ assignforce.controller("settingsCtrl", function ($scope, settingService, locatio
         });
     };
     sc.getBuildings = function(){
-        console.log("getting buildings")
     	sc.buildings = [];
     	angular.forEach(sc.defaultLocation.buildings, function(building){
     	    console.log(building);
