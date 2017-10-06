@@ -192,9 +192,12 @@ public class BatchCtrl {
 	// GET ALL
 	// retrieve all batches
 
+
 //	@PreAuthorize("hasPermission('', 'Trainers')")
 
-	@PostAuthorize("hasPermission(returnObject, 'Trainers')")
+
+	@PreAuthorize("hasPermission('', 'basic')")
+
 	@ApiOperation(value = "Retrieve all batches", response = BatchDaoService.class)
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully retrieved all batches"),

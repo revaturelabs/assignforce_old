@@ -17,8 +17,8 @@
 //{
 //    @Override
 //    public void configure(HttpSecurity http) throws Exception {
-//        http.authorizeRequests()
-//                .antMatchers(HttpMethod.POST, "/api/v2/**").permitAll();
+////        http.authorizeRequests()
+////                .antMatchers(HttpMethod.POST, "/api/v2/**").permitAll();
 ////                .antMatchers("/*").permitAll()
 ////            .and()
 ////                .csrf().disable();
