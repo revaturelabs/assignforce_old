@@ -60,7 +60,7 @@ app.service('ptoService', function ($resource, $mdDialog, gCalService, $http) {
     }
 
      ptos.getGoogle = function() {
-            window.location = "/google";
+            window.location = "api/v2/google/google";
         }
         ptos.addPto = function(trainer, startDate, endDate){
             Date.prototype.addDays = function(days) {
