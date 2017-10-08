@@ -64,7 +64,7 @@
                         </div>
                         <md-divider></md-divider>
                         <span flex></span>
-                        <md-button class="md-icon-button" ng-click="showAddCore($event)">
+                        <md-button class="md-icon-button" ng-click="showEditCurriculum($event,curr)">
                             <md-tooltip class="md-title"> Edit Curricula </md-tooltip>
                             <i class="material-icons revOrange"> edit </i>
                         </md-button>
@@ -127,7 +127,7 @@
                             <p>Skills: {{ curr.skills.map(cCtrl.joinObjArrayByName).join(", ");}}</p>
                         </div>
                         <span flex></span>
-                        <md-button class="md-icon-button" ng-click="showAddFocus($event)">
+                        <md-button class="md-icon-button" ng-click="showEditCurriculum($event,curr)">
                         <md-tooltip class="md-title"> Edit Focus </md-tooltip>
                         <i class="material-icons revOrange"> edit </i>
                         </md-button>

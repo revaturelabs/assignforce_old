@@ -217,14 +217,14 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
            $scope.saveCurriculum = function(x) {
                 var curric = {
                            name    : $scope.curricI.name,
-                           skills  : $scope.skillz,
+                           skills  : $scope.curricI.skills,
                            active  : true,
                            core    : true
                        };
                        curriculumService.create(curric, function () {
                            cc.showToast("Core created")
                        }, function () {
-                           cc.showToast("You're not authorized Scrub")
+                           cc.showToast("You're not authorized")
                        })
 
                        cc.curricula.push(curric);
@@ -256,15 +256,15 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
            }
            $scope.saveCurriculum = function(x) {
                 var curric = {
-                           name    :  $scope.curricI.name,
-                           skills  : $scope.skillz,
+                           name    : $scope.curricI.name,
+                           skills  : $scope.curricI.skills,
                            active  : true,
                            core    : false
                        };
                        curriculumService.create(curric, function () {
                            cc.showToast("Focus created")
                        }, function () {
-                           cc.showToast("You're not authorized Scrub")
+                           cc.showToast("You're not authorized")
                        })
 
                        cc.curricula.push(curric);
@@ -292,17 +292,14 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
            $scope.cancel = function() {
             $mdDialog.cancel();
            }
-           $scope.saveCurriculum = function(x) {
-               $scope.curricI.name = $scope.coreN;
-               $scope.curricI.skills = $scope.skillz;
-               curriculumService.update($scope.curricI, function () {
-                   cc.showToast("Curriculum updated")
-               }, function () {
-                   cc.showToast("You're not authorized Scrub")
-               })
 
-               cc.curricula.push($scope.curricI);
-                $mdDialog.hide();
+           $scope.saveCurriculum = function(x) {
+//               curriculumService.update($scope.curricI, function () {
+//                   cc.showToast("Curriculum updated")
+//               }, function () {
+//                   cc.showToast("You're not authorized")
+//               })
+               $mdDialog.hide();
            }
        }
     };
