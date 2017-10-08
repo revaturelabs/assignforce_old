@@ -3,7 +3,6 @@
 
     assignforce.controller( "homeCtrl", function( $scope, $filter, batchService, $rootScope , $resource ,trainerService, locationService, buildingService) {
         var hc = this;
-        $scope.self = hc;
 
           // functions
             // calls showToast method of aCtrl
