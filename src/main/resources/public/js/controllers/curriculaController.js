@@ -221,11 +221,11 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
                            active  : true,
                            core    : true
                        };
-//                       curriculumService.create(curric, function () {
-//                           cc.showToast("Core created")
-//                       }, function () {
-//                           cc.showToast("You're not authorized")
-//                       })
+                       curriculumService.create(curric, function () {
+                           cc.showToast("Core created")
+                       }, function () {
+                           cc.showToast("You're not authorized")
+                       })
 
                        cc.curricula.push(curric);
                 $mdDialog.hide();
@@ -261,11 +261,11 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
                            active  : true,
                            core    : false
                        };
-//                       curriculumService.create(curric, function () {
-//                           cc.showToast("Focus created")
-//                       }, function () {
-//                           cc.showToast("You're not authorized")
-//                       })
+                       curriculumService.create(curric, function () {
+                           cc.showToast("Focus created")
+                       }, function () {
+                           cc.showToast("You're not authorized")
+                       })
 
                        cc.curricula.push(curric);
                 $mdDialog.hide();
@@ -294,11 +294,11 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
            }
 
            $scope.saveCurriculum = function(x) {
-//               curriculumService.update($scope.curricI, function () {
-//                   cc.showToast("Curriculum updated")
-//               }, function () {
-//                   cc.showToast("You're not authorized")
-//               })
+               curriculumService.update($scope.curricI, function () {
+                   cc.showToast("Curriculum updated")
+               }, function () {
+                   cc.showToast("You're not authorized")
+               })
                $mdDialog.hide();
            }
        }
