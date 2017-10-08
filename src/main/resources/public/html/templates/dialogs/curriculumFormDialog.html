@@ -1,25 +1,25 @@
-<md-dialog>
+<md-dialog layout-padding class="Dialog">
    <md-dialog-content>
        <form name = curriculumForm>
            <div class="md-toolbar-tools">
                <span> Curriculum </span>
            </div>
            <div>
-            <md-input-container>
-                        <label>Curriculum Name</label>
-                        <input name="curriculumName"  ng-model="curricI.name">
-                </md-input-container>
-               <hr>
-                <md-input-container>
-                        <h3> Skills </h3>
-                       <select ng-model="curricI.skills" multiple ng-options="x.name for x in skills">
-                       </select>
-                </md-input-container>
+            <md-input-container class="md-primary md-hue-2">
+                <span> Curriculum Name:</span>
+                <input aria-label="curriculumName"  ng-model="curricI.name">
+            </md-input-container>
+           <br>
+            <md-input-container class="md-primary md-hue-2">
+                    <h5> Skills: </h5>
+                   <select aria-label="curriculumSkills" ng-model="curricI.skills" multiple ng-options="x.name for x in skills | orderBy:'name'">
+                   </select>
+            </md-input-container>
            </div>
        </form>
    </md-dialog-content>
-   <md-dialog-actions>
-           <md-button ng-click="cancel()" class="md-primary">Cancel</md-button>
-           <md-button ng-click="saveCurriculum()" class="md-primary">Save</md-button>
-       </md-dialog-actions>
+   <md-dialog-actions class="md-dialog-actions">
+           <md-button class="md-primary" ng-click="cancel()" class="md-primary">Cancel</md-button>
+           <md-button class="md-primary md-raised" ng-click="saveCurriculum()" class="md-primary">Save</md-button>
+   </md-dialog-actions>
 </md-dialog>
