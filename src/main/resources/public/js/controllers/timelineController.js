@@ -38,11 +38,14 @@ var app = angular.module('batchApp');
      };
 
      //Generates the string used in the columns
-
      $scope.trainerColumnName = function(trainer)
      {
          return trainer?( trainer.firstName + " " + trainer.lastName):'No trainer';
      };
+
+     $scope.filterBuildings = (locations) =>
+         (building) =>
+             (locations.includes(building.location))
 
      let p = () =>
      {
@@ -108,6 +111,7 @@ var app = angular.module('batchApp');
      $scope.selectDatesAutomatically =true;
      $scope.completeBatchlist = [];
      $scope.completeTrainerList = [];
+     $scope.noBatchesFound = false;
 
      //Timeline variables
      $scope.timelineFormatting =
@@ -217,27 +221,15 @@ var app = angular.module('batchApp');
 
          $scope.completeBatchlist.forEach((batch) =>
          {
-             if(batch.room)
+             if(batch.batchLocation)
              {
-                 let building = $scope.Buildings.find((b) => b.id === batch.room.building);
-                 if(building)
+                 if(batch.batchLocation.locationId)
                  {
-                     batch.building = building;
-                     batch.location = $scope.Location.find((l) => l.id === batch.building.location)
-
+                     batch.location = $scope.Location.find()
                  }
-                 else
-                 {
-                     batch.building = null;
-                     batch.location = null;
-                 }
-             }
-             else
-             {
-                 batch.building = null;
-                 batch.location = null;
              }
          });
+
          // Events for the timeline
          $scope.mousedown = function(evt){
              evt.stopPropagation();
@@ -322,7 +314,7 @@ var app = angular.module('batchApp');
          };
 
          //determines the maximum date of the enddate datepicker
-         $scope.maximumDate(utilService.day.addDays(new Date,365 * 2));
+         $scope.maximumDate(utilService.day.addDays(new Date(),365 * 2));
          $scope.minimumDate($scope.firstBatchStartDate($scope.completeBatchlist));
 
          //Calls for the timeline to be re-projected.
@@ -338,10 +330,20 @@ var app = angular.module('batchApp');
                  .filter((batch) => $scope.batchIsInDateRange(batch,$scope.StartDate(),$scope.EndDate())) //remove batches that dont fall into the time range\
                  .filter((batch) => ($scope.selectCurricula.length ===0 ||(batch.curriculum &&  $scope.selectCurricula.includes(batch.curriculum.currId)))) //filter Curricula
                  .filter((batch) => ($scope.selectFoci.length ===0 ||(batch.focus  && $scope.selectFoci.includes(batch.focus.currId)))) //filter Foci
-                 .filter((batch) => ($scope.selectLocations.length ===0 ||(batch.location && $scope.selectLocations.includes(batch.location.id)))) //filter Locations
-                 .filter((batch) => ($scope.selectBuildings.length ===0 ||(batch.building && $scope.selectBuildings.includes(batch.building.id)))) //filter buildings
-                 .filter((batch) => (!$scope.hideConcludedBatches || batch.endDate > $scope.EndDate())) //filter running batches
+                 .filter((batch) => ($scope.selectLocations.length ===0 ||(batch.batchLocation && $scope.selectLocations.includes(batch.batchLocation.locationId)))) //filter Locations
+                 .filter((batch) => ($scope.selectBuildings.length ===0 ||(batch.batchLocation && $scope.selectBuildings.includes(batch.batchLocation.buildingId)))) //filter buildings
+                 .filter((batch) => (!$scope.hideConcludedBatches || batch.endDate > new Date())) //filter running batches
                  ;
+
+             if(filteredBatchList.length === 0)
+             {
+                 $scope.noBatchesFound = true;
+                 return;
+             }
+             else
+             {
+                 $scope.noBatchesFound = false;
+             }
 
              if($scope.selectDatesAutomatically) {
                  $scope.StartDate($scope.firstBatchStartDate(filteredBatchList));

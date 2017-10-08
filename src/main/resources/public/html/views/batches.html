@@ -318,9 +318,12 @@
                                     <md-datepicker ng-model="EndDate" ng-model-options="{ getterSetter: true }" md-min-date="StartDate()" md-max-date="maximumDate()" md-current-view="year" md-open-on-focus md-hide-icons="calendar" ng-change="projectTimeline(-100)"> </md-datepicker>
                                 </md-input-container>
                             </div>
+                            <div layout="columns">
                             <md-checkbox aria-label="Select Dates Automatically?" ng-model="selectDatesAutomatically" ng-change="projectTimeline(-100)">
                                 Select Dates Automatically?
                             </md-checkbox>
+                                <span ng-if="noBatchesFound === true"> No Batches Found! </span>
+                            </div>
                         </div>
                         <div flex> </div>
                         
@@ -354,8 +357,8 @@
                        	<div>
                        		<md-input-container flex="none" >
                        			<label> Building </label>
-	                            <md-select ng-model="selectBuildings"  ng-style="{'width': 160 + 'px'}" ng-disabled="selectLocations.length === 0" ng-change="projectTimeline(-100)">
-	                                <md-option ng-value="building.id" ng-repeat="building in Buildings"> {{ building.name }} </md-option>
+	                            <md-select ng-model="selectBuildings"  ng-style="{'width': 160 + 'px'}" ng-disabled="selectLocations.length === 0" ng-change="projectTimeline(-100)" multiple>
+	                                <md-option ng-value="building.id" ng-repeat="building in Buildings| filter:filterBuildings(selectLocations)"> {{ building.name }} </md-option>
 	                            </md-select>
                             </md-input-container>
                         </div>
@@ -429,7 +432,7 @@
 	                </div>
                 </div>
                 <br ng-show="isLoaded === true">
-                <div id="timeline" ng-mousedown="mousedown($event)" ng-show="isLoaded === true"> </div>
+                <div id="timeline" ng-mousedown="mousedown($event)" ng-show="isLoaded === true && noBatchesFound === false"> </div>
                 
                 <div ng-if="isLoaded === false" layout="column" layout-wrap layout-align="center center">
                     <div flex="100"> &nbsp; </div>
