@@ -16,6 +16,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     rc.today = new Date();              // The current date.
     rc.reqDate = new Date();            // The date Trainee's are needed by.
     rc.startDate = new Date();          // Batch(s) StartDate variable.
+
     rc.totalNetBatch = 0;               // Total number of .NET batches within 'cardArr'.
     rc.totalSDETBatch = 0;              // Total number of SDET batches within 'cardArr'.
     rc.totalJavaBatch = 0;              // Total number of Java batches within 'cardArr'.
@@ -23,8 +24,8 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     rc.totalBigDataBatch = 0;              // Total number of Java batches within 'cardArr'.
     rc.totalCumulativeBatches = 0;      // Total number of required batches within 'cardArr'.
 
-    // The 'newObj' object, and it's assignments, are used to generate
-    // new objects to be placed within the 'cardArr' array object.
+    // The 'newObj' object and its assignments are used to generate new objects
+    // These will be placed within the 'cardArr' array object.
     rc.newObj = {};
     rc.newObj.requiredGrads = rc.requiredGrads;
     rc.newObj.reqDate = rc.reqDate;
@@ -33,10 +34,9 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     rc.newObj.formattedStartDate = rc.formattedStartDate;
     rc.newObj.batchType = rc.batchType;
 
-    rc.cardArr = [rc.newObj];   // Array of Required Trainee batch generation objects.
-
+    //Array of the required Trainee Batch Generation objects
+    rc.cardArr = [rc.newObj];
     rc.currOrder = "name";
-
     rc.monthList = monthList;
 
     rc.toggleBatch = true;    // Used to hide and show batch gen card
@@ -46,31 +46,35 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
 
     /* DATA - Grabs all of the default settings from the DB */
-    settingService.getSettingByName("reportGrads", function(response) {  // Default Grads per batch
 
+    // Default grads per batch
+    settingService.getSettingByName("reportGrads", function(response) {
         rc.graduates = response
     }, function(){
         console.log("error-")
     });
-    settingService.getSettingByName("batchLength", function(response) {  // Default length of batches
 
+    // Default length of batches
+    settingService.getSettingByName("batchLength", function(response) {
         rc.batchLength = response
     });
-    settingService.getSettingByName("reportIncomingGrads", function(response) {  // Default trainees per batch
 
+    // Default trainees per batch
+    settingService.getSettingByName("reportIncomingGrads", function(response) {
         rc.incoming = response
     });
 
-    settingService.getSettingByName("minBatchSize", function(response){  // Default minimum size for a batch
-
+    // Default minimum size for a batch
+    settingService.getSettingByName("minBatchSize", function(response){
         rc.minBatchSize = response
     });
 
-
-    settingService.getSettingByName("maxBatchSize", function(response){  // Default max size for a batch
-
+    // Default maximum size for a batch
+    settingService.getSettingByName("maxBatchSize", function(response){
         rc.maxBatchSize = response
     });
+
+
 
     /* DATA - Gets all of the batches from the DB */
     batchService.getAll(function(response) {
@@ -199,6 +203,63 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
     };
 
 
+    //This is how you apply one function to calculate multiple values
+    //You do not simply copy and paste the function multiple times
+    //You do NOT
+    //DO
+    //THAT
+    //
+    //EVER
+    //
+    //DO NOT
+    //
+    //I SAID DO NOT
+    //
+    //Instead, you do this
+    //You just make an intermediate function
+    //And pass argument flags to make it different stuff
+    //
+    //DO THIS
+    //
+    //IT'S
+    //THAT
+    //EASY
+    //
+    //AAAAAA
+    /*rc.export = function(aBooleanValue) {
+            var formatted = [];
+            formatted.push([
+                "Curriculum", "January", "February", "March", "April", "May", "June", "July",
+                "August", "September", "October", "November", "December", "Total"
+            ]);
+            angular.forEach(rc.curricula, function(curr) {
+                var year = [curr.name];
+                var sum = 0;
+                rc.currSummary(curr, aBooleanValue).forEach(function(month) {
+                    year.push(month);
+                    sum += month;
+                });
+                year.push(sum);
+
+                formatted.push(year);
+            });
+
+            var totalMonth = ["Total"];
+            var sumTotal = 0;
+            for (var i = 0; i < 12; i++) {
+                var ttl = rc.sumMonth2(i);
+                totalMonth.push(ttl);
+                sumTotal += ttl;
+            }
+            totalMonth.push(sumTotal);
+
+            formatted.push(totalMonth);
+
+            return formatted;
+        };*/
+
+
+
     /* FUNCTION - Summarizes graduate output of given curriculum for chosen year */
     rc.currSummary = function(curriculum) {
 
@@ -261,6 +322,42 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         }
         return summary2;
     };
+
+
+    //This is Charles Helf
+    //Wondering why it is that this application even exists
+    /*rc.currSummary = function(curriculum, newbsOrGrads) {
+
+        var summary2 = [];
+        var total2;
+        var date;
+        for (var month = 0; month < 12; month++) {
+            total2 = 0;
+
+            for (var x = 0; x < rc.batches.length; x++) {
+                date = new Date(rc.batches[x]['endDate']);
+
+                var sonarSeparationOfComplexity = rc.batches[x]['curriculum'].name;
+                var testToPassSonarQubeAndThisIfStatement = (
+                    curriculum &&
+                    (date.getMonth() === month) &&
+                    (date.getFullYear() === rc.year) &&
+                    (rc.batches[x]['curriculum'].currId === curriculum.currId)
+                );
+
+                if (sonarSeparationOfComplexity && testToPassSonarQubeAndThisIfStatement) {
+                    if (newbsOrGrads == true) {
+                        total2 += rc.incoming;
+                    }
+                    else {
+                        total2 += rc.graduates;
+                    }
+                }
+            }
+            summary2.push(total2);
+        }
+        return summary2;
+    };*/
 
 
     /* FUNCTION - Sums months for given curriculum in chosen year */
@@ -495,7 +592,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
 
 
     /* FUNCTION - This method will assert that batches have valid credentials for submission. */
-    rc.submittionValidityAssertion = function( index ){
+    rc.submissionValidityAssertion = function( index ){
         var flagArr = [ 0, 0, 0 ];
         var count = 0;
 
@@ -543,7 +640,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
      *            which will be displayed to the user on the reports tab. */
     rc.createBatchClick = function( index ) {
         // Determines whether or not the user is allowed to create batches.
-        var canSubmit = rc.submittionValidityAssertion( index );
+        var canSubmit = rc.submissionValidityAssertion( index );
 
         if ( canSubmit === 0 ) {
             //Create a batch object in the Reports Controller, using the batchService.
@@ -587,7 +684,7 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         for ( var index in rc.cardArr ) {
             if( rc.cardArr.hasOwnProperty(index) ) {
                 // Determines whether or not the user is allowed to create batches.
-                canSubmit = rc.submittionValidityAssertion( index );
+                canSubmit = rc.submissionValidityAssertion( index );
                 if ( canSubmit === 0 ) {
                     //Create a batch object in the Reports Controller, using the batchService.
                     rc.newBatch = batchService.getEmptyBatch();
