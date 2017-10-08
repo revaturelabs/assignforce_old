@@ -57,7 +57,7 @@
 	                        <label> Skills </label>
 	                        <md-select ng-model="bCtrl.selectedSkills" ng-change="bCtrl.updateSkillRatios();" multiple>
 	                        	<div ng-if="bCtrl.batch.curriculum">
-	                            	<md-option ng-repeat="skill in bCtrl.skills" ng-value="skill.skillId">{{skill.name}}</md-option>
+	                            	<md-option ng-repeat="skill in bCtrl.skills" ng-value="{{skill.skillId}}">{{skill.name}}</md-option>
 	                        	</div>
 	                        	<div ng-if="!bCtrl.batch.curriculum">
 	                        		<md-select-header> Select a curriculum first.</md-select-header>
