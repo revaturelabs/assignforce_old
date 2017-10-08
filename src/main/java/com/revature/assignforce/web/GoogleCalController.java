@@ -8,7 +8,6 @@ import com.google.api.services.calendar.model.CalendarListEntry;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.revature.assignforce.domain.Unavailable;
 import com.revature.assignforce.domain.dao.UnavailableRepository;
-import com.revature.assignforce.service.BatchDaoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -17,21 +16,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import com.google.api.services.calendar.Calendar;
 import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.TokenResponse;
@@ -86,7 +81,6 @@ public class GoogleCalController {
     })
     @RequestMapping(value = "/api/v2/google/google", method = RequestMethod.GET)
     public RedirectView googleConnectionStatus(HttpServletRequest request) throws Exception {
-        System.out.println("inside googleConnectionStatus");
         return new RedirectView(authorize());
     }
 
@@ -98,7 +92,7 @@ public class GoogleCalController {
     })
     @RequestMapping(value = "/api/v2/google/google", method = RequestMethod.GET, params = "code")
     public String oauth2Callback(@RequestParam(value = "code") String code) {
-        System.out.println("inside oauth2Callback");
+//        System.out.println("inside oauth2Callback");
         com.google.api.services.calendar.model.Events eventList;
         String message = "";
         try {
@@ -117,17 +111,6 @@ public class GoogleCalController {
         return "redirect:/";
     }
 
-    @ApiOperation(value = "google status", response = String.class)
-    @ApiResponses({
-            @ApiResponse(code=200, message ="Successfully retrieved the google status"),
-            @ApiResponse(code=400, message ="Bad Request, something broke"),
-            @ApiResponse(code=500, message ="Cannot retrieve the google status")
-    })
-    @RequestMapping(value = "/api/v2/google/googleStatus")
-    public void googleStatus() {
-        System.out.println(client.toString());
-    }
-
     private String authorize() throws Exception {
         AuthorizationCodeRequestUrl authorizationUrl;
         if (flow == null) {
@@ -140,8 +123,22 @@ public class GoogleCalController {
                     Collections.singleton(CalendarScopes.CALENDAR)).build();
         }
         authorizationUrl = flow.newAuthorizationUrl().setRedirectUri(redirectURI);
-        System.out.println("cal authorizationUrl->" + authorizationUrl);
+//        System.out.println("cal authorizationUrl->" + authorizationUrl);
         return authorizationUrl.build();
+    }
+
+    @ApiOperation(value = "google status", response = String.class)
+    @ApiResponses({
+            @ApiResponse(code=200, message ="Successfully retrieved the google status"),
+            @ApiResponse(code=400, message ="Bad Request, something broke"),
+            @ApiResponse(code=500, message ="Cannot retrieve the google status")
+    })
+    @RequestMapping(value = "/api/v2/google/googleStatus", produces = MediaType.TEXT_PLAIN_VALUE)
+    public @ResponseBody String googleStatus() {
+//        System.out.println(client);
+        if(client != null)
+            return "good";
+        return null;
     }
 
     @ApiOperation(value = "add event", response = String.class )
@@ -152,8 +149,8 @@ public class GoogleCalController {
     })
     @RequestMapping(value = "/api/v2/google/addEvent")
     private String addEvent(@RequestBody String json, HttpServletResponse res) throws Exception {
-        System.out.println("INSIDE ADD EVENT BRUH!!!!!!!!!!!!!!!");
-        System.out.println("This is the json string send from angular: "  + json);
+//        System.out.println("INSIDE ADD EVENT BRUH!!!!!!!!!!!!!!!");
+//        System.out.println("This is the json string send from angular: "  + json);
         ObjectMapper mapper = new ObjectMapper();
         JsonNode node = mapper.readTree(json);
         String name = node.get("summary").textValue();

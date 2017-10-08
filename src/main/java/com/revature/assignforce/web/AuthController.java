@@ -49,11 +49,9 @@ public class AuthController {
     public ResponseEntity<Employee> getInfo(OAuth2Authentication auth)
     {
         Employee emp = force.getCurrentEmployee(auth);
-        System.out.println("This is the emp role name: " + emp.getRoleName());
         String tk = restTemplate.getAccessToken().toString();
         emp.setAccessToken(tk);
-//        req.getSession().setAttribute("auth", auth);
-        System.out.println(auth.toString());
+//        System.out.println(auth.toString());
 
         return ResponseEntity.ok(emp);
     }
@@ -63,7 +61,7 @@ public class AuthController {
     public void getUserRoleInfo(OAuth2Authentication auth)
     {
         //Employee emp = force.getCurrentEmployee(auth);
-        System.out.println("This is auth from userroleinfo: " + auth.toString());
+        //System.out.println("This is auth from userroleinfo: " + auth.toString());
         //return emp.getRoleName();
     }
 

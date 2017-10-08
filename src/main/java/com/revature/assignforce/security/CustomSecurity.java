@@ -38,7 +38,7 @@ public class CustomSecurity implements PermissionEvaluator {
     @Override
     public boolean hasPermission(Authentication auth, Object targetDomainObject, Object permission) {
         if (auth != null && permission instanceof String) {
-            System.out.println(auth.toString());
+//            System.out.println(auth.toString());
             Employee e = force.getCurrentEmployee((OAuth2Authentication) auth);
             for(String s : permissions.get(e.getRoleName()))
                 if(s.equals((String)permission))
