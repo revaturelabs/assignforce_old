@@ -29,9 +29,10 @@ module.exports = function(config) {
         './node_modules/angular-bootstrap/ui-bootstrap.js',
         './node_modules/angular-md-table/dist/angular-md-table.min.js',
         './node_modules/angular-material-data-table/dist/md-data-table.js',
-        './node_modules/ngcsv/ngcsv.js',
+        './node_modules/ng-csv/build/ng-csv.js',
         './src/main/resources/public/js/assignforce.js',
-        './src/main/resources/public/js/services/*Service.js',
+        './src/main/resources/public/js/services/*.js',
+        './src/main/resources/public/js/controllers/*.js',
         './src/test/resources/specs/*.spec.js'
     ],
 
@@ -50,7 +51,7 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['spec'],
+    reporters: ['progress'],
 
 
     // web server port
