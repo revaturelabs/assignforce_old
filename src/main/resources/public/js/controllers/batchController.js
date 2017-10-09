@@ -1,4 +1,4 @@
-var assignforce = angular.module("batchApp");
+//let assignforce = angular.module("batchApp");
 
 const oneDayInMs = 1000 * 60 * 60 * 24;
 
@@ -9,7 +9,7 @@ const inRange = (date,start,end) => {
     return (start <= date && date <= end);
 };
 
-//not sure if this needs to be tested
+
 function daySequence(sd,ed)
 {
     if (!sd || !ed || ed.getTime() - sd.getTime() <= 0)
@@ -29,24 +29,20 @@ function daySequence(sd,ed)
 assignforce.controller("batchCtrl", function($scope, batchService, unavailableService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, skillService, $filter, $window, $rootScope, $mdDialog) {
 
     var bc = this;
-    //$scope.self=bc;
     bc.trainerSkillRatios = {};
     bc.trainerAvalRatios = {};
     bc.roomAvalRatios = {};
     bc.settings = {};
 
-
     $scope.isManager = $rootScope.role === "VP of Technology";
 
     /*FUNCTIONS*/
 
-    //No need to test this function since this method comes of authCtrl
     // This showToast is a function that comes from the parent
 	bc.showToast = function(message) {
     	$scope.$parent.aCtrl.showToast(message);
 	};
-
-	//No need to test this since it call batchService methods
+	
 	// Changes form state and populates many variables
 	bc.changeState = function(newState, incomingBatch) {
 		bc.state = newState;
@@ -121,7 +117,6 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 		}
 	};
 
-    //No need to test this since it calls authCtrl showToast method
 	// Ensures the batch end date can't be set before the start date.
 	bc.validateBatchEndDate = function() {
 		if (bc.batch.startDate && bc.batch.endDate <= bc.batch.startDate) {
@@ -132,7 +127,6 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 		}
 	};
 
-    //can be tested
 	// Updates list of selected skills based on curriculum and focus.
 	bc.updateSelectedSkills = function() {
 
@@ -194,7 +188,6 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
         return Math.floor((matches / total) * 100);
     };
 
-    //can be tested
     // Select end date based on start date
     bc.selectEndDate = function() {
         var startDate = new Date(bc.batch.startDate);
@@ -232,7 +225,6 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
         return date.getDay() === 5;
     };
 
-    //No need to test this since it calls service
 	// Saves/updates batch
 	bc.saveBatch = function(isValid) {
 		if (isValid) {
@@ -316,7 +308,6 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
         }
     };
 
-    //No need to test this since it calls settingService
     // Defaults batch naming convention based on setting
     bc.defaultName = function() {
         if (bc.batch.curriculum && bc.batch.startDate) {
@@ -435,7 +426,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
         }
     };
 
-    //No need to test this since it calls batchService
+    
     bc.repull = function() {
     	
     	batchService.getAll(function(response) {
@@ -472,7 +463,6 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
         $window.scrollTo(0, 0);
 	};
 
-    //Dont ned to test thsi
     // Delete single batch
     bc.delete = function(batch) {
         batchService.delete(batch, function() {
@@ -490,7 +480,6 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
         bc.deleteMultipleHelper(delList);
     };
 
-   //calls batch services so no need to test
     // Recursively deletes the first entry in bc.batchesSelected until it is empty
     bc.deleteMultipleHelper = function(delList) {
         if (delList.length === 0) {
@@ -511,7 +500,6 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
         });
     };
 
-    //calls showToast
     bc.sync = function(batch){
         $mdDialog.show({
             templateUrl: "html/templates/dialogs/batchSyncDialog.html",
@@ -533,7 +521,6 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
         })
     }
 
-    //calls showToast so no need to test
     bc.pullSF = function(){
         $mdDialog.show({
         }).then(function(){
@@ -545,7 +532,6 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
         })
     }
 
-    //just return so ne need to test
     bc.syncColor = function(){
         return {"background-color":"red"};
     }
@@ -574,13 +560,11 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
         return Math.floor((daysAvalible/dayCount) * 100);
     };
 
-    //No need to test this since its just return
     //calculates the presentage of time that a trainer is available for use
     bc.calcTrainerAvalibilityRatio = function(trainer) {
         return bc.calculateAvailability(trainer.unavailabilities)
     };
 
-    //No need to test this since it just returns
     //calculates the presentage of time that a room is available for use
     bc.calcRoomAvalibilityRatio = function(room){
         return bc.calculateAvailability(room.unavailabilities);

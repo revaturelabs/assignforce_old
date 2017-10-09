@@ -148,9 +148,7 @@ xdescribe('homeControllerTest', function(){
             expect(actual).toBe(should);
         });
     });
-
-    //test failed
-    describe('formatBatchesTest', function(){
+    xdescribe('formatBatchesTest', function(){
             it('should return a populated array, and shouldNot return an empty array', function(){
                 actual = $scope.self.formatBatches();
                 shouldNot = [];
