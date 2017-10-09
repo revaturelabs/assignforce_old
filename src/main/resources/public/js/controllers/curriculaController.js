@@ -1,17 +1,17 @@
 var assignforce = angular.module( "batchApp" );
+
 assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog, curriculumService, skillService) {
     var cc = this;
-    $scope.self = cc;
-    //$scope.skillToggle = false;
+
+    $scope.isManager = $rootScope.role === "VP of Technology";
 
     //functions
 
-    //calls showToast method of aCtrl therefore no need to test
+    //calls showToast method of aCtrl
     cc.showToast = function ( message ) {
         $scope.$parent.aCtrl.showToast( message )
     };
 
-    //calls skillService therefor no need to test
     //create a skill and add it to the database
     cc.createSkill = function (skillForm) {
         if(skillForm.$valid) {
@@ -32,7 +32,6 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
         cc.skillName = undefined;
     };
 
-    //Skill toolbar are not implemented on the developer side therefore no need to test
     //hides and shows the skill card's content when called
     cc.toggleSkillToolbar = function () {
         if(cc.skillToggle){
@@ -46,48 +45,42 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
         $("#skill").slideToggle();
     };
 
-     //conducted TEST for this function but failed beacuse of a bug in line 55
     //hides and shows the core card's content when called
     cc.toggleCoreToolbar = function () {
         if(cc.coreToggle){
             cc.coreToggle = false;
-            $("#coreArrow").text("keyboard_arrow_down");  //Don't need this since the toggle button works fine without it
+            $("#coreArrow").text("keyboard_arrow_down");
         } else {
             cc.coreToggle = true;
-            $("#coreArrow").text("keyboard_arrow_up"); ////Don't need this since the toggle button works fine without it
+            $("#coreArrow").text("keyboard_arrow_up");
         }
 
         $('#core').slideToggle();
     };
 
-    //No need to test this because it calls curriculumService and showToast method
     //focus functions
-    //create a focus
-    //I want to fix this to be readable - Sam
-    cc.createFocus = function (focusForm) {
+    cc.createCurriculum = function (focusForm,isCore) {
+
         //show a hidden field with a list of skill to select from, a name field, and a save button
         if(focusForm.$valid){
-            var skillList = [];
-            for(var i = 0; i < cc.selectedSkills.length; i++){
-                for(var j = 0; j < cc.skills.length; j++){
-                    if(cc.skills[j].skillId == cc.selectedSkills[i]){
-                        skillList.push(cc.skills[j]);
-                        break;
-                    }
-                }
-            }
 
-            var curriculum = {
-                name    : cc.focusName,
+            let selectedSkills = cc.selectedSkills.map((x) => {
+                return parseInt(x);
+            });
+            let skillList = cc.skills
+                .filter( (skill) => selectedSkills.includes(skill.skillId) );
+
+            let curriculum = {
+                name    : isCore?cc.coreName:cc.focusName,
                 skills  : skillList,
                 active  : true,
-                core    : false
+                core    : isCore
             };
 
             curriculumService.create(curriculum, function () {
-                cc.showToast("Focus created")
+                cc.showToast("" + isCore? "Core":"Focus" +" created")
             }, function () {
-                cc.showToast("Failed to create focus")
+                cc.showToast("Failed to create " + isCore? "core":"focus")
             })
 
             //reload curriculum
@@ -99,9 +92,23 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
 
         cc.selectedSkills = [];
         cc.focusName = undefined;
+
+    };
+    //create a focus
+    //I want to fix this to be readable - Sam
+    cc.createFocus = function (focusForm) {
+
+        cc.createCurriculum(focusForm,false);
+        cc.focusName = undefined;
+
     };
 
-    //Successfully tested this function
+    //create a core
+    cc.createCore = function (coreForm) {
+        cc.createCurriculum(coreForm,true);
+        cc.coreName = undefined;
+    };
+
     //Used to show the create focus card
     cc.toggleFocusStatus = function () {
         if(cc.focusStatus){
@@ -111,21 +118,28 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
         }
     };
 
-     //there is bug in line 120 so can't test this until the bug is fixed
+    //Used to show the create core card
+    cc.toggleCoreStatus = function (){
+        if(cc.coreStatus) {
+            cc.coreStatus = false;
+        } else{
+            cc.coreStatus =true;
+        }
+    };
+
     //hides and shows the focus card's content when called
     cc.toggleFocusToolbar = function () {
         if(cc.focusToggle){
             cc.focusToggle = false;
-            $("#focusArrow").text("keyboard_arrow_down"); //Don't need this since the toggle button works fine without it
+            $("#focusArrow").text("keyboard_arrow_down");
         } else {
             cc.focusToggle = true;
-           $("#focusArrow").text("keyboard_arrow_up"); //Don't need this since the toggle button works fine without it
+            $("#focusArrow").text("keyboard_arrow_up");
         }
 
         $('#focus').slideToggle();
     };
 
-    //No test needed since it calls showToast method in authController
     //removes a focus
     cc.removeFocus = function (curr) {
         curr.active = false;
@@ -136,6 +150,16 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
         })
     };
 
+    //removes a core
+        cc.removeCore = function (curr) {
+            curr.active = false;
+            curriculumService.update(curr, function () {
+                cc.showToast("Removed core successfully")
+            }, function () {
+                cc.showToast("Unable to remove core")
+            })
+        };
+
     //started the code for editing a focus. to be finished at a later time
     cc.editFocus = function (focus) {
         cc.focusName = focus.name;
@@ -143,7 +167,6 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
         cc.focusStatus = true;
     };
 
-    //This function does not need to be tested since there is not logic
     //used to join the skills together
     cc.joinObjArrayByName = function(elem) {
         return elem.name;
@@ -151,7 +174,6 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
 
     //retrieving data
 
-    //Not tested since it calls Curiculla Service
     //Grabs all Curricula
     curriculumService.getAll(function (response) {
         cc.curricula = response;
@@ -159,7 +181,6 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
         cc.showToast("Could not fetch curricula.");
     });
 
-    //Not tested since it calls skillService
     //Grabs all Skills
     skillService.getAll(function (response) {
         cc.skills = response;
@@ -280,12 +301,12 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
     };
 
     //variables
-    // cc.curricula;
-    // cc.skills;
     cc.selectedSkills = [];
     cc.focusName = undefined;
+    cc.coreName = undefined; //added for add Core usecase
     cc.skillName = undefined;
     cc.focusStatus = false;
+    cc.coreStatus = false; //added for add Core usecase
     cc.skillToggle = true;
     cc.focusToggle = true;
     cc.coreToggle = true;
