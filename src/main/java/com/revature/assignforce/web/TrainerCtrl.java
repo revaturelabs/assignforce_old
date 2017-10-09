@@ -81,7 +81,7 @@ public class TrainerCtrl {
 
 	  // UPDATE
 		// updating an existing trainer object with information passed from trainer data transfer object
-	@PreAuthorize("hasPermission('', 'trainer_profile')")
+	@PreAuthorize("hasPermission(#in, 'trainer_profile')")
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object updateTrainer( @RequestBody TrainerDTO in ) {
 		int ID = in.getTrainerId();
