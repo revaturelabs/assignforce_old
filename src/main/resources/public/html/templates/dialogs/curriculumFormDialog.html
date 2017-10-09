@@ -1,18 +1,19 @@
-<md-dialog layout-padding class="Dialog">
-   <md-dialog-content>
+<md-dialog layout-padding class="Dialog" style="padding-left: 10px; padding-right: 10px">
+   <md-dialog-content style="padding-left: 30px; padding-right: 30px; width: 300px;">
        <form class="form-horizontal" name = curriculumForm>
            <div class="form-group">
-               <span> Curriculum </span>
+               <h3> Curriculum </h3>
+               <md-divider></md-divider>
            </div>
 
            <div>
-            <md-input-container class="md-primary md-hue-2">
-                <span> Curriculum Name:</span>
+            <md-input-container class="md-primary md-hue-2" style="width: 200px">
+                <h4> Curriculum Name:</h4>
                 <input aria-label="curriculumName"  ng-model="curricI.name">
             </md-input-container>
            <br>
-            <md-input-container class="md-primary md-hue-2">
-                    <h5> Skills: </h5>
+            <md-input-container class="md-primary md-hue-2" style="width: 200px">
+                    <h4> Skills: </h4>
                    <md-select aria-label="curriculumSkills" ng-model="curricI.skills" multiple>
                        <md-option ng-value="x" ng-repeat="x in skills | orderBy:'name'">
                            {{x.name}}
