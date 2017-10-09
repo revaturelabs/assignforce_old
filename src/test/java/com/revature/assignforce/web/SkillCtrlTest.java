@@ -2,6 +2,7 @@ package com.revature.assignforce.web;
 
 import com.revature.assignforce.AssignForceV2Application;
 import com.revature.assignforce.domain.Skill;
+import com.revature.assignforce.security.CustomSecurity;
 import com.revature.assignforce.service.ActivatableObjectDaoService;
 import com.revature.assignforce.utils.JsonMaker;
 import org.junit.After;
@@ -47,6 +48,9 @@ public class SkillCtrlTest {
     @MockBean
     private ActivatableObjectDaoService<Skill, Integer> skillService;
 
+    @MockBean
+    CustomSecurity customSecurity;
+
     private Skill testSkill = null;
 
     private JsonMaker jsonMaker = new JsonMaker();
@@ -55,6 +59,7 @@ public class SkillCtrlTest {
     public void setUp(){
         testSkill = new Skill(0, "Sword Fighting");
         testSkill.setActive(true);
+        given(customSecurity.hasPermission(any(),any(),any())).willReturn(true);
     }
 
     @After

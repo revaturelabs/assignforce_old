@@ -6,10 +6,18 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 import com.revature.assignforce.domain.*;
 
+import com.revature.assignforce.service.ActivatableObjectDaoService;
+import com.revature.assignforce.service.BatchDaoService;
+import com.revature.assignforce.service.BatchLocationDaoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.ComponentScan;
@@ -17,6 +25,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -34,6 +45,7 @@ import com.revature.assignforce.service.DaoService;
 @RestController
 @RequestMapping("/api/v2/batch")
 @ComponentScan(basePackages = "com.revature.assignforce.service")
+@Api(value = "Batch Controller", description = "CRUD with Batches")
 public class BatchCtrl {
 
 	@PersistenceContext
@@ -66,6 +78,13 @@ public class BatchCtrl {
 	// CREATE
 	// creating new batch object from information passed from batch data
 	// transfer object
+	@PreAuthorize("hasPermission('', 'manager')")
+	@ApiOperation(value = "Create a branch", response = BatchDaoService.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully Created a Batch"),
+			@ApiResponse(code=400, message ="Bad Request, BatchDTO"),
+			@ApiResponse(code=500, message ="Cannot retrieve batch")
+	})
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Transactional
 	public Object createBatch(@RequestBody BatchDTO in) {
@@ -119,6 +138,13 @@ public class BatchCtrl {
 		}
 	}
 
+	@PreAuthorize("hasPermission('', 'manager')")
+	@ApiOperation(value = "Retrieve a batch", response = BatchDaoService.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully retrieved a Batch"),
+			@ApiResponse(code=400, message ="Bad Request, BatchDTO"),
+			@ApiResponse(code=500, message ="Cannot create batch")
+	})
 	// RETRIEVE
 	// retrieve batch with given ID
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -135,6 +161,13 @@ public class BatchCtrl {
 
 	// DELETE
 	// delete batch with given ID
+	@PreAuthorize("hasPermission('', 'manager')")
+	@ApiOperation(value = "Delete a batch", response = BatchDaoService.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully Deleted a Batch"),
+			@ApiResponse(code=400, message ="Bad Request, ID"),
+			@ApiResponse(code=500, message ="Cannot delete batch")
+	})
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Transactional
 	public Object deleteBatch(@PathVariable("id") int ID) {
@@ -161,6 +194,13 @@ public class BatchCtrl {
 
 	// GET ALL
 	// retrieve all batches
+	@PreAuthorize("hasPermission('', 'basic')")
+	@ApiOperation(value = "Retrieve all batches", response = BatchDaoService.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully retrieved all batches"),
+			@ApiResponse(code=400, message ="Bad Request"),
+			@ApiResponse(code=500, message ="Cannot retrieve all batches")
+	})
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveAllBatches() {
 
@@ -176,6 +216,13 @@ public class BatchCtrl {
 		}
 	}
 
+	@PreAuthorize("hasPermission('', 'manager')")
+	@ApiOperation(value = "Update a batch", response = BatchDaoService.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully updated a batch"),
+			@ApiResponse(code=400, message ="Bad Request, BATCHDTO"),
+			@ApiResponse(code=500, message ="Cannot update batch")
+	})
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Transactional
 	public Object updateBatch(@RequestBody BatchDTO in) {
@@ -252,6 +299,13 @@ public class BatchCtrl {
 		return new ResponseEntity<Batch>(b, HttpStatus.OK);
 	}
 
+	@PreAuthorize("hasPermission('', 'basic')")
+	@ApiOperation(value = "Create an Unavailabilities", response = BatchDaoService.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully created an unavailabilities"),
+			@ApiResponse(code=400, message ="Bad Request"),
+			@ApiResponse(code=500, message ="Cannot create an unavailability")
+	})
 	@Transactional
 	void createUnavailabilities(Trainer trainer, Room room, Timestamp startDate, Timestamp endDate) {
 		Unavailable unavailable = new Unavailable(startDate, endDate);
@@ -272,6 +326,13 @@ public class BatchCtrl {
 		}
 	}
 
+	@PreAuthorize("hasPermission('', 'manager')")
+	@ApiOperation(value = "Remove an Unavailabilities", response = BatchDaoService.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully removed an unavailabilities"),
+			@ApiResponse(code=400, message ="Bad Request"),
+			@ApiResponse(code=500, message ="Cannot remove an unavailability")
+	})
 	@Transactional
 	void removeUnavailabilities(Trainer trainer, Room room, Timestamp startDate, Timestamp endDate) {
 		Unavailable unavailableToRemove;
