@@ -17,9 +17,7 @@ assignforce.controller("ptoCtrl", function ($scope, $mdDialog, ptoService) {
     };
 
     ptoc.send = function (isValid) {
-        console.log("outer");
         if(isValid){
-            console.log("In");
             ptoService.addPto(ptoc.trainer, ptoc.startDate, ptoc.endDate);
         }
     };

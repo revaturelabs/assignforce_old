@@ -9,14 +9,10 @@ assignforce.controller( "profileCtrl", function( $scope, $resource, $http, $mdDi
     var pc = this
     pc.tId;
     if(!$routeParams.id){
-      console.log("Hellp")
-      console.log($routeParams.id)
       pc.tId = -1;
 
     }
     else {
-      console.log("Not working. ")
-      console.log($routeParams.id)
       pc.tId = $routeParams.id;
     }
      //grabs the trainer id from the url to load the page with the trainer specified
