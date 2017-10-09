@@ -17,13 +17,16 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@RestController
+@Controller
 @Api(value = "Authorization Controller", description = "Authorization Controller")
 public class AuthController {
 
@@ -46,7 +49,7 @@ public class AuthController {
             @ApiResponse(code=500, message ="Cannot retrieve Employee information")
     })
     @RequestMapping(value= "/auth/userinfo", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Employee> getInfo(OAuth2Authentication auth)
+    public @ResponseBody ResponseEntity<Employee> getInfo(OAuth2Authentication auth)
     {
         Employee emp = force.getCurrentEmployee(auth);
         String tk = restTemplate.getAccessToken().toString();
@@ -58,11 +61,17 @@ public class AuthController {
 
     @PreAuthorize("hasPermission('', 'basic')")
     @RequestMapping(value= "api/v2/userRoleinfo")
-    public void getUserRoleInfo(OAuth2Authentication auth)
+    public @ResponseBody void getUserRoleInfo(OAuth2Authentication auth)
     {
         //Employee emp = force.getCurrentEmployee(auth);
         //System.out.println("This is auth from userroleinfo: " + auth.toString());
         //return emp.getRoleName();
+    }
+
+    @RequestMapping(value = "/api/v2/logout", method = RequestMethod.GET)
+    public String logout() {
+        System.out.println("Inside Logout");
+        return "redirect:/logout";
     }
 
 

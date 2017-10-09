@@ -23,7 +23,6 @@ import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResour
 @EnableAutoConfiguration
 @EnableJpaRepositories(basePackages={"com.revature.assignforce.domain.dao"})
 @EntityScan("com.revature.assignforce.domain")
-@EnableOAuth2Sso
 public class AssignForceV2Application {
 
     @Autowired
