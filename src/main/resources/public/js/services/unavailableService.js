@@ -11,7 +11,7 @@
 
         us.create = function(unavailable, success, error){
             var newUnavailable = new Unavailable(unavailable);
-            newUnavailable.$save(success, error);
+            return newUnavailable.$save(success, error);
         };
 
         us.getAll = function(success, error) {
@@ -23,7 +23,7 @@
         };
 
         us.update = function(unavailable, success, error){
-            Unavailable.update(unavailable, success, error);
+            return Unavailable.update(unavailable, success, error);
         };
 
         us.delete = function(unavailable, success, error){
