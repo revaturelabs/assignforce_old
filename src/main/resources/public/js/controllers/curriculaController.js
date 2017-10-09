@@ -197,6 +197,7 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
     $scope.showAddCore = function(event) {
        $mdDialog.show({
             targetEvent: event,
+            clickOutsideToClose: true,
             templateUrl : "html/templates/dialogs/curriculumFormDialog.html",
             locals: {
                        skills: $rootScope.skills,
@@ -237,6 +238,7 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
     $scope.showAddFocus = function(event) {
        $mdDialog.show({
             targetEvent: event,
+            clickOutsideToClose: true,
             templateUrl : "html/templates/dialogs/curriculumFormDialog.html",
             locals: {
                        skills: $rootScope.skills,
@@ -277,24 +279,32 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
     $scope.showEditCurriculum = function(event,curr) {
        $mdDialog.show({
             targetEvent: event,
+            clickOutsideToClose: true,
             templateUrl : "html/templates/dialogs/curriculumFormDialog.html",
             locals: {
                        skills: $rootScope.skills,
-                       curricI: curr
+                       curricI: {
+                            name: curr.name,
+                            skills: curr.skills
+                       },
+                       curr: curr
                      },
             controller: EditCurriculumDialogController
        });
-       function EditCurriculumDialogController($scope, $mdDialog, skills, curricI) {
+       function EditCurriculumDialogController($scope, $mdDialog, skills, curricI, curr) {
 
            $scope.skills = skills;
            $scope.curricI = curricI;
+           $scope.curr = curr;
 
            $scope.cancel = function() {
             $mdDialog.cancel();
            }
 
            $scope.saveCurriculum = function(x) {
-               curriculumService.update($scope.curricI, function () {
+               $scope.curr.name = $scope.curricI.name
+               $scope.curr.skills = $scope.curricI.skills
+               curriculumService.update($scope.curr, function () {
                    cc.showToast("Curriculum updated")
                }, function () {
                    cc.showToast("You're not authorized")
