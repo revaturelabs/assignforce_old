@@ -132,7 +132,7 @@ var app = angular.module('batchApp');
          let moveAxis = () =>
          {
              let x = document.getElementById("x axis");
-             if (x !== undefined) {
+             if (!x) {
                  if (x.getBoundingClientRect().top) {
                      let newAxisDisplacement = axisDisplacement - x.getBoundingClientRect().top;
                      if (newAxisDisplacement !== axisDisplacement) {
