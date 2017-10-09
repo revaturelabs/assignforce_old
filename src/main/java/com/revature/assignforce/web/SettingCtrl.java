@@ -33,7 +33,7 @@ public class SettingCtrl {
     }
 
     //Retrieve
-    @PreAuthorize("hasPermission('', 'manager')")
+    @PreAuthorize("hasPermission('', 'basic')")
     @RequestMapping(value = "/{settingId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object retrieveSetting (@PathVariable("settingId") int settingId){
 
@@ -45,7 +45,7 @@ public class SettingCtrl {
         }
     }
 
-    @PreAuthorize("hasPermission('', 'manager')")
+    @PreAuthorize("hasPermission('', 'basic')")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object getGlobalSettings(){
 
