@@ -32,7 +32,7 @@ describe('curriculaCtrl', function () {
 //    });
 
     //Does not work because there is a bug in curriculaController.js
-    xdescribe('testing toggleCoreToolbar', function (){
+    describe('testing toggleCoreToolbar', function (){
         it ("sets the coreToggle variable to set to false if its true", function(){
             $scope.self.coreToggle = true;
             $scope.self.toggleCoreToolbar();
@@ -41,7 +41,7 @@ describe('curriculaCtrl', function () {
     });
 
     //Does not work because there is a bug in curriculaController.js
-    xdescribe('testing toggleFocusToolbar', function (){
+    describe('testing toggleFocusToolbar', function (){
             it ("sets the focusToggle variable to set to false if its true", function(){
                 $scope.self.focusToggle = true;
                 $scope.self.toggleFocusToolbar();
