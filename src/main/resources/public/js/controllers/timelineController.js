@@ -166,7 +166,6 @@ var app = angular.module('batchApp');
          $scope.$parent.aCtrl.showToast( message );
      };
 
-
      const pull = () => {
          return Promise.all([
 
@@ -217,7 +216,6 @@ var app = angular.module('batchApp');
      //actually initialize the controller
      const load = ($scope) => () =>
      {
-
          $scope.completeBatchlist.forEach((batch) =>
          {
              if(batch.batchLocation)
@@ -233,75 +231,6 @@ var app = angular.module('batchApp');
                  batch.room = batch.batchLocation;
              }
          });
-
-         // Events for the timeline
-         $scope.mousedown = function(evt){
-             evt.stopPropagation();
-
-             if(evt.offsetY > tlc.timelineFormatting.margin_top && evt.offsetY < tlc.timelineFormatting.height + tlc.timelineFormatting.margin_top){
-
-                 // Initial y-coordinate of the mouse
-                 var init = evt.offsetY - tlc.timelineFormatting.margin_top;
-                 var mousedownY = init;
-                 var pageY = evt.pageY;
-
-                 // Get the date with respect to the y-coordinate
-                 var yScale = d3.time.scale()
-                     .domain([0,tlc.timelineFormatting.height])
-                     .range([tlc.minDate, tlc.maxDate]);
-
-                 var yDate = new Date(yScale(init)).getTime();
-                 var diff = tlc.maxDate.getTime() - tlc.minDate.getTime();
-                 var topFraction = (yDate - tlc.minDate.getTime()) / diff;
-                 var bottomFraction = 1 - topFraction;
-
-                 // Draw the zoompoint
-                 $scope.projectTimeline(mousedownY);
-
-                 // Fire when there is a mousemove event on the #timeline element
-                 $scope.mousemove = function(evt){
-
-                     // Prevent text highlighting
-                     evt.preventDefault();
-                     evt.stopPropagation();
-
-                     // Number of milliseconds between min and max date
-                     var millisecondRange = tlc.maxDate.getTime() - tlc.minDate.getTime();
-
-                     // Recalculate the scaling factor based on the number of milliseconds currently on the timeline
-                     tlc.scalingFactor = millisecondRange / 10;
-                     var topMilliseconds = Math.trunc(tlc.scalingFactor * topFraction);
-                     var bottomMilliseconds = Math.trunc(tlc.scalingFactor * bottomFraction);
-                     var minDateMilliseconds = new Date(tlc.minDate).getTime();
-                     var maxDateMilliseconds = new Date(tlc.maxDate).getTime();
-
-                     // If the mouse moves up
-                     if(pageY > evt.pageY && millisecondRange > MIN_RANGE){
-                         // Set the newly calculated min and max dates
-                         tlc.minDate = new Date(minDateMilliseconds + topMilliseconds);
-                         tlc.maxDate = new Date(maxDateMilliseconds - bottomMilliseconds);
-                     }
-                     else if(pageY < evt.pageY && millisecondRange < MAX_RANGE) {
-                         tlc.minDate = new Date(minDateMilliseconds - topMilliseconds);
-                         tlc.maxDate = new Date(maxDateMilliseconds + bottomMilliseconds);
-                     }
-
-                     $scope.projectTimeline(mousedownY);
-
-                     // Update the last coordinate of the mouse
-                     pageY = evt.pageY;
-                 };
-             }
-         };
-
-         $scope.mouseup = function(evt){
-             // Erase the zoompoint(or move out of view)
-             $scope.projectTimeline(-100);
-             // Remove mousemove listener from the container
-             $(".toastContainer").off("mousemove");
-             evt.stopPropagation();
-         };
-
          $scope.firstBatchStartDate = (list) =>
          {
              return list
@@ -316,18 +245,15 @@ var app = angular.module('batchApp');
                  .map((a) => a.endDate)
                  .reduce((a,b) => a<b?b:a);
          };
-
          //determines the maximum date of the enddate datepicker
          $scope.maximumDate(utilService.day.addDays(new Date(),365 * 2));
          $scope.minimumDate($scope.firstBatchStartDate($scope.completeBatchlist));
-
          //Calls for the timeline to be re-projected.
          $scope.projectTimeline = function(yOffset)
          {
              //$scope from our closure isn't up to date
              //but because this function is a member of $scope, 'this' refers to the up to date $scope
              $scope = this;
-
              let filteredBatchList = $scope.completeBatchlist
                  .filter($scope.batchHasDate) //makes no sense to have dateless batches on the timeline
                  .filter((batch) => Boolean(batch.trainer)) 	//never show trainerless batches
@@ -354,9 +280,6 @@ var app = angular.module('batchApp');
                  $scope.StartDate($scope.firstBatchStartDate(filteredBatchList));
                  $scope.EndDate($scope.lastBatchEndDate(filteredBatchList));
              }
-
-
-
              let trainerHasBatch = (trainer) =>
              {
                  return filteredBatchList.map((batch) => batch.trainer.trainerId).includes(trainer.trainerId)
@@ -387,21 +310,16 @@ var app = angular.module('batchApp');
             $scope.renderTimeline($scope.timelineFormatting, $scope.StartDate(), $scope.EndDate(), yOffset, paginatedBatchList, $scope.$parent, calendarService.countWeeks, paginatedTrainerList);
          };
 
-
-
          // Draw timeline
          $scope.renderTimeline = function(timelineFormatting, minDate, maxDate, yCoord, timelineData, parentScope, numWeeks, trainerNames){
              //Define Scales
              let colorScale = d3.scale.category20();
-
              let yScale = d3.time.scale()
                  .domain([minDate, maxDate])
                  .range([0,timelineFormatting.height]);
-
              let xScale = d3.scale.ordinal()
                  .domain(trainerNames.map($scope.trainerColumnName))
                  .rangePoints([timelineFormatting.xPadding, timelineFormatting.width - timelineFormatting.xPadding]);
-
              //Define axis
              let yAxis = d3.svg.axis()
                  .scale(yScale)
@@ -439,9 +357,7 @@ var app = angular.module('batchApp');
                      }
                  });
              };
-             //
              //Sort data for Timeline
-
              timelineData.sort(function(a,b){
                  if(new Date(a.startDate) < new Date(b.startDate)){
                      return -1;
@@ -470,7 +386,6 @@ var app = angular.module('batchApp');
 
              });
              betweenBatches = betweenBatches.filter((a1) => a1 !== []).reduce((a,b) => a.concat(b), []);
-
 
              var lanePadding = (xScale.range()[1]-xScale.range()[0])/2;
 
@@ -510,10 +425,7 @@ var app = angular.module('batchApp');
                  .append('g')
                  .attr('transform','translate('+timelineFormatting.margin_left+','+timelineFormatting.margin_top+')');
 
-
-
              svg.call(tip);
-
 
              svg.append('g')
                  .attr('class','y axis')
@@ -593,8 +505,6 @@ var app = angular.module('batchApp');
                  .attr("operator", "in")
                  .attr("result", "colorBlur");
 
-
-
              var feMerge = filter.append("feMerge");
 
              feMerge.append("feMergeNode")
@@ -605,7 +515,6 @@ var app = angular.module('batchApp');
              //Normal stuff
              svg.append('g')
                  .attr('class','rectangles');
-
 
              //Add between batch length to timeline
              svg.append('g')
@@ -637,10 +546,6 @@ var app = angular.module('batchApp');
              var brect = xLine.append('rect');
 
              xLine.call(xAxis);
-
-
-
-
 
              d3.select('.rectangles')
                  .selectAll('g')
@@ -790,16 +695,12 @@ var app = angular.module('batchApp');
                      .attr('height',xLine.node().getBoundingClientRect().height)
                      .style('fill','white');
              }
-         }
-
-
+         };
 
          $scope.isLoaded = true;
          $scope.projectTimeline(-100);
-         $scope.projectTimeline(-100);
 
      };
-
      //Watches for "repullTimeline" to be broadcast, such that the timeline is repulled.
      let pullThenLoad = () =>
      {

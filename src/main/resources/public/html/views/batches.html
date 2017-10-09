@@ -405,7 +405,7 @@
                                     </div>
 			                        <md-input-container flex="none">
 			                        	<label> Go To Page </label>
-			                            <input type = "number" min = "1" max = "pagnination.maxPage()" ng-model="pagination.currentPage"  ng-model-options="{ getterSetter: true }" ng-change="projectTimeline(-100)" ng-style="{'width': 160 + 'px'}"/>
+			                            <input type = "number" min = "1" max = "pagination.maxPage()" ng-model="pagination.currentPage"  ng-model-options="{ getterSetter: true }" ng-change="projectTimeline(-100)" ng-style="{'width': 160 + 'px'}"/>
 			                        </md-input-container>
 	                        	</div>
 	                        	<div ng-if = "!pagination.shouldPaginate()">
