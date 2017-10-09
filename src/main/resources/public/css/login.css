@@ -78,3 +78,9 @@ Secondary Colors
 /*
     Billy Styling End
 */
+
+
+.no-animate {
+	-webkit-transition: none !important;
+	transition: none !important;
+}

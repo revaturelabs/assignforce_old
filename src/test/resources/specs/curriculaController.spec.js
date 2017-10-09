@@ -1,3 +1,4 @@
+
 //testing this curriculaCtrl
 describe('curriculaCtrl', function () {
     var $controller;
