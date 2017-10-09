@@ -562,6 +562,9 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 
     //calculates the presentage of time that a trainer is available for use
     bc.calcTrainerAvalibilityRatio = function(trainer) {
+        if(!trainer.active){
+            return 0;
+        }
         return bc.calculateAvailability(trainer.unavailabilities)
     };
 
