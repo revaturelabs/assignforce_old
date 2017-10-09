@@ -1,32 +1,6 @@
 //let assignforce = angular.module("batchApp");
 
-const oneDayInMs = 1000 * 60 * 60 * 24;
-
-const trimDate = (day) => { return new Date(day.getFullYear(), day.getMonth(), day.getDate()) };
-const addDays = (day, count) => { return new Date(day.getTime() + (oneDayInMs * count)  )};
-
-const inRange = (date,start,end) => {
-    return (start <= date && date <= end);
-};
-
-
-function daySequence(sd,ed)
-{
-    if (!sd || !ed || ed.getTime() - sd.getTime() <= 0)
-        return [];
-    const start = trimDate(sd);
-    const end = trimDate(ed);
-    let day = start;
-    let days = [];
-    while(day <= end)
-    {
-        days.push(day);
-        day = addDays(day,1);
-    }
-    return days;
-}
-
-assignforce.controller("batchCtrl", function($scope, batchService, unavailableService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, skillService, $filter, $window, $rootScope, $mdDialog) {
+assignforce.controller("batchCtrl", function($scope, batchService, unavailableService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, skillService, $filter, $window, $rootScope, $mdDialog, utilService) {
 
     var bc = this;
     bc.trainerSkillRatios = {};
@@ -538,7 +512,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
 
     //calculates the percentage of availabilities given an array of unavailabilities
     bc.calculateAvailability = (u) => {
-        const batchdays = daySequence(new Date(bc.batch.startDate), new Date(bc.batch.endDate));
+        const batchdays = utilService.day.daySequence(new Date(bc.batch.startDate), new Date(bc.batch.endDate));
         const unavailable = u
             .map((range)=> {
                 return {
@@ -551,7 +525,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
         const daysAvalible = batchdays
             .map((day) => {
                 let status = unavailable
-                    .map((range) => inRange(day,range.startDate,range.endDate) )
+                    .map((range) => utilService.day.inRange(day,range.startDate,range.endDate) )
                     .reduce((a,b) => a||b, false);
                 return status? 0:1;
             })
