@@ -9,23 +9,26 @@ app.service('batchService', function($resource) {
     };
     
     bs.create = function(batch, success, error){
-        batch.$save(success, error);
+        return batch.$save(success, error);
     };
 
     bs.getAll = function(success, error) {
-        Batch.query(success, error);
+        return Batch.query(success, error);
     };
 
     bs.getById = function(id, success, error){
-        Batch.get({id: id}, success, error);
+        return Batch.get({id: id}, success, error);
     };
 
     bs.update = function(batch, success, error){
-        batch.$update(success, error);
+        return batch.$update(success, error);
     };
 
     bs.delete = function(batch, success, error){
         batch.$remove(success, error);
     }
+    bs.getBatch = function () {
+        return Batch;
+    };
 
-});
+})
