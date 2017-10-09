@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -91,7 +93,7 @@ public class GoogleCalController {
             @ApiResponse(code=500, message ="Cannot receive the token due to a server error ")
     })
     @RequestMapping(value = "/api/v2/google/google", method = RequestMethod.GET, params = "code")
-    public String oauth2Callback(@RequestParam(value = "code") String code) {
+    public synchronized String oauth2Callback(@RequestParam(value = "code") String code) {
 //        System.out.println("inside oauth2Callback");
         com.google.api.services.calendar.model.Events eventList;
         String message = "";
@@ -111,7 +113,7 @@ public class GoogleCalController {
         return "redirect:/";
     }
 
-    private String authorize() throws Exception {
+    private synchronized String authorize() throws GeneralSecurityException, IOException {
         AuthorizationCodeRequestUrl authorizationUrl;
         if (flow == null) {
             Details web = new Details();
@@ -148,7 +150,7 @@ public class GoogleCalController {
             @ApiResponse(code=500, message ="Cannot add an event due to a server error")
     })
     @RequestMapping(value = "/api/v2/google/addEvent")
-    private String addEvent(@RequestBody String json, HttpServletResponse res) throws Exception {
+    private String addEvent(@RequestBody String json, HttpServletResponse res) throws IOException, ParseException {
 //        System.out.println("INSIDE ADD EVENT BRUH!!!!!!!!!!!!!!!");
 //        System.out.println("This is the json string send from angular: "  + json);
         ObjectMapper mapper = new ObjectMapper();
@@ -166,18 +168,18 @@ public class GoogleCalController {
         return null;
 
     }
-    private Event newEvent(String name,String startDate, String endDate) {
+    private Event newEvent(String name,String startDate, String endDate) throws ParseException {
         Event event = new Event();
         String pattern = "yyyy-MM-dd";
         Date startdate = null;
         Date enddate = null;
         SimpleDateFormat format = new SimpleDateFormat(pattern);
-        try {
+//        try {
             startdate = format.parse(startDate);
             enddate = format.parse(endDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
         event.setSummary(name);
         DateTime start = new DateTime(startdate, TimeZone.getTimeZone("EST"));
         event.setStart(new EventDateTime().setDateTime(start));
@@ -191,13 +193,5 @@ public class GoogleCalController {
         u.setEndDate(t);
         UDAO.save(u);
         return event;
-    }
-
-    @RequestMapping(value = "/api/v2/test")
-    private String test(@RequestBody String json) throws Exception {
-        System.out.println("Post PASSED BRAH!!!!!!!!!!!!!!!");
-        System.out.println("This is the json string send from angular: "  + json);
-        return null;
-
     }
 }
