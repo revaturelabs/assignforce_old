@@ -6,6 +6,7 @@ import com.revature.assignforce.domain.Room;
 import com.revature.assignforce.domain.Trainer;
 import com.revature.assignforce.domain.Unavailable;
 import com.revature.assignforce.domain.dto.BuildingDTO;
+import com.revature.assignforce.security.CustomSecurity;
 import com.revature.assignforce.service.ActivatableObjectDaoService;
 import com.revature.assignforce.utils.JsonMaker;
 import org.junit.After;
@@ -59,6 +60,9 @@ public class BuildingCtrlTest {
     @MockBean
     ActivatableObjectDaoService<Building, Integer> buildingService;
 
+    @MockBean
+    CustomSecurity customSecurity;
+
     @Before
     public void setUp() throws Exception {
 
@@ -84,6 +88,8 @@ public class BuildingCtrlTest {
         buildingTest = new Building(buildingDTO.getID(), buildingDTO.getName(), buildingDTO.getRooms(),
                 buildingDTO.getActive(), buildingDTO.getLocation());
 
+
+        given(customSecurity.hasPermission(any(),any(),any())).willReturn(true);
     }
 
     @After
@@ -93,7 +99,7 @@ public class BuildingCtrlTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void createBuildingTest() throws Exception {
         given(buildingService.saveItem(any(Building.class))).willReturn(buildingTest);
         mvc.perform(post("/api/v2/building")
@@ -104,7 +110,7 @@ public class BuildingCtrlTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void createBuildingWithEmptyDTOTest() throws Exception{
         given(buildingService.saveItem(any(Building.class))).willReturn(null);
         buildingTest = new Building();
@@ -116,7 +122,7 @@ public class BuildingCtrlTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void createBuildingWithNullDTOTest() throws Exception{
         given(buildingService.saveItem(any(Building.class))).willReturn(null);
         mvc.perform(post("/api/v2/building")
@@ -127,7 +133,7 @@ public class BuildingCtrlTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void retrieveBuildingTest() throws Exception {
         given(buildingService.getOneItem(any(Integer.class))).willReturn(buildingTest);
         mvc.perform(get("/api/v2/building/1")
@@ -140,7 +146,7 @@ public class BuildingCtrlTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void retrieveBuildingWithBadIdTest() throws Exception {
         given(buildingService.getOneItem(any(Integer.class))).willReturn(null);
         mvc.perform(get("/api/v2/building/1")
@@ -150,7 +156,7 @@ public class BuildingCtrlTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void updateBuildingTest() throws Exception {
         given(buildingService.saveItem(any(Building.class))).willReturn(buildingTest);
         mvc.perform(put("/api/v2/building")
@@ -162,7 +168,7 @@ public class BuildingCtrlTest {
 
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void updateBuildingWithEmptyDTOTest() throws Exception {
         buildingTest = new Building();
         given(buildingService.saveItem(any(Building.class))).willReturn(null);
@@ -174,7 +180,7 @@ public class BuildingCtrlTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void updateBuildingWithNullDTOTest() throws Exception {
         buildingTest = new Building();
         given(buildingService.saveItem(any(Building.class))).willReturn(null);
@@ -187,7 +193,7 @@ public class BuildingCtrlTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void deleteBuildingTest() throws Exception {
         doNothing().when(buildingService).deleteItem(any(Integer.class));
         mvc.perform(delete("/api/v2/building/1")
@@ -196,7 +202,7 @@ public class BuildingCtrlTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void retrieveAllBuildingsTest() throws Exception {
         List<Building> buildings = new ArrayList<>();
         buildings.add(buildingTest);
@@ -207,7 +213,7 @@ public class BuildingCtrlTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void retrieveAllBuildingsReturnEmptyListTest() throws Exception {
         List<Building> buildings = new ArrayList<>();
         given(buildingService.getAllItems()).willReturn(buildings);
@@ -217,7 +223,7 @@ public class BuildingCtrlTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void retrieveAllBuildingsReturnNullTest() throws Exception {
         given(buildingService.getAllItems()).willReturn(null);
         mvc.perform(get("/api/v2/building")

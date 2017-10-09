@@ -4,11 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.revature.assignforce.service.ActivatableObjectDaoService;
+import com.revature.assignforce.service.BatchDaoService;
+import com.revature.assignforce.service.BuildingDaoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +31,7 @@ import com.revature.assignforce.domain.dto.ResponseErrorDTO;
 @RestController
 @RequestMapping("/api/v2/building")
 @ComponentScan(basePackages = "com.revature.assignforce.service")
+@Api(value = "Building Controller", description = "CRUD Buildings")
 public class BuildingCtrl {
 
 	@Autowired
@@ -32,6 +40,13 @@ public class BuildingCtrl {
 	// CREATE
 	// creating new building object from information passed from building data
 	// transfer object
+	@PreAuthorize("hasPermission('', 'manager')")
+	@ApiOperation(value = "Create a building", response = BuildingDaoService.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully created a building"),
+			@ApiResponse(code=400, message ="Bad Request, BuildingDTO"),
+			@ApiResponse(code=500, message ="Cannot create building")
+	})
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createBuilding(@RequestBody BuildingDTO in) {
 
@@ -54,6 +69,13 @@ public class BuildingCtrl {
 
 	// RETRIEVE
 	// retrieve Building with given ID
+	@PreAuthorize("hasPermission('', 'basic')")
+	@ApiOperation(value = "Retrieve a building", response = BuildingDaoService.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully retrieved a building"),
+			@ApiResponse(code=400, message ="Bad Request, BuildingDTO"),
+			@ApiResponse(code=500, message ="Cannot retrieve building")
+	})
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveBuilding(@PathVariable("id") int ID) {
 
@@ -69,6 +91,13 @@ public class BuildingCtrl {
 	// UPDATE
 	// updating an existing Building object with information passed from
 	// Building data transfer object
+	@PreAuthorize("hasPermission('', 'manager')")
+	@ApiOperation(value = "Update building", response = BuildingDaoService.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully updated building"),
+			@ApiResponse(code=400, message ="Bad Request, BuildingDTO"),
+			@ApiResponse(code=500, message ="Cannot update building")
+	})
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object updateBuilding(@RequestBody BuildingDTO in) {
 
@@ -91,6 +120,13 @@ public class BuildingCtrl {
 
 	// DELETE
 	// delete Building with given ID
+	@PreAuthorize("hasPermission('', 'manager')")
+	@ApiOperation(value = "Delete a branch", response = BuildingDaoService.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully delete a building"),
+			@ApiResponse(code=400, message ="Bad Request, BuildingDTO"),
+			@ApiResponse(code=500, message ="Cannot delete a building")
+	})
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object deleteBuilding(@PathVariable("id") int ID) {
 
@@ -100,6 +136,13 @@ public class BuildingCtrl {
 
 	// GET ALL
 	// retrieve all buildings
+	@PreAuthorize("hasPermission('', 'basic')")
+	@ApiOperation(value = "Retrieve all buildings", response = BuildingDaoService.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully retrieve all buildings"),
+			@ApiResponse(code=400, message ="Bad Request, BuildingDTO"),
+			@ApiResponse(code=500, message ="Cannot retrieve all building")
+	})
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveAllBuildings() {
 

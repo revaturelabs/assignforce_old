@@ -4,6 +4,7 @@ import com.revature.assignforce.AssignForceV2Application;
 import com.revature.assignforce.domain.Curriculum;
 import com.revature.assignforce.domain.Skill;
 import com.revature.assignforce.domain.dto.CurriculumDTO;
+import com.revature.assignforce.security.CustomSecurity;
 import com.revature.assignforce.service.ActivatableObjectDaoService;
 import com.revature.assignforce.utils.JsonMaker;
 import org.junit.After;
@@ -54,6 +55,9 @@ public class CurriculumCtrlTest {
     @MockBean
     ActivatableObjectDaoService<Curriculum, Integer> currService;
 
+    @MockBean
+    CustomSecurity customSecurity;
+
     @Before
     public void setUp() throws Exception {
         curriculumDTO = new CurriculumDTO();
@@ -69,6 +73,7 @@ public class CurriculumCtrlTest {
         curriculumDTO.setSkills(skills);
 
         curriculumTest = new Curriculum(curriculumDTO.getCurrId(), curriculumDTO.getName(), curriculumDTO.getSkills(), true);
+        given(customSecurity.hasPermission(any(),any(),any())).willReturn(true);
     }
 
     @After

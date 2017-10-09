@@ -2,6 +2,7 @@ package com.revature.assignforce.web;
 
 import com.revature.assignforce.AssignForceV2Application;
 import com.revature.assignforce.domain.Setting;
+import com.revature.assignforce.security.CustomSecurity;
 import com.revature.assignforce.service.DaoService;
 import com.revature.assignforce.utils.JsonMaker;
 import org.hamcrest.Matchers;
@@ -46,6 +47,9 @@ public class SettingCtrlTest {
     @MockBean
     private DaoService<Setting, Integer> settingService;
 
+    @MockBean
+    CustomSecurity customSecurity;
+
     private Setting testSetting = null;
 
     private JsonMaker jsonMaker = new JsonMaker();
@@ -57,6 +61,7 @@ public class SettingCtrlTest {
         testSetting.setAlias("an Alias");
         testSetting.setTrainersPerPage(10);
         testSetting.setReportGrads(10);
+        given(customSecurity.hasPermission(any(),any(),any())).willReturn(true);
     }
 
     @After
@@ -65,7 +70,7 @@ public class SettingCtrlTest {
     }
 
     @Test
-    @WithMockUser(roles = "admin")
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void createSettingTest() throws Exception {
         mvc.perform(post("/api/v2/setting")
                 .with(csrf().asHeader())
@@ -75,7 +80,7 @@ public class SettingCtrlTest {
     }
 
     @Test
-    @WithMockUser(roles = "admin")
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void retrieveSettingTest() throws Exception {
         given(settingService.getOneItem(anyInt())).willReturn(testSetting);
         mvc.perform(get("/api/v2/setting/42")
@@ -88,7 +93,7 @@ public class SettingCtrlTest {
     }
 
     @Test
-    @WithMockUser(roles = "admin")
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void retrieveInvalidSettingTest() throws Exception {
         given(settingService.getOneItem(anyInt())).willReturn(null);
         mvc.perform(get("/api/v2/setting/42")
@@ -97,7 +102,7 @@ public class SettingCtrlTest {
     }
 
     @Test
-    @WithMockUser(roles = "admin")
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void getGlobalSettingsTest() throws Exception {
         List<Setting> listOfSettings = new ArrayList<Setting>();
         listOfSettings.add(testSetting);
@@ -110,7 +115,7 @@ public class SettingCtrlTest {
     }
 
     @Test
-    @WithMockUser(roles = "admin")
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void getEmptyGlobalSettingsTest() throws Exception {
         List<Setting> listOfSettings = new ArrayList<Setting>();
         given(settingService.getAllItems()).willReturn(listOfSettings);
@@ -120,7 +125,7 @@ public class SettingCtrlTest {
     }
 
     @Test
-    @WithMockUser(roles = "admin")
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void getGlobalSettingsFailedTest() throws Exception {
         given(settingService.getAllItems()).willReturn(null);
         mvc.perform(get("/api/v2/setting")
@@ -129,7 +134,7 @@ public class SettingCtrlTest {
     }
 
     @Test
-    @WithMockUser(roles = "admin")
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void updateSettingTest() throws Exception {
        given(settingService.saveItem(testSetting)).willReturn(testSetting);
        mvc.perform(put("/api/v2/setting")
@@ -150,7 +155,7 @@ public class SettingCtrlTest {
 //    }
 
     @Test
-    @WithMockUser(roles = "admin")
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void deleteSettingTest() throws Exception {
         mvc.perform(delete("/api/v2/setting/42")
                 .with(csrf().asHeader()))

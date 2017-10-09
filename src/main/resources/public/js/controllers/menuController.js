@@ -4,7 +4,7 @@
     assignforce.controller( "menuCtrl", function( $scope, $location, $rootScope, $http) {
         var mc = this;
 
-        $http.get("/api/v2/userinfo")
+        $http.get("/auth/userinfo")
        .then(function(response) {
            $rootScope.data = response.data;
            
@@ -35,8 +35,15 @@
             }
         };
 
-       
-        
+        mc.logout = function(){
+            console.log("Inside Logout");
+            $http.get("api/v2/logout").success(function() {
+                window.location = "/";
+            }).error(function() {
+                window.location = "/";
+            });
+        };
+
 
           // data
         mc.currentPage = mc.findCurrentPage();

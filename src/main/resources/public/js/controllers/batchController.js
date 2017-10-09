@@ -1,5 +1,6 @@
 //let assignforce = angular.module("batchApp");
 
+
 assignforce.controller("batchCtrl", function($scope, batchService, unavailableService, curriculumService, trainerService, locationService, buildingService, roomService, settingService, calendarService, skillService, $filter, $window, $rootScope, $mdDialog, utilService) {
 
     var bc = this;
@@ -410,6 +411,7 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
         });
     	
     	trainerService.getAll(function(response) {
+
             bc.trainers = response;
         }, function() {
             bc.showToast("Could not fetch trainers.");
