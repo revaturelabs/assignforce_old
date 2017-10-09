@@ -15,7 +15,7 @@
             <md-input-container class="md-primary md-hue-2" style="width: 200px">
                     <h4> Skills: </h4>
                    <md-select aria-label="curriculumSkills" ng-model="curricI.skills" multiple>
-                       <md-option ng-value="x" ng-repeat="x in skills | orderBy:'name'">
+                       <md-option  ng-repeat="x in skills| orderBy:'name' track by x.name" ng-value="x">
                            {{x.name}}
                        </md-option>
                    </md-select>
@@ -24,7 +24,7 @@
        </form>
    </md-dialog-content>
    <md-dialog-actions class="md-dialog-actions">
-           <md-button class="md-primary md-warn" ng-click="cancel()" class="md-primary">Cancel</md-button>
+           <md-button class="md-primary md-raised md-warn" ng-click="cancel()" class="md-primary">Cancel</md-button>
            <md-button class="md-primary md-raised" ng-click="saveCurriculum()" class="md-primary">Save</md-button>
    </md-dialog-actions>
 </md-dialog>
