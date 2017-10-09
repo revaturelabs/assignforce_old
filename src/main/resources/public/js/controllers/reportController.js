@@ -202,64 +202,6 @@ assignforce.controller("reportCtrl", function($scope, skillService, trainerServi
         return formatted;
     };
 
-
-    //This is how you apply one function to calculate multiple values
-    //You do not simply copy and paste the function multiple times
-    //You do NOT
-    //DO
-    //THAT
-    //
-    //EVER
-    //
-    //DO NOT
-    //
-    //I SAID DO NOT
-    //
-    //Instead, you do this
-    //You just make an intermediate function
-    //And pass argument flags to make it different stuff
-    //
-    //DO THIS
-    //
-    //IT'S
-    //THAT
-    //EASY
-    //
-    //AAAAAA
-    /*rc.export = function(aBooleanValue) {
-            var formatted = [];
-            formatted.push([
-                "Curriculum", "January", "February", "March", "April", "May", "June", "July",
-                "August", "September", "October", "November", "December", "Total"
-            ]);
-            angular.forEach(rc.curricula, function(curr) {
-                var year = [curr.name];
-                var sum = 0;
-                rc.currSummary(curr, aBooleanValue).forEach(function(month) {
-                    year.push(month);
-                    sum += month;
-                });
-                year.push(sum);
-
-                formatted.push(year);
-            });
-
-            var totalMonth = ["Total"];
-            var sumTotal = 0;
-            for (var i = 0; i < 12; i++) {
-                var ttl = rc.sumMonth2(i);
-                totalMonth.push(ttl);
-                sumTotal += ttl;
-            }
-            totalMonth.push(sumTotal);
-
-            formatted.push(totalMonth);
-
-            return formatted;
-        };*/
-
-
-
     /* FUNCTION - Summarizes graduate output of given curriculum for chosen year */
     rc.currSummary = function(curriculum) {
 
