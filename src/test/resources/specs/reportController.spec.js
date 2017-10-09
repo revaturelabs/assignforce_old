@@ -1,5 +1,5 @@
 //Describing our tests for Report Controller!
-describe('reportControllerTest', function(){
+xdescribe('reportControllerTest', function(){
 
     //These variables link the controller's scope and self to this test file
     //This enables us to access all of the controller's stuff
