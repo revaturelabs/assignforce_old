@@ -129,10 +129,12 @@ var app = angular.module('batchApp');
      {
          let isRunning = false;
          let axisDisplacement = 0;
+         let miss = 0;
          let moveAxis = () =>
          {
              let x = document.getElementById("x axis");
-             if (!x) {
+             if (x !== undefined && x !== null) {
+                 miss = 0;
                  if (x.getBoundingClientRect().top) {
                      let newAxisDisplacement = axisDisplacement - x.getBoundingClientRect().top;
                      if (newAxisDisplacement !== axisDisplacement) {
@@ -145,9 +147,14 @@ var app = angular.module('batchApp');
                  }
                  window.requestAnimationFrame(moveAxis);
              }
-             else
+             else if(miss > 60)
              {
                  isRunning = false
+             }
+             else
+             {
+                 miss++;
+                 window.requestAnimationFrame(moveAxis);
              }
          };
          return () =>
@@ -685,8 +692,8 @@ var app = angular.module('batchApp');
                  .attr('y', '-3.0em')
                  .call(wrap, 0.1);
 
-
              this.fireRenderHeaderLoop();
+
              if(timelineData.length!==null && xLine.node()!==null){
                  brect
                      .attr('class','axisrect')
