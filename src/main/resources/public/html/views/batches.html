@@ -322,7 +322,6 @@
                             <md-checkbox aria-label="Select Dates Automatically?" ng-model="selectDatesAutomatically" ng-change="projectTimeline(-100)">
                                 Select Dates Automatically?
                             </md-checkbox>
-                                <span ng-if="noBatchesFound === true"> No Batches Found! </span>
                             </div>
                         </div>
                         <div flex> </div>
@@ -431,9 +430,13 @@
                         </div>
 	                </div>
                 </div>
-                <br ng-show="isLoaded === true">
-                <div id="timeline" ng-mousedown="mousedown($event)" ng-show="isLoaded === true && noBatchesFound === false"> </div>
-                
+                <div ng-show="isLoaded === true">
+                    <br/>
+                    <div ng-show="noBatchesFound === false">
+                        <div id="timeline" ng-mousedown="mousedown($event)"> </div>
+                    </div>
+                    <span ng-if="noBatchesFound === true"> No Batches Found! </span>
+                </div>
                 <div ng-if="isLoaded === false" layout="column" layout-wrap layout-align="center center">
                     <div flex="100"> &nbsp; </div>
                     <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>

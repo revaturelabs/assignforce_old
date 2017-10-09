@@ -91,8 +91,7 @@ var app = angular.module('batchApp');
      };
      $scope.pagination = p();
 
-
-         $scope.isLoaded = false;
+     $scope.isLoaded = false;
      $scope.StartDate = privateDate();
      $scope.StartDate(utilService.day.addDays(new Date, -100));
      $scope.EndDate = privateDate();
@@ -225,7 +224,11 @@ var app = angular.module('batchApp');
              {
                  if(batch.batchLocation.locationId)
                  {
-                     batch.location = $scope.Location.find()
+                     batch.location = $scope.Location.find((l) => (l.id === batch.batchLocation.locationId))
+                 }
+                 if(batch.batchLocation.buildingId)
+                 {
+                     batch.location = $scope.Buildings.find((l) => (l.id === batch.batchLocation.buildingId))
                  }
              }
          });
@@ -625,7 +628,7 @@ var app = angular.module('batchApp');
                  .text(function(d) {return d.length;});
 
              var xLine = svg.append('g')
-                 .attr('class','x axis')
+                 .attr('class','x axis no-animate')
                  .attr('id','x axis')
                  .style('position','sticky')
 
