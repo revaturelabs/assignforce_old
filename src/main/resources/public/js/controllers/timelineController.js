@@ -228,8 +228,9 @@ var app = angular.module('batchApp');
                  }
                  if(batch.batchLocation.buildingId)
                  {
-                     batch.location = $scope.Buildings.find((l) => (l.id === batch.batchLocation.buildingId))
+                     batch.building = $scope.Buildings.find((l) => (l.id === batch.batchLocation.buildingId))
                  }
+                 batch.room = batch.batchLocation;
              }
          });
 
@@ -341,6 +342,7 @@ var app = angular.module('batchApp');
              if(filteredBatchList.length === 0)
              {
                  $scope.noBatchesFound = true;
+                 d3.select("#timeline").selectAll("*").remove();
                  return;
              }
              else
@@ -710,7 +712,12 @@ var app = angular.module('batchApp');
                      tip.offset([mouse_coordinates[1] - d3.select(this).attr("y") - 8, mouse_coordinates[0] - d3.select(this).attr("x") - (d3.select(this).attr("width") / 2)]).show(d);
                      d3.event.stopPropagation();
                  })
-                 .style('fill', function(d) {return colorScale(d.curriculum ? d.curriculum.name : 'No curriculum');});
+                 .style('fill', function(d) {
+                     if (d.trainer.active)
+                        return colorScale(d.curriculum ? d.curriculum.name : 'No curriculum');
+                     else
+                         return 'rgb(84, 84, 84)';
+                 });
              d3.selectAll('.rect')
                  .append('text')
                  .attr('y', function(d) {
@@ -796,14 +803,9 @@ var app = angular.module('batchApp');
      //Watches for "repullTimeline" to be broadcast, such that the timeline is repulled.
      let pullThenLoad = () =>
      {
-         pull().then(load($scope)).catch((msgs) => console.error(msgs));
+         pull().then(load($scope)).catch((msgs) => {console.error(msgs); scope.showToast(msgs)});
      };
      $scope.$on("repullTimeline",pullThenLoad);
      pullThenLoad();
 
-     // $scope.$on("repullTimeline", function(){
-     //    // pull().then(load($scope)).catch((msgs) => { msgs.forEach((msg) => $scope.showToast(msg)) });
-     // });
-     //
-     // pull().then(load($scope)).catch((msgs) => console.log(msgs));
 });
