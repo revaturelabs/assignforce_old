@@ -110,9 +110,6 @@
                 var building   = (batch.batchLocation) ? batch.batchLocation.buildingName                          : "";
                 var location   = (batch.batchLocation.locationName) ? batch.batchLocation.locationName             : "";
 
-                console.log(batch);
-
-
                 formatted.push( [ name, curriculum, trainer, cotrainer, location, building, room, startDate, endDate ] );
             });
 
