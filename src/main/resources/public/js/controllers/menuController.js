@@ -12,10 +12,10 @@
            $rootScope.token = response.data.accessToken;
            $rootScope.fName = response.data.firstName;
            $rootScope.lName = response.data.lastName;
-       }, function (error) {
+       }, function () {
 
     }).then(function(){
-        if ($rootScope.role == "Trainers"){
+        if ($rootScope.role === "Trainers"){
             $scope.toggle = true;
         }else{
             $scope.toggle = false;
@@ -28,7 +28,7 @@
         mc.findCurrentPage = function(){
 
             var path = $location.path().replace("/", "");
-            if (path == "home") {
+            if (path === "home") {
                 return "home";
             } else {
                 return path;
@@ -38,7 +38,6 @@
        
         
 
-        // $scope.toggle = false;
           // data
         mc.currentPage = mc.findCurrentPage();
     });

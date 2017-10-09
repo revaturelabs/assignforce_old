@@ -29,7 +29,7 @@
 
 <body ng-app="batchApp" ng-controller="AuthCtrl as aCtrl" layout-fill>
 
-    <div class="toastContainer">
+    <div ng-mouseup = "mouseup($event)" ng-mousedown = "mousedown($event)" ng-mousemove = "mousemove($event)" class="toastContainer">
         <div>
             <ng-include src="'html/views/menu.html'"/>
         </div>

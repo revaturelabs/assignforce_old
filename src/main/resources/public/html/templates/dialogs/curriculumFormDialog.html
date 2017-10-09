@@ -1,25 +1,29 @@
-<md-dialog>
+<md-dialog layout-padding class="Dialog">
    <md-dialog-content>
        <form class="form-horizontal" name = curriculumForm>
            <div class="form-group">
                <span> Curriculum </span>
            </div>
-           <div class="form-group">
-            <md-input-container>
-                        <label class="control-label">Curriculum Name</label>
-                        <input class="form-control" name="curriculumName"  ng-model="curricI.name">
-                </md-input-container>
-               <hr>
-                <md-input-container>
-                    <label class="control-label">Skills </label>
-                       <select class="form-control" ng-model="skillz" multiple ng-options="x.name for x in skills">
-                       </select>
-                </md-input-container>
+
+           <div>
+            <md-input-container class="md-primary md-hue-2">
+                <span> Curriculum Name:</span>
+                <input aria-label="curriculumName"  ng-model="curricI.name">
+            </md-input-container>
+           <br>
+            <md-input-container class="md-primary md-hue-2">
+                    <h5> Skills: </h5>
+                   <md-select aria-label="curriculumSkills" ng-model="curricI.skills" multiple>
+                       <md-option ng-value="x" ng-repeat="x in skills | orderBy:'name'">
+                           {{x.name}}
+                       </md-option>
+                   </md-select>
+            </md-input-container>
            </div>
        </form>
    </md-dialog-content>
-   <md-dialog-actions>
-           <md-button ng-click="cancel()" class="md-primary">Cancel</md-button>
-           <md-button ng-click="saveCurriculum()" class="md-primary">Save</md-button>
-       </md-dialog-actions>
+   <md-dialog-actions class="md-dialog-actions">
+           <md-button class="md-primary" ng-click="cancel()" class="md-primary">Cancel</md-button>
+           <md-button class="md-primary md-raised" ng-click="saveCurriculum()" class="md-primary">Save</md-button>
+   </md-dialog-actions>
 </md-dialog>
