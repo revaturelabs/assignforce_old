@@ -1,7 +1,3 @@
-/**
- * Created by lazaro on 2/22/2017.
- */
-
 var assignforce = angular.module( "batchApp" );
 
 assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog, curriculumService, skillService) {

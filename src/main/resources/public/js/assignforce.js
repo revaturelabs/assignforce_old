@@ -1,6 +1,7 @@
 
 	var assignforce = angular.module( "batchApp", ['ngRoute', 'ngAnimate', 'ngAria', 'ngResource', 'ngMaterial', 'md.data.table', 'ngCsv']);
 
+
           // global constants
         assignforce.constant( "secWeek", 604800000 )
                    .constant( "USstates", ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA',

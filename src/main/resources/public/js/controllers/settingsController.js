@@ -42,7 +42,7 @@ assignforce.controller("settingsCtrl", function ($scope, $rootScope, settingServ
             sc.showToast("could not fetch locations.");
         });
     };
-    
+
     sc.getBuildings = function(){
 
     	sc.buildings = [];

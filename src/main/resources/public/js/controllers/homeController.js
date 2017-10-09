@@ -3,14 +3,6 @@
 
     assignforce.controller( "homeCtrl", function( $scope, $filter, batchService, $rootScope , $resource ,trainerService, locationService, buildingService,$http) {
         var hc = this;
-
-
-//                 $http.get("api/v2/userRoleinfo").success(function(){
-//                        console.log("Inside AngularController")
-//                    }).error(function() {
-//                        console.log("Errored out");
-//                    });
-
           // functions
             // calls showToast method of aCtrl
         hc.showToast = function( message ) {
@@ -44,6 +36,8 @@
                     return 100;
                 } else if (paramLow.toLowerCase() === "unavailable") {
                     return 0;
+                }else{
+                    return NaN;
                 }
             }
                 // length based on simple division (locations)
