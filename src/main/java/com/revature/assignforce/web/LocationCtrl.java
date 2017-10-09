@@ -8,6 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,7 @@ public class LocationCtrl {
 	// CREATE
 	// creating new location object from information passed from location data
 	// transfer object
+	@PreAuthorize("hasPermission('', 'manager')")
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createLocation(@RequestBody LocationDTO in) {
 
@@ -54,6 +56,7 @@ public class LocationCtrl {
 
 	// RETRIEVE
 	// retrieve location with given ID
+	@PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveLocation(@PathVariable("id") int ID) {
 
@@ -69,6 +72,7 @@ public class LocationCtrl {
 	// UPDATE
 	// updating an existing location object with information passed from
 	// location data transfer object
+	@PreAuthorize("hasPermission('', 'manager')")
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object updateLocation(@RequestBody LocationDTO in) {
 
@@ -92,6 +96,7 @@ public class LocationCtrl {
 
 	// DELETE
 	// delete location with given ID
+	@PreAuthorize("hasPermission('', 'manager')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object deleteLocation(@PathVariable("id") int ID) {
 
@@ -101,6 +106,7 @@ public class LocationCtrl {
 
 	// GET ALL
 	// retrieve all locations
+	@PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveAllLocations() {
 

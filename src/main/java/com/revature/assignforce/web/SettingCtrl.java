@@ -9,6 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,12 +26,14 @@ public class SettingCtrl {
     DaoService<Setting, Integer> settingService;
 
     //Create
+    @PreAuthorize("hasPermission('', 'manager')")
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object createSetting(@RequestBody SettingDTO in ){
         return new ResponseEntity(null, HttpStatus.NOT_IMPLEMENTED);
     }
 
     //Retrieve
+    @PreAuthorize("hasPermission('', 'basic')")
     @RequestMapping(value = "/{settingId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object retrieveSetting (@PathVariable("settingId") int settingId){
 
@@ -42,6 +45,7 @@ public class SettingCtrl {
         }
     }
 
+    @PreAuthorize("hasPermission('', 'basic')")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object getGlobalSettings(){
 
@@ -57,6 +61,7 @@ public class SettingCtrl {
     }
 
     //Update
+    @PreAuthorize("hasPermission('', 'manager')")
     @RequestMapping( method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object updateSetting(@RequestBody Setting in ){
 
@@ -70,6 +75,7 @@ public class SettingCtrl {
     }
 
     //Delete
+    @PreAuthorize("hasPermission('', 'manager')")
     @RequestMapping(value = "/{settingId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object deleteSetting(){
         return new ResponseEntity<Object>(null, HttpStatus.NOT_IMPLEMENTED);

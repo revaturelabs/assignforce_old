@@ -9,6 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class SkillCtrl {
 
     // CREATE
     // creating new curriculum object from information passed from curriculum data transfer object
+    @PreAuthorize("hasPermission('', 'basic')")
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object createSkill( @RequestBody SkillDTO in ) {
 
@@ -44,6 +46,7 @@ public class SkillCtrl {
 
     // RETRIEVE
     // retrieve skill with given ID
+    @PreAuthorize("hasPermission('', 'basic')")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object retrieveSkill( @PathVariable("id") int ID ) {
 
@@ -57,6 +60,7 @@ public class SkillCtrl {
 
     // UPDATE
     // updating an existing skill object with information passed from skill data transfer object
+    @PreAuthorize("hasPermission('', 'basic')")
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object updateSkill( @RequestBody SkillDTO in ) {
 
@@ -76,6 +80,7 @@ public class SkillCtrl {
 
     // DELETE
     // delete skill with given ID
+    @PreAuthorize("hasPermission('', 'basic')")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object deleteSkill( @PathVariable("id") int ID ) {
 
@@ -85,6 +90,7 @@ public class SkillCtrl {
 
     // GET ALL
     // retrieve all skills
+    @PreAuthorize("hasPermission('', 'basic')")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object retrieveAllSkills() {
 

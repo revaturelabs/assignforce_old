@@ -6,7 +6,7 @@ var app = angular.module("batchApp");
 app.constant('authorizeUrl', 'api/v2/authorize');
 
 app.service('userService', function($resource, $rootScope, $http){
-   $http.get("/api/v2/userinfo")
+   $http.get("/auth/userinfo")
        .then(function(response) {
            $rootScope.data = response.data;
            $rootScope.role = response.data.roleName;
