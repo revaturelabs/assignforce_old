@@ -63,7 +63,6 @@
                             <p>Skills: {{ curr.skills.map(cCtrl.joinObjArrayByName).join(", ");}}</p>
                         </div>
                         <md-divider></md-divider>
-                        <span flex></span>
                         <md-button class="md-icon-button" ng-click="showEditCurriculum($event,curr)">
                             <md-tooltip class="md-title"> Edit Curricula </md-tooltip>
                             <i class="material-icons revOrange"> edit </i>
@@ -121,12 +120,12 @@
                     </form>
                 </md-card>
                 <md-list>
-                    <md-list-item ng-repeat="curr in cCtrl.curricula | activeItem" ng-if="curr.core == false" class="md-2-line" md-ink-ripple="#ff0000">
+                    <md-list-item ng-repeat="curr in cCtrl.curricula | activeItem" ng-if="curr.core == false" class="md-2-line" md-ink-ripple>
                         <div class="md-list-item-text" layout="column">
                             <h3>{{curr.name}}</h3>
                             <p>Skills: {{ curr.skills.map(cCtrl.joinObjArrayByName).join(", ");}}</p>
                         </div>
-                        <span flex></span>
+                        <md-divider></md-divider>
                         <md-button class="md-icon-button" ng-click="showEditCurriculum($event,curr)">
                         <md-tooltip class="md-title"> Edit Focus </md-tooltip>
                         <i class="material-icons revOrange"> edit </i>
