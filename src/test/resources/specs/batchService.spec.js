@@ -1,5 +1,5 @@
 //batch spec.js for protractor
-describe('batchServiceTest', function() {
+xdescribe('batchServiceTest', function() {
     var batchService, httpBackend;
     var should;
     var shouldNot;

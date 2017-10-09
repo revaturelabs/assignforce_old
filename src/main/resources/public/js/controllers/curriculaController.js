@@ -2,7 +2,6 @@ var assignforce = angular.module( "batchApp" );
 
 assignforce.controller("curriculaCtrl", function ($scope, curriculumService, skillService) {
     var cc = this;
-    $scope.self = cc;
     //$scope.skillToggle = false;
 
     //functions
@@ -12,7 +11,7 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
         $scope.$parent.aCtrl.showToast( message )
     };
 
-    //calls skillService therefor no need to test
+    //calls skillService therefore no need to test
     //create a skill and add it to the database
     cc.createSkill = function (skillForm) {
         if(skillForm.$valid) {
@@ -61,7 +60,7 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
         $('#core').slideToggle();
     };
 
-    //No need to test this because it calls curriculumService and showToast method
+    //No need to test this since it calls curruculumService
     //focus functions
     //create a focus
     //I want to fix this to be readable - Sam
@@ -69,7 +68,7 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
         //show a hidden field with a list of skill to select from, a name field, and a save button
         if(focusForm.$valid){
             var skillList = [];
-            for(var i = 0; i < cc.selectedSkills.length; i++){
+            for(var i = 0; i < cc.selectedSkills.length; i++){  //if skills has a,b,c and selectedSkills has a,b then skillList has a,b
                 for(var j = 0; j < cc.skills.length; j++){
                     if(cc.skills[j].skillId == cc.selectedSkills[i]){
                         skillList.push(cc.skills[j]);
@@ -153,7 +152,7 @@ assignforce.controller("curriculaCtrl", function ($scope, curriculumService, ski
 
     //retrieving data
 
-    //Not tested since it calls Curiculla Service
+    //Not tested since it just calls Curiculla Service
     //Grabs all Curricula
     curriculumService.getAll(function (response) {
         cc.curricula = response;
