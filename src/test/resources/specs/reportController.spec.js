@@ -1,4 +1,5 @@
 //Describing our tests for Report Controller!
+//Tests are not finished, all these tests are placeholders
 xdescribe('reportControllerTest', function(){
 
     //These variables link the controller's scope and self to this test file
