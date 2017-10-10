@@ -15,7 +15,7 @@
             <md-input-container class="md-primary md-hue-2" style="width: 200px">
                     <h4> Skills: </h4>
                    <md-select aria-label="curriculumSkills" ng-model="curricI.skills" multiple>
-                       <md-option  ng-repeat="x in skills| orderBy:'name' track by x.name" ng-value="x">
+                       <md-option  ng-repeat="x in skills| orderBy:'name'" ng-value="x">
                            {{x.name}}
                        </md-option>
                    </md-select>
