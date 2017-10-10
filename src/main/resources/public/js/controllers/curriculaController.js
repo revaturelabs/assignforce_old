@@ -221,7 +221,7 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
                        curriculumService.create(curric, function () {
                            cc.showToast("Core created")
                        }, function () {
-                           cc.showToast("You're not authorized")
+                           cc.showToast("Could not add Core")
                        })
 
                        cc.curricula.push(curric);
@@ -262,7 +262,7 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
                        curriculumService.create(curric, function () {
                            cc.showToast("Focus created")
                        }, function () {
-                           cc.showToast("You're not authorized")
+                           cc.showToast("You could not add focus")
                        })
 
                        cc.curricula.push(curric);
@@ -301,9 +301,9 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
                $scope.curr.name = $scope.curricI.name
                $scope.curr.skills = $scope.curricI.skills
                curriculumService.update($scope.curr, function () {
-                   cc.showToast("Curriculum updated")
+                   cc.showToast("Curriculum updated");
                }, function () {
-                   cc.showToast("You're not authorized")
+                   cc.showToast("Could not edit Curriculum")
                })
                $mdDialog.hide();
            }

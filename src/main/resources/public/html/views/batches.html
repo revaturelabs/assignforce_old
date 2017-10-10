@@ -33,7 +33,7 @@
                 <div layout="columns" layout-xl="rows"  class="md-title">
                     <div flex layout="columns">                    
                     	<md-input-container flex>                       
-                            <label> Curriculum </label>
+                            <label> Core Curriculum </label>
                             <md-select ng-model="bCtrl.batch.curriculum" ng-change="bCtrl.defaultName(); bCtrl.updateSelectedSkills(); bCtrl.updateSkillRatios();">
                                 <md-option ng-value="curriculum.currId" ng-repeat="curriculum in bCtrl.curricula | activeItem"> {{ curriculum.name }} </md-option>
                             </md-select>
