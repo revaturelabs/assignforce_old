@@ -196,16 +196,15 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
             clickOutsideToClose: true,
             templateUrl : "html/templates/dialogs/curriculumFormDialog.html",
             locals: {
-                       skills: cc.skills,
                        curricI: {
                             name: "Core Name"
                        }
                      },
             controller: CoreDialogController
        });
-       function CoreDialogController($scope, $mdDialog, skills, curricI) {
+       function CoreDialogController($scope, $mdDialog, curricI) {
 
-           $scope.skills = skills;
+           $scope.skills = cc.skills;
            $scope.curricI = curricI;
 
            $scope.cancel = function() {
@@ -237,16 +236,15 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
             clickOutsideToClose: true,
             templateUrl : "html/templates/dialogs/curriculumFormDialog.html",
             locals: {
-                       skills: cc.skills,
                        curricI: {
                                    name: "Focus Name"
                               }
                      },
             controller: FocusDialogController
        });
-       function FocusDialogController($scope, $mdDialog, skills, curricI) {
+       function FocusDialogController($scope, $mdDialog, curricI) {
 
-          $scope.skills = skills;
+           $scope.skills = cc.skills;
           $scope.curricI = curricI;
 
            $scope.cancel = function() {
@@ -278,7 +276,6 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
             clickOutsideToClose: true,
             templateUrl : "html/templates/dialogs/curriculumFormDialog.html",
             locals: {
-                       skills: cc.skills,
                        curricI: {
                             name: curr.name,
                             skills: curr.skills
@@ -286,9 +283,9 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
                      },
             controller: EditCurriculumDialogController
        });
-       function EditCurriculumDialogController($scope, $mdDialog, skills, curricI) {
+       function EditCurriculumDialogController($scope, $mdDialog, curricI) {
 
-           $scope.skills = skills;
+           $scope.skills = cc.skills;
            $scope.curricI = curricI;
 
            $scope.cancel = function() {
