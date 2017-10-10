@@ -127,3 +127,10 @@ Use whichever method you feel most comfortable with to install each of the liste
 this process, you will have a "package.json" that contains all of the node module dependencies required to conduct
 the Karma unit testing necessary.  From here on, simply by having that "package.json" file, you can use "npm install"
 to install all the dependencies needed to conduct automated unit testing.
+
+###### Design Notes ######
+removing curricula only sets its active property to false
+    it does not remove from database
+    actual remove may lead to issues with existing batches that have the deleted curriculum
+
+Curricula Tab edit curriculum does not initialize existing skills as selected
