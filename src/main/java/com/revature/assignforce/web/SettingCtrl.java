@@ -4,6 +4,8 @@ import com.revature.assignforce.domain.Setting;
 import com.revature.assignforce.domain.dto.ResponseErrorDTO;
 import com.revature.assignforce.domain.dto.SettingDTO;
 import com.revature.assignforce.service.DaoService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,8 @@ import java.util.List;
 @RequestMapping("/api/v2/setting")
 @ComponentScan(basePackages = "com.revature.assignforce.service")
 public class SettingCtrl {
+    private final static Log logger = LogFactory.getLog(SettingCtrl.class);
+
     @Autowired
     DaoService<Setting, Integer> settingService;
 
@@ -68,6 +72,7 @@ public class SettingCtrl {
         try{
             settingService.saveItem(in);
         }catch (Exception ex){
+            logger.warn(ex);
             return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("An error has occured while updating system settings"),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }

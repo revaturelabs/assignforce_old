@@ -18,6 +18,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.ComponentScan;
@@ -47,6 +49,7 @@ import com.revature.assignforce.service.DaoService;
 @ComponentScan(basePackages = "com.revature.assignforce.service")
 @Api(value = "Batch Controller", description = "CRUD with Batches")
 public class BatchCtrl {
+	private final static Log logger = LogFactory.getLog(BatchCtrl.class);
 
 	@PersistenceContext
 	private EntityManager em;
@@ -292,6 +295,7 @@ public class BatchCtrl {
 		try {
 			batchService.saveItem(b);
 		} catch (Exception ex) {
+			logger.warn(ex);
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO(ex.getMessage()),
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}

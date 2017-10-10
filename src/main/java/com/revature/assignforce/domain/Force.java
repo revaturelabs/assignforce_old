@@ -21,7 +21,7 @@ public class Force {
     private static final String REST_VERSION = "40.0";
 
 
-    public OAuth2RestTemplate restTemplate;
+    private OAuth2RestTemplate restTemplate;
 
     @Autowired
     public Force(OAuth2ProtectedResourceDetails resourceDetails, OAuth2ClientContext clientContext) {
@@ -43,7 +43,6 @@ public class Force {
 
     public Employee getCurrentEmployee(Authentication auth) {
         HashMap<String, String> details = (HashMap<String, String>) auth.getDetails();
-//        System.out.println(details.toString());
         String query = "SELECT Id, Name, CommunityNickname, FirstName, LastName, Email, FullPhotoUrl, SmallPhotoUrl, " +
                 "UserRole.Id, UserRole.Name " +
                 "FROM User WHERE Id = '" + details.get("user_id") + "'";
@@ -53,17 +52,6 @@ public class Force {
         List<Employee> employees = parseSalesForceQueryResponse(response);
         return employees.get(0);
     }
-
-//    public List<Employee> getTrainers(OAuth2Authentication auth) {
-//        String query = "SELECT Id, Name, CommunityNickname, FirstName, LastName, Email, FullPhotoUrl, SmallPhotoUrl, " +
-//                "UserRole.Id, UserRole.Name " +
-//                "FROM User WHERE UserRoleId = '" + Role.ROLE_TRAINER + "'";
-//
-//        String response = executeSalesForceQuery(auth, query);
-//
-//        return parseSalesForceQueryResponse(response);
-//    }
-
 
     private String executeSalesForceQuery(Authentication auth, String query) {
         String url = restUrl(auth, "query") + "?q={q}";
@@ -95,9 +83,7 @@ public class Force {
 
 
                     JsonObject jsonRole = jsonObject.get("UserRole").getAsJsonObject();
-                    Role role = new Role();
                     employee.setRoleName(jsonRole.get("Name").getAsString());
-                    //employee.setRole(role);
                     employees.add(employee);
                 }
         );
