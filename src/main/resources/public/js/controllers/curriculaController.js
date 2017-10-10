@@ -219,10 +219,15 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
                        };
                        curriculumService.create(curric, function () {
                            cc.showToast("Core created");
-                           cc.curricula.push(curric);
+                           curriculumService.getAll(function (response) {
+                               cc.curricula = response;
+                             }, function () {
+                             cc.showToast("Could not refresh skills");
+                          })
                        }, function () {
                            cc.showToast("Could not add Core")
                        })
+
 
                 $mdDialog.hide();
            }
