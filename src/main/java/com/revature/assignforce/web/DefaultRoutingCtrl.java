@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 public class DefaultRoutingCtrl {
 
     //Don't ask why it works, just accept it
-    @RequestMapping(value = {"/login", "/home", "/batches", "/curriculum", "/trainers", "/locations", "/profile", "/profile/:id", "/reports", "/settings"})
+    @RequestMapping(value = {"/login", "/home", "/batches", "/curriculum", "/trainers", "/locations", "/profile", "/profile/", "/reports", "/settings"})
     public String routeToHome(){
         return "";
     }

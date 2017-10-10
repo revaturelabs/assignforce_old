@@ -3,7 +3,9 @@ package com.revature.assignforce.web;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.services.calendar.model.EventDateTime;
+import com.revature.assignforce.domain.Trainer;
 import com.revature.assignforce.domain.Unavailable;
+import com.revature.assignforce.domain.dao.TrainerRepository;
 import com.revature.assignforce.domain.dao.UnavailableRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,6 +16,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
@@ -67,6 +70,10 @@ public class GoogleCalCtrl {
     @Autowired
     private UnavailableRepository uDAO;
 
+    @Autowired
+    private TrainerRepository tDAO;
+
+    @PreAuthorize("hasPermission('', 'basic')")
     @ApiOperation(value = "redirect the view")
     @ApiResponses({
             @ApiResponse(code=200, message ="Successfully authorized the redirection of the view"),
@@ -85,6 +92,7 @@ public class GoogleCalCtrl {
         return null;
     }
 
+    @PreAuthorize("hasPermission('', 'basic')")
     @ApiOperation(value = "outh2 callback", response = String.class )
     @ApiResponses({
             @ApiResponse(code=200, message ="Successfully redirected"),
@@ -124,6 +132,7 @@ public class GoogleCalCtrl {
         return authorizationUrl.build();
     }
 
+    @PreAuthorize("hasPermission('', 'basic')")
     @ApiOperation(value = "google status", response = String.class)
     @ApiResponses({
             @ApiResponse(code=200, message ="Successfully retrieved the google status"),
@@ -137,6 +146,7 @@ public class GoogleCalCtrl {
         return null;
     }
 
+    @PreAuthorize("hasPermission('', 'basic')")
     @ApiOperation(value = "add event", response = String.class )
     @ApiResponses({
             @ApiResponse(code=200, message ="Successfully added an event"),
@@ -183,6 +193,15 @@ public class GoogleCalCtrl {
             t = new Timestamp(enddate.getTime());
             u.setEndDate(t);
             uDAO.save(u);
+
+            String[] n = name.split(" ");
+            Trainer trainer = tDAO.findByFirstNameAndLastName(n[0], n[1]);
+            try {
+                trainer.getUnavailabilities().add(u);
+                tDAO.save(trainer);
+            } catch(NullPointerException e) {
+                logger.warn(e);
+            }
 
             return event;
 

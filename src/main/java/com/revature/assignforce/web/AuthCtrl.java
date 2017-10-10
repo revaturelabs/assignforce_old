@@ -65,7 +65,6 @@ public class AuthCtrl {
 
     @RequestMapping(value = "/api/v2/logout", method = RequestMethod.GET)
     public String logout() {
-        System.out.println("Inside Logout");
         return "redirect:/logout";
     }
 
