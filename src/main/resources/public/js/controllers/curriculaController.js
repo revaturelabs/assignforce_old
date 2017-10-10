@@ -90,55 +90,55 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
     };
 
     //focus functions
-        cc.createCurriculum = function (focusForm,isCore) {
+    cc.createCurriculum = function (focusForm,isCore) {
 
-            //show a hidden field with a list of skill to select from, a name field, and a save button
-            if(focusForm.$valid){
+        //show a hidden field with a list of skill to select from, a name field, and a save button
+        if(focusForm.$valid){
 
-                let selectedSkills = cc.selectedSkills.map((x) => {
-                    return parseInt(x);
-                });
-                let skillList = cc.skills
-                    .filter( (skill) => selectedSkills.includes(skill.skillId) );
+            let selectedSkills = cc.selectedSkills.map((x) => {
+                return parseInt(x);
+            });
+            let skillList = cc.skills
+                .filter( (skill) => selectedSkills.includes(skill.skillId) );
 
-                let curriculum = {
-                    name    : isCore?cc.coreName:cc.focusName,
-                    skills  : skillList,
-                    active  : true,
-                    core    : isCore
-                };
+            let curriculum = {
+                name    : isCore?cc.coreName:cc.focusName,
+                skills  : skillList,
+                active  : true,
+                core    : isCore
+            };
 
-                curriculumService.create(curriculum, function () {
-                    cc.showToast("" + isCore? "Core":"Focus" +" created")
-                }, function () {
-                    cc.showToast("Failed to create " + isCore? "core":"focus")
-                })
+            curriculumService.create(curriculum, function () {
+                cc.showToast("" + isCore? "Core":"Focus" +" created")
+            }, function () {
+                cc.showToast("Failed to create " + isCore? "core":"focus")
+            })
 
-                //reload curriculum
-                cc.curricula.push(curriculum);
+            //reload curriculum
+            cc.curricula.push(curriculum);
 
-            } else {
-                cc.showToast("Missing input fields.")
-            }
+        } else {
+            cc.showToast("Missing input fields.")
+        }
 
-            cc.selectedSkills = [];
-            cc.focusName = undefined;
+        cc.selectedSkills = [];
+        cc.focusName = undefined;
 
-        };
-        //create a focus
-        //I want to fix this to be readable - Sam
-        cc.createFocus = function (focusForm) {
+    };
+    //create a focus
+    //I want to fix this to be readable - Sam
+    cc.createFocus = function (focusForm) {
 
-            cc.createCurriculum(focusForm,false);
-            cc.focusName = undefined;
+        cc.createCurriculum(focusForm,false);
+        cc.focusName = undefined;
 
-        };
+    };
 
-        //create a core
-        cc.createCore = function (coreForm) {
-            cc.createCurriculum(coreForm,true);
-            cc.coreName = undefined;
-        };
+    //create a core
+    cc.createCore = function (coreForm) {
+        cc.createCurriculum(coreForm,true);
+        cc.coreName = undefined;
+    };
 
     //removes a focus
     cc.removeCurriculum = function (event,curr) {
