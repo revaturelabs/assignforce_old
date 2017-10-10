@@ -132,3 +132,5 @@ to install all the dependencies needed to conduct automated unit testing.
 removing curricula only sets its active property to false
     it does not remove from database
     actual remove may lead to issues with existing batches that have the deleted curriculum
+
+Curricula Tab edit curriculum does not initialize existing skills as selected

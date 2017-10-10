@@ -1,6 +1,6 @@
 var assignforce = angular.module( "batchApp" );
 
-assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog, curriculumService, skillService) {
+assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog, curriculumService, skillService, $route) {
     var cc = this;
 
     $scope.isManager = $rootScope.role === "VP of Technology";
@@ -219,11 +219,7 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
                        };
                        curriculumService.create(curric, function () {
                            cc.showToast("Core created");
-                           curriculumService.getAll(function (response) {
-                               cc.curricula = response;
-                             }, function () {
-                             cc.showToast("Could not refresh skills");
-                          })
+                           $route.reload(); //this is not ideal. Newly created curricula do not appear initially
                        }, function () {
                            cc.showToast("Could not add Core")
                        })
@@ -264,7 +260,7 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
                        };
                        curriculumService.create(curric, function () {
                            cc.showToast("Focus created");
-                           cc.curricula.push(curric);
+                           $route.reload(); //this is not ideal. Newly created curricula do not appear initially
                        }, function () {
                            cc.showToast("You could not add focus")
                        })
