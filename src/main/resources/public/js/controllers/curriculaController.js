@@ -160,7 +160,11 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
                        };
                        curriculumService.create(curric, function () {
                            cc.showToast("Core created");
-                           $route.reload(); //this is not ideal. Newly created curricula do not appear initially
+                               curriculumService.getAll(function (response) {
+                                   cc.curricula = response;
+                               }, function () {
+                                   cc.showToast("Could not refresh curricula.");
+                               });
                        }, function () {
                            cc.showToast("Could not add Core")
                        })
@@ -201,7 +205,11 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
                        };
                        curriculumService.create(curric, function () {
                            cc.showToast("Focus created");
-                           $route.reload(); //this is not ideal. Newly created curricula do not appear initially
+                               curriculumService.getAll(function (response) {
+                                   cc.curricula = response;
+                               }, function () {
+                                   cc.showToast("Could not refresh curricula.");
+                               });
                        }, function () {
                            cc.showToast("You could not add focus")
                        })
