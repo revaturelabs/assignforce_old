@@ -31,7 +31,7 @@ public class CurriculumCtrl {
 
 	  // CREATE
 		// creating new curriculum object from information passed from curriculum data transfer object
-	  @PreAuthorize("hasPermission('', 'basic')")
+	  @PreAuthorize("hasPermission('', 'manager')")
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createCurriculum( @RequestBody CurriculumDTO in ) {
 
@@ -66,7 +66,7 @@ public class CurriculumCtrl {
 
 	  // UPDATE
 		// updating an existing curriculum object with information passed from curriculum data transfer object
-	  @PreAuthorize("hasPermission('', 'basic')")
+	  @PreAuthorize("hasPermission('', 'manager')")
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object updateCurriculum( @RequestBody CurriculumDTO in ) {
 		Integer id = in.getCurrId();
@@ -88,7 +88,7 @@ public class CurriculumCtrl {
 	
 	  // DELETE
 		// delete curriculum with given ID
-	  @PreAuthorize("hasPermission('', 'basic')")
+	  @PreAuthorize("hasPermission('', 'manager')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object deleteCurriculum( @PathVariable("id") int ID ) {
 
