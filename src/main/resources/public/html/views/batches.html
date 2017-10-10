@@ -44,7 +44,7 @@
                             <md-select ng-model="bCtrl.batch.focus" ng-change="bCtrl.updateSelectedSkills(); bCtrl.updateSkillRatios();">
                             	<div ng-if="bCtrl.batch.curriculum">
                             		<md-option ng-value="null">No Focus</md-option>
-                                	<md-option ng-value="focus.currId" ng-repeat="focus in bCtrl.foci"> {{ focus.name }} </md-option>
+                                	<md-option ng-value="focus.currId" ng-repeat="focus in bCtrl.foci | activeItem"> {{ focus.name }} </md-option>
                             	</div>
                             	<div ng-if="!bCtrl.batch.curriculum">
                             		<md-option ng-value="null" disabled>Select a curriculum first.</md-option>
@@ -57,7 +57,7 @@
 	                        <label> Skills </label>
 	                        <md-select ng-model="bCtrl.selectedSkills" ng-change="bCtrl.updateSkillRatios();" multiple>
 	                        	<div ng-if="bCtrl.batch.curriculum">
-	                            	<md-option ng-repeat="skill in bCtrl.skills" ng-if="skill.active === true" ng-value="{{skill.skillId}}">{{skill.name}}</md-option>
+	                            	<md-option ng-repeat="skill in bCtrl.skills" ng-value="{{skill.skillId}}">{{skill.name}}</md-option>
 	                        	</div>
 	                        	<div ng-if="!bCtrl.batch.curriculum">
 	                        		<md-select-header> Select a curriculum first.</md-select-header>
