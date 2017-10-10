@@ -35,7 +35,7 @@
                     	<md-input-container flex>                       
                             <label> Curriculum </label>
                             <md-select ng-model="bCtrl.batch.curriculum" ng-change="bCtrl.defaultName(); bCtrl.updateSelectedSkills(); bCtrl.updateSkillRatios();">
-                                <md-option ng-value="curriculum.currId" ng-repeat="curriculum in bCtrl.curricula"> {{ curriculum.name }} </md-option>
+                                <md-option ng-value="curriculum.currId" ng-repeat="curriculum in bCtrl.curricula | activeItem"> {{ curriculum.name }} </md-option>
                             </md-select>
                         </md-input-container>
                         
@@ -57,7 +57,7 @@
 	                        <label> Skills </label>
 	                        <md-select ng-model="bCtrl.selectedSkills" ng-change="bCtrl.updateSkillRatios();" multiple>
 	                        	<div ng-if="bCtrl.batch.curriculum">
-	                            	<md-option ng-repeat="skill in bCtrl.skills" ng-value="{{skill.skillId}}">{{skill.name}}</md-option>
+	                            	<md-option ng-repeat="skill in bCtrl.skills" ng-if="skill.active === true" ng-value="{{skill.skillId}}">{{skill.name}}</md-option>
 	                        	</div>
 	                        	<div ng-if="!bCtrl.batch.curriculum">
 	                        		<md-select-header> Select a curriculum first.</md-select-header>
