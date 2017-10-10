@@ -157,7 +157,7 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
                 cc.showToast("Unable to remove core")
             })
             }, function() {
-                
+
         });
     };
 
