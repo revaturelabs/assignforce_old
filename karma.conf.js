@@ -53,7 +53,7 @@ module.exports = function(config) {
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
     reporters: ['progress','junit'],
     junitReporter: {
-        outputFile: 'target/surefire-reports/test-results.xml'
+        outputFile: '../target/surefire-reports/test-results.xml'
     },
 
     // web server port
