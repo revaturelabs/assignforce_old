@@ -35,8 +35,14 @@
             }
         };
 
-       
-        
+        mc.logout = function(){
+            $http.get("api/v2/logout").success(function() {
+                window.location = "/";
+            }).error(function() {
+                window.location = "/";
+            });
+        };
+
 
           // data
         mc.currentPage = mc.findCurrentPage();

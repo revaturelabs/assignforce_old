@@ -4,8 +4,8 @@
         <!-- Create/Edit batch section -->
         <!--  bCtrl is Batch Controller -->
         <!--<md-content ng-show="isManager">-->
-        <md-content > <!--Pasang: this will show create batch form upon logging in-->
-            <form class="batchForm" name="batchForm" ng-submit="bCtrl.saveBatch(batchForm.$valid)" novalidate>
+        <md-content ng-if= "isManager"> <!--Pasang: this will show create batch form upon logging in-->
+            <form class="batchForm" name="batchForm"  ng-submit="bCtrl.saveBatch(batchForm.$valid)" novalidate>
                     
                 <!-- Labels section and buttons based on creation mode (create/edit/clone) -->
                 <md-toolbar class="md-primary" layout="columns" layout-align="center center">                
@@ -33,9 +33,9 @@
                 <div layout="columns" layout-xl="rows"  class="md-title">
                     <div flex layout="columns">                    
                     	<md-input-container flex>                       
-                            <label> Curriculum </label>
+                            <label> Core Curriculum </label>
                             <md-select ng-model="bCtrl.batch.curriculum" ng-change="bCtrl.defaultName(); bCtrl.updateSelectedSkills(); bCtrl.updateSkillRatios();">
-                                <md-option ng-value="curriculum.currId" ng-repeat="curriculum in bCtrl.curricula"> {{ curriculum.name }} </md-option>
+                                <md-option ng-value="curriculum.currId" ng-repeat="curriculum in bCtrl.curricula | activeItem"> {{ curriculum.name }} </md-option>
                             </md-select>
                         </md-input-container>
                         
@@ -44,7 +44,7 @@
                             <md-select ng-model="bCtrl.batch.focus" ng-change="bCtrl.updateSelectedSkills(); bCtrl.updateSkillRatios();">
                             	<div ng-if="bCtrl.batch.curriculum">
                             		<md-option ng-value="null">No Focus</md-option>
-                                	<md-option ng-value="focus.currId" ng-repeat="focus in bCtrl.foci"> {{ focus.name }} </md-option>
+                                	<md-option ng-value="focus.currId" ng-repeat="focus in bCtrl.foci | activeItem"> {{ focus.name }} </md-option>
                             	</div>
                             	<div ng-if="!bCtrl.batch.curriculum">
                             		<md-option ng-value="null" disabled>Select a curriculum first.</md-option>
@@ -57,7 +57,7 @@
 	                        <label> Skills </label>
 	                        <md-select ng-model="bCtrl.selectedSkills" ng-change="bCtrl.updateSkillRatios();" multiple>
 	                        	<div ng-if="bCtrl.batch.curriculum">
-	                            	<md-option ng-repeat="skill in bCtrl.skills" ng-value="skill.skillId">{{skill.name}}</md-option>
+	                            	<md-option ng-repeat="skill in bCtrl.skills" ng-value="{{skill.skillId}}">{{skill.name}}</md-option>
 	                        	</div>
 	                        	<div ng-if="!bCtrl.batch.curriculum">
 	                        		<md-select-header> Select a curriculum first.</md-select-header>
@@ -302,27 +302,35 @@
 
             <div ng-controller="TimelineCtrl as tlCtrl">
 
-                <div class="batchView" ng-if="(tlCtrl.batches != undefined) && (tlCtrl.trainers != undefined)">
+                <div class="batchView" ng-if="isLoaded === true" >
                     <div class="md-padding" layout="columns">
-                        <md-input-container flex="none">
-                            <label> Start Date </label>
-                            <md-datepicker ng-model="tlCtrl.minDate" md-current-view="year" md-open-on-focus md-hide-icons="calendar" ng-change="tlCtrl.validateStartDate(); tlCtrl.filterTimelineData(false); tlCtrl.changeTrainersPerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.projectTimelineOnly()"> </md-datepicker>
-                        </md-input-container>
-                        
-                        <div flex> </div>
+                        <div>
+                            <div layout="columns">
+                                <md-input-container flex="none">
+                                    <label> Start Date  </label>
+                                    <md-datepicker  ng-model="StartDate" ng-model-options="{ getterSetter: true }" md-min-date="minimumDate()" md-max-date="EndDate()" md-current-view="year" md-open-on-focus md-hide-icons="calendar" ng-change="projectTimeline(-100)" > </md-datepicker>
+                                </md-input-container>
 
-                        <md-input-container flex="none">
-                            <label> End Date </label>
-                            <md-datepicker ng-model="tlCtrl.maxDate" md-current-view="year" md-open-on-focus md-hide-icons="calendar" ng-change="tlCtrl.validateEndDate(); tlCtrl.filterTimelineData(false); tlCtrl.changeTrainersPerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.projectTimelineOnly()"> </md-datepicker>
-                        </md-input-container>
-                        
+                                <div flex> </div>
+
+                                <md-input-container flex="none">
+                                    <label> End Date </label>
+                                    <md-datepicker ng-model="EndDate" ng-model-options="{ getterSetter: true }" md-min-date="StartDate()" md-max-date="maximumDate()" md-current-view="year" md-open-on-focus md-hide-icons="calendar" ng-change="projectTimeline(-100)"> </md-datepicker>
+                                </md-input-container>
+                            </div>
+                            <div layout="columns">
+                            <md-checkbox aria-label="Select Dates Automatically?" ng-model="selectDatesAutomatically" ng-change="projectTimeline(-100)">
+                                Select Dates Automatically?
+                            </md-checkbox>
+                                <span ng-if="noBatchesFound === true">&nbsp; &nbsp; No Batches Found! </span>
+                            </div>
+                        </div>
                         <div flex> </div>
                         
                         <md-input-container flex="none">
                         	<label> Curriculum </label>
-                            <md-select ng-model="tlCtrl.selectedCurriculum" ng-change="tlCtrl.filterTimelineData(false); tlCtrl.changeTrainersPerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.getDateRange(tlCtrl.useFilteredBatches()); tlCtrl.projectTimelineOnly()" ng-style="{'width': 160 + 'px'}">
-                            	<md-option ng-value = "0">Any</md-option>
-                                <md-option ng-value="curriculum.currId" ng-repeat="curriculum in tlCtrl.curricula"> {{ curriculum.name }} </md-option>
+                            <md-select ng-model="selectCurricula"  ng-style="{'width': 160 + 'px'}" multiple ng-change="projectTimeline(-100)">
+                                <md-option ng-value="curriculum.currId" ng-repeat="curriculum in Curricula"> {{ curriculum.name }} </md-option>
                             </md-select>
                         </md-input-container>
                         
@@ -330,9 +338,8 @@
                         
                         <md-input-container flex="none">
                         	<label> Focus </label>
-                            <md-select ng-model="tlCtrl.selectedFocus" ng-change="tlCtrl.filterTimelineData(false); tlCtrl.changeTrainersPerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.getDateRange(tlCtrl.useFilteredBatches()); tlCtrl.projectTimelineOnly()" ng-style="{'width': 160 + 'px'}">
-                            	<md-option ng-value = "0">Any</md-option>
-                                <md-option ng-value="focus.currId" ng-repeat="focus in tlCtrl.foci"> {{ focus.name }} </md-option>
+                            <md-select ng-model="selectFoci"  ng-style="{'width': 160 + 'px'}" multiple ng-change="projectTimeline(-100)">
+                                <md-option ng-value="focus.currId" ng-repeat="focus in Foci"> {{ focus.name }} </md-option>
                             </md-select>
                         </md-input-container>
                   
@@ -340,69 +347,51 @@
                         
                         <md-input-container flex="none">
                         	<label> Location </label>
-                            <md-select ng-model="tlCtrl.selectedLocation" ng-change="tlCtrl.selectedBuilding = 0; tlCtrl.filterTimelineData(false); tlCtrl.changeTrainersPerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.getDateRange(tlCtrl.useFilteredBatches()); tlCtrl.projectTimelineOnly()" ng-style="{'width': 160 + 'px'}">
-                            	<md-option ng-value = "0">Any</md-option>
-                                <md-option ng-value="location.id" ng-repeat="location in tlCtrl.locations"> {{ location.name }} - {{ location.city }}, {{ location.state }}</md-option>
+                            <md-select ng-model="selectLocations"  ng-style="{'width': 160 + 'px'}" ng-change="selectBuildings = [] ;projectTimeline(-100)" multiple>
+                                <md-option ng-value="location.id" ng-repeat="location in Location"> {{ location.name }} - {{ location.city }}, {{ location.state }}</md-option>
                             </md-select>
                         </md-input-container>
                   
                         <div flex> </div>
                         
-                       	<div ng-if = "tlCtrl.selectedLocation != 0">
-                       		<md-input-container flex="none">
+                       	<div>
+                       		<md-input-container flex="none" >
                        			<label> Building </label>
-	                            <md-select ng-model="tlCtrl.selectedBuilding" ng-change="tlCtrl.filterTimelineData(false); tlCtrl.changeTrainersPerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.getDateRange(tlCtrl.useFilteredBatches()); tlCtrl.projectTimelineOnly()" ng-style="{'width': 160 + 'px'}">
-	                            	<md-option ng-value = "0">Any</md-option>
-	                                <md-option ng-value="building.id" ng-repeat="building in tlCtrl.getSelectedLocation().buildings"> {{ building.name }} </md-option>
+	                            <md-select ng-model="selectBuildings"  ng-style="{'width': 160 + 'px'}" ng-disabled="selectLocations.length === 0" ng-change="projectTimeline(-100)" multiple>
+	                                <md-option ng-value="building.id" ng-repeat="building in Buildings| filter:filterBuildings(selectLocations)"> {{ building.name }} </md-option>
 	                            </md-select>
                             </md-input-container>
                         </div>
-                        
-                        <div ng-if = "tlCtrl.selectedLocation == 0">
-                           	<md-input-container flex="none">
-                           		<label> Building </label>
-	                            <md-select ng-model="tlCtrl.selectedBuilding" ng-style="{'width': 160 + 'px'}" disabled>
-	                            	<md-option ng-value = "0" selected>Any</md-option>
-	                            </md-select>
-                            </md-input-container>
-                        </div>
+
                         
                         <div flex> </div>
                         
                         <div class="md-padding" layout="columns">
-	                        <md-checkbox aria-label="Hide Concluded Batches?" ng-model="tlCtrl.hideConcludedBatches" ng-change="tlCtrl.filterTimelineData(true); tlCtrl.getDateRange(tlCtrl.useFilteredBatches()); tlCtrl.projectTimelineOnly()">
-	                        	Hide Concluded Batches?
+	                        <md-checkbox aria-label="Hide Concluded Batches?" ng-model="hideConcludedBatches" ng-change="projectTimeline(-100)">
+                                <span>Hide Concluded Batches?</span>
 	                        </md-checkbox>
-	                        
-	                        <div ng-if="tlCtrl.realTrainersPerPage <= 0">
-		                        <md-checkbox aria-label="Hide Batchless Trainers?" ng-model="tlCtrl.hideBatchlessTrainers" ng-change="tlCtrl.filterTimelineData(false); tlCtrl.changeTrainersPerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.projectTimelineOnly()">
-		                        	Hide Batchless Trainers?
-		                        </md-checkbox>
-	                        </div>
-	                        
-	                        <div ng-if="tlCtrl.realTrainersPerPage > 0">
-		                        <md-checkbox aria-label="Hide Batchless Trainers?" ng-model="tlCtrl.hideBatchlessTrainers" disabled>
-		                        	Hide Batchless Trainers?
-		                        </md-checkbox>
-	                        </div>
+                            <md-checkbox aria-label="Hide Batchless Trainers?" ng-model="hideBatchlessTrainers" ng-change="projectTimeline(-100)">
+                                <span>Hide Batchless Trainers?</span>
+                            </md-checkbox>
+
                         </div>
                     </div>
                     
 	                <div class="md-padding" layout="columns">
                         <md-input-container flex="none">
                         	<label> Trainers Per Page (0 to see All) </label>
-                            <input type = "number" min = "0" max = "tlCtrl.maxTrainerPages" ng-model="tlCtrl.trainersPerPage" ng-change="tlCtrl.filterTimelineData(false); tlCtrl.changeTrainersPerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.projectTimelineOnly()" ng-style="{'width': 320 + 'px'}"/>
+                            <input type = "number" min = "0" max = "completeTrainerList.length" ng-model="pagination.perPage" ng-model-options="{ getterSetter: true }" ng-change="projectTimeline(-100)" ng-style="{'width': 320 + 'px'}"/>
                         </md-input-container>
                         
                         <div class="md-padding" layout="columns">
-	                        <md-button id = "firstTrainerPageButton" class="md-fab md-mini" ng-click="tlCtrl.firstTrainerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.projectTimelineOnly()" ng-disabled = "tlCtrl.previousPageButtonDisabled"> 
+	                        <md-button id = "firstTrainerPageButton" class="md-fab md-mini" ng-click="pagination.currentPage(1); projectTimeline(-100)" ng-disabled = "pagination.currentPage() === 1">
 	                            <md-tooltip class="md-title"> Jump to First Page </md-tooltip>
 	                            <md-icon md-svg-src="img/ic_skip_previous_white_24px.svg"></md-icon>
 	                        </md-button>
 	                        
 	                        <div flex> </div>
                         
-	                        <md-button id = "previousTrainerPageButton" class="md-fab md-mini" ng-click="tlCtrl.previousTrainerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.projectTimelineOnly()" ng-disabled = "tlCtrl.previousPageButtonDisabled"> 
+	                        <md-button id = "previousTrainerPageButton" class="md-fab md-mini" ng-click="pagination.previousPage(); projectTimeline(-100)" ng-disabled = "pagination.currentPage() === 1">
 	                            <md-tooltip class="md-title"> Previous Page </md-tooltip>
 	                            <md-icon md-svg-src="img/ic_arrow_back_white_24px.svg"></md-icon>
 	                        </md-button>
@@ -410,16 +399,16 @@
 	                        <div flex> </div>
 	                        
 	                        <div>
-	                        	<div ng-if = "tlCtrl.realTrainersPerPage > 0 && tlCtrl.maxTrainerPages > 1">
+	                        	<div ng-if = "pagination.shouldPaginate()">
 	                        		<div>
-	                        			Viewing Page:  <b>{{tlCtrl.realTrainerPage}}</b> / {{tlCtrl.maxTrainerPages}}
-	                        		</div>
+	                        			Viewing Page:  <b>{{pagination.currentPage()}}</b> / {{ pagination.maxPage() }}
+                                    </div>
 			                        <md-input-container flex="none">
 			                        	<label> Go To Page </label>
-			                            <input type = "number" min = "1" max = "tlCtrl.maxTrainerPages" ng-model="tlCtrl.trainerPage" ng-change="tlCtrl.goToTrainerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.projectTimelineOnly()" ng-style="{'width': 160 + 'px'}"/>
+			                            <input type = "number" min = "1" max = "pagination.maxPage()" ng-model="pagination.currentPage"  ng-model-options="{ getterSetter: true }" ng-change="projectTimeline(-100)" ng-style="{'width': 160 + 'px'}"/>
 			                        </md-input-container>
 	                        	</div>
-	                        	<div ng-if = "tlCtrl.realTrainersPerPage <= 0 || tlCtrl.maxTrainerPages <= 1">
+	                        	<div ng-if = "!pagination.shouldPaginate()">
 	                        		<div>
 	                        			Viewing All Trainers' Batches
 	                        		</div>
@@ -428,24 +417,27 @@
 	                        
 	                        <div flex> </div>
 	                        
-	                        <md-button id = "nextTrainerPageButton"  class="md-fab md-mini" ng-click="tlCtrl.nextTrainerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.projectTimelineOnly()" ng-disabled = "tlCtrl.nextPageButtonDisabled"> 
+	                        <md-button id = "nextTrainerPageButton"  class="md-fab md-mini" ng-click="pagination.nextPage(); projectTimeline(-100) " ng-disabled = "pagination.currentPage() === pagnination.maxPage()">
 	                            <md-tooltip class="md-title"> Next Page </md-tooltip>
 	                            <md-icon md-svg-src="img/ic_arrow_forward_white_24px.svg"></md-icon>
 	                        </md-button>
 	                      
 	                        <div flex> </div>
 	                        
-	                        <md-button id = "lastTrainerPageButton"  class="md-fab md-mini" ng-click="tlCtrl.lastTrainerPage(tlCtrl.hideBatchlessTrainers); tlCtrl.filterTimelineData(true); tlCtrl.projectTimelineOnly()" ng-disabled = "tlCtrl.nextPageButtonDisabled"> 
+	                        <md-button id = "lastTrainerPageButton"  class="md-fab md-mini" ng-click="pagination.currentPage(pagnination.maxPage()); projectTimeline(-100)" ng-disabled = "pagination.currentPage() === pagnination.maxPage()">
 	                            <md-tooltip class="md-title"> Jump to Last Page </md-tooltip>
 	                            <md-icon md-svg-src="img/ic_skip_next_white_24px.svg"></md-icon>
 	                        </md-button>
                         </div>
 	                </div>
                 </div>
-                <br ng-show="(tlCtrl.batches != undefined) && (tlCtrl.trainers != undefined)">
-                <div id="timeline" ng-mousedown="mousedown($event)" ng-show="(tlCtrl.batches != undefined) && (tlCtrl.trainers != undefined)"> </div>
-                
-                <div ng-if="(tlCtrl.batches == undefined) || (tlCtrl.trainers == undefined)" layout="column" layout-wrap layout-align="center center">
+                <div ng-show="isLoaded === true">
+                    <br/>
+                    <div ng-show="noBatchesFound === false">
+                        <div id="timeline"> </div>
+                    </div>
+                </div>
+                <div ng-if="isLoaded === false" layout="column" layout-wrap layout-align="center center">
                     <div flex="100"> &nbsp; </div>
                     <md-progress-circular flex="100" md-mode="indeterminate"> </md-progress-circular>
                     <div flex="100"> &nbsp; </div>

@@ -10,6 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
@@ -30,6 +31,7 @@ public class UnavailableCtrl {
 	
 	// CREATE
 	// creating new unavailable object from information passed from unavailable data transfer object
+	@PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createUnavailability( @RequestBody UnavailableDTO in ) {
 		int ID = in.getUnavailableId();
@@ -48,6 +50,7 @@ public class UnavailableCtrl {
 	
 	// RETRIEVE
 	// retrieve unavailability with given ID
+	@PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveUnavailability( @PathVariable("id") int ID ) {
 		Unavailable out = unavailableService.getOneItem(ID);
@@ -60,6 +63,7 @@ public class UnavailableCtrl {
 	
 	// UPDATE
 	// updating an existing unavailability object with information passed from unavailable data transfer object
+	@PreAuthorize("hasPermission('', 'trainer_profile')")
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object updateSkill( @RequestBody UnavailableDTO in ) {
 		
@@ -79,6 +83,7 @@ public class UnavailableCtrl {
 	
 	// DELETE
 	// delete unavailability with given ID
+	@PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object deleteUnavailability( @PathVariable("id") int ID ) {
 		unavailableService.deleteItem(ID);
@@ -86,6 +91,7 @@ public class UnavailableCtrl {
 	}
 	
 	// GET ALL **PROBABLY WON'T BE USED**
+	@PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveAllUnavailabilities() {
 		

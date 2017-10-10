@@ -18,6 +18,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.ComponentScan;
@@ -47,6 +49,7 @@ import com.revature.assignforce.service.DaoService;
 @ComponentScan(basePackages = "com.revature.assignforce.service")
 @Api(value = "Batch Controller", description = "CRUD with Batches")
 public class BatchCtrl {
+	private final static Log logger = LogFactory.getLog(BatchCtrl.class);
 
 	@PersistenceContext
 	private EntityManager em;
@@ -78,6 +81,7 @@ public class BatchCtrl {
 	// CREATE
 	// creating new batch object from information passed from batch data
 	// transfer object
+	@PreAuthorize("hasPermission('', 'manager')")
 	@ApiOperation(value = "Create a branch", response = BatchDaoService.class)
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully Created a Batch"),
@@ -137,6 +141,7 @@ public class BatchCtrl {
 		}
 	}
 
+	@PreAuthorize("hasPermission('', 'manager')")
 	@ApiOperation(value = "Retrieve a batch", response = BatchDaoService.class)
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully retrieved a Batch"),
@@ -159,6 +164,7 @@ public class BatchCtrl {
 
 	// DELETE
 	// delete batch with given ID
+	@PreAuthorize("hasPermission('', 'manager')")
 	@ApiOperation(value = "Delete a batch", response = BatchDaoService.class)
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully Deleted a Batch"),
@@ -220,7 +226,7 @@ public class BatchCtrl {
 		}
 	}
 
-
+	@PreAuthorize("hasPermission('', 'manager')")
 	@ApiOperation(value = "Update a batch", response = BatchDaoService.class)
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully updated a batch"),
@@ -296,6 +302,7 @@ public class BatchCtrl {
 		try {
 			batchService.saveItem(b);
 		} catch (Exception ex) {
+			logger.warn(ex);
 			return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO(ex.getMessage()),
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -303,7 +310,7 @@ public class BatchCtrl {
 		return new ResponseEntity<Batch>(b, HttpStatus.OK);
 	}
 
-
+	@PreAuthorize("hasPermission('', 'basic')")
 	@ApiOperation(value = "Create an Unavailabilities", response = BatchDaoService.class)
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully created an unavailabilities"),
@@ -330,9 +337,7 @@ public class BatchCtrl {
 		}
 	}
 
-
-
-
+	@PreAuthorize("hasPermission('', 'manager')")
 	@ApiOperation(value = "Remove an Unavailabilities", response = BatchDaoService.class)
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully removed an unavailabilities"),

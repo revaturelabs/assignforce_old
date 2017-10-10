@@ -4,6 +4,7 @@ import com.revature.assignforce.AssignForceV2Application;
 import com.revature.assignforce.domain.Room;
 import com.revature.assignforce.domain.Trainer;
 import com.revature.assignforce.domain.Unavailable;
+import com.revature.assignforce.security.CustomSecurity;
 import com.revature.assignforce.service.ActivatableObjectDaoService;
 import com.revature.assignforce.utils.JsonMaker;
 import org.junit.After;
@@ -48,6 +49,8 @@ public class RoomCtrlTest {
     @MockBean
     private ActivatableObjectDaoService<Room, Integer> roomService;
 
+    @MockBean
+    CustomSecurity customSecurity;
 
     private Room testRoom = null;
 
@@ -59,6 +62,7 @@ public class RoomCtrlTest {
         testRoom = new Room(0, "aRoom",
                 3, unavailablities, false);
 
+        given(customSecurity.hasPermission(any(),any(),any())).willReturn(true);
     }
 
     @After

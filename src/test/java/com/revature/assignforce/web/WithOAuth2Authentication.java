@@ -10,5 +10,5 @@ import java.lang.annotation.RetentionPolicy;
 public @interface WithOAuth2Authentication {
     String clientId() default "client-id";
     String username() default "username";
-    String family() default "Trainer";
+    String family() default "Trainers";
 }

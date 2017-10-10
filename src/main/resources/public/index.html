@@ -23,7 +23,14 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
     <link rel="stylesheet" href="css/login.css">
+    <style>
+        .SVGSticky {
+            position: sticky;
+            position: -webkit-sticky;
+        }
+    </style>
     <!--<link rel="stylesheet" href="css/customStyle.css">-->
+
 </head>
 
 <body ng-app="batchApp" ng-controller="AuthCtrl as aCtrl" layout-fill>
@@ -88,13 +95,13 @@
     <script type="text/javascript" src="js/services/trainerService.js"></script>
     <script type="text/javascript" src="js/services/unavailableService.js"></script>
     <script type="text/javascript" src="js/services/userService.js"></script>
+    <script type="text/javascript" src="js/services/utilService.js"></script>
     <script type="text/javascript" src="js/services/settingService.js"></script>
     <script type="text/javascript" src="js/services/S3CredentialsService.js"></script>
     <script type="text/javascript" src="js/services/ptoService.js"></script>
     <script type="text/javascript" src="js/services/gCalCredentialsService.js"></script>
 
-    <script type="text/javascript" src="js/services/SalesforceDBService.js"></script>
-    
+
     <!-- Filters -->
     <script type="text/javascript" src="js/filters/timeModeFilter.js"></script>
     <script type="text/javascript" src="js/filters/availableModeFilter.js"></script>

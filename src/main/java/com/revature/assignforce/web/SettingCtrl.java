@@ -4,11 +4,14 @@ import com.revature.assignforce.domain.Setting;
 import com.revature.assignforce.domain.dto.ResponseErrorDTO;
 import com.revature.assignforce.domain.dto.SettingDTO;
 import com.revature.assignforce.service.DaoService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,16 +24,20 @@ import java.util.List;
 @RequestMapping("/api/v2/setting")
 @ComponentScan(basePackages = "com.revature.assignforce.service")
 public class SettingCtrl {
+    private final static Log logger = LogFactory.getLog(SettingCtrl.class);
+
     @Autowired
     DaoService<Setting, Integer> settingService;
 
     //Create
+    @PreAuthorize("hasPermission('', 'manager')")
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object createSetting(@RequestBody SettingDTO in ){
         return new ResponseEntity(null, HttpStatus.NOT_IMPLEMENTED);
     }
 
     //Retrieve
+    @PreAuthorize("hasPermission('', 'basic')")
     @RequestMapping(value = "/{settingId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object retrieveSetting (@PathVariable("settingId") int settingId){
 
@@ -42,6 +49,7 @@ public class SettingCtrl {
         }
     }
 
+    @PreAuthorize("hasPermission('', 'basic')")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object getGlobalSettings(){
 
@@ -57,12 +65,14 @@ public class SettingCtrl {
     }
 
     //Update
+    @PreAuthorize("hasPermission('', 'manager')")
     @RequestMapping( method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object updateSetting(@RequestBody Setting in ){
 
         try{
             settingService.saveItem(in);
         }catch (Exception ex){
+            logger.warn(ex);
             return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("An error has occured while updating system settings"),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -70,6 +80,7 @@ public class SettingCtrl {
     }
 
     //Delete
+    @PreAuthorize("hasPermission('', 'manager')")
     @RequestMapping(value = "/{settingId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object deleteSetting(){
         return new ResponseEntity<Object>(null, HttpStatus.NOT_IMPLEMENTED);

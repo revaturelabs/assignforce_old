@@ -60,7 +60,7 @@ app.service('ptoService', function ($resource, $mdDialog, gCalService, $http) {
     }
 
      ptos.getGoogle = function() {
-            window.location = "/google";
+            window.location = "api/v2/google/google";
         }
         ptos.addPto = function(trainer, startDate, endDate){
             Date.prototype.addDays = function(days) {
@@ -111,7 +111,7 @@ app.service('ptoService', function ($resource, $mdDialog, gCalService, $http) {
                 $mdDialog.cancel();
                 showCalendar();
             }).error(function() {
-                console.log("not logged in");
+                console.error("not logged in");
                 window.location = "/api/v2/google/google";
             });
     //        gapi.client.load('calendar', 'v3', function(){ // load the calendar api (version 3)

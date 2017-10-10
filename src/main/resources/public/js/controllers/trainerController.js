@@ -117,10 +117,13 @@ assignforce.controller( "trainerCtrl", function( $scope, $rootScope, $mdDialog, 
     };
 
     tc.showCalendar = function(){
-        $http.get("/api/v2/google/googleStatus").error(function() {
-             window.location = "/api/v2/google/google";
+        $http.get("/api/v2/google/googleStatus").then(function(response) {
+            if(response.data !== "") {
+                ptoService.authorize();
+            } else {
+                 tc.googleAuth();
+             }
         });
-        ptoService.authorize();
     };
 
     tc.hideCalendar = function(){

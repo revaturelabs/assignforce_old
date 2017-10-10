@@ -15,6 +15,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +40,7 @@ public class BuildingCtrl {
 	// CREATE
 	// creating new building object from information passed from building data
 	// transfer object
+	@PreAuthorize("hasPermission('', 'manager')")
 	@ApiOperation(value = "Create a building", response = BuildingDaoService.class)
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully created a building"),
@@ -53,7 +55,6 @@ public class BuildingCtrl {
 		int location = in.getLocation(); //building's location id.  This is where it is was breaking - said the location id is 0
 		List<Room> rooms = in.getRooms(); //list of rooms(if being created in this step, no rooms..)
 
-		// int iD, String name, String city, String state, List<Building>
 		// buildings, Boolean active
 		Building out = new Building(ID, name, rooms, true, location);
 		out = buildingService.saveItem(out);// I need to see this: active is being set to null in the db. Is it because it should be 1 in the db instead of true?  idk
@@ -67,6 +68,7 @@ public class BuildingCtrl {
 
 	// RETRIEVE
 	// retrieve Building with given ID
+	@PreAuthorize("hasPermission('', 'basic')")
 	@ApiOperation(value = "Retrieve a building", response = BuildingDaoService.class)
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully retrieved a building"),
@@ -88,6 +90,7 @@ public class BuildingCtrl {
 	// UPDATE
 	// updating an existing Building object with information passed from
 	// Building data transfer object
+	@PreAuthorize("hasPermission('', 'manager')")
 	@ApiOperation(value = "Update building", response = BuildingDaoService.class)
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully updated building"),
@@ -116,6 +119,7 @@ public class BuildingCtrl {
 
 	// DELETE
 	// delete Building with given ID
+	@PreAuthorize("hasPermission('', 'manager')")
 	@ApiOperation(value = "Delete a branch", response = BuildingDaoService.class)
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully delete a building"),
@@ -131,6 +135,7 @@ public class BuildingCtrl {
 
 	// GET ALL
 	// retrieve all buildings
+	@PreAuthorize("hasPermission('', 'basic')")
 	@ApiOperation(value = "Retrieve all buildings", response = BuildingDaoService.class)
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully retrieve all buildings"),

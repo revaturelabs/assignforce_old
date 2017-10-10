@@ -2,6 +2,7 @@ package com.revature.assignforce.security;
 
 import com.revature.assignforce.domain.Employee;
 import com.revature.assignforce.domain.Force;
+import com.revature.assignforce.domain.dto.TrainerDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
@@ -38,8 +39,16 @@ public class CustomSecurity implements PermissionEvaluator {
     @Override
     public boolean hasPermission(Authentication auth, Object targetDomainObject, Object permission) {
         if (auth != null && permission instanceof String) {
-            System.out.println(auth.toString());
             Employee e = force.getCurrentEmployee((OAuth2Authentication) auth);
+
+            if (targetDomainObject instanceof TrainerDTO) {
+                TrainerDTO t = ((TrainerDTO) targetDomainObject);
+                String t_name = t.getFirstName() + " " + t.getLastName();
+                String e_name = e.getFirstName() + " " + e.getLastName();
+                if(!t_name.equals(e_name))
+                    return false;
+            }
+
             for(String s : permissions.get(e.getRoleName()))
                 if(s.equals((String)permission))
                     return true;
