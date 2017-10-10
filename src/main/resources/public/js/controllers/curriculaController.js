@@ -196,7 +196,7 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
             clickOutsideToClose: true,
             templateUrl : "html/templates/dialogs/curriculumFormDialog.html",
             locals: {
-                       skills: $rootScope.skills,
+                       skills: cc.skills,
                        curricI: {
                             name: "Core Name"
                        }
@@ -219,12 +219,12 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
                            core    : true
                        };
                        curriculumService.create(curric, function () {
-                           cc.showToast("Core created")
+                           cc.showToast("Core created");
+                           cc.curricula.push(curric);
                        }, function () {
                            cc.showToast("Could not add Core")
                        })
 
-                       cc.curricula.push(curric);
                 $mdDialog.hide();
            }
        }
@@ -237,7 +237,7 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
             clickOutsideToClose: true,
             templateUrl : "html/templates/dialogs/curriculumFormDialog.html",
             locals: {
-                       skills: $rootScope.skills,
+                       skills: cc.skills,
                        curricI: {
                                    name: "Focus Name"
                               }
@@ -260,12 +260,12 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
                            core    : false
                        };
                        curriculumService.create(curric, function () {
-                           cc.showToast("Focus created")
+                           cc.showToast("Focus created");
+                           cc.curricula.push(curric);
                        }, function () {
                            cc.showToast("You could not add focus")
                        })
 
-                       cc.curricula.push(curric);
                 $mdDialog.hide();
            }
        }
@@ -278,7 +278,7 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
             clickOutsideToClose: true,
             templateUrl : "html/templates/dialogs/curriculumFormDialog.html",
             locals: {
-                       skills: $rootScope.skills,
+                       skills: cc.skills,
                        curricI: {
                             name: curr.name,
                             skills: curr.skills
