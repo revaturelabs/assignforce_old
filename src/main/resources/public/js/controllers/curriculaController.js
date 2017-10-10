@@ -202,7 +202,7 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
            $scope.cancel = function() {
             $mdDialog.cancel();
            }
-           $scope.saveCurriculum = function(x) {
+           $scope.saveCurriculum = function() {
                 var curric = {
                            name    : $scope.curricI.name,
                            skills  : $scope.curricI.skills,
@@ -247,7 +247,7 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
            $scope.cancel = function() {
             $mdDialog.cancel();
            }
-           $scope.saveCurriculum = function(x) {
+           $scope.saveCurriculum = function() {
                 var curric = {
                            name    : $scope.curricI.name,
                            skills  : $scope.curricI.skills,
@@ -279,7 +279,7 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
             locals: {
                        curricI: {
                             name: curr.name,
-                            skills: cc.skills.filter(function check(x){
+                            skills: cc.skills.filter(function(x){
                                curr.skills.map(function(y) {
                                  return y.name;
                                }).includes(x.name);
@@ -297,7 +297,7 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
             $mdDialog.cancel();
            }
 
-           $scope.saveCurriculum = function(x) {
+           $scope.saveCurriculum = function() {
                curr.name = $scope.curricI.name
                curr.skills = $scope.curricI.skills
                curriculumService.update(curr, function () {
