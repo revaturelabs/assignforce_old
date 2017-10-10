@@ -4,8 +4,8 @@
         <!-- Create/Edit batch section -->
         <!--  bCtrl is Batch Controller -->
         <!--<md-content ng-show="isManager">-->
-        <md-content > <!--Pasang: this will show create batch form upon logging in-->
-            <form class="batchForm" name="batchForm" ng-if= "isManager" ng-submit="bCtrl.saveBatch(batchForm.$valid)" novalidate>
+        <md-content ng-if= "isManager"> <!--Pasang: this will show create batch form upon logging in-->
+            <form class="batchForm" name="batchForm"  ng-submit="bCtrl.saveBatch(batchForm.$valid)" novalidate>
                     
                 <!-- Labels section and buttons based on creation mode (create/edit/clone) -->
                 <md-toolbar class="md-primary" layout="columns" layout-align="center center">                
