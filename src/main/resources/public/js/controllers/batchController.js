@@ -325,6 +325,11 @@ assignforce.controller("batchCtrl", function($scope, batchService, unavailableSe
         if (!paramLow || !paramHigh) {
             return 0;
         }
+        if (paramLow <0 || paramHigh <0){ //makes sure paramLow and paramHigh return 0 if they are negative values
+            return 0;
+        }
+
+
 
         var today = new Date().getTime();
         var diff = paramHigh - paramLow;

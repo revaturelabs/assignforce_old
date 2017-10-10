@@ -29,7 +29,7 @@ describe('curriculaCtrl', function () {
     });
 
     //Does not work because there is a bug in curriculaController.js
-    xdescribe('testing toggleFocusToolbar', function (){
+    describe('testing toggleFocusToolbar', function (){
             it ("sets the focusToggle variable to set to false if its true", function(){
                 ctrl.focusToggle = true;
                 ctrl.toggleFocusToolbar();
