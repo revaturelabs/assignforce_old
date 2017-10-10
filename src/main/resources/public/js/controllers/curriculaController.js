@@ -278,7 +278,11 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
             locals: {
                        curricI: {
                             name: curr.name,
-                            skills: curr.skills
+                            skills: cc.skills.filter(function check(x){
+                               curr.skills.map(function(y) {
+                                 return y.name;
+                               }).includes(x.name);
+                            })
                        }
                      },
             controller: EditCurriculumDialogController
