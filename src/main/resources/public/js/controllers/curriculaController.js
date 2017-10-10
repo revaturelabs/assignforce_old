@@ -204,21 +204,42 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
            }
            $scope.saveCurriculum = function() {
                 var curric = {
-                           name    : $scope.curricI.name,
-                           skills  : $scope.curricI.skills,
-                           active  : true,
-                           core    : true
-                       };
-                       curriculumService.create(curric, function () {
-                           cc.showToast("Core created");
-                               curriculumService.getAll(function (response) {
-                                   cc.curricula = response;
-                               }, function () {
-                                   cc.showToast("Could not refresh curricula.");
-                               });
-                       }, function () {
-                           cc.showToast("Could not add Core")
-                       })
+                   name    : $scope.curricI.name,
+                   skills  : $scope.curricI.skills,
+                   active  : true,
+                   core    : true
+               };
+               var existingInactive = find(curric, cc.curricula);
+               console.log(cc.curricula);
+               if(existingInactive){
+                    existingInactive.name = curric.name;
+                    existingInactive.skills = curric.skills;
+                    existingInactive.active = true;
+                    curriculumService.update(existingInactive,
+                    function(){
+                        cc.showToast("Core created");
+                        curriculumService.getAll(function (response) {
+                            cc.curricula = response;
+                        }, function () {
+                              cc.showToast("Could not refresh curricula.");
+                        });
+                    },
+                    function(){
+                        cc.showToast("Could not add Core");
+                    });
+               }
+               else{
+                    curriculumService.create(curric, function () {
+                      cc.showToast("Core created");
+                          curriculumService.getAll(function (response) {
+                              cc.curricula = response;
+                          }, function () {
+                              cc.showToast("Could not refresh curricula.");
+                          });
+                    }, function () {
+                      cc.showToast("Could not add Core")
+                    })
+               }
 
 
                 $mdDialog.hide();
@@ -254,16 +275,37 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
                            active  : true,
                            core    : false
                        };
-                       curriculumService.create(curric, function () {
-                           cc.showToast("Focus created");
+                       var existingInactive = find(curric, cc.curricula);
+                       if(existingInactive){
+                            existingInactive.name = curric.name;
+                            existingInactive.skills = curric.skills;
+                            existingInactive.active = true;
+                           curriculumService.update(existingInactive,
+                           function(){
+                               cc.showToast("Focus created");
                                curriculumService.getAll(function (response) {
                                    cc.curricula = response;
                                }, function () {
-                                   cc.showToast("Could not refresh curricula.");
+                                     cc.showToast("Could not refresh curricula.");
                                });
-                       }, function () {
-                           cc.showToast("You could not add focus")
-                       })
+                           },
+                           function(){
+                               cc.showToast("Could not add Focus");
+                           });
+                           $mdDialog.hide();
+                       }
+                       else{
+                           curriculumService.create(curric, function () {
+                               cc.showToast("Focus created");
+                                   curriculumService.getAll(function (response) {
+                                       cc.curricula = response;
+                                   }, function () {
+                                       cc.showToast("Could not refresh curricula.");
+                                   });
+                           }, function () {
+                               cc.showToast("You could not add focus")
+                           })
+                       }
 
                 $mdDialog.hide();
            }
@@ -309,7 +351,18 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
            }
        }
     };
-
+    //sequentially searches list of curricula for the target curricula
+    //returns resource if it exists and if it is inactive
+    var find = function (target, list){
+        let item;
+        for(let i=0; i<list.length; i++){
+            item = list[i];
+            if((target.name===item.name) && !item.active){
+                return item;
+            }
+        }
+        return false;
+    }
     //variables
     cc.selectedSkills = [];
     cc.focusName = undefined;
