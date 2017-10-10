@@ -55,7 +55,6 @@ public class BuildingCtrl {
 		int location = in.getLocation(); //building's location id.  This is where it is was breaking - said the location id is 0
 		List<Room> rooms = in.getRooms(); //list of rooms(if being created in this step, no rooms..)
 
-		// int iD, String name, String city, String state, List<Building>
 		// buildings, Boolean active
 		Building out = new Building(ID, name, rooms, true, location);
 		out = buildingService.saveItem(out);// I need to see this: active is being set to null in the db. Is it because it should be 1 in the db instead of true?  idk

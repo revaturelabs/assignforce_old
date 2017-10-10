@@ -15,10 +15,10 @@ public class BatchNamePattern {
     @GeneratedValue(generator = "patternSeq", strategy = GenerationType.SEQUENCE)
     private Integer id;
 
-    public BatchNamePattern(){}
-
     @Column(name = "PATTERN")
     private String pattern;
+
+    public BatchNamePattern(){}
 
     public Integer getId() {
         return id;

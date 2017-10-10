@@ -2,9 +2,6 @@ package com.revature.assignforce.web;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.api.client.http.HttpResponse;
-import com.google.api.client.json.Json;
-import com.google.api.services.calendar.model.CalendarListEntry;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.revature.assignforce.domain.Unavailable;
 import com.revature.assignforce.domain.dao.UnavailableRepository;
@@ -20,7 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
-import javax.servlet.http.HttpServletRequest;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -45,9 +42,9 @@ import com.google.api.services.calendar.model.Event;
 
 @Controller
 @Api(value = "Google Calendar Controller", description = "CRUD with the google API")
-public class GoogleCalController {
+public class GoogleCalCtrl {
 
-    private final static Log logger = LogFactory.getLog(GoogleCalController.class);
+    private final static Log logger = LogFactory.getLog(GoogleCalCtrl.class);
     private static final String APPLICATION_NAME = "";
     private static HttpTransport httpTransport;
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
@@ -66,14 +63,9 @@ public class GoogleCalController {
 
     @Value("${google.calendar.id}")
     private String googleCalendarId;
-    private Set<Event> events = new HashSet<>();
 
     @Autowired
-    private UnavailableRepository UDAO;
-
-    public void setEvents(Set<Event> events) {
-        this.events = events;
-    }
+    private UnavailableRepository uDAO;
 
     @ApiOperation(value = "redirect the view")
     @ApiResponses({
@@ -82,8 +74,15 @@ public class GoogleCalController {
             @ApiResponse(code=500, message ="Cannot authorize the redirect view ")
     })
     @RequestMapping(value = "/api/v2/google/google", method = RequestMethod.GET)
-    public RedirectView googleConnectionStatus(HttpServletRequest request) throws Exception {
-        return new RedirectView(authorize());
+    public RedirectView googleConnectionStatus() {
+        try {
+            return new RedirectView(authorize());
+        } catch(GeneralSecurityException e) {
+            logger.warn(e);
+        } catch(IOException e) {
+            logger.warn(e);
+        }
+        return null;
     }
 
     @ApiOperation(value = "outh2 callback", response = String.class )
@@ -94,9 +93,6 @@ public class GoogleCalController {
     })
     @RequestMapping(value = "/api/v2/google/google", method = RequestMethod.GET, params = "code")
     public synchronized String oauth2Callback(@RequestParam(value = "code") String code) {
-//        System.out.println("inside oauth2Callback");
-        com.google.api.services.calendar.model.Events eventList;
-        String message = "";
         try {
             TokenResponse response = flow.newTokenRequest(code).setRedirectUri(redirectURI).execute();
             credential = flow.createAndStoreCredential(response, "userID");
@@ -104,13 +100,12 @@ public class GoogleCalController {
             client = new com.google.api.services.calendar.Calendar.Builder(httpTransport, JSON_FACTORY, credential)
                     .setApplicationName(APPLICATION_NAME).build();
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             logger.warn("Exception while handling OAuth2 callback (" + e.getMessage() + ")."
                     + " Redirecting to google connection status page.");
-            message = "Exception while handling OAuth2 callback (" + e.getMessage() + ")."
-                    + " Redirecting to google connection status page.";
+            logger.warn(e);
         }
-        return "redirect:/";
+        return "redirect:/trainers";
     }
 
     private synchronized String authorize() throws GeneralSecurityException, IOException {
@@ -125,7 +120,7 @@ public class GoogleCalController {
                     Collections.singleton(CalendarScopes.CALENDAR)).build();
         }
         authorizationUrl = flow.newAuthorizationUrl().setRedirectUri(redirectURI);
-//        System.out.println("cal authorizationUrl->" + authorizationUrl);
+        logger.debug("cal authorizationUrl->" + authorizationUrl);
         return authorizationUrl.build();
     }
 
@@ -137,7 +132,6 @@ public class GoogleCalController {
     })
     @RequestMapping(value = "/api/v2/google/googleStatus", produces = MediaType.TEXT_PLAIN_VALUE)
     public @ResponseBody String googleStatus() {
-//        System.out.println(client);
         if(client != null)
             return "good";
         return null;
@@ -150,9 +144,7 @@ public class GoogleCalController {
             @ApiResponse(code=500, message ="Cannot add an event due to a server error")
     })
     @RequestMapping(value = "/api/v2/google/addEvent")
-    private String addEvent(@RequestBody String json, HttpServletResponse res) throws IOException, ParseException {
-//        System.out.println("INSIDE ADD EVENT BRUH!!!!!!!!!!!!!!!");
-//        System.out.println("This is the json string send from angular: "  + json);
+    public String addEvent(@RequestBody String json, HttpServletResponse res) throws IOException, ParseException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode node = mapper.readTree(json);
         String name = node.get("summary").textValue();
@@ -160,38 +152,43 @@ public class GoogleCalController {
         String endDate =  node.get("end").get("date").textValue();
         Event event = newEvent(name, startDate, endDate);
         try {
-            Event result = client.events().insert(googleCalendarId, event).execute();
+            client.events().insert(googleCalendarId, event).execute();
             return "redirect:/";
         }catch (NullPointerException e){
+            logger.warn(e);
             res.sendError(500);
         }
         return null;
-
     }
-    private Event newEvent(String name,String startDate, String endDate) throws ParseException {
+
+    private Event newEvent(String name,String startDate, String endDate) {
         Event event = new Event();
         String pattern = "yyyy-MM-dd";
-        Date startdate = null;
-        Date enddate = null;
+        Date startdate;
+        Date enddate;
         SimpleDateFormat format = new SimpleDateFormat(pattern);
-//        try {
+        try {
             startdate = format.parse(startDate);
             enddate = format.parse(endDate);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-        event.setSummary(name);
-        DateTime start = new DateTime(startdate, TimeZone.getTimeZone("EST"));
-        event.setStart(new EventDateTime().setDateTime(start));
-        DateTime end = new DateTime(enddate, TimeZone.getTimeZone("EST"));
-        event.setEnd(new EventDateTime().setDateTime(end));
 
-        Unavailable u = new Unavailable();
-        Timestamp t = new Timestamp(startdate.getTime());
-        u.setStartDate(t);
-        t = new Timestamp(enddate.getTime());
-        u.setEndDate(t);
-        UDAO.save(u);
-        return event;
+            event.setSummary(name);
+            DateTime start = new DateTime(startdate, TimeZone.getTimeZone("EST"));
+            event.setStart(new EventDateTime().setDateTime(start));
+            DateTime end = new DateTime(enddate, TimeZone.getTimeZone("EST"));
+            event.setEnd(new EventDateTime().setDateTime(end));
+
+            Unavailable u = new Unavailable();
+            Timestamp t = new Timestamp(startdate.getTime());
+            u.setStartDate(t);
+            t = new Timestamp(enddate.getTime());
+            u.setEndDate(t);
+            uDAO.save(u);
+
+            return event;
+
+        } catch (ParseException e) {
+            logger.warn(e);
+        }
+        return null;
     }
 }

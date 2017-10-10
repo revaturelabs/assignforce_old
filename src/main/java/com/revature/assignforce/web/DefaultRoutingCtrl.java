@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
  * Created by August Duet on 11/28/2016.
  */
 @Controller
-public class DefaultRoutingController {
+public class DefaultRoutingCtrl {
 
     //Don't ask why it works, just accept it
     @RequestMapping(value = {"/login", "/home", "/batches", "/curriculum", "/trainers", "/locations", "/profile", "/profile/:id", "/reports", "/settings"})

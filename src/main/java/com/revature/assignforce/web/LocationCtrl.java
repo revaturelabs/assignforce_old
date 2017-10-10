@@ -41,7 +41,6 @@ public class LocationCtrl {
 		String state = in.getState();
 		List<Building> buildings = in.getBuildings();
 
-		// int iD, String name, String city, String state, List<Building>
 		// buildings, Boolean active
 		Location out = new Location(ID, name, city, state, buildings, true);
 		out = locationService.saveItem(out);
