@@ -282,25 +282,23 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
                        curricI: {
                             name: curr.name,
                             skills: curr.skills
-                       },
-                       curr: curr
+                       }
                      },
             controller: EditCurriculumDialogController
        });
-       function EditCurriculumDialogController($scope, $mdDialog, skills, curricI, curr) {
+       function EditCurriculumDialogController($scope, $mdDialog, skills, curricI) {
 
            $scope.skills = skills;
            $scope.curricI = curricI;
-           $scope.curr = curr;
 
            $scope.cancel = function() {
             $mdDialog.cancel();
            }
 
            $scope.saveCurriculum = function(x) {
-               $scope.curr.name = $scope.curricI.name
-               $scope.curr.skills = $scope.curricI.skills
-               curriculumService.update($scope.curr, function () {
+               curr.name = $scope.curricI.name
+               curr.skills = $scope.curricI.skills
+               curriculumService.update(curr, function () {
                    cc.showToast("Curriculum updated");
                }, function () {
                    cc.showToast("Could not edit Curriculum")
