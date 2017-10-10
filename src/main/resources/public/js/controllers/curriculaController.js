@@ -141,17 +141,28 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
     };
 
     //removes a focus
-    cc.removeFocus = function (curr) {
-        curr.active = false;
-        curriculumService.update(curr, function () {
-            cc.showToast("Removed focus successfully")
-        }, function () {
-            cc.showToast("Unable to remove focus")
-        })
+    cc.removeCurriculum = function (event,curr) {
+        var confirm = $mdDialog.confirm()
+              .title('Are You Sure?')
+              .textContent('Are you sure you would like to remove this curriculum?')
+              .ariaLabel('curricRemove')
+              .targetEvent(event)
+              .ok('Remove')
+              .cancel('Cancel');
+        $mdDialog.show(confirm).then(function() {
+            curr.active = false;
+            curriculumService.update(curr, function () {
+                cc.showToast("Removed core successfully")
+            }, function () {
+                cc.showToast("Unable to remove core")
+            })
+            }, function() {
+                
+        });
     };
 
     //removes a core
-        cc.removeCore = function (curr) {
+        cc.removeCore = function (event,curr) {
             curr.active = false;
             curriculumService.update(curr, function () {
                 cc.showToast("Removed core successfully")
