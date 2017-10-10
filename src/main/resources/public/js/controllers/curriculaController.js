@@ -58,6 +58,37 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
         $('#core').slideToggle();
     };
 
+    //Used to show the create focus card
+    cc.toggleFocusStatus = function () {
+        if(cc.focusStatus){
+            cc.focusStatus = false;
+        } else {
+            cc.focusStatus = true;
+        }
+    };
+
+    //Used to show the create core card
+    cc.toggleCoreStatus = function (){
+        if(cc.coreStatus) {
+            cc.coreStatus = false;
+        } else{
+            cc.coreStatus =true;
+        }
+    };
+
+    //hides and shows the focus card's content when called
+    cc.toggleFocusToolbar = function () {
+        if(cc.focusToggle){
+            cc.focusToggle = false;
+            $("#focusArrow").text("keyboard_arrow_down");
+        } else {
+            cc.focusToggle = true;
+            $("#focusArrow").text("keyboard_arrow_up");
+        }
+
+        $('#focus').slideToggle();
+    };
+
     //focus functions
     cc.createCurriculum = function (focusForm,isCore) {
 
@@ -109,37 +140,6 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
         cc.coreName = undefined;
     };
 
-    //Used to show the create focus card
-    cc.toggleFocusStatus = function () {
-        if(cc.focusStatus){
-            cc.focusStatus = false;
-        } else {
-            cc.focusStatus = true;
-        }
-    };
-
-    //Used to show the create core card
-    cc.toggleCoreStatus = function (){
-        if(cc.coreStatus) {
-            cc.coreStatus = false;
-        } else{
-            cc.coreStatus =true;
-        }
-    };
-
-    //hides and shows the focus card's content when called
-    cc.toggleFocusToolbar = function () {
-        if(cc.focusToggle){
-            cc.focusToggle = false;
-            $("#focusArrow").text("keyboard_arrow_down");
-        } else {
-            cc.focusToggle = true;
-            $("#focusArrow").text("keyboard_arrow_up");
-        }
-
-        $('#focus').slideToggle();
-    };
-
     //removes a focus
     cc.removeCurriculum = function (event,curr) {
         var confirm = $mdDialog.confirm()
@@ -161,29 +161,10 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
         });
     };
 
-    //removes a core
-        cc.removeCore = function (event,curr) {
-            curr.active = false;
-            curriculumService.update(curr, function () {
-                cc.showToast("Removed core successfully")
-            }, function () {
-                cc.showToast("Unable to remove core")
-            })
-        };
-
-    //started the code for editing a focus. to be finished at a later time
-    cc.editFocus = function (focus) {
-        cc.focusName = focus.name;
-        cc.selectedSkills = focus.skills;
-        cc.focusStatus = true;
-    };
-
     //used to join the skills together
     cc.joinObjArrayByName = function(elem) {
         return elem.name;
     };
-
-    //retrieving data
 
     //Grabs all Curricula
     curriculumService.getAll(function (response) {
@@ -221,7 +202,7 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
            $scope.cancel = function() {
             $mdDialog.cancel();
            }
-           $scope.saveCurriculum = function(x) {
+           $scope.saveCurriculum = function() {
                 var curric = {
                            name    : $scope.curricI.name,
                            skills  : $scope.curricI.skills,
@@ -230,7 +211,11 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
                        };
                        curriculumService.create(curric, function () {
                            cc.showToast("Core created");
-                           $route.reload(); //this is not ideal. Newly created curricula do not appear initially
+                               curriculumService.getAll(function (response) {
+                                   cc.curricula = response;
+                               }, function () {
+                                   cc.showToast("Could not refresh curricula.");
+                               });
                        }, function () {
                            cc.showToast("Could not add Core")
                        })
@@ -262,7 +247,7 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
            $scope.cancel = function() {
             $mdDialog.cancel();
            }
-           $scope.saveCurriculum = function(x) {
+           $scope.saveCurriculum = function() {
                 var curric = {
                            name    : $scope.curricI.name,
                            skills  : $scope.curricI.skills,
@@ -271,7 +256,11 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
                        };
                        curriculumService.create(curric, function () {
                            cc.showToast("Focus created");
-                           $route.reload(); //this is not ideal. Newly created curricula do not appear initially
+                               curriculumService.getAll(function (response) {
+                                   cc.curricula = response;
+                               }, function () {
+                                   cc.showToast("Could not refresh curricula.");
+                               });
                        }, function () {
                            cc.showToast("You could not add focus")
                        })
@@ -290,7 +279,7 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
             locals: {
                        curricI: {
                             name: curr.name,
-                            skills: cc.skills.filter(function check(x){
+                            skills: cc.skills.filter(function(x){
                                curr.skills.map(function(y) {
                                  return y.name;
                                }).includes(x.name);
@@ -308,7 +297,7 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
             $mdDialog.cancel();
            }
 
-           $scope.saveCurriculum = function(x) {
+           $scope.saveCurriculum = function() {
                curr.name = $scope.curricI.name
                curr.skills = $scope.curricI.skills
                curriculumService.update(curr, function () {
