@@ -3,6 +3,10 @@ package com.revature.assignforce.web;
 import java.util.List;
 
 import com.revature.assignforce.service.ActivatableObjectDaoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
@@ -23,6 +27,7 @@ import com.revature.assignforce.domain.dto.ResponseErrorDTO;
 @RestController
 @RequestMapping("/api/v2/location")
 @ComponentScan(basePackages = "com.revature.assignforce.service")
+@Api(value = "Location Controller", description = "Operations regarding Locations")
 public class LocationCtrl {
 
 	@Autowired
@@ -33,6 +38,12 @@ public class LocationCtrl {
 	// transfer object
 	@PreAuthorize("hasPermission('', 'manager')")
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Create a Location", response = ResponseEntity.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully created Location information"),
+			@ApiResponse(code=400, message ="Bad Request, the information recieved maybe invalid"),
+			@ApiResponse(code=500, message ="Cannot create Location")
+	})
 	public Object createLocation(@RequestBody LocationDTO in) {
 
 		int ID = in.getID();
@@ -57,6 +68,12 @@ public class LocationCtrl {
 	// retrieve location with given ID
 	@PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Get a Location given an ID", response = ResponseEntity.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully retrieved Location information"),
+			@ApiResponse(code=400, message ="Bad Request, the information recieved maybe invalid"),
+			@ApiResponse(code=500, message ="Cannot retrieve Location information")
+	})
 	public Object retrieveLocation(@PathVariable("id") int ID) {
 
 		Location out = locationService.getOneItem(ID);
@@ -73,6 +90,12 @@ public class LocationCtrl {
 	// location data transfer object
 	@PreAuthorize("hasPermission('', 'manager')")
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Update a Location", response = ResponseEntity.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully updated Location information"),
+			@ApiResponse(code=400, message ="Bad Request, the information recieved maybe invalid"),
+			@ApiResponse(code=500, message ="Cannot update Location information")
+	})
 	public Object updateLocation(@RequestBody LocationDTO in) {
 
 		int ID = in.getID();
@@ -97,6 +120,12 @@ public class LocationCtrl {
 	// delete location with given ID
 	@PreAuthorize("hasPermission('', 'manager')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Delete a Location", response = ResponseEntity.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully deleted Location"),
+			@ApiResponse(code=400, message ="Bad Request, the information recieved maybe invalid"),
+			@ApiResponse(code=500, message ="Cannot delete Location")
+	})
 	public Object deleteLocation(@PathVariable("id") int ID) {
 
 		locationService.deleteItem(ID);
@@ -107,6 +136,12 @@ public class LocationCtrl {
 	// retrieve all locations
 	@PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Retrieve all Locations", response = ResponseEntity.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully retrieved all Locations"),
+			@ApiResponse(code=400, message ="Bad Request, the information recieved maybe invalid"),
+			@ApiResponse(code=500, message ="Cannot retrieve Locations")
+	})
 	public Object retrieveAllLocations() {
 
 		List<Location> all = locationService.getAllItems();

@@ -3,6 +3,10 @@ package com.revature.assignforce.web;
 import java.util.List;
 
 import com.revature.assignforce.service.ActivatableObjectDaoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
@@ -24,6 +28,7 @@ import com.revature.assignforce.domain.dto.RoomDTO;
 @RestController
 @RequestMapping("/api/v2/room")
 @ComponentScan(basePackages="com.revature.assignforce.service")
+@Api(value = "Room Controller", description = "Operations regarding rooms")
 public class RoomCtrl {
 
 	@Autowired
@@ -33,6 +38,12 @@ public class RoomCtrl {
 		// creating new room object from information passed from room data transfer object
 	  @PreAuthorize("hasPermission('', 'manager')")
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Create a Room", response = ResponseEntity.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully created Room information"),
+			@ApiResponse(code=400, message ="Bad Request, the information recieved maybe invalid"),
+			@ApiResponse(code=500, message ="Cannot create Room")
+	})
 	public Object createRoom( @RequestBody RoomDTO in ) {
 	
 		int ID = in.getRoomID();
@@ -55,6 +66,12 @@ public class RoomCtrl {
 		// retrieve room with given ID
 	  @PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Get a Room of a given ID", response = ResponseEntity.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully retrieved Room information"),
+			@ApiResponse(code=400, message ="Bad Request, the information recieved maybe invalid"),
+			@ApiResponse(code=500, message ="Cannot retrieve Room")
+	})
 	public Object retrieveRoom( @PathVariable("id") int ID ) {
 		Room out = roomService.getOneItem(ID);
 		if (out == null) {
@@ -68,6 +85,12 @@ public class RoomCtrl {
 		// updating an existing room object with information passed from room data transfer object
 	  @PreAuthorize("hasPermission('', 'manager')")
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Update a Room", response = ResponseEntity.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully updated Room information"),
+			@ApiResponse(code=400, message ="Bad Request, the information recieved maybe invalid"),
+			@ApiResponse(code=500, message ="Cannot update Room")
+	})
 	public Object updateRoom( @RequestBody RoomDTO in ) {
 		
 		int ID = in.getRoomID();
@@ -90,6 +113,12 @@ public class RoomCtrl {
 		// delete room with given ID
 	  @PreAuthorize("hasPermission('', 'manager')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Delete a Room", response = ResponseEntity.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully deleted Room"),
+			@ApiResponse(code=400, message ="Bad Request, the information recieved maybe invalid"),
+			@ApiResponse(code=500, message ="Cannot delete Room")
+	})
 	public Object deleteRoom( @PathVariable("id") int ID ) {
 		roomService.deleteItem(ID);
 		return new ResponseEntity<Object>(null, HttpStatus.OK);
@@ -99,6 +128,12 @@ public class RoomCtrl {
 		// retrieve all rooms
 	  @PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Retrieve All Rooms", response = ResponseEntity.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully retrieved all Rooms"),
+			@ApiResponse(code=400, message ="Bad Request, the information recieved maybe invalid"),
+			@ApiResponse(code=500, message ="Cannot retrieve all Rooms")
+	})
 	public Object retrieveAllRooms() {
 		List<Room> all = roomService.getAllItems();
 

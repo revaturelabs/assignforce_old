@@ -4,6 +4,10 @@ import com.revature.assignforce.domain.Skill;
 import com.revature.assignforce.domain.dto.SkillDTO;
 import com.revature.assignforce.domain.dto.ResponseErrorDTO;
 import com.revature.assignforce.service.ActivatableObjectDaoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
@@ -20,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v2/skill")
 @ComponentScan(basePackages="com.revature.assignforce.service")
+@Api(value = "Skill Controller", description = "Operations regarding Skillz(such as the ability to do a Backflip)")
 public class SkillCtrl {
 
     @Autowired
@@ -29,6 +34,12 @@ public class SkillCtrl {
     // creating new curriculum object from information passed from curriculum data transfer object
     @PreAuthorize("hasPermission('', 'basic')")
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Create a skill", response = ResponseEntity.class)
+    @ApiResponses({
+            @ApiResponse(code=200, message ="Successfully created Skill information"),
+            @ApiResponse(code=400, message ="Bad Request, the information recieved maybe invalid"),
+            @ApiResponse(code=500, message ="Cannot create Skill")
+    })
     public Object createSkill( @RequestBody SkillDTO in ) {
 
         int ID = in.getSkillId();
@@ -48,6 +59,12 @@ public class SkillCtrl {
     // retrieve skill with given ID
     @PreAuthorize("hasPermission('', 'basic')")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Get a skill of a given ID", response = ResponseEntity.class)
+    @ApiResponses({
+            @ApiResponse(code=200, message ="Successfully received Skill information"),
+            @ApiResponse(code=400, message ="Bad Request, the information recieved maybe invalid"),
+            @ApiResponse(code=500, message ="Cannot retrieve Skill")
+    })
     public Object retrieveSkill( @PathVariable("id") int ID ) {
 
         Skill out = skillService.getOneItem(ID);
@@ -62,6 +79,12 @@ public class SkillCtrl {
     // updating an existing skill object with information passed from skill data transfer object
     @PreAuthorize("hasPermission('', 'basic')")
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Update a skill", response = ResponseEntity.class)
+    @ApiResponses({
+            @ApiResponse(code=200, message ="Successfully updated Skill information"),
+            @ApiResponse(code=400, message ="Bad Request, the information recieved maybe invalid"),
+            @ApiResponse(code=500, message ="Cannot update Skill")
+    })
     public Object updateSkill( @RequestBody SkillDTO in ) {
 
         int ID = in.getSkillId();
@@ -82,6 +105,12 @@ public class SkillCtrl {
     // delete skill with given ID
     @PreAuthorize("hasPermission('', 'basic')")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Delete a skill", response = ResponseEntity.class)
+    @ApiResponses({
+            @ApiResponse(code=200, message ="Successfully deleted Skill"),
+            @ApiResponse(code=400, message ="Bad Request, the information recieved maybe invalid"),
+            @ApiResponse(code=500, message ="Cannot delete Skill")
+    })
     public Object deleteSkill( @PathVariable("id") int ID ) {
 
         skillService.deleteItem(ID);
@@ -92,6 +121,12 @@ public class SkillCtrl {
     // retrieve all skills
     @PreAuthorize("hasPermission('', 'basic')")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Retrieve all Skills", response = ResponseEntity.class)
+    @ApiResponses({
+            @ApiResponse(code=200, message ="Successfully retrieved all SKills"),
+            @ApiResponse(code=400, message ="Bad Request, the information recieved maybe invalid"),
+            @ApiResponse(code=500, message ="Cannot retrieve Skill")
+    })
     public Object retrieveAllSkills() {
 
         List<Skill> all = skillService.getAllItems();

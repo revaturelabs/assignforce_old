@@ -2,6 +2,7 @@ package com.revature.assignforce.domain;
 
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
+
 public class Employee {
     private String employeeId;
     private String roleId;

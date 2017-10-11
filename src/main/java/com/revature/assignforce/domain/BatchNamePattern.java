@@ -1,5 +1,7 @@
 package com.revature.assignforce.domain;
 
+import io.swagger.annotations.ApiModel;
+
 import javax.persistence.*;
 
 /**

@@ -1,5 +1,6 @@
 package com.revature.assignforce.domain;
 
+import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;

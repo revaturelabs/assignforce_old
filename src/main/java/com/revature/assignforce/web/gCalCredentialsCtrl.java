@@ -10,35 +10,31 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v2/s3Creds")
+@RequestMapping("/api/v2/gCalCreds")
 @ComponentScan(basePackages="com.revature.assignforce.service")
-@Api(value = "S3Credentials Controller", description = "Used to retrieve Credentials")
-public class S3CredentialsCtrl {
+@Api(value = "Google Calender Credentials Controller", description = "Operations regarding Google Calender Credentials")
+public class gCalCredentialsCtrl {
 
-	@PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(value = "Retrieves Credentials", response = ResponseEntity.class)
+	@ApiOperation(value = "Retrieve Google Calender Credentials", response = ResponseEntity.class)
 	@ApiResponses({
-			@ApiResponse(code=200, message ="Successfully retrieved Credentials"),
-			@ApiResponse(code=400, message ="Bad Request, the information recieved may be invalid"),
-			@ApiResponse(code=500, message ="Cannot retrieve Credentials")
+			@ApiResponse(code=200, message ="Successfully retrieved Credentials information"),
+			@ApiResponse(code=400, message ="Bad Request, the information recieved maybe invalid"),
+			@ApiResponse(code=500, message ="Cannot retrieve Credentials information")
 	})
 	public Object retrieveCredentials() {
-		//grabs the S3 info name, accessId, and secretAccessId from your environment variables
-		String s3ID = System.getenv("S3_ID");
-		String s3SecretKey = System.getenv("S3_SECRET");
-		String s3Name = System.getenv("S3_NAME");
-		//insert the variables into a hashMap so that it could be passed as an JSON value
+		String clientID = System.getenv("CLIENT_ID");
+		String apiKey = System.getenv("API_KEY");
+		String calendarID = System.getenv("CALENDAR_ID");
 		HashMap<String,String> out = new HashMap<>();
-		out.put("ID",s3ID);
-		out.put("SecretKey",s3SecretKey);
-		out.put("BucketName",s3Name);
+		out.put("ClientID",clientID);
+		out.put("ApiKey",apiKey);
+		out.put("CalendarID",calendarID);
 		return new ResponseEntity< HashMap<String,String> >(out, HttpStatus.OK);
 	}
 }
