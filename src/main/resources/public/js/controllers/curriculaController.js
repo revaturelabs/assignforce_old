@@ -9,7 +9,7 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog,
 
     //calls showToast method of aCtrl
     cc.showToast = function ( message ) {
-        $scope.$parent.aCtrl.showtoast( message )
+        $scope.$parent.aCtrl.showToast( message )
     };
 
     //create a skill and add it to the database
