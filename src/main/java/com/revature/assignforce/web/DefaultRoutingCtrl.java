@@ -32,7 +32,6 @@ public class DefaultRoutingCtrl {
     }
 
     // Added for Parasol Project - Simply did what I was asked to do....
-    //
     @RequestMapping(value="/health")
     @ApiOperation(value = "Check", response = ResponseEntity.class)
     @ApiResponses({
