@@ -3,6 +3,7 @@ package com.revature.assignforce.web;
 import com.revature.assignforce.AssignForceV2Application;
 import com.revature.assignforce.domain.*;
 import com.revature.assignforce.domain.dto.BatchDTO;
+import com.revature.assignforce.security.CustomSecurity;
 import com.revature.assignforce.service.ActivatableObjectDaoService;
 import com.revature.assignforce.service.BatchLocationDaoService;
 import com.revature.assignforce.service.DaoService;
@@ -97,6 +98,9 @@ public class BatchCtrlTest {
     @MockBean
     DaoService<BatchLocation, Integer> batchLocationService;
 
+    @MockBean
+    CustomSecurity customSecurity;
+
     @Before
     public void setUp() {
         List<Skill> skills = new ArrayList<Skill>();
@@ -136,6 +140,7 @@ public class BatchCtrlTest {
         batchDTO.setStartDate(testBatch.getStartDate());
         batchDTO.setEndDate(testBatch.getEndDate());
         batchDTO.setSkills(testBatch.getSkills());
+        given(customSecurity.hasPermission(any(),any(),any())).willReturn(true);
     }
 
     @After
@@ -144,7 +149,7 @@ public class BatchCtrlTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void createBatch() throws Exception {
         given(currService.getOneItem(anyInt())).willReturn(curriculum);
         given(currService.getOneItem(anyInt())).willReturn(curriculum);
@@ -160,7 +165,7 @@ public class BatchCtrlTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void createBatchWithEmptyDTO() throws Exception {
         given(currService.getOneItem(anyInt())).willReturn(curriculum);
         given(currService.getOneItem(anyInt())).willReturn(curriculum);
@@ -175,7 +180,7 @@ public class BatchCtrlTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void retrieveBatch() throws Exception {
         given(batchService.getOneItem(anyInt())).willReturn(testBatch);
         mvc.perform(get("/api/v2/batch/42")
@@ -185,7 +190,7 @@ public class BatchCtrlTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void retrieveBatchWithEmptyDTO() throws Exception {
         given(batchService.getOneItem(anyInt())).willReturn(null);
         mvc.perform(get("/api/v2/batch/42")
@@ -194,7 +199,7 @@ public class BatchCtrlTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void deleteBatch() throws Exception {
         Room aRoom = new Room();
         doNothing().when(batchService).deleteItem(anyInt());
@@ -207,7 +212,7 @@ public class BatchCtrlTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void retrieveAllBatches() throws Exception {
         List<Batch> batches = new ArrayList<Batch>();
         batches.add(testBatch);
@@ -219,7 +224,7 @@ public class BatchCtrlTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void retrieveAllBatchesWithEmptySet() throws Exception {
         List<Batch> batches = new ArrayList<Batch>();
         given(batchService.getAllItems()).willReturn(batches);
@@ -229,7 +234,7 @@ public class BatchCtrlTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void retrieveAllBatchesWithError() throws Exception {
         given(batchService.getAllItems()).willReturn(null);
         mvc.perform(get("/api/v2/batch")
@@ -238,7 +243,7 @@ public class BatchCtrlTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void updateBatch() throws Exception {
         given(currService.getOneItem(anyInt())).willReturn(curriculum);
         given(currService.getOneItem(anyInt())).willReturn(curriculum);
@@ -255,7 +260,7 @@ public class BatchCtrlTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "Her Majesty The Queen Of England")
     public void updateBatchWithEmptyDTO() throws Exception {
         given(currService.getOneItem(anyInt())).willReturn(curriculum);
         given(currService.getOneItem(anyInt())).willReturn(curriculum);

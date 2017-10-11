@@ -2,6 +2,7 @@ package com.revature.assignforce.web;
 
 import com.revature.assignforce.AssignForceV2Application;
 import com.revature.assignforce.domain.Unavailable;
+import com.revature.assignforce.security.CustomSecurity;
 import com.revature.assignforce.service.DaoService;
 import com.revature.assignforce.utils.JsonMaker;
 import org.junit.After;
@@ -57,11 +58,15 @@ public class UnavailableCtrlTest {
     @MockBean
     DaoService<Unavailable, Integer> unavailableService;
 
+    @MockBean
+    CustomSecurity customSecurity;
+
     @Before
     public void setUp(){
         testUnavailable = new Unavailable(0,
                 new Timestamp(Timestamp.valueOf(LocalDateTime.now()).getTime()),
                 new Timestamp(Timestamp.valueOf(LocalDateTime.now()).getTime()));
+        given(customSecurity.hasPermission(any(),any(),any())).willReturn(true);
 
     }
 

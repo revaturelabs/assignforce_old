@@ -9,13 +9,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Created by August Duet on 11/28/2016.
  */
 @Controller
 @Api(value = "Routing Controller", description = "Operations regarding Routing")
-public class DefaultRoutingController {
+public class DefaultRoutingCtrl {
 
+
+    //Don't ask why it works, just accept it
     @RequestMapping(value = {"/login", "/home", "/batches", "/curriculum", "/trainers", "/locations", "/profile", "/profile/:id", "/reports", "/settings"})
     @ApiOperation(value = "Route to Home", response = String.class)
     @ApiResponses({
@@ -24,7 +28,7 @@ public class DefaultRoutingController {
             @ApiResponse(code=500, message ="Cannot go Home")
     })
     public String routeToHome(){
-        return "forward:home.html";
+        return "";
     }
 
     // Added for Parasol Project - Simply did what I was asked to do....
