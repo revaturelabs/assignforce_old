@@ -15,7 +15,7 @@ app.controller("AuthCtrl", function($scope, $location, $window, $mdToast, $http,
 
 
     // global function available to all other controllers (as they are all children of authctrl) to create toast messages
-    ac.showtoast = function( message ) {
+    ac.showToast = function( message ) {
         $mdToast.show( $mdToast.simple().textContent( message ).action("okay").position("top right").highlightAction(true) );
     }
 
