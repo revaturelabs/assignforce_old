@@ -15,10 +15,11 @@ app.service('settingService', function ($resource) {
             success(ss.settings);
             return;
         }
-        Setting.query(function(response){
-            ss.settings = response[0];
-            success(ss.settings)
-        }, error);
+//        Setting.query(function(response){
+//            ss.settings = response[0];
+//            success(ss.settings)
+//        }, error);
+        return Setting.query(success, error);
     };
 
     ss.getSettingByName = function(name, success, error){
