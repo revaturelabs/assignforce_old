@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.revature.assignforce.domain.Skill;
@@ -31,6 +32,7 @@ public class TrainerCtrl {
 
 	  // CREATE
 		// creating new trainer object from information passed from trainer data transfer object
+	  @PreAuthorize("hasPermission('', 'manager')")
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Create a trainer", response = ResponseEntity.class)
 	@ApiResponses({
@@ -60,6 +62,7 @@ public class TrainerCtrl {
 
 	  // RETRIEVE
 		// retrieve trainer with given ID
+	@PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Get a trainer bsed on ID", response = ResponseEntity.class)
 	@ApiResponses({
@@ -80,6 +83,7 @@ public class TrainerCtrl {
 
 	//RETRIEVE
 	//retrieve trainer with given fistName, lastName
+	@PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(value = "/{firstName}/{lastName}", method = RequestMethod.GET, produces =  MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Get a trainer based on First and Last name", response = ResponseEntity.class)
 	@ApiResponses({
@@ -99,6 +103,7 @@ public class TrainerCtrl {
 
 	  // UPDATE
 		// updating an existing trainer object with information passed from trainer data transfer object
+	@PreAuthorize("hasPermission(#in, 'trainer_profile')")
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Update a trainer", response = ResponseEntity.class)
 	@ApiResponses({
@@ -129,6 +134,7 @@ public class TrainerCtrl {
 
 	  // DELETE
 		// delete trainer with given ID
+	  @PreAuthorize("hasPermission('', 'manager')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Delete a trainer of a given ID", response = ResponseEntity.class)
 	@ApiResponses({
@@ -143,6 +149,7 @@ public class TrainerCtrl {
 
 	  // GET ALL
 		// retrieve all trainers
+	  @PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Retrieve all trainers", response = ResponseEntity.class)
 	@ApiResponses({

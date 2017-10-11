@@ -8,11 +8,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,10 +29,13 @@ import java.util.List;
 @ComponentScan(basePackages = "com.revature.assignforce.service")
 @Api(value = "Setting Controller", description = "Operations regarding settings")
 public class SettingCtrl {
+    private final static Log logger = LogFactory.getLog(SettingCtrl.class);
+
     @Autowired
     DaoService<Setting, Integer> settingService;
 
     //Create
+    @PreAuthorize("hasPermission('', 'manager')")
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Create a Setting", response = ResponseEntity.class)
     @ApiResponses({
@@ -42,6 +48,7 @@ public class SettingCtrl {
     }
 
     //Retrieve
+    @PreAuthorize("hasPermission('', 'basic')")
     @RequestMapping(value = "/{settingId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get a Setting based on an ID", response = ResponseEntity.class)
     @ApiResponses({
@@ -59,6 +66,7 @@ public class SettingCtrl {
         }
     }
 
+    @PreAuthorize("hasPermission('', 'basic')")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Gets all Settings", response = ResponseEntity.class)
     @ApiResponses({
@@ -80,6 +88,7 @@ public class SettingCtrl {
     }
 
     //Update
+    @PreAuthorize("hasPermission('', 'manager')")
     @RequestMapping( method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Update a Setting", response = ResponseEntity.class)
     @ApiResponses({
@@ -92,6 +101,7 @@ public class SettingCtrl {
         try{
             settingService.saveItem(in);
         }catch (Exception ex){
+            logger.warn(ex);
             return new ResponseEntity<ResponseErrorDTO>(new ResponseErrorDTO("An error has occured while updating system settings"),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -99,6 +109,7 @@ public class SettingCtrl {
     }
 
     //Delete
+    @PreAuthorize("hasPermission('', 'manager')")
     @RequestMapping(value = "/{settingId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Delete a Setting", response = ResponseEntity.class)
     @ApiResponses({

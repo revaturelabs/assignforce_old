@@ -13,6 +13,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +36,7 @@ public class CurriculumCtrl {
 
 	  // CREATE
 		// creating new curriculum object from information passed from curriculum data transfer object
+	  @PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Create a Curriculum", response = ResponseEntity.class)
 	@ApiResponses({
@@ -61,6 +63,7 @@ public class CurriculumCtrl {
 
 	  // RETRIEVE
 		// retrieve curriculum with given ID
+	  @PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Get a Curriculum given an ID", response = ResponseEntity.class)
 	@ApiResponses({
@@ -80,6 +83,7 @@ public class CurriculumCtrl {
 
 	  // UPDATE
 		// updating an existing curriculum object with information passed from curriculum data transfer object
+	  @PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Update a Curriculum", response = ResponseEntity.class)
 	@ApiResponses({
@@ -107,6 +111,7 @@ public class CurriculumCtrl {
 	
 	  // DELETE
 		// delete curriculum with given ID
+	  @PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Delete a Curriculum", response = ResponseEntity.class)
 	@ApiResponses({
@@ -122,6 +127,7 @@ public class CurriculumCtrl {
 	
 	  // GET ALL
 		// retrieve all curricula
+	  @PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Retrieve all Curricula", response = ResponseEntity.class)
 	@ApiResponses({

@@ -12,6 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +36,7 @@ public class RoomCtrl {
 
 	  // CREATE
 		// creating new room object from information passed from room data transfer object
+	  @PreAuthorize("hasPermission('', 'manager')")
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Create a Room", response = ResponseEntity.class)
 	@ApiResponses({
@@ -62,6 +64,7 @@ public class RoomCtrl {
 	
 	  // RETRIEVE
 		// retrieve room with given ID
+	  @PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Get a Room of a given ID", response = ResponseEntity.class)
 	@ApiResponses({
@@ -80,6 +83,7 @@ public class RoomCtrl {
 	
 	  // UPDATE
 		// updating an existing room object with information passed from room data transfer object
+	  @PreAuthorize("hasPermission('', 'manager')")
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Update a Room", response = ResponseEntity.class)
 	@ApiResponses({
@@ -107,6 +111,7 @@ public class RoomCtrl {
 	
 	  // DELETE
 		// delete room with given ID
+	  @PreAuthorize("hasPermission('', 'manager')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Delete a Room", response = ResponseEntity.class)
 	@ApiResponses({
@@ -121,6 +126,7 @@ public class RoomCtrl {
 	
 	  // GET ALL
 		// retrieve all rooms
+	  @PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Retrieve All Rooms", response = ResponseEntity.class)
 	@ApiResponses({

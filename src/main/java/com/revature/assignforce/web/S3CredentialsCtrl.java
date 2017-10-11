@@ -10,6 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(value = "S3Credentials Controller", description = "Used to retrieve Credentials")
 public class S3CredentialsCtrl {
 
+	@PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Retrieves Credentials", response = ResponseEntity.class)
 	@ApiResponses({
