@@ -36,7 +36,7 @@ public class CurriculumCtrl {
 
 	  // CREATE
 		// creating new curriculum object from information passed from curriculum data transfer object
-	  @PreAuthorize("hasPermission('', 'basic')")
+	  @PreAuthorize("hasPermission('', 'manager')")
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Create a Curriculum", response = ResponseEntity.class)
 	@ApiResponses({
