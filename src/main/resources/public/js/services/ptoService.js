@@ -85,7 +85,6 @@ app.service('ptoService', function ($resource, $mdDialog, gCalService, $http) {
             endDate = endDate.addDays(1).formatDate();
             // This is the resource we will pass while calling api function
             var resource = {
-                "summary": trainer.firstName + " " + trainer.lastName + ": Out Of Office",
                 "start": {
                     "date": startDate.toString()
                 },

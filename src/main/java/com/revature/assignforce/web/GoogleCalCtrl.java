@@ -3,6 +3,8 @@ package com.revature.assignforce.web;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.services.calendar.model.EventDateTime;
+import com.revature.assignforce.domain.Employee;
+import com.revature.assignforce.domain.Force;
 import com.revature.assignforce.domain.Trainer;
 import com.revature.assignforce.domain.Unavailable;
 import com.revature.assignforce.domain.dao.TrainerRepository;
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
@@ -72,6 +75,9 @@ public class GoogleCalCtrl {
 
     @Autowired
     private TrainerRepository tDAO;
+
+    @Autowired
+    private Force force;
 
     @PreAuthorize("hasPermission('', 'basic')")
     @ApiOperation(value = "redirect the view")
@@ -154,10 +160,11 @@ public class GoogleCalCtrl {
             @ApiResponse(code=500, message ="Cannot add an event due to a server error")
     })
     @RequestMapping(value = "/api/v2/google/addEvent")
-    public String addEvent(@RequestBody String json, HttpServletResponse res) throws IOException, ParseException {
+    public String addEvent(@RequestBody String json, OAuth2Authentication auth, HttpServletResponse res) throws IOException, ParseException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode node = mapper.readTree(json);
-        String name = node.get("summary").textValue();
+        Employee emp = force.getCurrentEmployee(auth);
+        String name = emp.getFirstName() + " " + emp.getLastName() + " : Out Of Office";
         String startDate = node.get("start").get("date").textValue();
         String endDate =  node.get("end").get("date").textValue();
         Event event = newEvent(name, startDate, endDate);
