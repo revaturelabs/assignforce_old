@@ -6,6 +6,7 @@ import com.revature.assignforce.domain.Certification;
 import com.revature.assignforce.service.ActivatableObjectDaoService;
 import com.revature.assignforce.service.TrainerDaoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,8 @@ import com.revature.assignforce.domain.dto.TrainerDTO;
 
 @RestController
 @RequestMapping("/api/v2/trainer")
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@EnableAspectJAutoProxy
 public class TrainerCtrl {
 
 	@Autowired
