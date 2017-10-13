@@ -194,6 +194,8 @@ public class GoogleCalCtrl {
             DateTime end = new DateTime(enddate, TimeZone.getTimeZone("EST"));
             event.setEnd(new EventDateTime().setDateTime(end));
 
+            event.
+
             Unavailable u = new Unavailable();
             Timestamp t = new Timestamp(startdate.getTime());
             u.setStartDate(t);
