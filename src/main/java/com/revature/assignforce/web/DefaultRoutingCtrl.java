@@ -20,13 +20,7 @@ public class DefaultRoutingCtrl {
 
 
     //Don't ask why it works, just accept it
-    @RequestMapping(value = {"/login", "/home", "/batches", "/curriculum", "/trainers", "/locations", "/profile", "/profile/:id", "/reports", "/settings"})
-    @ApiOperation(value = "Route to Home", response = String.class)
-    @ApiResponses({
-            @ApiResponse(code=200, message ="We're going Home"),
-            @ApiResponse(code=400, message ="Bad Request, Cannot go Home"),
-            @ApiResponse(code=500, message ="Cannot go Home")
-    })
+    @RequestMapping(value = {"/login", "/home", "/batches", "/curriculum", "/trainers", "/locations", "/profile", "/profile/", "/reports", "/settings"})
     public String routeToHome(){
         return "";
     }

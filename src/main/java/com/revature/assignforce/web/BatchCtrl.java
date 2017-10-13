@@ -197,13 +197,20 @@ public class BatchCtrl {
 
 	// GET ALL
 	// retrieve all batches
+
+
+//	@PreAuthorize("hasPermission('', 'Trainers')")
+
+
 	@PreAuthorize("hasPermission('', 'basic')")
+
 	@ApiOperation(value = "Retrieve all batches", response = BatchDaoService.class)
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully retrieved all batches"),
 			@ApiResponse(code=400, message ="Bad Request"),
 			@ApiResponse(code=500, message ="Cannot retrieve all batches")
 	})
+
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveAllBatches() {
 

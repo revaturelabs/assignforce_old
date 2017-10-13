@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,8 @@ import com.revature.assignforce.domain.dto.TrainerDTO;
 @RestController
 @RequestMapping("/api/v2/trainer")
 @Api(value = "Trainer Controller", description = "Operations regarding trainers")
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@EnableAspectJAutoProxy
 public class TrainerCtrl {
 
 	@Autowired
@@ -103,8 +106,7 @@ public class TrainerCtrl {
 
 	  // UPDATE
 		// updating an existing trainer object with information passed from trainer data transfer object
-	@PreAuthorize("hasPermission(#in, 'trainer_profile')")
-	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasPermission(#in, 'trainer_profile') or hasPermission('', 'manager')")	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Update a trainer", response = ResponseEntity.class)
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully updated Trainer information"),
