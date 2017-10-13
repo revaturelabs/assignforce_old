@@ -4,13 +4,13 @@
     assignforce.filter( "timeMode", function(secWeek) {
         return function(items, mode, params) {
 
-            if (items == undefined) {
+            if (items === undefined) {
                 return items;
             }
             
               // define time given number of weeks from now
             var now = new Date().getTime();
-            if (mode == "upcoming") {
+            if (mode === "upcoming") {
                 var offset = now + secWeek * params.numWeeks;
             }
             var result = [];
@@ -28,6 +28,9 @@
                     }
                     break;
                 case "none":
+                    result.push(item);
+                    break;
+                default:
                     result.push(item);
                 }
             });

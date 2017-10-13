@@ -6,9 +6,11 @@ import com.revature.assignforce.domain.Certification;
 import com.revature.assignforce.service.ActivatableObjectDaoService;
 import com.revature.assignforce.service.TrainerDaoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.revature.assignforce.domain.Skill;
@@ -19,6 +21,8 @@ import com.revature.assignforce.domain.dto.TrainerDTO;
 
 @RestController
 @RequestMapping("/api/v2/trainer")
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@EnableAspectJAutoProxy
 public class TrainerCtrl {
 
 	@Autowired
@@ -26,6 +30,7 @@ public class TrainerCtrl {
 
 	  // CREATE
 		// creating new trainer object from information passed from trainer data transfer object
+	  @PreAuthorize("hasPermission('', 'manager')")
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 
 	public Object createTrainer( @RequestBody TrainerDTO in ) {
@@ -50,6 +55,7 @@ public class TrainerCtrl {
 
 	  // RETRIEVE
 		// retrieve trainer with given ID
+	@PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveTrainer( @PathVariable("id") int ID ) {
 
@@ -64,6 +70,7 @@ public class TrainerCtrl {
 
 	//RETRIEVE
 	//retrieve trainer with given fistName, lastName
+	@PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(value = "/{firstName}/{lastName}", method = RequestMethod.GET, produces =  MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveTrainer (@PathVariable("firstName") String fName, @PathVariable("lastName") String lname){
 		Trainer out = trainerService.findByFirstNameAndLastName(fName, lname);
@@ -77,6 +84,7 @@ public class TrainerCtrl {
 
 	  // UPDATE
 		// updating an existing trainer object with information passed from trainer data transfer object
+	@PreAuthorize("hasPermission(#in, 'trainer_profile') or hasPermission('', 'manager')")
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object updateTrainer( @RequestBody TrainerDTO in ) {
 		int ID = in.getTrainerId();
@@ -101,6 +109,7 @@ public class TrainerCtrl {
 
 	  // DELETE
 		// delete trainer with given ID
+	  @PreAuthorize("hasPermission('', 'manager')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object deleteTrainer( @PathVariable("id") int ID ) {
 		trainerService.deleteItem(ID);
@@ -109,6 +118,7 @@ public class TrainerCtrl {
 
 	  // GET ALL
 		// retrieve all trainers
+	  @PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object retrieveAllTrainers() {
 

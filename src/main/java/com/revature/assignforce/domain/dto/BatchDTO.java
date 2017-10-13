@@ -5,20 +5,35 @@ import java.util.List;
 
 import com.revature.assignforce.domain.BatchLocation;
 import com.revature.assignforce.domain.Skill;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
+@ApiModel("Batch")
 public class BatchDTO {
 
+	@ApiModelProperty(notes = "The Batch ID", name = "ID", dataType = "int")
 	private int ID;
+	@ApiModelProperty(notes = "The name of the batch", name = "name", dataType = "String")
 	private String name;
+	@ApiModelProperty(notes = "The curriculum assigned to the batch", name = "curriculum", dataType = "int")
 	private int curriculum;
+	@ApiModelProperty(notes = "The topic the batch will focus on", name = "focus", dataType = "int")
 	private int focus;
+	@ApiModelProperty(notes = "The trainer that will be assigned to the batch", name = "trainer", dataType = "int")
 	private int trainer;
+	@ApiModelProperty(notes = "The Co-trainer that will be assigned to the batch", name = "cotrainer", dataType = "int")
 	private int cotrainer;
+	@ApiModelProperty(notes = "the physical location the batch will be assigned to", name = "location", dataType = "int")
 	private int location;
+	@ApiModelProperty(notes = "The physical building the batch will be assigned to", name = "building", dataType = "int")
 	private int building;
+	@ApiModelProperty(notes = "The physical room the batch will be assigned to", name = "room", dataType = "int")
 	private int room;
+	@ApiModelProperty(notes = "The date the batch starts training", name = "startDate", dataType = "Timestamp")
 	private Timestamp startDate;
+	@ApiModelProperty(notes = "The date the batch stopped training", name = "endDate", dataType = "Timestamp")
 	private Timestamp endDate;
+	@ApiModelProperty(notes = "The list of technical skills", name = "skills", dataType = "List<Skill>")
 	private List<Skill> skills;
 
 	public BatchDTO(){}
