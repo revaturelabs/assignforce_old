@@ -7,6 +7,7 @@ import java.util.List;
 @Entity
 @Table(name = "LOCATION")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
+
 public class Location implements Activatable {
 
 	@Id

@@ -14,15 +14,11 @@
                     <span flex></span>
 
                     <!--Add New Curriculum Button-->
-                    <md-button class="md-icon-button" ng-click="showAddCore($event)" style="margin: 12px 6px;" >
+                    <md-button class="md-icon-button" ng-if = "isManager" ng-click="showAddCore($event)" style="margin: 12px 6px;" >
                         <md-tooltip class="md-title"> Add New Curriculum </md-tooltip>
                         <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
                     </md-button>
 
-                    <md-button class="md-icon-button" ng-click="cCtrl.toggleCoreStatus()" ng-show="isManager">
-                        <md-tooltip class="md-title"> Create Core</md-tooltip>
-                        <i class="material-icons">add_circle</i>
-                    </md-button>
                     <md-button class="md-icon-button" ng-click="cCtrl.toggleCoreToolbar()">
                         <md-tooltip class="md-title"> Toggle Content </md-tooltip>
                         <i id="coreArrow" class="material-icons">keyboard_arrow_up</i>
@@ -41,11 +37,11 @@
                             <p>Skills: {{ curr.skills.map(cCtrl.joinObjArrayByName).join(", ");}}</p>
                         </div>
                         <md-divider></md-divider>
-                        <md-button class="md-icon-button" ng-click="showEditCurriculum($event,curr)">
+                        <md-button class="md-icon-button" ng-if = "isManager" ng-click="showEditCurriculum($event,curr)">
                             <md-tooltip class="md-title"> Edit Curricula </md-tooltip>
                             <i class="material-icons revOrange"> edit </i>
                         </md-button>
-                        <md-button class="md-icon-button" ng-click="cCtrl.removeCurriculum($event,curr)">
+                        <md-button class="md-icon-button" ng-if = "isManager" ng-click="cCtrl.removeCurriculum($event,curr)">
                             <md-tooltip class="md-title"> Remove Core </md-tooltip>
                             <i class="material-icons revOrange">remove_circle</i>
                         </md-button>
@@ -61,15 +57,11 @@
                     <span flex></span>
 
                     <!--Add New Focus Button-->
-                    <md-button class="md-icon-button" ng-click="showAddFocus($event)" style="margin: 12px 6px;" >
+                    <md-button class="md-icon-button" ng-if = "isManager" ng-click="showAddFocus($event)" style="margin: 12px 6px;" >
                         <md-tooltip class="md-title"> Add New Focus</md-tooltip>
                         <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
                     </md-button>
 
-                    <md-button class="md-icon-button" ng-click="cCtrl.toggleFocusStatus()" ng-show="isManager">
-                        <md-tooltip class="md-title"> Create Focus</md-tooltip>
-                        <i class="material-icons">add_circle</i>
-                    </md-button>
                     <md-button class="md-icon-button" ng-click="cCtrl.toggleFocusToolbar()">
                         <md-tooltip class="md-title"> Toggle Content </md-tooltip>
                         <i id="focusArrow" class="material-icons">keyboard_arrow_up</i>
@@ -86,11 +78,11 @@
                             <p>Skills: {{ curr.skills.map(cCtrl.joinObjArrayByName).join(", ");}}</p>
                         </div>
                         <md-divider></md-divider>
-                        <md-button class="md-icon-button" ng-click="showEditCurriculum($event,curr)">
+                        <md-button class="md-icon-button" ng-if = "isManager" ng-click="showEditCurriculum($event,curr)">
                         <md-tooltip class="md-title"> Edit Focus </md-tooltip>
                         <i class="material-icons revOrange"> edit </i>
                         </md-button>
-                        <md-button class="md-icon-button" ng-click="cCtrl.removeCurriculum($event,curr)">
+                        <md-button class="md-icon-button" ng-if = "isManager" ng-click="cCtrl.removeCurriculum($event,curr)">
                             <md-tooltip class="md-title"> Remove Focus </md-tooltip>
                             <i class="material-icons revOrange">remove_circle</i>
                         </md-button>

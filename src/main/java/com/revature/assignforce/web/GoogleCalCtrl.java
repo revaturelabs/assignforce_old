@@ -2,6 +2,7 @@ package com.revature.assignforce.web;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.services.calendar.model.EventAttendee;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.revature.assignforce.domain.Employee;
 import com.revature.assignforce.domain.Force;
@@ -194,7 +195,7 @@ public class GoogleCalCtrl {
             DateTime end = new DateTime(enddate, TimeZone.getTimeZone("EST"));
             event.setEnd(new EventDateTime().setDateTime(end));
 
-            event.
+            event.setAttendees(Arrays.asList(new EventAttendee().setEmail("trainers@revature.com")));
 
             Unavailable u = new Unavailable();
             Timestamp t = new Timestamp(startdate.getTime());

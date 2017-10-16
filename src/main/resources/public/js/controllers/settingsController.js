@@ -13,9 +13,13 @@ assignforce.controller("settingsCtrl", function ($scope, $rootScope, settingServ
     };
 
     sc.resetSettings = function () {
-        settingService.getAll(function(response){
-            sc.settings = response;
-        })
+        settingService.getGlobal( function (response) {
+                sc.settings = response;
+                sc.getLocations();//this will initialize the Locations variable after the settings are loaded in.
+                sc.showToast("Settings reset.");
+            }, function () {
+                sc.showToast("Could not fetch settings.");
+            })
     };
 
     sc.updateSettings = function () {
@@ -56,7 +60,6 @@ assignforce.controller("settingsCtrl", function ($scope, $rootScope, settingServ
     settingService.getGlobal( function (response) {
         sc.settings = response;
         sc.getLocations();//this will initialize the Locations variable after the settings are loaded in.
-
     }, function () {
         sc.showToast("Could not fetch settings.");
     });
