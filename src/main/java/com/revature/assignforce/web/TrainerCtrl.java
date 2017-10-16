@@ -106,7 +106,8 @@ public class TrainerCtrl {
 
 	  // UPDATE
 		// updating an existing trainer object with information passed from trainer data transfer object
-	@PreAuthorize("hasPermission(#in, 'trainer_profile') or hasPermission('', 'manager')")	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasPermission(#in, 'trainer_profile') or hasPermission('', 'manager')")
+	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Update a trainer", response = ResponseEntity.class)
 	@ApiResponses({
 			@ApiResponse(code=200, message ="Successfully updated Trainer information"),

@@ -2,8 +2,13 @@ package com.revature.assignforce.web;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.services.calendar.model.EventAttendee;
 import com.google.api.services.calendar.model.EventDateTime;
+import com.revature.assignforce.domain.Employee;
+import com.revature.assignforce.domain.Force;
+import com.revature.assignforce.domain.Trainer;
 import com.revature.assignforce.domain.Unavailable;
+import com.revature.assignforce.domain.dao.TrainerRepository;
 import com.revature.assignforce.domain.dao.UnavailableRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,6 +19,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
@@ -67,6 +74,13 @@ public class GoogleCalCtrl {
     @Autowired
     private UnavailableRepository uDAO;
 
+    @Autowired
+    private TrainerRepository tDAO;
+
+    @Autowired
+    private Force force;
+
+    @PreAuthorize("hasPermission('', 'basic')")
     @ApiOperation(value = "redirect the view")
     @ApiResponses({
             @ApiResponse(code=200, message ="Successfully authorized the redirection of the view"),
@@ -85,6 +99,7 @@ public class GoogleCalCtrl {
         return null;
     }
 
+    @PreAuthorize("hasPermission('', 'basic')")
     @ApiOperation(value = "outh2 callback", response = String.class )
     @ApiResponses({
             @ApiResponse(code=200, message ="Successfully redirected"),
@@ -124,6 +139,7 @@ public class GoogleCalCtrl {
         return authorizationUrl.build();
     }
 
+    @PreAuthorize("hasPermission('', 'basic')")
     @ApiOperation(value = "google status", response = String.class)
     @ApiResponses({
             @ApiResponse(code=200, message ="Successfully retrieved the google status"),
@@ -137,6 +153,7 @@ public class GoogleCalCtrl {
         return null;
     }
 
+    @PreAuthorize("hasPermission('', 'basic')")
     @ApiOperation(value = "add event", response = String.class )
     @ApiResponses({
             @ApiResponse(code=200, message ="Successfully added an event"),
@@ -144,10 +161,11 @@ public class GoogleCalCtrl {
             @ApiResponse(code=500, message ="Cannot add an event due to a server error")
     })
     @RequestMapping(value = "/api/v2/google/addEvent")
-    public String addEvent(@RequestBody String json, HttpServletResponse res) throws IOException, ParseException {
+    public String addEvent(@RequestBody String json, OAuth2Authentication auth, HttpServletResponse res) throws IOException, ParseException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode node = mapper.readTree(json);
-        String name = node.get("summary").textValue();
+        Employee emp = force.getCurrentEmployee(auth);
+        String name = emp.getFirstName() + " " + emp.getLastName() + " : Out Of Office";
         String startDate = node.get("start").get("date").textValue();
         String endDate =  node.get("end").get("date").textValue();
         Event event = newEvent(name, startDate, endDate);
@@ -177,12 +195,23 @@ public class GoogleCalCtrl {
             DateTime end = new DateTime(enddate, TimeZone.getTimeZone("EST"));
             event.setEnd(new EventDateTime().setDateTime(end));
 
+            event.setAttendees(Arrays.asList(new EventAttendee().setEmail("trainers@revature.com")));
+
             Unavailable u = new Unavailable();
             Timestamp t = new Timestamp(startdate.getTime());
             u.setStartDate(t);
             t = new Timestamp(enddate.getTime());
             u.setEndDate(t);
             uDAO.save(u);
+
+            String[] n = name.split(" ");
+            Trainer trainer = tDAO.findByFirstNameAndLastName(n[0], n[1]);
+            try {
+                trainer.getUnavailabilities().add(u);
+                tDAO.save(trainer);
+            } catch(NullPointerException e) {
+                logger.warn(e);
+            }
 
             return event;
 
