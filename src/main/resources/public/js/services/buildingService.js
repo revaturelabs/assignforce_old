@@ -14,23 +14,23 @@ app.service( "buildingService", function($resource) {
     };
     
     bs.create = function(building, success, error){
-        building.$save(success, error);
+        return building.$save(success, error);
     };
     
     bs.getAll = function(success, error) {
-        Building.query(success, error);
+        return Building.query(success, error);
     };
 
     bs.getById = function(id, success, error){
-        Building.get({id: id}, success, error);
+        return Building.get({id: id}, success, error);
     };
 
     bs.update = function(building, success, error){
-        Building.update(building, success, error);
+        return Building.update(building, success, error);
     };
 
     bs.delete = function(building, success, error){
-        building.$remove(success, error);
+        return building.$remove(success, error);
     };
     
     bs.cloneBuilding = function(building){

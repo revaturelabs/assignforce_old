@@ -4,11 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.revature.assignforce.service.ActivatableObjectDaoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +28,7 @@ import com.revature.assignforce.domain.dto.ResponseErrorDTO;
 @RestController
 @RequestMapping("/api/v2/curriculum")
 @ComponentScan(basePackages="com.revature.assignforce.service")
+@Api(value = "Curriculum Controller", description = "Operations regarding Curricula")
 public class CurriculumCtrl {
 
 	@Autowired
@@ -30,7 +36,14 @@ public class CurriculumCtrl {
 
 	  // CREATE
 		// creating new curriculum object from information passed from curriculum data transfer object
+	  @PreAuthorize("hasPermission('', 'manager')")
 	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Create a Curriculum", response = ResponseEntity.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully created Curriculum information"),
+			@ApiResponse(code=400, message ="Bad Request, the information recieved maybe invalid"),
+			@ApiResponse(code=500, message ="Cannot create Curriculum")
+	})
 	public Object createCurriculum( @RequestBody CurriculumDTO in ) {
 
 		int id = in.getCurrId();
@@ -50,7 +63,14 @@ public class CurriculumCtrl {
 
 	  // RETRIEVE
 		// retrieve curriculum with given ID
+	  @PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Get a Curriculum given an ID", response = ResponseEntity.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully retrieved Curriculum information"),
+			@ApiResponse(code=400, message ="Bad Request, the information recieved maybe invalid"),
+			@ApiResponse(code=500, message ="Cannot retrieve Curriculum information")
+	})
 	public Object retrieveCurriculum( @PathVariable("id") int ID ) {
 
 		Curriculum out = currService.getOneItem(ID);
@@ -63,7 +83,14 @@ public class CurriculumCtrl {
 
 	  // UPDATE
 		// updating an existing curriculum object with information passed from curriculum data transfer object
+	  @PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Update a Curriculum", response = ResponseEntity.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully updated Curriculum information"),
+			@ApiResponse(code=400, message ="Bad Request, the information recieved maybe invalid"),
+			@ApiResponse(code=500, message ="Cannot update Curriculum information")
+	})
 	public Object updateCurriculum( @RequestBody CurriculumDTO in ) {
 		Integer id = in.getCurrId();
 		id = (id != null)? in.getCurrId() : 0;
@@ -84,7 +111,14 @@ public class CurriculumCtrl {
 	
 	  // DELETE
 		// delete curriculum with given ID
+	  @PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Delete a Curriculum", response = ResponseEntity.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully deleted Curriculum"),
+			@ApiResponse(code=400, message ="Bad Request, the information recieved maybe invalid"),
+			@ApiResponse(code=500, message ="Cannot delete Curriculum")
+	})
 	public Object deleteCurriculum( @PathVariable("id") int ID ) {
 
 		currService.deleteItem(ID);
@@ -93,7 +127,14 @@ public class CurriculumCtrl {
 	
 	  // GET ALL
 		// retrieve all curricula
+	  @PreAuthorize("hasPermission('', 'basic')")
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Retrieve all Curricula", response = ResponseEntity.class)
+	@ApiResponses({
+			@ApiResponse(code=200, message ="Successfully retrieved all Curricula"),
+			@ApiResponse(code=400, message ="Bad Request, the information recieved maybe invalid"),
+			@ApiResponse(code=500, message ="Cannot retrieve Curricula")
+	})
 	public Object retrieveAllCurricula() {
 
 		List<Curriculum> all = currService.getAllItems();

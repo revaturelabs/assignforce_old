@@ -1,14 +1,9 @@
-/**
- * Created by lazaro on 2/22/2017.
- */
-
 var assignforce = angular.module( "batchApp" );
 
-assignforce.controller("curriculaCtrl", function ($scope, $rootScope, curriculumService, skillService) {
+assignforce.controller("curriculaCtrl", function ($scope, $rootScope, $mdDialog, curriculumService, skillService, $route) {
     var cc = this;
 
-    $scope.isManager = $rootScope.role == "VP of Technology";
-    // $scope.skillToggle = false;
+    $scope.isManager = $rootScope.role === "VP of Technology";
 
     //functions
 
@@ -63,85 +58,6 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, curriculum
         $('#core').slideToggle();
     };
 
-    //focus functions
-    //create a focus
-    //I want to fix this to be readable - Sam
-    cc.createFocus = function (focusForm) {
-        //show a hidden field with a list of skill to select from, a name field, and a save button
-        if(focusForm.$valid){
-            var skillList = [];
-            for(var i = 0; i < cc.selectedSkills.length; i++){
-                for(var j = 0; j < cc.skills.length; j++){
-                    if(cc.skills[j].skillId == cc.selectedSkills[i]){
-                        skillList.push(cc.skills[j]);
-                        break;
-                    }
-                }
-            }
-
-            var curriculum = {
-                name    : cc.focusName,
-                skills  : skillList,
-                active  : true,
-                core    : false
-            };
-
-            curriculumService.create(curriculum, function () {
-                cc.showToast("Focus created")
-            }, function () {
-                cc.showToast("Failed to create focus")
-            })
-
-            //reload curriculum
-            cc.curricula.push(curriculum);
-
-        } else {
-            cc.showToast("Missing input fields.")
-        }
-
-        cc.selectedSkills = [];
-        cc.focusName = undefined;
-    };
-
-
-    //create a core
-    cc.createCore = function (coreForm) {
-        //show a hidden field with a list of skill to select from, a name field, and a save button
-        if(coreForm.$valid){
-            var skillList = [];
-            for(var i = 0; i < cc.selectedSkills.length; i++){
-                for(var j = 0; j < cc.skills.length; j++){
-                    if(cc.skills[j].skillId == cc.selectedSkills[i]){
-                        skillList.push(cc.skills[j]);
-                        break;
-                    }
-                }
-            }
-
-            var curric = {
-                name    : cc.coreName,
-                skills  : skillList,
-                active  : true,
-                core    : true
-            };
-
-            curriculumService.create(curric, function () {
-                cc.showToast("Core created")
-            }, function () {
-                cc.showToast("Failed to create core")
-            })
-
-            //reload curric
-            cc.curricula.push(curric);
-
-        } else {
-            cc.showToast("Missing input fields.")
-        }
-
-        cc.selectedSkills = [];
-        cc.coreName = undefined;
-    };
-
     //Used to show the create focus card
     cc.toggleFocusStatus = function () {
         if(cc.focusStatus){
@@ -173,29 +89,82 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, curriculum
         $('#focus').slideToggle();
     };
 
-    //removes a focus
-    cc.removeFocus = function (curr) {
-        curr.active = false;
-        curriculumService.update(curr, function () {
-            cc.showToast("Removed focus successfully")
-        }, function () {
-            cc.showToast("Unable to remove focus")
-        })
+    //focus functions
+    cc.createCurriculum = function (focusForm,isCore) {
+
+        //show a hidden field with a list of skill to select from, a name field, and a save button
+        if(focusForm.$valid){
+
+            let selectedSkills = cc.selectedSkills.map((x) => {
+                return parseInt(x);
+            });
+            let skillList = cc.skills
+                .filter( (skill) => selectedSkills.includes(skill.skillId) );
+
+            let curriculum = {
+                name    : isCore?cc.coreName:cc.focusName,
+                skills  : skillList,
+                active  : true,
+                core    : isCore
+            };
+
+            curriculumService.create(curriculum, function () {
+                cc.showToast("" + isCore? "Core":"Focus" +" created")
+            }, function () {
+                cc.showToast("Failed to create " + isCore? "core":"focus")
+            })
+
+            //reload curriculum
+            cc.curricula.push(curriculum);
+
+        } else {
+            cc.showToast("Missing input fields.")
+        }
+
+        cc.selectedSkills = [];
+        cc.focusName = undefined;
+
+    };
+    //create a focus
+    //I want to fix this to be readable - Sam
+    cc.createFocus = function (focusForm) {
+
+        cc.createCurriculum(focusForm,false);
+        cc.focusName = undefined;
+
     };
 
-    //started the code for editing a focus. to be finished at a later time
-    cc.editFocus = function (focus) {
-        cc.focusName = focus.name;
-        cc.selectedSkills = focus.skills;
-        cc.focusStatus = true;
+    //create a core
+    cc.createCore = function (coreForm) {
+        cc.createCurriculum(coreForm,true);
+        cc.coreName = undefined;
+    };
+
+    //removes a focus
+    cc.removeCurriculum = function (event,curr) {
+        var confirm = $mdDialog.confirm()
+              .title('Are You Sure?')
+              .textContent('Are you sure you would like to remove this curriculum?')
+              .ariaLabel('curricRemove')
+              .targetEvent(event)
+              .ok('Remove')
+              .cancel('Cancel');
+        $mdDialog.show(confirm).then(function() {
+            curr.active = false;
+            curriculumService.update(curr, function () {
+                cc.showToast("Removed core successfully")
+            }, function () {
+                cc.showToast("Unable to remove core")
+            })
+            }, function() {
+
+        });
     };
 
     //used to join the skills together
     cc.joinObjArrayByName = function(elem) {
         return elem.name;
     };
-
-    //retrieving data
 
     //Grabs all Curricula
     curriculumService.getAll(function (response) {
@@ -207,13 +176,194 @@ assignforce.controller("curriculaCtrl", function ($scope, $rootScope, curriculum
     //Grabs all Skills
     skillService.getAll(function (response) {
         cc.skills = response;
+        $rootScope.skills = cc.skills;
     }, function () {
         cc.showToast("Could not fetch skills.")
     });
 
+    //Show Add Core Dialog
+    $scope.showAddCore = function(event) {
+       $mdDialog.show({
+            targetEvent: event,
+            clickOutsideToClose: true,
+            templateUrl : "html/templates/dialogs/curriculumFormDialog.html",
+            locals: {
+                       curricI: {
+                            name: "Core Name"
+                       }
+                     },
+            controller: CoreDialogController
+       });
+       function CoreDialogController($scope, $mdDialog, curricI) {
+
+           $scope.skills = cc.skills;
+           $scope.curricI = curricI;
+
+           $scope.cancel = function() {
+            $mdDialog.cancel();
+           }
+           $scope.saveCurriculum = function() {
+                var curric = {
+                   name    : $scope.curricI.name,
+                   skills  : $scope.curricI.skills,
+                   active  : true,
+                   core    : true
+               };
+               var existingInactive = find(curric, cc.curricula);
+               console.log(cc.curricula);
+               if(existingInactive){
+                    existingInactive.name = curric.name;
+                    existingInactive.skills = curric.skills;
+                    existingInactive.active = true;
+                    curriculumService.update(existingInactive,
+                    function(){
+                        cc.showToast("Core created");
+                        curriculumService.getAll(function (response) {
+                            cc.curricula = response;
+                        }, function () {
+                              cc.showToast("Could not refresh curricula.");
+                        });
+                    },
+                    function(){
+                        cc.showToast("Could not add Core");
+                    });
+               }
+               else{
+                    curriculumService.create(curric, function () {
+                      cc.showToast("Core created");
+                          curriculumService.getAll(function (response) {
+                              cc.curricula = response;
+                          }, function () {
+                              cc.showToast("Could not refresh curricula.");
+                          });
+                    }, function () {
+                      cc.showToast("Could not add Core")
+                    })
+               }
+
+
+                $mdDialog.hide();
+           }
+       }
+    };
+
+    //Show Add Focus Dialog
+    $scope.showAddFocus = function(event) {
+       $mdDialog.show({
+            targetEvent: event,
+            clickOutsideToClose: true,
+            templateUrl : "html/templates/dialogs/curriculumFormDialog.html",
+            locals: {
+                       curricI: {
+                                   name: "Focus Name"
+                              }
+                     },
+            controller: FocusDialogController
+       });
+       function FocusDialogController($scope, $mdDialog, curricI) {
+
+           $scope.skills = cc.skills;
+          $scope.curricI = curricI;
+
+           $scope.cancel = function() {
+            $mdDialog.cancel();
+           }
+           $scope.saveCurriculum = function() {
+                var curric = {
+                           name    : $scope.curricI.name,
+                           skills  : $scope.curricI.skills,
+                           active  : true,
+                           core    : false
+                       };
+                       var existingInactive = find(curric, cc.curricula);
+                       if(existingInactive){
+                            existingInactive.name = curric.name;
+                            existingInactive.skills = curric.skills;
+                            existingInactive.active = true;
+                           curriculumService.update(existingInactive,
+                           function(){
+                               cc.showToast("Focus created");
+                               curriculumService.getAll(function (response) {
+                                   cc.curricula = response;
+                               }, function () {
+                                     cc.showToast("Could not refresh curricula.");
+                               });
+                           },
+                           function(){
+                               cc.showToast("Could not add Focus");
+                           });
+                           $mdDialog.hide();
+                       }
+                       else{
+                           curriculumService.create(curric, function () {
+                               cc.showToast("Focus created");
+                                   curriculumService.getAll(function (response) {
+                                       cc.curricula = response;
+                                   }, function () {
+                                       cc.showToast("Could not refresh curricula.");
+                                   });
+                           }, function () {
+                               cc.showToast("You could not add focus")
+                           })
+                       }
+
+                $mdDialog.hide();
+           }
+       }
+    };
+
+    //Show Edit Curriculum Dialog
+    $scope.showEditCurriculum = function(event,curr) {
+       $mdDialog.show({
+            targetEvent: event,
+            clickOutsideToClose: true,
+            templateUrl : "html/templates/dialogs/curriculumFormDialog.html",
+            locals: {
+                       curricI: {
+                            name: curr.name,
+                            skills: cc.skills.filter(function(x){
+                               curr.skills.map(function(y) {
+                                 return y.name;
+                               }).includes(x.name);
+                            })
+                       }
+                     },
+            controller: EditCurriculumDialogController
+       });
+       function EditCurriculumDialogController($scope, $mdDialog, curricI) {
+
+           $scope.skills = cc.skills;
+           $scope.curricI = curricI;
+
+           $scope.cancel = function() {
+            $mdDialog.cancel();
+           }
+
+           $scope.saveCurriculum = function() {
+               curr.name = $scope.curricI.name
+               curr.skills = $scope.curricI.skills
+               curriculumService.update(curr, function () {
+                   cc.showToast("Curriculum updated");
+               }, function () {
+                   cc.showToast("Could not edit Curriculum")
+               })
+               $mdDialog.hide();
+           }
+       }
+    };
+    //sequentially searches list of curricula for the target curricula
+    //returns resource if it exists and if it is inactive
+    var find = function (target, list){
+        let item;
+        for(let i=0; i<list.length; i++){
+            item = list[i];
+            if((target.name===item.name) && !item.active){
+                return item;
+            }
+        }
+        return false;
+    }
     //variables
-    // cc.curricula;
-    // cc.skills;
     cc.selectedSkills = [];
     cc.focusName = undefined;
     cc.coreName = undefined; //added for add Core usecase

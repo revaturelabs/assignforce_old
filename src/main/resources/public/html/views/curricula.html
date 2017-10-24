@@ -1,4 +1,5 @@
 <md-card>
+
     <md-content>
         <md-toolbar layout="columns">
             <div class="md-toolbar-tools">
@@ -11,10 +12,13 @@
                 <div class="md-toolbar-tools">
                     <span>Core Curricula</span>
                     <span flex></span>
-                    <md-button class="md-icon-button" ng-click="cCtrl.toggleCoreStatus()" ng-show="isManager">
-                        <md-tooltip class="md-title"> Create Core</md-tooltip>
-                        <i class="material-icons">add_circle</i>
+
+                    <!--Add New Curriculum Button-->
+                    <md-button class="md-icon-button" ng-if = "isManager" ng-click="showAddCore($event)" style="margin: 12px 6px;" >
+                        <md-tooltip class="md-title"> Add New Curriculum </md-tooltip>
+                        <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
                     </md-button>
+
                     <md-button class="md-icon-button" ng-click="cCtrl.toggleCoreToolbar()">
                         <md-tooltip class="md-title"> Toggle Content </md-tooltip>
                         <i id="coreArrow" class="material-icons">keyboard_arrow_up</i>
@@ -23,28 +27,6 @@
             </md-toolbar>
 
             <md-card-content id="core" ng-if="cCtrl.curricula != undefined && cCtrl.skills != undefined">
-                <md-card class="simpleCard">
-                    <!--content for adding core-->
-                    <form name="coreForm" ng-show="cCtrl.coreStatus">
-                        <div layout="row" class="md-padding">
-                            <md-input-container flex="50">
-                                <label>Core Name:</label>
-                                <input type="text" name="Core" ng-model="cCtrl.coreName" required />
-                            </md-input-container>
-                            <md-input-container style="margin-right: 10px;" required flex="50">
-                                <label>Skills:</label>
-                                <md-select ng-model="cCtrl.selectedSkills" multiple>
-                                    <md-option ng-repeat="skill in cCtrl.skills | activeItem" value="{{skill.skillId}}" ng-if="skill.active == true">{{skill.name}}</md-option>
-                                </md-select>
-                            </md-input-container>
-                        </div>
-                        <div layout="row" class="md-padding">
-                            <md-button ng-click="cCtrl.createCore(coreForm)" class="md-primary"> Save </md-button>
-                        </div>
-                    </form>
-
-                </md-card>
-
 
                 <!--content ending for adding core-->
 
@@ -54,6 +36,15 @@
                             <h3>{{curr.name}}</h3>
                             <p>Skills: {{ curr.skills.map(cCtrl.joinObjArrayByName).join(", ");}}</p>
                         </div>
+                        <md-divider></md-divider>
+                        <md-button class="md-icon-button" ng-if = "isManager" ng-click="showEditCurriculum($event,curr)">
+                            <md-tooltip class="md-title"> Edit Curricula </md-tooltip>
+                            <i class="material-icons revOrange"> edit </i>
+                        </md-button>
+                        <md-button class="md-icon-button" ng-if = "isManager" ng-click="cCtrl.removeCurriculum($event,curr)">
+                            <md-tooltip class="md-title"> Remove Core </md-tooltip>
+                            <i class="material-icons revOrange">remove_circle</i>
+                        </md-button>
                     </md-list-item>
                 </md-list>
             </md-card-content>
@@ -64,10 +55,13 @@
                 <div class="md-toolbar-tools">
                     <span>Focuses</span>
                     <span flex></span>
-                    <md-button class="md-icon-button" ng-click="cCtrl.toggleFocusStatus()" ng-show="isManager">
-                        <md-tooltip class="md-title"> Create Focus</md-tooltip>
-                        <i class="material-icons">add_circle</i>
+
+                    <!--Add New Focus Button-->
+                    <md-button class="md-icon-button" ng-if = "isManager" ng-click="showAddFocus($event)" style="margin: 12px 6px;" >
+                        <md-tooltip class="md-title"> Add New Focus</md-tooltip>
+                        <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
                     </md-button>
+
                     <md-button class="md-icon-button" ng-click="cCtrl.toggleFocusToolbar()">
                         <md-tooltip class="md-title"> Toggle Content </md-tooltip>
                         <i id="focusArrow" class="material-icons">keyboard_arrow_up</i>
@@ -76,37 +70,19 @@
             </md-toolbar>
 
             <md-card-content id="focus" ng-if="cCtrl.curricula != undefined && cCtrl.skills != undefined">
-                <md-card class="simpleCard">
-                    <form name="focusForm" ng-show="cCtrl.focusStatus">
-                        <div layout="row" class="md-padding">
-                            <md-input-container flex="50">
-                                <label>Focus Name:</label>
-                                <input type="text" name="focus" ng-model="cCtrl.focusName" required />
-                            </md-input-container>
-                            <md-input-container style="margin-right: 10px;" required flex="50">
-                                <label>Skills:</label>
-                                <md-select ng-model="cCtrl.selectedSkills" multiple>
-                                    <md-option ng-repeat="skill in cCtrl.skills" value="{{skill.skillId}}">{{skill.name}}</md-option>
-                                </md-select>
-                            </md-input-container>
-                        </div>
-                        <div layout="row" class="md-padding">
-                            <md-button ng-click="cCtrl.createFocus(focusForm)" class="md-primary"> Save </md-button>
-                        </div>
-                    </form>
-                </md-card>
+
                 <md-list>
-                    <md-list-item ng-repeat="curr in cCtrl.curricula | activeItem" ng-if="curr.core == false" class="md-2-line" md-ink-ripple="#ff0000">
+                    <md-list-item ng-repeat="curr in cCtrl.curricula | activeItem" ng-if="curr.core == false" class="md-2-line" md-ink-ripple>
                         <div class="md-list-item-text" layout="column">
                             <h3>{{curr.name}}</h3>
                             <p>Skills: {{ curr.skills.map(cCtrl.joinObjArrayByName).join(", ");}}</p>
                         </div>
-                        <span flex></span>
-                        <!--<md-button class="md-icon-button" ng-click="cCtrl.editFocus(curr)">-->
-                        <!--<md-tooltip class="md-title"> Edit Focus </md-tooltip>-->
-                        <!--<i class="material-icons revOrange"> edit </i>-->
-                        <!--</md-button>-->
-                        <md-button class="md-icon-button" ng-click="cCtrl.removeFocus(curr)" ng-show="isManager">
+                        <md-divider></md-divider>
+                        <md-button class="md-icon-button" ng-if = "isManager" ng-click="showEditCurriculum($event,curr)">
+                        <md-tooltip class="md-title"> Edit Focus </md-tooltip>
+                        <i class="material-icons revOrange"> edit </i>
+                        </md-button>
+                        <md-button class="md-icon-button" ng-if = "isManager" ng-click="cCtrl.removeCurriculum($event,curr)">
                             <md-tooltip class="md-title"> Remove Focus </md-tooltip>
                             <i class="material-icons revOrange">remove_circle</i>
                         </md-button>
