@@ -2,6 +2,7 @@ package com.revature.assignforce;
 
 import com.revature.assignforce.domain.Force;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,7 +32,7 @@ public class AssignForceV2Application {
     }
 
     @Bean
-    public OAuth2RestTemplate restTemplate(OAuth2ProtectedResourceDetails resource,OAuth2ClientContext context) {
+    public OAuth2RestTemplate restTemplate(OAuth2ProtectedResourceDetails resource, @Qualifier("oauth2ClientContext") OAuth2ClientContext context) {
         return new OAuth2RestTemplate(resource, context);
     }
 }
