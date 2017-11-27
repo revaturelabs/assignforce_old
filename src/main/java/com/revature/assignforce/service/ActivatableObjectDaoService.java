@@ -34,7 +34,5 @@ public class ActivatableObjectDaoService<T extends Activatable, ID extends Seria
             T saveItem = (T)item;
             repo.save(saveItem);
         }
-
-
     }
 }

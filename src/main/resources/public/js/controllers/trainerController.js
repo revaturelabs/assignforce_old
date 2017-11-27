@@ -1,7 +1,8 @@
 var assignforce = angular.module( "batchApp" );
 
-assignforce.controller( "trainerCtrl", function( $scope, $mdDialog, $mdToast, $location, trainerService, s3Service, ptoService ) {
+assignforce.controller( "trainerCtrl", function( $scope, $rootScope, $mdDialog, $mdToast, $location, trainerService, s3Service, ptoService, $http) {
     var tc = this;
+    $scope.isManager = $rootScope.role === "VP of Technology";
 
       // functions
 
@@ -116,7 +117,13 @@ assignforce.controller( "trainerCtrl", function( $scope, $mdDialog, $mdToast, $l
     };
 
     tc.showCalendar = function(){
-        ptoService.authorize();
+        $http.get("/api/v2/google/googleStatus").then(function(response) {
+            if(response.data !== "") {
+                ptoService.authorize();
+            } else {
+                 tc.googleAuth();
+             }
+        });
     };
 
     tc.hideCalendar = function(){
@@ -148,5 +155,9 @@ assignforce.controller( "trainerCtrl", function( $scope, $mdDialog, $mdToast, $l
     }, function() {
         tc.showToast("Could not fetch trainers.");
     });
+
+    tc.googleAuth = function() {
+        window.location = "api/v2/google/google";
+    }
 
 });//end trainer controller

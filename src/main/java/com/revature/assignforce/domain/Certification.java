@@ -8,6 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "Certifications")
+
 public class Certification {
 
     @Id

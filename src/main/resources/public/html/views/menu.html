@@ -1,7 +1,10 @@
 
     <div ng-controller="menuCtrl as mCtrl">
         <md-content class="md-padding">
-            
+
+            <!--<form method="GET" action="api/v2/logout">-->
+                <!--<input type="submit" value="Logout" style="float: right;"/>-->
+            <!--</form>-->
             <img src="img/revature_logo_250.png" class="md-card-image">
             <md-nav-bar md-selected-nav-item="mCtrl.currentPage" aria-label="menu">
                 <span flex> </span>
@@ -10,9 +13,10 @@
                 <md-nav-item md-nav-href="locations" name="locations" layout-align="end end">  Locations </md-nav-item>
                 <md-nav-item md-nav-href="curriculum"   name="curricula"   layout-align="end end">  Curricula   </md-nav-item>
                 <md-nav-item md-nav-href="trainers"  name="trainers"  layout-align="end end">  Trainers  </md-nav-item>
-                <md-nav-item md-nav-href="profile"   name="profile"   layout-align="end end">  Profile   </md-nav-item>
+                <md-nav-item md-nav-href="profile" ng-show=toggle  name="profile"   layout-align="end end">  Profile   </md-nav-item>
                 <md-nav-item md-nav-href="reports"   name="reports"   layout-align="end end">  Reports   </md-nav-item>
                 <md-nav-item md-nav-href="settings"  name="settings"  layout-align="end end">  Settings  </md-nav-item>
+                <md-nav-item md-nav-click="mCtrl.logout();"  name="logout"  layout-align="end end">  Logout  </md-nav-item>
             </md-nav-bar>
 
         </md-content>

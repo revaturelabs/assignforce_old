@@ -14,19 +14,19 @@ app.service( "locationService", function($resource) {
     };
 
     ls.create = function(location, success, error){
-        location.$save(success, error);
+        return location.$save(success, error);
     };
 
     ls.getAll = function(success, error) {
-        Location.query(success, error);
+        return Location.query(success, error);
     };
 
     ls.getById = function(id, success, error){
-        Location.get({id: id}, success, error);
+        return Location.get({id: id}, success, error);
     };
 
     ls.update = function(location, success, error){
-    	Location.update(location, success, error);
+        return Location.update(location, success, error);
     };
 
     //I am not really changing location

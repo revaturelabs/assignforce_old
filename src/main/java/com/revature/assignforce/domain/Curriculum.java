@@ -17,6 +17,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "CURRICULUM")
+
 public class Curriculum implements Activatable{
 
 	@Id
@@ -45,11 +46,12 @@ public class Curriculum implements Activatable{
 		//noarg constructor
 	}
 
-	public Curriculum(int currId, String name, List<Skill> skills) {
+	public Curriculum(int currId, String name, List<Skill> skills, boolean core) {
 		super();
 		this.currId = currId;
 		this.name = name;
 		this.skills = skills;
+		this.core=core;
 	}
 
 	public int getCurrId() {

@@ -1,14 +1,13 @@
 package com.revature.assignforce.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-
-import java.util.List;
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "LOCATION")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
+
 public class Location implements Activatable {
 
 	@Id

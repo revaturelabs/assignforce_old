@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -61,7 +62,6 @@ public class Batch {
 	@JoinTable(name="BATCH_SKILL_JT", 
 	joinColumns=@JoinColumn(name="BATCH_ID"), 
 	inverseJoinColumns=@JoinColumn(name="SKILL_ID"))
-	//@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")					// ADDED this to fix serialization/infinite loop issues
 	private List<Skill> skills;
 
 	@OneToOne
