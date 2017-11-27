@@ -11,13 +11,13 @@ app.service('settingService', function ($resource) {
     ss.settings = null;
 
     ss.getGlobal = function (success, error) {
-//        if(ss.settings){
-//            success(ss.settings);
-//            return;
-//        }
+        if(ss.settings){
+            success(ss.settings);
+            return;
+        }
         Setting.query(function(response){
             ss.settings = response[0];
-            success(response[0])
+            success(ss.settings)
         }, error);
     };
 

@@ -1,7 +1,5 @@
 package com.revature.assignforce.domain;
 
-import io.swagger.annotations.ApiModel;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

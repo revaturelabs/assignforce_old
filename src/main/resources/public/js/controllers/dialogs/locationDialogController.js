@@ -13,13 +13,13 @@
             // save changes/new
         ldc.save = function(isValid) {
             if (isValid) {
-                if (ldc.state === "edit") {
+                if (ldc.state == "edit") {
                     locationService.update( ldc.location, function(){
                         $mdDialog.hide();
                     }, function(){
                         $mdDialog.cancel();
                     });
-                } else if (ldc.state === "create") {
+                } else if (ldc.state == "create") {
                     locationService.create( ldc.location, function(){
                         $mdDialog.hide();
                     }, function(){

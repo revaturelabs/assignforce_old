@@ -1,7 +1,6 @@
 
 	var assignforce = angular.module( "batchApp", ['ngRoute', 'ngAnimate', 'ngAria', 'ngResource', 'ngMaterial', 'md.data.table', 'ngCsv']);
 
-
           // global constants
         assignforce.constant( "secWeek", 604800000 )
                    .constant( "USstates", ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA',
@@ -11,16 +10,12 @@
                                            'SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'] )
                    .constant( "monthList", [ "Jan.", "Feb.", "Mar.", "Apr.", "May", "June",
                                              "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."] );
-
-    	// assignforce.constant('authorizeUrl', 'api/v2/authorize');
-
-        // url routing
+        
+		  // url routing
 		assignforce.config( function($routeProvider, $locationProvider){
-			
 			$routeProvider
 				.when("/login", {
-					templateUrl : "html/views/login.html",
-					controller : "authCtrl as aCtrl"
+					templateUrl : "html/views/login.html"
 				})
 				.when("/home", {
 					templateUrl : "html/views/home.html",
@@ -58,12 +53,7 @@
 					templateUrl : "html/views/settings.html",
 					controller  : "settingsCtrl as sCtrl"
 				})
-
-				.otherwise({"redirectTo": "/home"});
-                // .otherwise({
-                //     templateUrl : "html/views/home.html",
-                //     controller  : "homeCtrl as hCtrl"
-				// });
+				.otherwise({"redirectTo": "/login"});
 			
 			$locationProvider.html5Mode(true);
 		});

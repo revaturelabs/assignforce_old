@@ -15,13 +15,13 @@ assignforce.controller( "roomDialogCtrl", function( $scope, $mdDialog, locationS
 
             if (roomForm.$valid) { //check if the room dialog form is valid
                 
-                if (rdc.state === "edit") { //edit an existing room
+                if (rdc.state == "edit") { //edit an existing room
                     roomService.update( rdc.room, function(){
                         $mdDialog.hide();
                     }, function(){
                         $mdDialog.cancel();
                     });
-                } else if (rdc.state === "create") { //Create a new room
+                } else if (rdc.state == "create") { //Create a new room
                     rdc.room.building = rdc.building.id;
 
                     roomService.create( rdc.room, function() {

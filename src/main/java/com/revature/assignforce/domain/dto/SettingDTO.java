@@ -1,19 +1,11 @@
 package com.revature.assignforce.domain.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
 /**
  * Created by lazar on 2/8/2017.
  */
-@ApiModel("Setting")
 public class SettingDTO {
-
-    @ApiModelProperty(notes = "The setting ID", name = "settingId", dataType = "int")
     private int settingId;
-    @ApiModelProperty(notes = "The setting name", name = "settingName", dataType = "String")
     private String settingName;
-    @ApiModelProperty(notes = "The setting value number", name = "setttingValue", dataType = "int")
     private int settingValue;
 
     //ID

@@ -9,27 +9,27 @@
 
             <span flex> </span>
 
-            <md-button id="locAdd" class="md-icon-button" ng-click="lCtrl.addLocation()" ng-show="isManager">
+            <md-button id="locAdd" class="md-icon-button" ng-click="lCtrl.addLocation()">
                 <md-tooltip class="md-title"> Add location </md-tooltip>
                 <md-icon md-svg-icon="img/ic_add_location_white_24px.svg"> </md-icon>
             </md-button>
             
-            <md-button id="bldgAdd" class="md-icon-button" ng-click="lCtrl.addBuilding()" ng-show="isManager">
+            <md-button id="bldgAdd" class="md-icon-button" ng-click="lCtrl.addBuilding()">
                 <md-tooltip class="md-title"> Add building to selected </md-tooltip>
                 <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
             </md-button>
 
-            <md-button id="roomAdd" class="md-icon-button" ng-click="lCtrl.addRoom()" ng-show="isManager">
+            <md-button id="roomAdd" class="md-icon-button" ng-click="lCtrl.addRoom()">
                 <md-tooltip class="md-title"> Add room to selected </md-tooltip>
                 <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
             </md-button>
 
-            <md-button id="locEdit" class="md-icon-button" ng-click="lCtrl.editSelected()" ng-show="isManager">
+            <md-button id="locEdit" class="md-icon-button" ng-click="lCtrl.editSelected()">
                 <md-tooltip class="md-title"> Edit selected </md-tooltip>
                 <md-icon md-svg-icon="img/ic_edit_white_24px.svg"> </md-icon>
             </md-button>
 
-            <md-button class="md-icon-button" ng-click="lCtrl.deleteSelected()" ng-show="isManager">
+            <md-button class="md-icon-button" ng-click="lCtrl.deleteSelected()">
                 <md-tooltip class="md-title"> Inactivate selected </md-tooltip>
                 <md-icon md-svg-icon="img/ic_delete_white_24px.svg"> </md-icon>
             </md-button>
@@ -54,7 +54,7 @@
                     <span flex> </span>
 
                     <md-checkbox md-no-ink ng-checked="lCtrl.exists(location)"
-                    	ng-click="lCtrl.toggle(location)" ng-show="isManager"> </md-checkbox>
+                    	ng-click="lCtrl.toggle(location)"> </md-checkbox>
 
                 </md-list-item>
                 
@@ -82,7 +82,7 @@
 	                        <span flex> </span>
 	
 	                        <md-checkbox md-no-ink ng-checked="lCtrl.exists(room)" 
-	                        	ng-click="lCtrl.toggle(room)" ng-show="isManager"> </md-checkbox>
+	                        	ng-click="lCtrl.toggle(room)"> </md-checkbox>
 	
 	                    	</md-list-item>
                 		</md-list>
@@ -90,7 +90,7 @@
                         <span flex> </span>
 
                         <md-checkbox aria-label="Building check" md-no-ink ng-checked="lCtrl.exists(building)" 
-                        	ng-click="lCtrl.toggle(building)" ng-hide="lCtrl.selectedBuilding == building || !isManager"> </md-checkbox>
+                        	ng-click="lCtrl.toggle(building)" ng-hide="lCtrl.selectedBuilding == building"> </md-checkbox>
                         
                  
 

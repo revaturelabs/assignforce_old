@@ -20,7 +20,7 @@ assignforce.controller("skillDialogCtrl", function ($scope, $mdDialog, $mdToast,
         sdc.selectedSkills = sdc.trainer.skills;
 
         var idx = sdc.selectedSkills.indexOf(obj);
-        if (idx === -1) {
+        if (idx == -1) {
             sdc.selectedSkills.push(obj);
         } else {
             sdc.selectedSkills.splice(idx, 1);

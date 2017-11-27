@@ -14,7 +14,6 @@ import org.hibernate.annotations.FetchMode;
 @Table(name = "BUILDING")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 // @JsonIgnoreProperties(ignoreUnknown = true)
-
 public class Building implements Activatable {
 
 	@Id
