@@ -1,5 +1,5 @@
 // Karma configuration
-// Generated on Fri Jul 14 2017 11:28:01 GMT-0400 (Eastern Daylight Time)
+// Generated on Mon Mar 06 2017 17:11:42 GMT-0500 (Eastern Standard Time)
 
 module.exports = function(config) {
   config.set({
@@ -14,26 +14,14 @@ module.exports = function(config) {
 
 
     // list of files / patterns to load in the browser
-
     files: [
-        './node_modules/angular/angular.js',
-        './node_modules/angular-animate/angular-animate.js',
-        './node_modules/angular-aria/angular-aria.js',
-        './node_modules/angular-route/angular-route.js',
-        './node_modules/angular-mocks/angular-mocks.js',
-        './node_modules/angular-sanitize/angular-sanitize.js',
-        './node_modules/angular-material-icons/angular-material-icons.js',
-        './node_modules/angular-material/angular-material.js',
-        './node_modules/angular-material/angular-material-mocks.js',
-        './node_modules/angular-resource/angular-resource.js',
-        './node_modules/angular-bootstrap/ui-bootstrap.js',
-        './node_modules/angular-md-table/dist/angular-md-table.min.js',
-        './node_modules/angular-material-data-table/dist/md-data-table.js',
-        './node_modules/ng-csv/build/ng-csv.js',
-        './src/main/resources/public/js/assignforce.js',
-        './src/main/resources/public/js/services/*.js',
-        './src/main/resources/public/js/controllers/*.js',
-        './src/test/resources/specs/*.spec.js'
+        'test-main.js',
+        {pattern: 'src/test/resources/angular_modules/jquery.min.js'},
+        {pattern: 'src/test/resources/angular_modules/angular.js'},
+        {pattern: 'src/test/resources/angular_modules/*.js'},
+        {pattern: 'src/main/resources/public/js/*.js'},
+        {pattern: 'src/main/resources/public/js/**/*.js'},
+        {pattern: 'src/test/resources/specs/curriculaController_spec.js'}
     ],
 
 
@@ -51,10 +39,8 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress','junit'],
-    junitReporter: {
-        outputFile: '../target/surefire-reports/test-results.xml'
-    },
+    reporters: ['progress'],
+
 
     // web server port
     port: 9876,
@@ -75,16 +61,20 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['ChromeHeadless'],
-
+    browsers: ['Chrome'],
+    // browsers: ['Firefox'],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: true,
+    singleRun: false,
 
     // Concurrency level
     // how many browser should be started simultaneous
-    concurrency: Infinity
-  })
+    concurrency: Infinity,
 
-}
+    plugins: [
+          'karma-chrome-launcher',
+          'karma-jasmine'
+    ]
+  })
+};

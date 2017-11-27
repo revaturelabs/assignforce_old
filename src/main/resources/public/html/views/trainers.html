@@ -4,7 +4,7 @@
         <div class="md-toolbar-tools" >
             <span> Trainers </span>
             <span flex> </span>
-            <md-button class="md-icon-button" ng-click="tCtrl.addTrainer()" ng-show="isManager">
+            <md-button class="md-icon-button" ng-click="tCtrl.addTrainer()">
                 <md-tooltip class="md-title"> Add Trainer </md-tooltip>
                 <md-icon md-svg-icon="img/ic_add_circle_white_24px.svg"> </md-icon>
             </md-button>
@@ -12,10 +12,6 @@
                 <md-tooltip class="md-title"> View PTO Calendar </md-tooltip>
                 <md-icon md-svg-icon="img/ic_perm_contact_calendar_white_24px.svg"> </md-icon>
             </md-button>
-            <!--<md-button class="md-icon-button" ng-click="tCtrl.googleAuth()">-->
-                <!--<md-tooltip class="md-title"> Google Authentication </md-tooltip>-->
-                <!--<md-icon md-svg-icon="img/ic_perm_contact_calendar_white_24px.svg"> </md-icon>-->
-            <!--</md-button>-->
         </div>
     </md-toolbar>
     <!--shows a list of all the active trainers-->
@@ -34,7 +30,7 @@
                     <md-tooltip class="md-title"> Download Resume </md-tooltip>
                     <i class="material-icons revOrange">file_download</i>
                 </md-button>
-                <md-button class="md-icon-button" ng-click="tCtrl.removeTrainer(trainer)" ng-show="isManager">
+                <md-button class="md-icon-button" ng-click="tCtrl.removeTrainer(trainer)">
                     <md-tooltip class="md-title"> Deactivate Trainer </md-tooltip>
                     <i class="material-icons revOrange">remove_circle</i>
                 </md-button>
@@ -68,7 +64,7 @@
                 </div>
                 <span flex> </span>
                 <!--button activates a Trainer-->
-                <md-button class="md-icon-button" ng-click="tCtrl.activateTrainer(trainer)" ng-show="isManager">
+                <md-button class="md-icon-button" ng-click="tCtrl.activateTrainer(trainer)">
                     <md-tooltip class="md-title"> Reactivate Trainer </md-tooltip>
                     <i class="material-icons revOrange">add_circle</i>
                 </md-button>

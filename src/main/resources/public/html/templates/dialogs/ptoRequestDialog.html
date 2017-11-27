@@ -8,6 +8,17 @@
             </md-toolbar>
 
             <div class="md-padding">
+                <div layout layout-wrap>
+                    <md-input-container flex="100">
+                        <label>First Name</label>
+                        <input ng-model="ptoCtrl.trainer.firstName" required>
+                    </md-input-container>
+
+                    <md-input-container flex="100">
+                        <label>Last Name</label>
+                        <input ng-model="ptoCtrl.trainer.lastName" required>
+                    </md-input-container>
+                </div>
                 <md-input-container flex="none">
                     <label>Start Date</label>
                     <md-datepicker ng-model="ptoCtrl.startDate" md-current-view="year" md-open-on-focus md-hide-icons="calendar"> </md-datepicker>
@@ -20,7 +31,7 @@
         </md-dialog-content>
 
         <md-dialog-actions>
-            <md-button class="md-primary" ng-click="ptoCtrl.send(true)">Send</md-button>
+            <md-button class="md-primary" type="submit">Send</md-button>
             <md-button class="md-primary" ng-click="ptoCtrl.cancel()">Cancel</md-button>
         </md-dialog-actions>
     </form>

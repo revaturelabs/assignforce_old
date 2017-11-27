@@ -1,10 +1,8 @@
 
 var assignforce = angular.module("batchApp");
 
-assignforce.controller("locationCtrl", function($scope, $rootScope, $filter, $mdDialog, locationService, buildingService, roomService) {
+assignforce.controller("locationCtrl", function($scope, $filter, $mdDialog, locationService, buildingService, roomService) {
 	var lc = this;
-
-	$scope.isManager = $rootScope.role === "VP of Technology";
 
 	// functions
 	// calls showToast method of aCtrl
@@ -54,9 +52,9 @@ assignforce.controller("locationCtrl", function($scope, $rootScope, $filter, $md
 			lc.showToast("Please select only one location.");
 		}
 		// indicates that the list item is actually a location and not something
-		else if (lc.selectedList.length === 0) {
+		else if (lc.selectedList.length == 0) {
 			lc.showToast("Please select a location.");
-		} else if(lc.selectedList[0].buildings === undefined) {
+		} else if(lc.selectedList[0].buildings == undefined) {
             lc.showToast("Buildings can only be added to locations.");
         } else {
 			$mdDialog.show({
@@ -86,9 +84,9 @@ assignforce.controller("locationCtrl", function($scope, $rootScope, $filter, $md
 			lc.showToast("Please select only one building.");
 		}
 		// indicates that the list item is actually a building and not a location
-		else if (lc.selectedList.length === 0) {
+		else if (lc.selectedList.length == 0) {
 			lc.showToast("Please select a building.");
-		} else if (lc.selectedList[0].rooms === undefined) {
+		} else if (lc.selectedList[0].rooms == undefined) {
             lc.showToast("Rooms can only be added to Buildings.")
 		} else {
 			$mdDialog.show({
@@ -129,7 +127,7 @@ assignforce.controller("locationCtrl", function($scope, $rootScope, $filter, $md
 
 		if (lc.selectedList.length > 1) {
 			lc.showToast("Please select only one item.");
-		} else if (lc.selectedList.length === 0) {
+		} else if (lc.selectedList.length == 0) {
 			lc.showToast("Please select an item.");
 		} else {
 			// edit location
@@ -198,7 +196,7 @@ assignforce.controller("locationCtrl", function($scope, $rootScope, $filter, $md
 
 	// delete Room/Building/Location
 	lc.deleteSelected = function() {
-        if (lc.selectedList.length === 0) {
+        if (lc.selectedList.length == 0) {
             lc.showToast("Please select an item.");
         } else {
             var summary = lc.categorizeSelected();
@@ -227,19 +225,19 @@ assignforce.controller("locationCtrl", function($scope, $rootScope, $filter, $md
 	lc.formatMessage = function(summary) {
 
 		var message = "";
-		if (summary.rooms === 1) {
+		if (summary.rooms == 1) {
 			message += "1 room";
 		} else if (summary.rooms > 1) {
 			message += summary.rooms + " rooms";
 		}
 		
-		if(summary.buildings === 1) {
+		if(summary.buildings == 1) {
 			message += "1 building";
 		} else if (summary.buildings > 1){
 			message += summary.buildings + " buildings";
 		}
 
-		if (summary.locations === 1) {
+		if (summary.locations == 1) {
 			if (summary.rooms > 0) {
 				message += " and ";
 			}
@@ -306,7 +304,7 @@ assignforce.controller("locationCtrl", function($scope, $rootScope, $filter, $md
 	lc.toggle = function(obj) {
 
 		var idx = lc.selectedList.indexOf(obj);
-		if (idx === -1) {
+		if (idx == -1) {
 			lc.selectedList.push(obj);
 		} else {
 			lc.selectedList.splice(idx, 1);
@@ -321,7 +319,7 @@ assignforce.controller("locationCtrl", function($scope, $rootScope, $filter, $md
 			return false;
 		} else {
 			var style = window.getComputedStyle(element);
-			return style.display === "none";
+			return style.display == "none";
 		}
 	};
 

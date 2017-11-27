@@ -1,5 +1,5 @@
 <div layout="row">
-    <md-content flex="80" class="md-padding" layout-xs="column" layout="row" >
+    <md-content flex="80" class="md-padding" layout-xs="column" layout="row">
         <div flex-xs="" flex-gt-xs="20" layout="column" ng-repeat="n in rCtrl.cardArr track by $index">
             <md-card>
                 <md-card-content class="md-padding" layout="column">
@@ -51,7 +51,7 @@
     </md-content>
     <!--  Master Angular Card Object  -->
     <md-content flex="20" class="md-padding" layout-xs="column" layout="column" layout-align="center center">
-        <div flex-xs="" flex-gt-xs="100" layout="column" style="overflow: hidden;">
+        <div flex-xs="" flex-gt-xs="100" layout="column">
             <md-card>
                 <md-card-content class="md-padding" layout="column">
                     <md-card-title-text>
@@ -69,15 +69,6 @@
                     <div ng-model="rCtrl.cardArr[$index].requiredBatches">
                         <p> Total SDET Batches: {{ rCtrl.totalSDETBatch }} </p>
                     </div>
-                    <!--  Number of Salesforce Batches -->
-                    <div ng-model="rCtrl.cardArr[$index].requiredBatches">
-                        <p> Total Salesforce Batches: {{ rCtrl.totalSalesforceBatch }} </p>
-                    </div>
-                    <!--  Number of Big Data Batches -->
-                    <div ng-model="rCtrl.cardArr[$index].requiredBatches">
-                        <p> Total Big Data Batches: {{ rCtrl.totalBigDataBatch }} </p>
-                    </div>
-
                     <!--  Total Number of Batches -->
                     <div ng-model="rCtrl.cardArr[$index].requiredBatches">
                         <p> Cumulative Number of Batches: {{rCtrl.totalCumulativeBatches}}</p>

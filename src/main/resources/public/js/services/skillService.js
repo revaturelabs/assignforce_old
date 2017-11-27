@@ -11,19 +11,19 @@
 
         ss.create = function (skill, success, error) {
             var newSkill = new Skill(skill);
-            return newSkill.$save(success, error);
+            newSkill.$save(success, error);
         };
 
         ss.getAll = function(success, error) {
-            return Skill.query(success, error);
+            Skill.query(success, error);
         };
 
         ss.getById = function(skillId, success, error){
-            return Skill.get({skillId: skillId}, success, error);
+            Skill.get({skillId: skillId}, success, error);
         };
 
         ss.update = function(skill, success, error){
-            return Skill.update(skill, success, error);
+            Skill.update(skill, success, error);
         };
 
         ss.delete = function(skill, success, error){

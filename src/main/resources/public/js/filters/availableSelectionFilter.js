@@ -4,10 +4,7 @@ var assignforce = angular.module( "batchApp" );
 assignforce.filter("availableSelection", function() {
 	//returns list of available items based on selected dates of batch
 	return function(items, batchStart, batchEnd) {
-		if(angular.isUndefined(items) || items == null || angular.isUndefined(batchStart) || angular.isUndefined(batchEnd)){
-		    return items;
-		}
-		else if(batchStart == null || batchEnd == null){
+		if(angular.isUndefined(items) || items == null || angular.isUndefined(batchStart) || angular.isUndefined(batchEnd) || batchStart == null || batchEnd == null){
 			return items;
 		}
 
@@ -27,7 +24,7 @@ assignforce.filter("availableSelection", function() {
 					
 					//Iterates current unavailable date range by day
 					for (var i = startDate; i <= endDate; i.setDate(i.getDate() + 1)) {
-						if (i.getDay() === 6 || i.getDay() === 0){ //if we are looking at a Saturday or Sunday, go to the next day
+						if (i.getDay() == 6 || i.getDay() == 0){ //if we are looking at a Saturday or Sunday, go to the next day
 							continue;
 						}
 						
@@ -37,7 +34,7 @@ assignforce.filter("availableSelection", function() {
 						//a sql Timestamp, since we don't use any of that time information anyway.
 						//Iterates batch dates by day
 						for (var j = new Date(batchStart); j <= batchEnd ; j.setDate(j.getDate() + 1)){
-							if (i.getDate() === j.getDate() && i.getMonth() === j.getMonth() && i.getFullYear() === j.getFullYear()){
+							if (i.getDate() == j.getDate() && i.getMonth() == j.getMonth() && i.getFullYear() == j.getFullYear()){
 								j.setDate(j.getDate() + 1);
 								dayCount = dayCount + 1;
 								batchStart = j;
@@ -52,11 +49,11 @@ assignforce.filter("availableSelection", function() {
 						// If room is a building, unavailable if there are 5 days of overlap.
 						// Hard-coded at the moment.
 						if (item.building){
-							if (dayCount === 5){
+							if (dayCount == 5){
 								break;
 							}
 						}
-						else if (dayCount === 10) {
+						else if (dayCount == 10) {
 							break;
 						}
 					}
